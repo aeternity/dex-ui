@@ -1,0 +1,9 @@
+@import '~@fontsource/ibm-plex-sans/500.css';
+@import 'variables';
+
+%face-sans-16-regular {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 16px;
+}
