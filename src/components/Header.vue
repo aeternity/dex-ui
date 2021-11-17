@@ -7,9 +7,27 @@
     </div>
     <NavigationMenu />
     <div class="right">
-      <button class="connect-wallet">
-        Connect Wallet
+      <button
+        v-if="!address"
+        :class="['connect-wallet', { disabled: loading }]"
+        @click="connectWallet"
+      >
+        <span v-if="!loading">Connect Wallet</span>
+        <img
+          v-else
+          src="../assets/animated-spinner.svg"
+        >
       </button>
+      <div
+        v-else
+        class="account-info"
+      >
+        <span>{{ balance.toFixed(2) }} AE</span>
+        <div class="address">
+          <span>{{ `${address.slice(0,6)}...${address.slice(-3)}`}}</span>
+          <img :src="`https://avatars.z52da5wt.xyz/${address}`">
+        </div>
+      </div>
       <ActionsMenu @click.stop>
         <template v-slot:display>
           <div class="more">
@@ -26,6 +44,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import ActionsMenu from './ActionsMenu.vue';
 import NavigationMenu from './NavigationMenu.vue';
 
@@ -34,10 +54,42 @@ export default {
     ActionsMenu,
     NavigationMenu,
   },
+  data: () => ({
+    balance: 0,
+    loading: false,
+  }),
+  computed: mapState(['address', 'useIframeWallet']),
+  methods: {
+    async connectWallet() {
+      if (this.loading) return;
+      this.loading = true;
+      await this.$watchUntilTruly(() => this.$store.state.sdk);
+      await this.$store.dispatch('scanForWallets');
+      this.loading = false;
+    },
+  },
+  watch: {
+    address: {
+      async handler(value) {
+        let polling = null;
+        if (value) {
+          polling = setInterval(async () => {
+            this.balance = new BigNumber(
+              await this.$store.state.sdk.getBalance(value),
+            ).shiftedBy(-18);
+          }, 5000);
+        }
+        if (!value && polling) clearInterval(polling);
+      },
+      immediate: true,
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/typography.scss';
+
 .header {
   display: flex;
   align-items: center;
@@ -88,7 +140,8 @@ export default {
         background-color: rgb(25, 27, 31);
         border-radius: 12px;
         border: 1px solid rgb(25, 27, 31);
-        font-size: 16px;
+
+        @extend %face-sans-16-regular;
 
         img {
           height: 16px;
@@ -106,7 +159,6 @@ export default {
       background-color: rgba(21, 61, 111, 0.44);
       cursor: pointer;
       white-space: nowrap;
-      font-size: 16px;
 
       &:active {
         box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
@@ -116,6 +168,12 @@ export default {
         border: 1px solid rgba(49, 95, 154, 0.44);
         color: rgb(57, 130, 231);
       }
+
+      img {
+        height: 20px;
+      }
+
+      @extend %face-sans-16-regular;
     }
 
     .actions-menu {
@@ -154,6 +212,18 @@ export default {
 
   @media (max-width: 480px) {
     .left span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .right .account-info span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .navigation-menu {
       display: none;
     }
   }

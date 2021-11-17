@@ -1,30 +1,50 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <Header />
   <router-view/>
+  <div class="footer">
+    <NavigationMenu  />
+  </div>
 </template>
 
+<script>
+import Header from '@/components/Header.vue';
+import NavigationMenu from '@/components/NavigationMenu.vue';
+
+export default {
+  components: {
+    Header,
+    NavigationMenu,
+  },
+  async mounted() {
+    await this.$store.dispatch('initSdk');
+  },
+};
+</script>
+
 <style lang="scss">
+@use './styles/variables.scss';
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: variables.$font-sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+.footer {
+  position: fixed;
+  bottom: 0;
+  right: 50%;
+  transform: translate(50%, -50%);
+  margin: 0 auto;
+  display: none;
+  justify-content: center;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+@media (max-width: 1100px) {
+  .footer {
+    display: flex;
   }
 }
 </style>
