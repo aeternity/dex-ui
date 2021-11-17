@@ -21,7 +21,7 @@ jobs:
           ref: develop
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 100
+          fetch-depth: 0
 
       - if: github.ref != 'refs/heads/develop'
         run: git branch develop origin/develop
