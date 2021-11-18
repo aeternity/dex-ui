@@ -8,8 +8,12 @@ export default createStore({
     address: null,
     sdk: null,
     balance: 0,
+    useIframeWallet: false,
   },
   mutations: {
+    enableIframeWallet(state) {
+      state.useIframeWallet = true;
+    },
     setAddress(state, address) {
       state.address = address;
     },
@@ -40,9 +44,14 @@ export default createStore({
         connectionInfo: { id: 'spy' },
       });
       const detector = await WalletDetector({ connection: scannerConnection });
+      // eslint-disable-next-line no-underscore-dangle
+      const webWalletTimeout = window.navigator.userAgent.includes('Mobi') ? 0
+        : setTimeout(() => commit('enableIframeWallet'), 10000);
+
       return new Promise((resolve) => {
         detector.scan(async ({ newWallet }) => {
           if (!newWallet) return;
+          clearInterval(webWalletTimeout);
           await sdk.connectToWallet(await newWallet.getConnection());
           await sdk.subscribeAddress('subscribe', 'current');
           const address = sdk.rpcClient.getCurrentAccount();
