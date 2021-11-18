@@ -40,6 +40,10 @@
         </a>
       </ActionsMenu>
     </div>
+    <iframe
+      v-if="useIframeWallet && !address"
+      :src="walletUrl"
+    />
   </div>
 </template>
 
@@ -55,6 +59,7 @@ export default {
     NavigationMenu,
   },
   data: () => ({
+    walletUrl: process.env.VUE_APP_WALLET_URL,
     balance: 0,
     loading: false,
   }),
@@ -93,6 +98,10 @@ export default {
 .header {
   display: flex;
   align-items: center;
+
+  iframe {
+    display: none;
+  }
 
   .left, .right {
     flex-grow: 1;
