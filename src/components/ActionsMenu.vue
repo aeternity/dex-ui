@@ -2,7 +2,7 @@
   <div
     class="actions-menu"
     :class="{ active: showMenu }"
-    @click="showMenu = !showMenu"
+    @click="showMenu = true"
   >
     <slot name="display" />
     <SmallModal
@@ -37,7 +37,7 @@ export default {
     cursor: pointer;
   }
 
-  :deep(.content) {
+  :deep(.small-modal > .content) {
     padding: 8px;
     border-radius: 12px;
     background-color: rgb(44, 47, 54);
