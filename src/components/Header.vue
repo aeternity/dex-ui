@@ -7,9 +7,10 @@
     </div>
     <NavigationMenu />
     <div class="right">
-      <button
+      <ButtonDefault
         v-if="!address"
         :class="['connect-wallet', { disabled: loading }]"
+        fill="transparent-blue"
         @click="connectWallet"
       >
         <span v-if="!loading">Connect Wallet</span>
@@ -17,7 +18,7 @@
           v-else
           src="../assets/animated-spinner.svg"
         >
-      </button>
+      </ButtonDefault>
       <div
         v-else
         class="account-info"
@@ -52,11 +53,13 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ActionsMenu from './ActionsMenu.vue';
 import NavigationMenu from './NavigationMenu.vue';
+import ButtonDefault from './ButtonDefault.vue';
 
 export default {
   components: {
     ActionsMenu,
     NavigationMenu,
+    ButtonDefault,
   },
   data: () => ({
     walletUrl: process.env.VUE_APP_WALLET_URL,
@@ -66,7 +69,6 @@ export default {
   computed: mapState(['address', 'useIframeWallet']),
   methods: {
     async connectWallet() {
-      if (this.loading) return;
       this.loading = true;
       await this.$watchUntilTruly(() => this.$store.state.sdk);
       await this.$store.dispatch('scanForWallets');
@@ -162,21 +164,7 @@ export default {
     .connect-wallet {
       padding: 8px;
       margin-right: 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(21, 61, 111, 0.44);
-      color: rgb(80, 144, 234);
-      background-color: rgba(21, 61, 111, 0.44);
-      cursor: pointer;
       white-space: nowrap;
-
-      &:active {
-        box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
-      }
-
-      &:hover {
-        border: 1px solid rgba(49, 95, 154, 0.44);
-        color: rgb(57, 130, 231);
-      }
 
       img {
         height: 20px;
