@@ -3,7 +3,7 @@ name: Production Dex UI Pipeline
 on:
   push:
     branches: 
-      - master
+      - main
     tags:
       - 'v*'
 

@@ -2,7 +2,7 @@ name: Staging Dex UI Pipeline
 
 on:
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main ]
     types: [ opened, closed ]
 
 env:
@@ -14,16 +14,9 @@ jobs:
     runs-on: ubuntu-latest    
     name: Web build docker
     steps:
-      - if: github.ref != 'refs/heads/develop'
-        uses: actions/checkout@v2
-        with:
-          ref: develop
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - if: github.ref != 'refs/heads/develop'
-        run: git branch develop origin/develop
 
       - name: Log in to dockerhub
         uses: docker/login-action@v1
