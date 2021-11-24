@@ -23,6 +23,8 @@
             </div>
             <SettingsItem
               title="Slippage tolerance"
+              tooltip="Your transaction will revert if the price
+                changes unfavorably by more than this percentage."
               class="slippage"
             >
               <div>
@@ -52,6 +54,8 @@
             </SettingsItem>
             <SettingsItem
               title="Transaction deadline"
+              tooltip="Your transaction will revert if
+                it is pending for more than this period of time."
               class="deadline"
             >
               <InputAmount
@@ -107,7 +111,7 @@ export default {
 .main-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 64px auto 0 auto;
+  margin: 4vh auto 0 auto;
   border-radius: 24px;
   max-width: 480px;
   background: rgb(25, 27, 31);

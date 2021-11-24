@@ -2,7 +2,9 @@
   <div class="settings-item">
     <div class="title">
       <span>{{ title }}</span>
-      <ButtonPlain>?</ButtonPlain>
+      <ButtonPlain @mouseenter="mouseEnterHandler">
+        ?
+      </ButtonPlain>
     </div>
     <div class="content">
       <slot />
@@ -17,12 +19,27 @@ export default {
   components: {
     ButtonPlain,
   },
+  data: () => ({
+    popupBound: false,
+  }),
   props: {
     title: { type: String, required: true },
-    // hint: { type: String, required: true },
+  },
+  methods: {
+    async mouseEnterHandler() {
+      if (this.popupBound) return;
+      this.popupBound = true;
+      await this.$store.dispatch('modals/open', {
+        name: 'show-tooltip',
+        tooltip: this.$attrs.tooltip,
+        reference: this.$el.querySelector('.title > .button-plain'),
+      });
+      this.popupBound = false;
+    },
   },
 };
 </script>
+
 <style lang="scss" scoped>
 .settings-item {
   .title {
