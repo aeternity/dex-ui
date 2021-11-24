@@ -77,3 +77,9 @@ jobs:
         with:
           msg: Deployed to pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.aepps.com
           check_for_duplicate_msg: true
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
