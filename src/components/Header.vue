@@ -51,6 +51,7 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { MAGNITUDE } from '../store/utils';
 import ActionsMenu from './ActionsMenu.vue';
 import NavigationMenu from './NavigationMenu.vue';
 import ButtonDefault from './ButtonDefault.vue';
@@ -83,7 +84,7 @@ export default {
           polling = setInterval(async () => {
             this.balance = new BigNumber(
               await this.$store.state.sdk.getBalance(value),
-            ).shiftedBy(-18);
+            ).shiftedBy(-MAGNITUDE);
           }, 5000);
         }
         if (!value && polling) clearInterval(polling);
