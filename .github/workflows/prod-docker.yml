@@ -9,7 +9,8 @@ on:
 
 env:
   ENV: "prd"
-
+  APP: "dex"
+  
 jobs:
   main:
     runs-on: ubuntu-latest    
@@ -68,3 +69,4 @@ jobs:
         with:
           url-prefix: ${{ steps.get_version.outputs.TAG }}
           env: ${{ env.ENV }}
+          app: ${{ env.APP }}
