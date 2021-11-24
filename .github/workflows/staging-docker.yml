@@ -81,5 +81,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
+          repository: aeternity/gitops-apps.git
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          branch: staging
