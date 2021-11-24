@@ -75,5 +75,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: Deployed to pr-${{ env.PR_NUMBER }}.${{ env.APP }}.${{ env.ENV }}.aepps.com
+          msg: Deployed to pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.aepps.com
           check_for_duplicate_msg: true
