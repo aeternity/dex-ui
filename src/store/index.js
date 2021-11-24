@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import {
   Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
+import aeternityModule from './modules/aeternity';
 
 export default createStore({
   state: {
@@ -64,5 +65,6 @@ export default createStore({
     },
   },
   modules: {
+    aeternity: aeternityModule,
   },
 });
