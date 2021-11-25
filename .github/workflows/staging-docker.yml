@@ -8,7 +8,7 @@ on:
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
   ENV: "stg"
-  APP: "dex"
+  APP: "dex-ui"
 
 jobs:
   main:
