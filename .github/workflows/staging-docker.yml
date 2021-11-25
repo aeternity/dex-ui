@@ -8,7 +8,7 @@ on:
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
   ENV: "stg"
-  APP: "dex"
+  APP: "dex-ui"
 
 jobs:
   main:
@@ -75,5 +75,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: Deployed to pr-${{ env.PR_NUMBER }}.${{ env.APP }}.${{ env.ENV }}.aepps.com
+          msg: Deployed to https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.aepps.com
           check_for_duplicate_msg: true
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          repository: aeternity/gitops-apps
+          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          branch: staging
