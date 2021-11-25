@@ -57,7 +57,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: aeternity/ae-github-actions/argocd-deploy@v1
         with:
-          url-prefix: pr-${{ env.PR_NUMBER }}-${{ env.APP }}
+          url-prefix: pr-${{ env.PR_NUMBER }}
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
 
@@ -65,7 +65,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'closed'
         uses: aeternity/ae-github-actions/argocd-undeploy@v1
         with:
-          url-prefix: pr-${{ env.PR_NUMBER }}-${{ env.APP }}
+          url-prefix: pr-${{ env.PR_NUMBER }}
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
 
