@@ -7,7 +7,7 @@
   >
     <div class="input-wrapper">
       <InputField
-        v-model="searchTerm"
+        v-model:value="searchTerm"
         placeholder="Search name or paste address"
         class="search-bar"
       />
@@ -17,6 +17,7 @@
         v-for="token in filteredResults"
         v-bind:key="token.contract_id"
         class="toke-list-item"
+        @click="resolve(token)"
       >
         <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`">
         <div class="token">
@@ -38,7 +39,7 @@
 import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
-import { fetchJson } from '../store/utils';
+import { fetchJson } from '../lib/utils';
 
 export default {
   components: {

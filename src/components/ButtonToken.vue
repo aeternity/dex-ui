@@ -1,17 +1,16 @@
 <template>
   <ButtonDefault
     v-bind="$attrs"
+    :fill="token ? 'dark' : 'blue'"
     class="button-token"
-    @click="showTokenModal"
+    @click="selectToken"
   >
     <div class="token">
-      <div
-        v-if="$slots.icon"
-        class="icon"
+      <img
+        v-if="token"
+        :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`"
       >
-        <slot name="icon" />
-      </div>
-      <span>{{ title }}</span>
+      <span>{{ token && token.symbol || 'Select token' }}</span>
     </div>
     <img
       v-if="arrow"
@@ -28,12 +27,13 @@ export default {
     ButtonDefault,
   },
   props: {
-    title: { type: String, required: true },
+    token: { type: Object, default: null },
     arrow: { type: Boolean },
   },
   methods: {
-    async showTokenModal() {
-      this.$store.dispatch('modals/open', { name: 'select-token' });
+    async selectToken() {
+      const token = await this.$store.dispatch('modals/open', { name: 'select-token' });
+      if (token) this.$emit('update:token', token);
     },
   },
 };
@@ -51,8 +51,11 @@ export default {
   .token {
     display: flex;
     align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
 
-    .icon :deep(img) {
+    img {
       width: 24px;
       height: 24px;
       border-radius: 24px;

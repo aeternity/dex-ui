@@ -9,15 +9,13 @@
     <div class="right">
       <ButtonDefault
         v-if="!address"
-        :class="['connect-wallet', { disabled: loading }]"
+        :spinner="loading"
+        :disabled="loading"
+        class="connect-wallet"
         fill="transparent-blue"
         @click="connectWallet"
       >
-        <span v-if="!loading">Connect Wallet</span>
-        <img
-          v-else
-          src="../assets/animated-spinner.svg"
-        >
+        <span>Connect Wallet</span>
       </ButtonDefault>
       <div
         v-else
@@ -166,10 +164,6 @@ export default {
       padding: 8px;
       margin-right: 10px;
       white-space: nowrap;
-
-      img {
-        height: 20px;
-      }
 
       @extend %face-sans-16-regular;
     }

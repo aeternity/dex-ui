@@ -3,8 +3,9 @@
     v-bind="$attrs"
     :class="[fill, 'button-default']"
   >
-    <AnimatedSpinner
+    <img
       v-if="spinner"
+      src="../assets/animated-spinner.svg"
       class="spinner"
     />
     <slot v-else />
@@ -13,12 +14,10 @@
 
 <script>
 import ButtonPlain from './ButtonPlain.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
 export default {
   components: {
     ButtonPlain,
-    AnimatedSpinner,
   },
   props: {
     fill: {
@@ -62,22 +61,35 @@ export default {
   }
 
   &.transparent-blue {
-      border: 1px solid rgba(21, 61, 111, 0.44);
-      color: rgb(80, 144, 234);
-      background-color: rgba(21, 61, 111, 0.44);
+    border: 1px solid rgba(21, 61, 111, 0.44);
+    color: rgb(80, 144, 234);
+    background-color: rgba(21, 61, 111, 0.44);
 
-      &:active {
-        box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
-      }
-
-      &:hover {
-        border: 1px solid rgba(49, 95, 154, 0.44);
-        color: rgb(57, 130, 231);
-      }
+    &:active {
+      box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
     }
 
-  &.disabled {
-    opacity: 0.4;
+    &:hover {
+      border: 1px solid rgba(49, 95, 154, 0.44);
+      color: rgb(57, 130, 231);
+    }
+  }
+
+  &.dark {
+    background: rgb(25, 27, 31);
+
+    &:hover {
+      background-color: rgb(44, 47, 54);
+    }
+
+    &:active {
+      background-color: rgb(21, 23, 26);
+    }
+  }
+
+  &:disabled {
+    background-color: rgb(44, 47, 54);
+    color: rgb(195, 197, 203);
     pointer-events: none;
   }
 
