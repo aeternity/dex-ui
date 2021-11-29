@@ -40,7 +40,7 @@ export default createStore({
       });
       commit('setSdk', instance);
     },
-    async scanForWallets({ commit, state: { sdk } }) {
+    async scanForWallets({ commit, dispatch, state: { sdk } }) {
       const scannerConnection = await BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
       });
@@ -59,6 +59,8 @@ export default createStore({
           if (!address) return;
           detector.stopScan();
           commit('setAddress', address);
+          await dispatch('aeternity/initRouter', sdk);
+          await dispatch('aeternity/initWae', sdk);
           resolve(address);
         });
       });

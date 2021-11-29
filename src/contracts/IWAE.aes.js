@@ -1,0 +1,34 @@
+module.exports = `
+
+
+
+
+contract interface IAEX9Minimal =
+  record allowance_accounts = {from_account : address,for_account : address}
+  record meta_info = {name : string,symbol : string,decimals : int}
+  entrypoint meta_info : () => IAEX9Minimal.meta_info
+  entrypoint total_supply : () => int
+  entrypoint balance : (address) => option(int)
+  entrypoint allowance : (IAEX9Minimal.allowance_accounts) => option(int)
+  stateful entrypoint transfer : (address, int) => unit
+  stateful entrypoint create_allowance : (address, int) => unit
+  stateful entrypoint transfer_allowance : (address, address, int) => unit
+
+
+main contract WAE =
+  record state = {balance_of : map(WAE.owner, int),allowance : map(WAE.owner, map(WAE.spender, int))}
+  datatype event = Transfer(address, address, int) | Allowance(address, address, int) | Deposit(address, int) | Withdrawal(address, int)
+  type owner = address
+  type spender = address
+  entrypoint init : () => WAE.state
+  entrypoint total_supply : () => int
+  entrypoint total_supply_str : () => string
+  entrypoint meta_info : () => IAEX9Minimal.meta_info
+  entrypoint balance : (address) => option(int)
+  entrypoint allowance : (IAEX9Minimal.allowance_accounts) => option(int)
+  payable stateful entrypoint deposit : () => unit
+  stateful entrypoint withdraw : (int) => unit
+  stateful entrypoint create_allowance : (address, int) => unit
+  stateful entrypoint transfer : (address, int) => unit
+  stateful entrypoint transfer_allowance : (address, address, int) => unit
+`;
