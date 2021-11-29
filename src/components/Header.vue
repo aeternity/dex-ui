@@ -21,7 +21,7 @@
         v-else
         class="account-info"
       >
-        <span>{{ balance.toFixed(2) }} AE</span>
+        <span><AeBalance :address="address" /> AE</span>
         <div class="address">
           <span>{{ `${address.slice(0,6)}...${address.slice(-3)}`}}</span>
           <img :src="`https://avatars.z52da5wt.xyz/${address}`">
@@ -48,9 +48,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
-import { MAGNITUDE } from '../store/utils';
 import ActionsMenu from './ActionsMenu.vue';
+import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
 import ButtonDefault from './ButtonDefault.vue';
 
@@ -59,10 +58,10 @@ export default {
     ActionsMenu,
     NavigationMenu,
     ButtonDefault,
+    AeBalance,
   },
   data: () => ({
     walletUrl: process.env.VUE_APP_WALLET_URL,
-    balance: 0,
     loading: false,
   }),
   computed: mapState(['address', 'useIframeWallet']),
@@ -72,22 +71,6 @@ export default {
       await this.$watchUntilTruly(() => this.$store.state.sdk);
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
-    },
-  },
-  watch: {
-    address: {
-      async handler(value) {
-        let polling = null;
-        if (value) {
-          polling = setInterval(async () => {
-            this.balance = new BigNumber(
-              await this.$store.state.sdk.getBalance(value),
-            ).shiftedBy(-MAGNITUDE);
-          }, 5000);
-        }
-        if (!value && polling) clearInterval(polling);
-      },
-      immediate: true,
     },
   },
 };
