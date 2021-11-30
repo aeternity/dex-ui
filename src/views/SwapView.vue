@@ -64,7 +64,7 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { calculateSelectedToken } from '../lib/utils';
+import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
 
 export default {
   components: {
@@ -136,7 +136,20 @@ export default {
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
     },
-    swap() {
+    async swap() {
+      try {
+        await this.$store.dispatch('modals/open', {
+          name: 'confirm-swap',
+          from: this.from,
+          to: this.to,
+          amountFrom: this.amountFrom,
+          amountTo: this.amountTo,
+          ratio: this.testRatio,
+        });
+      } catch (e) {
+        if (e.message === 'Rejected by user') return;
+        handleUnknownError(e);
+      }
     },
   },
 };
