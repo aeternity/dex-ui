@@ -28,5 +28,14 @@ export default {
   background: transparent;
   box-shadow: none;
   color: white;
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  &[type='number']::-webkit-outer-spin-button,
+  &[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 }
 </style>
