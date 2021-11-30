@@ -40,6 +40,7 @@ export default {
 }
 
 * {
+  font-family: variables.$font-sans;
   box-sizing: border-box;
 }
 
