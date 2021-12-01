@@ -146,6 +146,13 @@ export default {
           amountTo: this.amountTo,
           ratio: this.testRatio,
         });
+        await this.$store.dispatch('modals/open', {
+          name: 'submit-transaction',
+          fromSymbol: this.from.symbol,
+          toSymbol: this.to.symbol,
+          amountFrom: this.amountFrom,
+          amountTo: this.amountTo,
+        });
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);

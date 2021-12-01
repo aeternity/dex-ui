@@ -77,6 +77,14 @@ export default {
 
 <style lang="scss" scoped>
 .select-token-modal {
+  :deep(.container) {
+    min-height: 60vh;
+
+    .body {
+      margin-bottom: 40px;
+    }
+  }
+
   .input-wrapper {
     margin: 0 20px 20px 20px;
 

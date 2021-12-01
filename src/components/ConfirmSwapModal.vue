@@ -92,13 +92,8 @@ export default {
 .confirm-swap-modal {
   color: white;
 
-  :deep(.container) {
-    min-height: 0;
-
-    .body {
-      padding: 0px 16px 16px 16px;
-      margin-bottom: 0;
-    }
+  :deep(.body) {
+    padding: 0px 16px 16px 16px;
   }
 
   .arrow {
