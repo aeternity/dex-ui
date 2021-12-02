@@ -5,6 +5,8 @@ import aex9Inteface from '../../contracts/IAEX9Minimal.aes';
 // TODO: this should be reviewed
 const MaxUint256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935n;
 
+const defaultDeadline = () => Date.now() + 30 * 60000;
+
 const getRouterInstance = (sdk) => sdk.getContractInstance(
   {
     source: routerInterface,
@@ -94,7 +96,7 @@ export default {
         amountAMin || 0n,
         amountBMin || 0n,
         to,
-        deadline || MaxUint256,
+        deadline || defaultDeadline(),
         extraGas,
       );
       return decodedResult;
@@ -130,7 +132,7 @@ export default {
         amountTokenMin || 0n,
         amountAEMin || 0n,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         extraGas,
       );
     },
@@ -195,7 +197,7 @@ export default {
         amountAMin || 0n,
         amountBMin || 0n,
         to,
-        deadline || MaxUint256,
+        deadline || defaultDeadline(),
         extraGas,
       );
       return decodedResult;
@@ -235,7 +237,7 @@ export default {
         amountTokenMin || 0n,
         amountAeMin || 0n,
         to,
-        deadline, {
+        deadline || defaultDeadline(), {
           ...extraGas,
           amount: amountAeDesired.toString(),
         },
@@ -294,7 +296,7 @@ export default {
         amountInMax ?? MaxUint256,
         path,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         undefined,
         extraGas,
       );
@@ -320,7 +322,7 @@ export default {
         amountOutMin || 0n,
         path,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         undefined, {
           ...extraGas,
           amount: amountAeIn.toString(),
@@ -352,7 +354,7 @@ export default {
         amountTokenInMax ?? MaxUint256,
         path,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         undefined,
         extraGas,
       );
@@ -382,7 +384,7 @@ export default {
         amountAeOutMin ?? 0n,
         path,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         undefined,
         extraGas,
       );
@@ -408,7 +410,7 @@ export default {
         amountOut,
         path,
         to,
-        deadline,
+        deadline || defaultDeadline(),
         undefined,
         {
           ...extraGas,
