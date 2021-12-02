@@ -8,17 +8,6 @@
     <NavigationMenu />
     <div class="right">
       <button
-        v-if="address"
-        :class="['connect-wallet', { disabled: loading }]"
-        @click="addLiquidity"
-      >
-        <span v-if="!loading">Add liquidity</span>
-        <img
-          v-else
-          src="../assets/animated-spinner.svg"
-        >
-      </button>
-      <button
         v-if="!address"
         :class="['connect-wallet', { disabled: loading }]"
         @click="connectWallet"
@@ -82,23 +71,6 @@ export default {
       await this.$watchUntilTruly(() => this.$store.state.sdk);
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
-    },
-    async addLiquidity() {
-      const obj = {
-        tokenA: 'ct_X5ZXB4U3g9ikrobouRiP2sMprtp152EeMtYdBmeyS5D4NhEfs',
-        tokenB: 'ct_jTPt5W5w2HVYeDvBNe7CRjqD1dvRZf4E1PFsdQboHDKVpXD5y',
-        amountADesired: 1n,
-        amountBDesired: 1n,
-      };
-      await this.$store.dispatch('aeternity/createAllowance', {
-        token: obj.tokenA,
-        amount: 2n,
-      });
-      await this.$store.dispatch('aeternity/createAllowance', {
-        token: obj.tokenB,
-        amount: 2n,
-      });
-      await this.$store.dispatch('aeternity/addLiquidity', obj);
     },
   },
   watch: {

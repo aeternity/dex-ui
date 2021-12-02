@@ -154,7 +154,7 @@ export default {
       const routerAddr = getCtAddress(router);
       await token.methods.create_allowance(
         routerAddr,
-        amount ?? MaxUint256,
+        amount,
       );
     },
 
