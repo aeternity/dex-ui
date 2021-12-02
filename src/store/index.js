@@ -3,6 +3,7 @@ import {
   Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
 import aeternityModule from './modules/aeternity';
+import modals from './plugins/modals';
 
 export default createStore({
   state: {
@@ -69,4 +70,7 @@ export default createStore({
   modules: {
     aeternity: aeternityModule,
   },
+  plugins: [
+    modals,
+  ],
 });

@@ -12,12 +12,14 @@
   "dependencies": {
     "@aeternity/aepp-sdk": "github:aeternity/aepp-sdk-js.git#develop",
     "@fontsource/ibm-plex-sans": "^4.5.1",
+    "@popperjs/core": "^2.10.2",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.8.3",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
