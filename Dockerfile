@@ -3,6 +3,7 @@ FROM node:16 as builder
 RUN mkdir -p /home/node/app
 WORKDIR /home/node/app
 COPY package*.json /home/node/app/
+COPY test.txt /home/node/app/
 RUN chown -R node:node /home/node/
 
 USER node
