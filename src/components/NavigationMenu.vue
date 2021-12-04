@@ -1,7 +1,7 @@
 <template>
   <nav class="navigation-menu">
     <router-link to="/swap">Swap</router-link>
-    <router-link to="/about">Pool</router-link>
+    <router-link to="/pool">Pool</router-link>
   </nav>
 </template>
 

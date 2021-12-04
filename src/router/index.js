@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SwapView from '../views/SwapView.vue';
+import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 
@@ -14,12 +15,9 @@ const routes = [
     redirect: '/swap',
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    path: '/pool',
+    name: 'pool',
+    component: PoolView,
   },
   {
     path: '/pool/import',
