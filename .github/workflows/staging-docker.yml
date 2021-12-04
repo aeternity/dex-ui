@@ -68,6 +68,16 @@ jobs:
           url-prefix: pr-${{ env.PR_NUMBER }}
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
+      
+      - name: Remove Docker Tag
+        if: github.event_name == 'pull_request' && github.event.action == 'closed'
+        uses: aeternity/ae-github-actions/remove-docker-tag@v2
+        with:
+          tag: pr-${{ env.PR_NUMBER }}
+          organization: aeternity
+          image: dex-ui
+          dockerhub_user: ${{ secrets.DOCKERHUB_USER }}
+          dockerhub_pass: ${{ secrets.DOCKERHUB_PASS }}
 
       - name: Print PR url
         uses: unsplash/comment-on-pr@v1.3.0
