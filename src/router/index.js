@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SwapView from '../views/SwapView.vue';
 import ImportPool from '../views/ImportPool.vue';
+import AddLiquidity from '../views/AddLiquidity.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/pool/import',
     name: 'import-pool',
     component: ImportPool,
+  },
+  {
+    path: '/pool/add',
+    name: 'add-pool',
+    component: AddLiquidity,
   },
 
 ];

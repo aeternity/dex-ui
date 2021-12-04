@@ -1,15 +1,18 @@
 <template>
-  <button
+  <Component
+    :is="!disabled && to ? 'RouterLink' : 'button'"
+    :to="to"
     :disabled="disabled"
     class="button-plain"
   >
     <slot />
-  </button>
+  </Component>
 </template>
 
 <script>
 export default {
   props: {
+    to: { type: [String, Object], default: null },
     disabled: Boolean,
   },
 };
@@ -21,6 +24,7 @@ export default {
   border: none;
   outline: none;
   background: transparent;
+  text-decoration: none;
   cursor: pointer;
 }
 </style>
