@@ -5,7 +5,10 @@
         v-if="backButton"
         class="left"
       >
-        <ButtonDefault fill="plain">
+        <ButtonDefault
+          fill="plain"
+          @click="back"
+        >
           <img src="../assets/back.svg">
         </ButtonDefault>
       </div>
@@ -102,6 +105,15 @@ export default {
       if (this.slip > 10 && this.slip < 51) return 'warning';
       if (this.slip > 51 || this.slip < 0) return 'alert';
       return '';
+    },
+  },
+  methods: {
+    back() {
+      if (!this.$store.state.route.from.name) {
+        this.$router.push({ name: 'swap' });
+        return;
+      }
+      this.$router.go(-1);
     },
   },
 };
