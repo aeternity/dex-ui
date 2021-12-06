@@ -183,6 +183,8 @@ export default {
      * @param {string} p2.tokenB
      * @param {bigint} p2.amountADesired
      * @param {bigint} p2.amountBDesired
+     * @param {bigint} p2.minimumLiquidity if the pair was not created at
+     * the point of creation the factory needs the minimum liquidity value
      * @param {bigint | null} p2.deadline
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for tokenA and tokenB and the liquidity
@@ -194,6 +196,7 @@ export default {
       tokenA, tokenB,
       amountADesired,
       amountBDesired,
+      minimumLiquidity,
       deadline,
     }) {
       const { decodedResult } = await router.methods.add_liquidity(
@@ -204,6 +207,7 @@ export default {
         subSlippage(amountADesired, slippage), // min amount to be added
         subSlippage(amountBDesired, slippage), // min amount to be added
         to,
+        minimumLiquidity,
         deadline || defaultDeadline(),
         extraGas,
       );
@@ -220,6 +224,8 @@ export default {
      * @param {bigint} p2.amountTokenDesired
      * @param {bigint} p2.amountAeDesired
      * @param {bigint | null} p2.deadline
+     * @param {bigint} p2.minimumLiquidity if the pair was not created at
+     * the point of creation the factory needs the minimum liquidity value
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for token and AE and the liquidity
     */
@@ -230,6 +236,7 @@ export default {
       token,
       amountTokenDesired,
       amountAeDesired,
+      minimumLiquidity,
       deadline,
     }) {
       const { decodedResult } = await router.methods.add_liquidity_ae(
@@ -238,6 +245,7 @@ export default {
         subSlippage(amountTokenDesired, slippage), // min amount
         subSlippage(amountAeDesired, slippage), // min amount
         to,
+        minimumLiquidity,
         deadline || defaultDeadline(), {
           ...extraGas,
           amount: amountAeDesired.toString(), // if less is added the diff is returned at the end
