@@ -3,7 +3,7 @@ name: Staging Dex UI Pipeline Test
 on:
   pull_request:
     branches: [ main ]
-    types: [ opened, closed ]
+    types: [ opened, synchronize, closed ]
 
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
