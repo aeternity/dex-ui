@@ -3,7 +3,7 @@ name: Staging Dex UI Pipeline
 on:
   pull_request:
     branches: [ main ]
-    types: [ opened, closed ]
+    types: [ opened, synchronize, closed ]
 
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -54,7 +54,7 @@ jobs:
           fetch-depth: 0
 
       - name: Staging deploy
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: aeternity/ae-github-actions/argocd-deploy@v1
         with:
           url-prefix: pr-${{ env.PR_NUMBER }}
@@ -71,7 +71,7 @@ jobs:
 
       - name: Print PR url
         uses: unsplash/comment-on-pr@v1.3.0
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
