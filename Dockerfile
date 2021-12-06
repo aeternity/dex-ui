@@ -17,3 +17,4 @@ FROM nginx:1.13.7-alpine
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf 
 COPY --from=builder /home/node/app/dist /usr/share/nginx/html
+COPY --from=builder /home/node/app/test.txt /usr/share/nginx/html
