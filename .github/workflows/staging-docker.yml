@@ -3,7 +3,7 @@ name: Staging Dex UI Pipeline
 on:
   pull_request:
     branches: [ main ]
-    types: [ opened, closed ]
+    types: [ opened, synchronize, closed ]
 
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASS }}
 
       - name: Extract metadata for docker
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         id: meta
         uses: docker/metadata-action@v3
         with:
@@ -37,7 +37,7 @@ jobs:
             type=ref,event=pr
       
       - name: Build and push docker image
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         uses: docker/build-push-action@v2
         with:
           context: .
