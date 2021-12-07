@@ -26,7 +26,7 @@
       color: white
     }
 
-    &.router-link-exact-active {
+    &.router-link-active {
       border-radius: 12px;
       color: white;
       background-color: rgb(44, 47, 54);

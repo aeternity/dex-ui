@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { h } from 'vue';
+import { createRouter, createWebHistory, RouterView } from 'vue-router';
 import SwapView from '../views/SwapView.vue';
 import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
@@ -16,20 +17,23 @@ const routes = [
   },
   {
     path: '/pool',
-    name: 'pool',
-    component: PoolView,
+    component: { render: () => h(RouterView) },
+    children: [{
+      path: '',
+      name: 'pool',
+      component: PoolView,
+    },
+    {
+      path: 'import',
+      name: 'import-pool',
+      component: ImportPool,
+    },
+    {
+      path: 'add',
+      name: 'add-pool',
+      component: AddLiquidity,
+    }],
   },
-  {
-    path: '/pool/import',
-    name: 'import-pool',
-    component: ImportPool,
-  },
-  {
-    path: '/pool/add',
-    name: 'add-pool',
-    component: AddLiquidity,
-  },
-
 ];
 
 const router = createRouter({
