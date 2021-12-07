@@ -79,7 +79,7 @@ import Tip from '@/components/Tip.vue';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import { calculateSelectedToken } from '../lib/utils';
+import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
 
 export default {
   components: {
@@ -157,7 +157,20 @@ export default {
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
     },
-    supply() {
+    async supply() {
+      try {
+        await this.$store.dispatch('modals/open', {
+          name: 'confirm-add',
+          firstToken: this.from,
+          secondToken: this.to,
+          firstAmount: this.amountFrom,
+          secondAmount: this.amountTo,
+          receive: +this.amountFrom + +this.amountTo, // Should be calculated
+        });
+      } catch (e) {
+        if (e.message === 'Rejected by user') return;
+        handleUnknownError(e);
+      }
     },
   },
 };
