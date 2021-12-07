@@ -7,7 +7,10 @@
       id="tooltip"
       class="tooltip-modal"
     >
-      {{ tooltip }}
+      <slot />
+      <template v-if="!$slots.default">
+        {{ tooltip }}
+      </template>
       <div id="arrow" data-popper-arrow />
     </div>
   </Transition>
@@ -19,7 +22,7 @@ import { createPopper } from '@popperjs/core';
 export default {
   props: {
     reference: { type: typeof Element !== 'undefined' ? Element : null, required: true },
-    tooltip: { type: String, required: true },
+    tooltip: { type: String, default: '' },
     resolve: { type: Function, required: true },
   },
   data: () => ({

@@ -65,7 +65,6 @@ export default {
   .container {
     overflow: hidden;
     position: relative;
-    min-height: 60vh;
     min-width: 20vw;
     margin: auto;
     background-color: rgb(25, 27, 31);
@@ -97,7 +96,6 @@ export default {
     .body {
       word-break: break-word;
       text-align: center;
-      margin-bottom: 40px;
     }
 
     .footer .content {

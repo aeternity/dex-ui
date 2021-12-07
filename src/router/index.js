@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import SwapView from '../views/SwapView.vue';
 import ImportPool from '../views/ImportPool.vue';
 
 const routes = [
   {
+    path: '/swap',
+    name: 'swap',
+    component: SwapView,
+  },
+  {
     path: '/',
-    name: 'home',
-    component: HomeView,
+    redirect: '/swap',
   },
   {
     path: '/about',

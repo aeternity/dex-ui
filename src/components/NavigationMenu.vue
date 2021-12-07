@@ -1,6 +1,6 @@
 <template>
   <nav class="navigation-menu">
-    <router-link to="/">Swap</router-link>
+    <router-link to="/swap">Swap</router-link>
     <router-link to="/about">Pool</router-link>
   </nav>
 </template>

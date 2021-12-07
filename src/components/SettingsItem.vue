@@ -2,9 +2,9 @@
   <div class="settings-item">
     <div class="title">
       <span>{{ title }}</span>
-      <ButtonPlain @mouseenter="mouseEnterHandler">
+      <ButtonTooltip v-bind="$attrs">
         ?
-      </ButtonPlain>
+      </ButtonTooltip>
     </div>
     <div class="content">
       <slot />
@@ -13,29 +13,14 @@
 </template>
 
 <script>
-import ButtonPlain from './ButtonPlain.vue';
+import ButtonTooltip from './ButtonTooltip.vue';
 
 export default {
   components: {
-    ButtonPlain,
+    ButtonTooltip,
   },
-  data: () => ({
-    popupBound: false,
-  }),
   props: {
     title: { type: String, required: true },
-  },
-  methods: {
-    async mouseEnterHandler() {
-      if (this.popupBound) return;
-      this.popupBound = true;
-      await this.$store.dispatch('modals/open', {
-        name: 'show-tooltip',
-        tooltip: this.$attrs.tooltip,
-        reference: this.$el.querySelector('.title > .button-plain'),
-      });
-      this.popupBound = false;
-    },
   },
 };
 </script>
@@ -48,7 +33,7 @@ export default {
     font-size: 14px;
     color: rgb(195, 197, 203);;
 
-    .button-plain {
+    .button-tooltip {
       color: white;
       margin-left: 8px;
     }

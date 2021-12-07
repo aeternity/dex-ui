@@ -3,16 +3,16 @@
     class="input-field"
     v-bind="$attrs"
     autocomplete="off"
-    :value="modelValue"
+    :value="value"
     step="any"
-    @input="$emit('update:modelValue', $event.target.value)"
+    @input="$emit('update:value', $event.target.value)"
   >
 </template>
 
 <script>
 export default {
   props: {
-    modelValue: { type: [String, Number], default: null },
+    value: { type: [String, Number], default: null },
   },
 };
 </script>
@@ -28,5 +28,14 @@ export default {
   background: transparent;
   box-shadow: none;
   color: white;
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  &[type='number']::-webkit-outer-spin-button,
+  &[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 }
 </style>

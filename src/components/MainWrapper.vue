@@ -33,7 +33,7 @@
               <div>
                 <ButtonDefault>Auto</ButtonDefault>
                 <InputAmount
-                  v-model="slip"
+                  v-model:value="slip"
                   placeholder="0.10"
                   :class="slippageStatus"
                 >
@@ -62,7 +62,7 @@
               class="deadline"
             >
               <InputAmount
-                v-model="slip"
+                v-model:value="slip"
                 placeholder="30"
               />
               <span>minutes</span>

@@ -7,17 +7,15 @@
       <Tip tip="Use this tool to find v2 pools that don't automatically appear in the interface." />
       <ButtonToken
         fill="transparent"
-        title="ETH"
+        :token="from"
+        @update:token="setSelectedToken($event, true)"
         arrow
-      >
-        <template v-slot:icon>
-          <img src="../assets/logo.png">
-        </template>
-      </ButtonToken>
+      />
       <img src="../assets/plus.svg">
       <ButtonToken
         fill="transparent"
-        title="Select token"
+        :token="to"
+        @update:token="setSelectedToken($event, false)"
         arrow
       />
       <div class="connect">
@@ -35,6 +33,7 @@ import { mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
+import { calculateSelectedToken } from '../lib/utils';
 
 export default {
   components: {
@@ -42,7 +41,16 @@ export default {
     ButtonToken,
     Tip,
   },
+  data: () => ({
+    to: null,
+    from: null,
+  }),
   computed: mapState(['address']),
+  methods: {
+    setSelectedToken(token, isFrom) {
+      [this.from, this.to] = calculateSelectedToken(token, this.from, this.to, isFrom);
+    },
+  },
 };
 </script>
 

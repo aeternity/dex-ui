@@ -2,6 +2,7 @@
   <div class="input-amount">
     <slot name="left" />
     <InputField
+      type="number"
       v-bind="$attrs"
       @input="$emit('input', $event)"
     />
