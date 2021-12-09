@@ -10,7 +10,7 @@
       <h4>{{ msg }}</h4>
     </div>
     <ButtonDefault fill="transparent-blue" @click="resolve">
-      <span>Dismiss</span>
+      Dismiss
     </ButtonDefault>
   </ModalDefault>
 </template>
