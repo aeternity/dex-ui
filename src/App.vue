@@ -22,10 +22,10 @@ export default {
     Header,
     NavigationMenu,
   },
+  computed: mapGetters('modals', ['opened']),
   async mounted() {
     await this.$store.dispatch('initSdk');
   },
-  computed: mapGetters('modals', ['opened']),
 };
 </script>
 
