@@ -10,9 +10,10 @@ USER node
 RUN npm ci
 COPY --chown=node:node . /home/node/app
 ENV NODE_ENV=production
+RUN npm run lint
 RUN npm run build -- --report
 
 FROM nginx:1.13.7-alpine
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf 
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /home/node/app/dist /usr/share/nginx/html
