@@ -1,7 +1,7 @@
 <template>
   <nav class="navigation-menu">
     <router-link to="/swap">Swap</router-link>
-    <router-link to="/about">Pool</router-link>
+    <router-link to="/pool">Pool</router-link>
   </nav>
 </template>
 
@@ -26,7 +26,7 @@
       color: white
     }
 
-    &.router-link-exact-active {
+    &.router-link-active {
       border-radius: 12px;
       color: white;
       background-color: rgb(44, 47, 54);

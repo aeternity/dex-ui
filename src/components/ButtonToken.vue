@@ -62,6 +62,7 @@ export default {
     }
 
     > span {
+      font-weight: 500;
       font-size: 18px;
       margin-left: 12px;
     }
