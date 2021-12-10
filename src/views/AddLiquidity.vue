@@ -30,7 +30,9 @@
       v-if="to && from"
       class="pool-info"
     >
-      <div class="header">Prices and pool share</div>
+      <div class="header">
+        Prices and pool share
+      </div>
       <div class="body">
         <div>
           <span>

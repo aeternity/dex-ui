@@ -27,7 +27,7 @@
       v-if="to && from"
       class="price"
     >
-      {{ `1 ${to.symbol} = ${1 / testRatio} ${from.symbol}`}}
+      {{ `1 ${to.symbol} = ${1 / testRatio} ${from.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"

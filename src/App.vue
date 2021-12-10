@@ -1,10 +1,10 @@
 <template>
   <Header />
-  <router-view/>
+  <router-view />
   <div class="footer">
-    <NavigationMenu  />
+    <NavigationMenu />
   </div>
-    <Component
+  <Component
     :is="component"
     v-for="{ component, key, props } in opened"
     :key="key"

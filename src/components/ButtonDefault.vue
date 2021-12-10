@@ -7,7 +7,7 @@
       v-if="spinner"
       src="../assets/animated-spinner.svg"
       class="spinner"
-    />
+    >
     <slot v-else />
   </ButtonPlain>
 </template>

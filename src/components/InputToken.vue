@@ -5,7 +5,7 @@
         v-bind="$attrs"
         arrow
       >
-        <template v-slot:icon>
+        <template #icon>
           <img src="../assets/logo.png">
         </template>
       </ButtonToken>
@@ -24,7 +24,7 @@
           @update:balance="updateBalance($event)"
           :address="$attrs.token.contract_id"
         />
-         {{ $attrs.token.symbol }}
+        {{ $attrs.token.symbol }}
       </span>
       <ButtonPlain
         v-if="+balance"

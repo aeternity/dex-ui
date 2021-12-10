@@ -17,7 +17,7 @@
       </div>
       <div class="right">
         <ActionsMenu v-if="settings">
-          <template v-slot:display>
+          <template #display>
             <img src="../assets/cog.svg">
           </template>
           <div class="settings">
@@ -38,11 +38,14 @@
                   :class="slippageStatus"
                 >
                   <template
-                    v-slot:left
+                    #left
                   >
-                    <img v-show="slippageStatus === 'warning'" src="../assets/warning.svg">
+                    <img
+                      v-show="slippageStatus === 'warning'"
+                      src="../assets/warning.svg"
+                    >
                   </template>
-                  <template v-slot:right>
+                  <template #right>
                     <span>%</span>
                   </template>
                 </InputAmount>
