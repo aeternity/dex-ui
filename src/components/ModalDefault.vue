@@ -48,6 +48,7 @@ export default {
     close: Boolean,
     title: { type: String, default: '' },
   },
+  emits: ['close'],
 };
 </script>
 

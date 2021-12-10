@@ -17,6 +17,7 @@ export default {
   components: {
     InputField,
   },
+  emits: ['input'],
 };
 </script>
 

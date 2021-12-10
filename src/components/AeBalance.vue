@@ -77,6 +77,7 @@ export default {
     address: { type: String, required: true },
     fixed: { type: Number, default: 2 },
   },
+  emits: ['update:balance'],
   setup(props, { emit }) {
     storeState = toRef(useStore(), 'state');
     const balance = getBalanceRef(toRef(props, 'address'));

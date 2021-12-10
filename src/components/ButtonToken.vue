@@ -30,6 +30,7 @@ export default {
     token: { type: Object, default: null },
     arrow: { type: Boolean },
   },
+  emits: ['update:token'],
   methods: {
     async selectToken() {
       const token = await this.$store.dispatch('modals/open', { name: 'select-token' });

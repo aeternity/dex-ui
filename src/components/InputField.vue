@@ -14,6 +14,7 @@ export default {
   props: {
     value: { type: [String, Number], default: null },
   },
+  emits: ['update:value'],
 };
 </script>
 
