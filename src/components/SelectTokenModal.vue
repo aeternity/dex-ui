@@ -15,7 +15,7 @@
     <div class="token-list">
       <ButtonPlain
         v-for="token in filteredResults"
-        v-bind:key="token.contract_id"
+        :key="token.contract_id"
         class="toke-list-item"
         @click="resolve(token)"
       >

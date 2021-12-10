@@ -22,7 +22,7 @@
     />
     <div class="price">
       Price
-      <span>{{ `1 ${to.symbol} = ${1 / ratio} ${from.symbol}`}}</span>
+      <span>{{ `1 ${to.symbol} = ${1 / ratio} ${from.symbol}` }}</span>
     </div>
     <div class="transaction-details">
       <div class="title">
@@ -42,14 +42,14 @@
       </div>
       <div>
         <span>Minimum received</span>
-        <span>{{`0.00099425 ${to.symbol}`}}</span>
+        <span>{{ `0.00099425 ${to.symbol}` }}</span>
       </div>
     </div>
     <div class="estimation">
-        Output is estimated.
-        You will receive at least
-        <b>{{`0.00099425 ${to.symbol}`}}</b>
-        or the transaction will revert.
+      Output is estimated.
+      You will receive at least
+      <b>{{ `0.00099425 ${to.symbol}` }}</b>
+      or the transaction will revert.
     </div>
     <ButtonDefault @click="allowHandler">
       Confirm Swap

@@ -35,8 +35,8 @@
         <div class="rates">
           <span>Rates</span>
           <div>
-            <span>{{ `1 ${secondToken.symbol} = ${1 / 0.005} ${firstToken.symbol}`}}</span>
-            {{ `1 ${firstToken.symbol} = ${0.005} ${secondToken.symbol}`}}
+            <span>{{ `1 ${secondToken.symbol} = ${1 / 0.005} ${firstToken.symbol}` }}</span>
+            {{ `1 ${firstToken.symbol} = ${0.005} ${secondToken.symbol}` }}
           </div>
         </div>
         <div>
