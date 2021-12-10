@@ -50,6 +50,7 @@ export default {
     ButtonPlain,
     AeBalance,
   },
+  emits: ['update:value', 'update:balance'],
   data: () => ({
     balance: '',
   }),

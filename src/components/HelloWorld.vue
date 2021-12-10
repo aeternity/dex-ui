@@ -138,7 +138,7 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String,
+    msg: { type: String, default: 'TODO: remove example code' },
   },
 };
 </script>
