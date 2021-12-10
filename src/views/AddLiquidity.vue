@@ -12,16 +12,16 @@
     />
     <InputToken
       :value="amountFrom"
-      @update:value="setAmount($event, true)"
       :token="from"
+      @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balanceFrom = $event"
     />
     <img src="../assets/plus.svg">
     <InputToken
       :value="amountTo"
-      @update:value="setAmount($event, false)"
       :token="to"
+      @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
       @update:balance="balanceTo = $event"
     />

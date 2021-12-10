@@ -47,9 +47,6 @@ export default {
     ModalDefault,
     ButtonDefault,
   },
-  data: () => ({
-    isConfirmed: false,
-  }),
   props: {
     fromSymbol: { type: String, required: true },
     toSymbol: { type: String, required: true },
@@ -58,6 +55,9 @@ export default {
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
   },
+  data: () => ({
+    isConfirmed: false,
+  }),
   methods: {
     clickHandler() {
       if (this.isConfirmed) {

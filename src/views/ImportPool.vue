@@ -8,15 +8,15 @@
       <ButtonToken
         fill="transparent"
         :token="from"
-        @update:token="setSelectedToken($event, true)"
         arrow
+        @update:token="setSelectedToken($event, true)"
       />
       <img src="../assets/plus.svg">
       <ButtonToken
         fill="transparent"
         :token="to"
-        @update:token="setSelectedToken($event, false)"
         arrow
+        @update:token="setSelectedToken($event, false)"
       />
       <div class="connect">
         {{ address

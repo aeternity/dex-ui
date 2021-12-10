@@ -21,8 +21,8 @@
     >
       <span>Balance:
         <AeBalance
-          @update:balance="updateBalance($event)"
           :address="$attrs.token.contract_id"
+          @update:balance="updateBalance($event)"
         />
         {{ $attrs.token.symbol }}
       </span>

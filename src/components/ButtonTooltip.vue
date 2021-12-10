@@ -1,7 +1,7 @@
 <template>
   <ButtonPlain
-    @mouseenter="mouseEnterHandler"
     class="button-tooltip"
+    @mouseenter="mouseEnterHandler"
   >
     <slot />
   </ButtonPlain>
@@ -14,13 +14,13 @@ export default {
   components: {
     ButtonPlain,
   },
-  data: () => ({
-    popupBound: false,
-  }),
   props: {
     tooltip: { type: String, default: '' },
     modal: { type: String, default: 'show-tooltip' },
   },
+  data: () => ({
+    popupBound: false,
+  }),
   methods: {
     async mouseEnterHandler() {
       if (this.popupBound) return;

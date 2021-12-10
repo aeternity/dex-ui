@@ -2,10 +2,10 @@
   <Transition @after-leave="popper.destroy()">
     <div
       v-if="visible"
-      @mouseenter="enterHandler"
-      @mouseleave="leaveHandler"
       id="tooltip"
       class="tooltip-modal"
+      @mouseenter="enterHandler"
+      @mouseleave="leaveHandler"
     >
       <slot />
       <template v-if="!$slots.default">
