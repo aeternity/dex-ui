@@ -69,12 +69,12 @@ export default {
     ButtonPlain,
     ButtonDefault,
   },
-  data: () => ({
-    show: false,
-  }),
   props: {
     poolInfo: { type: Object, required: true }, // that will be displayed within this component
   },
+  data: () => ({
+    show: false,
+  }),
 };
 </script>
 

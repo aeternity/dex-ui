@@ -95,14 +95,14 @@ export default {
     SettingsItem,
     InputAmount,
   },
-  data: () => ({
-    slip: null,
-  }),
   props: {
     backButton: { type: Boolean },
     title: { type: String, required: true },
     settings: { type: Boolean },
   },
+  data: () => ({
+    slip: null,
+  }),
   computed: {
     slippageStatus() {
       if (this.slip > 10 && this.slip < 51) return 'warning';

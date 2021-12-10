@@ -47,14 +47,14 @@ export default {
     InputField,
     ButtonPlain,
   },
-  data: () => ({
-    tokenList: [],
-    searchTerm: '',
-  }),
   props: {
     resolve: { type: Function, required: true },
     close: { type: Function, default: null },
   },
+  data: () => ({
+    tokenList: [],
+    searchTerm: '',
+  }),
   computed: {
     filteredResults() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
