@@ -1,6 +1,8 @@
 import routerInterface from '../../contracts/IAedexV2Router.aes';
 import waeInterface from '../../contracts/IWAE.aes';
 import aex9Inteface from '../../contracts/IAEX9Minimal.aes';
+import factoryInteface from '../../contracts/IAedexV2Factory.aes';
+import pairInteface from '../../contracts/IAedexV2Pair.aes';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
@@ -10,10 +12,22 @@ const getRouterInstance = (sdk) => sdk.getContractInstance(
     contractAddress: process.env.VUE_APP_ROUTER_ADDRESS,
   },
 );
-const getTokenInstance = (sdk, address) => sdk.getContractInstance(
+const getFactoryInstance = (sdk, contractAddress) => sdk.getContractInstance(
+  {
+    source: factoryInteface,
+    contractAddress,
+  },
+);
+const getTokenInstance = (sdk, contractAddress) => sdk.getContractInstance(
   {
     source: aex9Inteface,
-    contractAddress: address,
+    contractAddress,
+  },
+);
+const getPairInstance = (sdk, contractAddress) => sdk.getContractInstance(
+  {
+    source: pairInteface,
+    contractAddress,
   },
 );
 const getAddress = (x) => x.deployInfo.address;
@@ -42,6 +56,7 @@ export default {
   state: {
     router: null,
     wae: null,
+    factory: null,
     // TODO: should this be the default?
     slippage: 10n,
   },
@@ -52,6 +67,9 @@ export default {
   mutations: {
     setWaeInstance(state, instance) {
       state.wae = instance;
+    },
+    setFactoryInstance(state, instance) {
+      state.factory = instance;
     },
     setRouterInstance(state, instance) {
       state.router = instance;
@@ -66,6 +84,11 @@ export default {
       const contract = await getRouterInstance(sdk);
       commit('setRouterInstance', contract);
     },
+    async initFactory({ commit, state: { router } }, sdk) {
+      const { decodedResult: factoryAddress } = await router.methods.factory();
+      const contract = await getFactoryInstance(sdk, factoryAddress);
+      commit('setFactoryInstance', contract);
+    },
     async initWae({ commit }, sdk) {
       const contract = await sdk.getContractInstance(
         {
@@ -76,6 +99,52 @@ export default {
       commit('setWaeInstance', contract);
     },
 
+    /**
+     * @description retrieve the liquidity share from a pool
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {int | null} returns the owner liquidity
+    */
+    async getAccountLiquidity({
+      state: { factory },
+      rootState: { address: owner, sdk },
+    }, {
+      tokenA, tokenB,
+    }) {
+      const { decodedResult: pairAddress } = factory.methods.get_pair(tokenA, tokenB);
+      if (pairAddress == null) {
+        // TODO: what kind of error
+        throw new Error('????');
+      }
+      const pair = await getPairInstance(sdk, pairAddress);
+      const { decodedResult: balance } = await pair.methods.balance(owner);
+      return balance;
+    },
+    /**
+     * @description retrieve the total liquidity from a certain pool
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {int} returns the total supply/liquidity
+    */
+    async getTotalSupply({
+      state: { factory },
+      rootState: { address: owner, sdk },
+    }, {
+      tokenA, tokenB,
+    }) {
+      const { decodedResult: pairAddress } = factory.methods.get_pair(tokenA, tokenB);
+      if (pairAddress == null) {
+        // TODO: what kind of error
+        throw new Error('????');
+      }
+      const pair = await getPairInstance(sdk, pairAddress);
+      const { decodedResult: totalSupply } = await pair.methods.total_supply(owner);
+      return totalSupply;
+    },
     /**
      * @description remove the liquidity provided to a pair
      * for p2.tokenA*p2.tokenB

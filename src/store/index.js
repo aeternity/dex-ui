@@ -61,6 +61,7 @@ export default createStore({
           detector.stopScan();
           commit('setAddress', address);
           await dispatch('aeternity/initRouter', sdk);
+          await dispatch('aeternity/initFactory', sdk);
           await dispatch('aeternity/initWae', sdk);
           resolve(address);
         });
