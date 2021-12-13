@@ -71,6 +71,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .submit-transaction-modal {
   img {
     height: 100px;
@@ -93,8 +96,7 @@ export default {
       margin-bottom: 12px;
 
       &.status {
-        font-size: 20px;
-        font-weight: 500;
+        @extend %face-sans-20-medium;
       }
 
       &.swap-info {
@@ -103,14 +105,14 @@ export default {
 
       &.guide {
         font-size: 14px;
-        color: rgb(86, 90, 105);
+        color: variables.$color-gray2;
         margin-bottom: 12px;
       }
     }
 
     > a {
       font-size: 14px;
-      color: rgb(33, 114, 229);
+      color: variables.$color-blue;
       text-decoration: none;
     }
 

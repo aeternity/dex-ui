@@ -76,6 +76,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .select-token-modal {
   :deep(.container) {
     min-height: 60vh;
@@ -94,11 +96,11 @@ export default {
       padding: 16px;
       border-radius: 20px;
       color: white;
-      border: 1px solid rgb(64, 68, 79);
+      border: 1px solid variables.$color-gray;
       transition: border 100ms ease 0s;
 
       &:focus {
-        border: 1px solid rgb(33, 114, 229);
+        border: 1px solid variables.$color-blue;
       }
     }
   }
@@ -108,7 +110,7 @@ export default {
     flex-direction: column;
     max-height: 50vh;
     overflow-y: auto;
-    border-top: 1px solid rgb(44, 47, 54);
+    border-top: 1px solid variables.$color-black;
 
     .toke-list-item {
       display: flex;
@@ -116,7 +118,7 @@ export default {
       padding: 4px 20px;
 
       &:hover {
-        background-color: rgb(44, 47, 54);
+        background-color: variables.$color-black;
       }
 
       img {
@@ -137,7 +139,7 @@ export default {
 
         .name {
           color: white;
-          color: rgb(143, 150, 172);
+          color: variables.$color-gray3;
           font-size: 12px;
         }
       }
@@ -145,7 +147,7 @@ export default {
 
     .empty {
       padding: 20px 0;
-      color: rgb(143, 150, 172);
+      color: variables.$color-gray3;
     }
   }
 }

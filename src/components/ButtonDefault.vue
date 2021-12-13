@@ -39,21 +39,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .button-default {
   border-radius: 12px;
-  color: white;
+  color: variables.$color-white;
 
   &.blue {
-    background-color: rgb(33, 114, 229);
+    background-color: variables.$color-blue;
 
     &:hover {
-      background-color: rgb(25, 102, 212);
+      background-color: variables.$color-blue2;
     }
   }
 
   &.transparent {
     background-color: transparent;
-    border:1px solid rgb(44, 47, 54);
+    border:1px solid variables.$color-black;
 
     &:hover {
       box-shadow: rgb(86 90 105) 0px 0px 0px 1px;
@@ -61,35 +63,35 @@ export default {
   }
 
   &.transparent-blue {
-    border: 1px solid rgba(21, 61, 111, 0.44);
-    color: rgb(80, 144, 234);
-    background-color: rgba(21, 61, 111, 0.44);
+    border: 1px solid variables.$color-blue3;
+    color: variables.$color-blue5;
+    background-color: variables.$color-blue3;
 
     &:active {
       box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
     }
 
     &:hover {
-      border: 1px solid rgba(49, 95, 154, 0.44);
-      color: rgb(57, 130, 231);
+      border: 1px solid variables.$color-blue4;
+      color: variables.$color-blue-hover;
     }
   }
 
   &.dark {
-    background: rgb(25, 27, 31);
+    background: variables.$color-black3;
 
     &:hover {
-      background-color: rgb(44, 47, 54);
+      background-color: variables.$color-black;
     }
 
     &:active {
-      background-color: rgb(21, 23, 26);
+      background-color: variables.$color-black5;
     }
   }
 
   &:disabled {
-    background-color: rgb(44, 47, 54);
-    color: rgb(195, 197, 203);
+    background-color: variables.$color-black;
+    color: variables.$color-white2;
     pointer-events: none;
   }
 

@@ -55,6 +55,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .import-pool {
   .button-token {
     margin: 12px 0;
@@ -65,8 +67,8 @@ export default {
     width: 100%;
     padding: 45px 0;
     border-radius: 16px;
-    border: 1px solid rgb(44, 47, 54);
-    background-color: rgb(33, 36, 41);
+    border: 1px solid variables.$color-black;
+    background-color: variables.$color-black2;
   }
 }
 </style>

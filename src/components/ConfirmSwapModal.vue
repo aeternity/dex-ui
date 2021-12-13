@@ -89,6 +89,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .confirm-swap-modal {
   color: white;
 
@@ -105,8 +108,8 @@ export default {
     margin-top: -14px;
     margin-bottom: -14px;
     left: calc(50% - 16px);
-    background-color: rgb(33, 36, 41);
-    border: 4px solid rgb(25, 27, 31);
+    background-color: variables.$color-black2;
+    border: 4px solid variables.$color-black3;
   }
 
   .test-component:first-of-type {
@@ -123,7 +126,7 @@ export default {
     margin-top: 8px;
     padding: 0 16px;
     font-size: 14px;
-    color: rgb(195, 197, 203);
+    color: variables.$color-white2;
 
     > span {
       color: white;
@@ -135,11 +138,11 @@ export default {
     flex-direction: column;
     margin-top: 8px;
     padding: 12px;
-    border: 1px solid rgb(44, 47, 54);
-    background-color: rgb(33, 36, 41);
+    border: 1px solid variables.$color-black;
+    background-color: variables.$color-black2;
     border-radius: 16px;
-    font-weight: 400;
-    font-size: 14px;
+
+    @extend %face-sans-14-regular;
 
     > div {
       display: flex;
@@ -153,7 +156,7 @@ export default {
 
     .title {
       margin-top: 0;
-      border-bottom: 1px solid rgb(44, 47, 54);
+      border-bottom: 1px solid variables.$color-black;
       padding-bottom: 8px;
     }
   }
@@ -161,10 +164,10 @@ export default {
   .estimation {
     max-width: 380px;
     padding: 12px 16px;
-    font-weight: 400;
-    font-size: 12px;
     text-align: left;
-    color: rgb(195, 197, 203);
+    color: variables.$color-white2;
+
+    @extend %face-sans-12-regular;
   }
 
   .button-default {

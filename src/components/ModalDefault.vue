@@ -53,6 +53,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .modal {
   position: fixed;
   z-index: 1;
@@ -60,7 +63,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.424);
+  background-color: variables.$color-black4;
   display: flex;
 
   .container {
@@ -68,20 +71,20 @@ export default {
     position: relative;
     min-width: 20vw;
     margin: auto;
-    background-color: rgb(25, 27, 31);
-    border: 1px solid rgb(33, 36, 41);
+    background-color: variables.$color-black3;
+    border: 1px solid variables.$color-black2;
     box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px 0px;
     border-radius: 20px;
 
     .header {
       padding: 20px 20px 16px 20px;
       color: white;
-      font-size: 19px;
-      font-weight: 500;
       word-break: break-word;
       text-align: center;
       display: flex;
       justify-content: space-between;
+
+      @extend %face-sans-18-medium;
 
       .close {
         width: 24px;

@@ -80,7 +80,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins';
 
 .header {
   display: flex;
@@ -99,8 +101,8 @@ export default {
   .left {
     justify-content: start;
     align-items: center;
-    font-size: 24px;
-    font-weight: 600;
+
+    @extend %face-sans-24-bold;
 
     span {
       margin-right: 4px;
@@ -118,7 +120,7 @@ export default {
     .account-info {
       display: flex;
       align-items: center;
-      background-color: rgb(33, 36, 41);
+      background-color: variables.$color-black2;
       border-radius: 12px;
       margin-right: 10px;
       color: white;
@@ -133,9 +135,9 @@ export default {
         align-items: center;
         color: white;
         padding: 12px 10px;
-        background-color: rgb(25, 27, 31);
+        background-color: variables.$color-black3;
         border-radius: 12px;
-        border: 1px solid rgb(25, 27, 31);
+        border: 1px solid variables.$color-black3;
 
         @extend %face-sans-16-regular;
 
@@ -159,17 +161,17 @@ export default {
         color: white;
         padding: 10px 12px;
         cursor: pointer;
-        border: 1px solid rgb(25, 27, 31);
+        border: 1px solid variables.$color-black3;
         border-radius: 12px;
-        background-color: rgb(25, 27, 31);
+        background-color: variables.$color-black3;
 
         &:hover {
-          border-color: rgb(64, 68, 79);
+          border-color: variables.$color-gray;
         }
       }
 
       a {
-        color: rgb(195, 197, 203);
+        color: variables.$color-white2;
         text-decoration: none;
         display: flex;
         justify-content: space-between;
@@ -188,19 +190,19 @@ export default {
     }
   }
 
-  @media (max-width: 480px) {
+  @include mixins.phone {
     .left span {
       display: none;
     }
   }
 
-  @media (max-width: 400px) {
+  @include mixins.sm-phone {
     .right .account-info span {
       display: none;
     }
   }
 
-  @media (max-width: 1100px) {
+  @include mixins.laptop {
     .navigation-menu {
       display: none;
     }

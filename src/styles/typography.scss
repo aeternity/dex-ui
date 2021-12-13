@@ -3,9 +3,87 @@
 @import '~@fontsource/ibm-plex-sans/600.css';
 @import 'variables';
 
+%face-sans-34-regular  {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+%face-sans-24-bold  {
+  font-family: $font-sans;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+%face-sans-24-regular  {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+%face-sans-20-medium  {
+  font-family: $font-sans;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+%face-sans-20-regular  {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+%face-sans-18-medium  {
+  font-family: $font-sans;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+%face-sans-18-regular  {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+%face-sans-16-medium {
+  font-family: $font-sans;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
+}
+
 %face-sans-16-regular {
   font-family: $font-sans;
   font-weight: normal;
   font-size: 16px;
   line-height: 16px;
 }
+
+%face-sans-14-medium {
+  font-family: $font-sans;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+%face-sans-14-regular {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+%face-sans-12-regular {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+}
+

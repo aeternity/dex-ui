@@ -14,9 +14,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .tip {
-  color: rgb(80, 144, 234);
-  background-color: rgba(21, 61, 111, 0.44);;
+  color: variables.$color-blue5;
+  background-color: variables.$color-blue3;;
   border-radius: 12px;
   padding: 16px;
   text-align: left;

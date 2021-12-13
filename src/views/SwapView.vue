@@ -163,6 +163,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .swap-view {
   .input-token:first-of-type {
     margin-bottom: -8px;
@@ -179,8 +182,8 @@ export default {
     width: 32px;
     margin-top: -14px;
     margin-bottom: -14px;
-    background-color: rgb(33, 36, 41);
-    border: 4px solid rgb(25, 27, 31);
+    background-color: variables.$color-black2;
+    border: 4px solid variables.$color-black3;
 
     &:hover {
       opacity: 0.8;
@@ -192,16 +195,16 @@ export default {
     color: white;
     justify-content: flex-end;
     margin-top: 8px;
-    font-weight: 500;
-    font-size: 14px;
+
+    @extend %face-sans-14-medium;
   }
 
   .button-default {
     width: 100%;
     padding: 16px;
     margin-top: 8px;
-    font-size: 20px;
-    font-weight: 500;
+
+    @extend %face-sans-20-medium;
 
     &.loading {
       padding: 0;

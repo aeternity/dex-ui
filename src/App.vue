@@ -31,17 +31,12 @@ export default {
 
 <style lang="scss">
 @use './styles/variables.scss';
+@use './styles/mixins';
 
 #app {
-  font-family: variables.$font-sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-}
-
-* {
-  font-family: variables.$font-sans;
-  box-sizing: border-box;
 }
 
 .footer {
@@ -54,25 +49,11 @@ export default {
   justify-content: center;
 }
 
-#tooltip[data-popper-placement^='top'] > #arrow {
-  bottom: -4px;
-}
-
-#tooltip[data-popper-placement^='bottom'] > #arrow {
-  top: -4px;
-}
-
-#tooltip[data-popper-placement^='left'] > #arrow {
-  right: -4px;
-}
-
-#tooltip[data-popper-placement^='right'] > #arrow {
-  left: -4px;
-}
-
-@media (max-width: 1100px) {
+@include mixins.laptop {
   .footer {
     display: flex;
   }
 }
 </style>
+
+<style lang="scss" src="./styles/globals.scss" />

@@ -68,12 +68,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .input-token {
   display: flex;
   flex-direction: column;
-  background: rgb(33, 36, 41);
+  background: variables.$color-black2;
   border-radius: 20px;
-  border: 1px solid rgb(44, 47, 54);
+  border: 1px solid variables.$color-black;
   padding: 16px;
 
   .token-amount {
@@ -93,19 +96,18 @@ export default {
   }
 
   .balance {
-    color: rgb(195, 197, 203);
+    color: variables.$color-white2;
     padding: 0 16px;
     text-align: left;
 
     > span {
-      font-weight: 400;
-      font-size: 14px;
+      @extend %face-sans-14-regular;
     }
 
     .button-plain {
       margin-left: 4px;
       font-weight: 500;
-      color: rgb(80, 144, 234);
+      color: variables.$color-blue5;
     }
   }
 }

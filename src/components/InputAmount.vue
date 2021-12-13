@@ -22,15 +22,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .input-amount {
   display: flex;
   align-items: center;
-  background: rgb(33, 36, 41);
-  border: 1px solid rgb(64, 68, 79);
+  background: variables.$color-black2;
+  border: 1px solid variables.$color-gray;
   min-width: 56px;
 
   &:hover {
-    border: 1px solid rgb(86, 90, 105)
+    border: 1px solid variables.$color-gray2
   }
 }
 </style>
