@@ -25,21 +25,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .token-amount-details {
   display: flex;
   flex-direction: column;
   text-align: left;
-  border: 1px solid rgb(44, 47, 54);
-  background-color: rgb(33, 36, 41);
+  border: 1px solid variables.$color-black;
+  background-color: variables.$color-black2;
   border-radius: 16px;
   padding: 12px 16px;
   color: white;
 
   label {
-    font-weight: 500;
-    font-size: 14px;
-    color: rgb(143, 150, 172);
+    color: variables.$color-gray3;
     margin-bottom: 8px;
+
+    @extend %face-sans-14-medium;
   }
 
   div {

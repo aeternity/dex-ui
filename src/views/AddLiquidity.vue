@@ -179,6 +179,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .add-liquidity {
   .input-token {
     margin: 20px 0;
@@ -188,8 +191,8 @@ export default {
     width: 100%;
     padding: 16px;
     margin-top: 8px;
-    font-size: 20px;
-    font-weight: 500;
+
+    @extend %face-sans-20-medium;
 
     &.loading {
       padding: 0;
@@ -241,8 +244,8 @@ export default {
     }
 
     &, > .body {
-      border: 1px solid rgb(44, 47, 54);
-      background-color: rgb(33, 36, 41);
+      border: 1px solid variables.$color-black;
+      background-color: variables.$color-black2;
       border-radius: 20px;
     }
 
@@ -256,7 +259,7 @@ export default {
 
         .second {
           padding-top: 4px;
-          color: rgb(195, 197, 203);
+          color: variables.$color-white2;
         }
       }
     }

@@ -1,0 +1,19 @@
+@use './variables.scss';
+
+@mixin sm-phone {
+  @media (max-width: variables.$sm-phone-width) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (max-width: variables.$phone-width) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media (max-width: variables.$laptop-width) {
+    @content;
+  }
+}

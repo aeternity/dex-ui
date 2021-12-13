@@ -26,12 +26,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .settings-item {
   .title {
     margin: 12px 0;
-    font-weight: 500;
-    font-size: 14px;
-    color: rgb(195, 197, 203);;
+    color: variables.$color-white2;
+
+    @extend %face-sans-14-medium;
 
     .button-tooltip {
       color: white;

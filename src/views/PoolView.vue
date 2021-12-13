@@ -50,14 +50,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/typography';
+
 .pool-view {
   .button-default {
     display: block;
     width: 100%;
     padding: 16px;
     margin-top: 8px;
-    font-size: 16px;
-    font-weight: 500;
+
+    @extend %face-sans-16-medium;
   }
 
   .title {
