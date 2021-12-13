@@ -71,16 +71,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .tooltip-modal {
   display: flex;
   padding: 10px 16px;
   max-width: 256px;
   word-break: break-word;
-  background: rgb(25, 27, 31);
-  color: rgb(195, 197, 203);
+  background: variables.$color-black3;
+  color: variables.$color-white2;
   border-radius: 12px;
   text-align: left;
-  border: 1px solid rgb(44, 47, 54);
+  border: 1px solid variables.$color-black;
   box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 0px;
 
   &.v-enter-active,

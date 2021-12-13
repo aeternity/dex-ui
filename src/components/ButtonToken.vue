@@ -41,6 +41,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/typography.scss';
+
 .button-token {
   padding: 16px;
   width: 100%;
@@ -63,9 +65,9 @@ export default {
     }
 
     > span {
-      font-weight: 500;
-      font-size: 18px;
       margin-left: 12px;
+
+      @extend %face-sans-18-medium;
     }
   }
 

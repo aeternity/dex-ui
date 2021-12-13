@@ -10,15 +10,17 @@
 </template>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .navigation-menu {
   display: flex;
   border-radius: 16px;
-  background: rgb(25, 27, 31);
+  background: variables.$color-black3;
   padding: 4px;
-  border: 1px solid rgb(44, 47, 54);
+  border: 1px solid variables.$color-black;
 
   a {
-    color: rgb(195, 197, 203);
+    color: variables.$color-white2;
     padding: 8px 12px;
     text-decoration: none;
 
@@ -33,7 +35,7 @@
     &.router-link-active {
       border-radius: 12px;
       color: white;
-      background-color: rgb(44, 47, 54);
+      background-color: variables.$color-black;
     }
   }
 }

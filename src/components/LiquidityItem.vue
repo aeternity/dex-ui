@@ -79,12 +79,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .liquidity-item {
   display: flex;
   flex-direction: column;
   padding: 12px;
   border-radius: 20px;
-  border: 1px solid #2c2f36;
+  border: 1px solid variables.$color-black;
   margin-bottom: 20px;
   overflow: hidden;
   max-height: 700px;
@@ -122,9 +125,9 @@ export default {
 
       span {
         color: white;
-        font-size: 18px;
-        font-weight: 500;
         margin-left: 15px;
+
+        @extend %face-sans-18-medium;
       }
     }
   }
@@ -155,7 +158,7 @@ export default {
 
     a {
       text-decoration: none;
-      color: #2172e5;
+      color: variables.$color-blue2;
 
       &:hover {
         color: #35b6ff;

@@ -1,1 +1,33 @@
 $font-sans: 'IBM Plex Sans', sans-serif;
+$sm-phone-width: 400px;
+$phone-width: 480px;
+$laptop-width: 1100px;
+
+$base-font-size: 16px;
+$color-white: #fff;
+$color-white2: rgb(195, 197, 203); // also used as disabled
+
+$color-black: rgb(44, 47, 54); // also used as disabled
+$color-black2: rgb(33, 36, 41);
+$color-black3: rgb(25, 27, 31);
+$color-black4: rgba(0, 0, 0, 0.424);
+$color-black5: rgb(21, 23, 26); // used as active
+
+$color-gray:rgb(64, 68, 79); // also used as hover
+$color-gray2: rgb(86, 90, 105);
+$color-gray3: rgb(143, 150, 172);
+
+$color-blue: rgb(33, 114, 229); // replaces #2c2f36, also used as focus
+$color-blue2: rgb(25, 102, 212); // used as hover
+$color-blue3: rgba(21, 61, 111, 0.44); // also as hover
+$color-blue4: rgba(49, 95, 154, 0.44);
+$color-blue5: rgb(80, 144, 234);
+$color-blue-hover: rgb(57, 130, 231); // used as hover
+$color-link-hover: rgb(53, 182, 255);
+
+$color-red: rgb(255, 67, 67);
+
+$color-orange: rgb(255, 170, 41); // replace #ffaa29
+
+
+

@@ -123,13 +123,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .main-wrapper {
   display: flex;
   flex-direction: column;
   margin: 4vh auto 0 auto;
   border-radius: 24px;
   max-width: 480px;
-  background: rgb(25, 27, 31);
+  background: variables.$color-black3;
   box-shadow: rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px,
     rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px;
 
@@ -165,7 +167,7 @@ export default {
         }
 
         :deep(.small-modal > .content) {
-          border: 1px solid rgb(64, 68, 79);
+          border: 1px solid variables.$color-gray;
           top: 30px;
         }
 
@@ -185,7 +187,7 @@ export default {
             display: flex;
 
             .button-default {
-              border: 1px solid rgb(64, 68, 79);
+              border: 1px solid variables.$color-gray;
               padding: 6px 8px;
               margin-right: 8px;
               font-size: 16px;
@@ -193,10 +195,10 @@ export default {
 
             .input-amount {
               &.alert {
-                border-color: rgb(255, 67, 67);
+                border-color: variables.$color-red;
 
                 :deep(.input-field) {
-                  color: rgb(255, 67, 67);
+                  color: variables.$color-red;
                 }
               }
 
@@ -217,12 +219,12 @@ export default {
 
               &.alert {
                 display: flex;
-                color: rgb(255, 67, 67);
+                color: variables.$color-red;
               }
 
               &.warning {
                 display: flex;
-                color: #ffaa29;
+                color: variables.$color-orange;
               }
             }
           }

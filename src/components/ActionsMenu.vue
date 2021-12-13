@@ -30,6 +30,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .actions-menu {
   position: relative;
 
@@ -40,7 +42,7 @@ export default {
   :deep(.small-modal > .content) {
     padding: 8px;
     border-radius: 12px;
-    background-color: rgb(44, 47, 54);
+    background-color: variables.$color-black;
     top: 50px;
     right: 0;
     white-space: nowrap;

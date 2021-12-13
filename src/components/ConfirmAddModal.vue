@@ -81,6 +81,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+@use '../styles/typography';
+
 .confirm-add-modal .container {
   padding: 16px;
   color: white;
@@ -114,9 +117,9 @@ export default {
   .estimation {
     display: block;
     max-width: 380px;
-    font-weight: 400;
-    font-size: 12px;
-    color: rgb(195, 197, 203);
+    color: variables.$color-white2;
+
+    @extend %face-sans-12-regular;
   }
 
   .transaction-details {
