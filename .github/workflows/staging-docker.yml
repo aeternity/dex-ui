@@ -112,3 +112,4 @@ jobs:
           repository: aeternity/gitops-apps
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
           branch: stg
+
