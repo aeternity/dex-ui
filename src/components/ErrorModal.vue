@@ -34,7 +34,6 @@ export default {
   props: {
     msg: { type: String, required: true },
     resolve: { type: Function, required: true },
-    close: { type: Function, default: null },
   },
 };
 </script>
