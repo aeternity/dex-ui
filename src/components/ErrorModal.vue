@@ -1,15 +1,21 @@
 <template>
-  <ModalDefault class="error-modal"
-      title="Error"
-      close
-      @close="resolve">
+  <ModalDefault
+    class="error-modal"
+    title="Error"
+    close
+    @close="resolve"
+  >
     <div class="error-details">
-      <img src="../assets/alert.svg"
-        alt="Warning icon" />
+      <img
+        src="../assets/alert.svg"
+        alt="Warning icon"
+      >
       <h4>{{ msg }}</h4>
     </div>
-    <ButtonDefault fill="transparent-blue"
-      @click="resolve">
+    <ButtonDefault
+      fill="transparent-blue"
+      @click="resolve"
+    >
       Dismiss
     </ButtonDefault>
   </ModalDefault>
