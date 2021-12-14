@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import routerInterface from '../../contracts/IAedexV2Router.aes';
 import waeInterface from '../../contracts/IWAE.aes';
 import aex9Inteface from '../../contracts/IAEX9Minimal.aes';
@@ -30,6 +31,24 @@ const getPairInstance = (sdk, contractAddress) => sdk.getContractInstance(
     contractAddress,
   },
 );
+export const getPriceImpact = (reserveA, reserveB, amountA) => {
+  const k = BigNumber(reserveA).times(reserveB);
+  const newReserveA = BigNumber(reserveA).plus(amountA);
+  const newReserveB = k.div(newReserveA);
+  const receivedB = BigNumber(reserveB).minus(newReserveB);
+  const marketPrice = BigNumber(reserveA).div(reserveB);
+  const newPrice = BigNumber(amountA).div(receivedB);
+
+  return newPrice.minus(marketPrice).times(100).div(marketPrice).toNumber();
+};
+const getPairByTokens = async (sdk, factory, tokenA, tokenB) => {
+  const { decodedResult: pairAddress } = await factory.methods.get_pair(tokenA, tokenB);
+  if (pairAddress == null) {
+    // TODO: what kind of error
+    throw new Error('????');
+  }
+  return getPairInstance(sdk, pairAddress);
+};
 const getAddress = (x) => x.deployInfo.address;
 const cttoak = (value) => value.replace('ct_', 'ak_');
 const getCtAddress = (contract) => cttoak(getAddress(contract));
@@ -113,12 +132,8 @@ export default {
     }, {
       tokenA, tokenB,
     }) {
-      const { decodedResult: pairAddress } = factory.methods.get_pair(tokenA, tokenB);
-      if (pairAddress == null) {
-        // TODO: what kind of error
-        throw new Error('????');
-      }
-      const pair = await getPairInstance(sdk, pairAddress);
+      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+
       const { decodedResult: balance } = await pair.methods.balance(owner);
       return balance;
     },
@@ -132,18 +147,86 @@ export default {
     */
     async getTotalSupply({
       state: { factory },
+      rootState: { sdk },
+    }, {
+      tokenA, tokenB,
+    }) {
+      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const { decodedResult: totalSupply } = await pair.methods.total_supply();
+      return totalSupply;
+    },
+    /**
+     * @description get the rate of the pair
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {number} returns the (reserveTokenA/reserveTokenB)
+    */
+    async getRate({
+      state: { factory },
       rootState: { address: owner, sdk },
     }, {
       tokenA, tokenB,
     }) {
-      const { decodedResult: pairAddress } = factory.methods.get_pair(tokenA, tokenB);
-      if (pairAddress == null) {
-        // TODO: what kind of error
-        throw new Error('????');
-      }
-      const pair = await getPairInstance(sdk, pairAddress);
-      const { decodedResult: totalSupply } = await pair.methods.total_supply(owner);
-      return totalSupply;
+      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
+      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const [reserveA, reserveB] = token0 === tokenA
+        ? [reserve0, reserve1]
+        : [reserve1, reserve0];
+      return reserveA / reserveB;
+    },
+    /**
+     * @description get the price impact after the swap
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @param {bigint} p2.amountA tokenA amount to be swapped
+     * @return {number} returns the (newPrice - oldPrice) * 100 / oldPrice
+    */
+    async getPriceImpact({
+      state: { factory },
+      rootState: { address: owner, sdk },
+    }, {
+      tokenA, tokenB,
+      amountA,
+    }) {
+      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
+      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const [reserveA, reserveB] = token0 === tokenA
+        ? [reserve0, reserve1]
+        : [reserve1, reserve0];
+      getPriceImpact(reserveA, reserveB, amountA);
+    },
+    /**
+     * @description get infor about the pool
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {object} returns {totalSupply,reserveA,reserveB}
+    */
+    async getPoolInfo({
+      state: { factory },
+      rootState: { address: owner, sdk },
+    }, {
+      tokenA, tokenB,
+    }) {
+      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
+      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const [reserveA, reserveB] = token0 === tokenA
+        ? [reserve0, reserve1]
+        : [reserve1, reserve0];
+      const { decodedResult: totalSupply } = await pair.methods.total_supply();
+      return {
+        totalSupply,
+        reserveA,
+        reserveB,
+      };
     },
     /**
      * @description remove the liquidity provided to a pair
