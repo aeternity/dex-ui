@@ -26,7 +26,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .token-amount-details {
   display: flex;
@@ -39,7 +39,7 @@ export default {
   color: white;
 
   label {
-    color: variables.$color-gray3;
+    color: variables.$color-gray2;
     margin-bottom: 8px;
 
     @extend %face-sans-14-medium;

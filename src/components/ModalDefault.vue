@@ -54,7 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .modal {
   position: fixed;
@@ -63,7 +63,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: variables.$color-black4;
+  background-color: variables.$color-modal-bg;
   display: flex;
 
   .container {

@@ -145,7 +145,7 @@ export default {
 
         .name {
           color: white;
-          color: variables.$color-gray3;
+          color: variables.$color-gray2;
           font-size: 12px;
         }
       }
@@ -153,7 +153,7 @@ export default {
 
     .empty {
       padding: 20px 0;
-      color: variables.$color-gray3;
+      color: variables.$color-gray2;
     }
   }
 }
