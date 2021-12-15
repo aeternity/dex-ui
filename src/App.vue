@@ -47,6 +47,10 @@ export default {
   margin: 0 auto;
   display: none;
   justify-content: center;
+
+  @include mixins.laptop {
+    display: flex;
+  }
 }
 
 @include mixins.laptop {
