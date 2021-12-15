@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
-@use '../styles/mixins';
+@use '../styles/mixins.scss';
 
 .header {
   display: flex;

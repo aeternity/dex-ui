@@ -27,7 +27,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .settings-item {
   .title {

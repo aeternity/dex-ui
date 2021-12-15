@@ -69,7 +69,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .input-token {
   display: flex;
@@ -107,7 +107,7 @@ export default {
     .button-plain {
       margin-left: 4px;
       font-weight: 500;
-      color: variables.$color-blue5;
+      color: variables.$color-blue;
     }
   }
 }

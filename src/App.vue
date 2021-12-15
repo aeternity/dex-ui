@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 @use './styles/variables.scss';
-@use './styles/mixins';
+@use './styles/mixins.scss';
 
 #app {
   -webkit-font-smoothing: antialiased;
