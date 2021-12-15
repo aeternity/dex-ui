@@ -1,9 +1,5 @@
 @use './variables.scss';
 
-#app {
-    font-family: variables.$font-sans;
-}
-
 * {
   font-family: variables.$font-sans;
   box-sizing: border-box;

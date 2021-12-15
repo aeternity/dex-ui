@@ -29,7 +29,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use './styles/variables.scss';
 @use './styles/mixins';
 
@@ -47,6 +47,10 @@ export default {
   margin: 0 auto;
   display: none;
   justify-content: center;
+
+  @include mixins.laptop {
+    display: flex;
+  }
 }
 
 @include mixins.laptop {
