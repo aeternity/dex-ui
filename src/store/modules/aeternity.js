@@ -7,30 +7,6 @@ import pairInteface from '../../contracts/IAedexV2Pair.aes';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
-const getRouterInstance = (sdk) => sdk.getContractInstance(
-  {
-    source: routerInterface,
-    contractAddress: process.env.VUE_APP_ROUTER_ADDRESS,
-  },
-);
-const getFactoryInstance = (sdk, contractAddress) => sdk.getContractInstance(
-  {
-    source: factoryInteface,
-    contractAddress,
-  },
-);
-const getTokenInstance = (sdk, contractAddress) => sdk.getContractInstance(
-  {
-    source: aex9Inteface,
-    contractAddress,
-  },
-);
-const getPairInstance = (sdk, contractAddress) => sdk.getContractInstance(
-  {
-    source: pairInteface,
-    contractAddress,
-  },
-);
 export const getPriceImpact = (reserveA, reserveB, amountA) => {
   const k = BigNumber(reserveA).times(reserveB);
   const newReserveA = BigNumber(reserveA).plus(amountA);
@@ -41,17 +17,18 @@ export const getPriceImpact = (reserveA, reserveB, amountA) => {
 
   return newPrice.minus(marketPrice).times(100).div(marketPrice).toNumber();
 };
-const getPairByTokens = async (sdk, factory, tokenA, tokenB) => {
-  const { decodedResult: pairAddress } = await factory.methods.get_pair(tokenA, tokenB);
-  if (pairAddress == null) {
-    // TODO: what kind of error
-    throw new Error('????');
-  }
-  return getPairInstance(sdk, pairAddress);
-};
 const getAddress = (x) => x.deployInfo.address;
 const cttoak = (value) => value.replace('ct_', 'ak_');
 const getCtAddress = (contract) => cttoak(getAddress(contract));
+
+const sortTokens = (tokenA, tokenB, transform) => {
+  const f = transform || ((x) => x);
+  return (f(tokenA) < f(tokenB)) ? [tokenA, tokenB] : [tokenB, tokenA];
+};
+const getPairId = (tokenA, tokenB) => {
+  const [token0, token1] = sortTokens(tokenA, tokenB);
+  return `${token0}|${token1}`;
+};
 
 // TODO: remove this after testing the actual gas and before production
 const extraGas = {
@@ -78,6 +55,7 @@ export default {
     factory: null,
     // TODO: should this be the default?
     slippage: 10n,
+    pairs: {},
   },
 
   getters: {
@@ -96,16 +74,30 @@ export default {
     setSlippage(state, slippage) {
       state.slippage = slippage;
     },
+    addPair(state, { tokenA, tokenB, instance }) {
+      state.pairs[getPairId(tokenA, tokenB)] = instance;
+    },
   },
 
   actions: {
     async initRouter({ commit }, sdk) {
-      const contract = await getRouterInstance(sdk);
+      const contract = await sdk.getContractInstance(
+        {
+          source: routerInterface,
+          contractAddress: process.env.VUE_APP_ROUTER_ADDRESS,
+        },
+      );
       commit('setRouterInstance', contract);
     },
     async initFactory({ commit, state: { router } }, sdk) {
       const { decodedResult: factoryAddress } = await router.methods.factory();
-      const contract = await getFactoryInstance(sdk, factoryAddress);
+      const contract = await sdk.getContractInstance(
+        {
+          source: factoryInteface,
+          contractAddress: factoryAddress,
+        },
+      );
+
       commit('setFactoryInstance', contract);
     },
     async initWae({ commit }, sdk) {
@@ -119,6 +111,46 @@ export default {
     },
 
     /**
+     * @description retrieve the Pair and store it if it wasn't already fetched before
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {int | null} returns the pair instance
+    */
+    async getPairByTokens({
+      commit,
+      state: { factory, pairs },
+      rootState: { sdk },
+    }, {
+      tokenA,
+      tokenB,
+    }) {
+      const pair = pairs[getPairId(tokenA, tokenB)];
+      if (pair) {
+        return pair;
+      }
+      const { decodedResult: contractAddress } = await factory.methods.get_pair(tokenA, tokenB);
+      if (contractAddress == null) {
+        // TODO: what kind of error
+        throw new Error('????');
+      }
+      const instance = sdk.getContractInstance(
+        {
+          source: pairInteface,
+          contractAddress,
+        },
+      );
+      commit('addPair', { tokenA, tokenB, instance });
+      return instance;
+    },
+    getTokenInstance({ rootState: { sdk } }, contractAddress) {
+      return sdk.getContractInstance({
+        source: aex9Inteface,
+        contractAddress,
+      });
+    },
+    /**
      * @description retrieve the liquidity share from a pool
      * @async
      * @param p1 vuex context
@@ -127,12 +159,12 @@ export default {
      * @return {int | null} returns the owner liquidity
     */
     async getAccountLiquidity({
-      state: { factory },
-      rootState: { address: owner, sdk },
+      dispatch,
+      rootState: { address: owner },
     }, {
       tokenA, tokenB,
     }) {
-      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
 
       const { decodedResult: balance } = await pair.methods.balance(owner);
       return balance;
@@ -145,13 +177,8 @@ export default {
      * @param {string} p2.tokenB tokenA address
      * @return {int} returns the total supply/liquidity
     */
-    async getTotalSupply({
-      state: { factory },
-      rootState: { sdk },
-    }, {
-      tokenA, tokenB,
-    }) {
-      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+    async getTotalSupply({ dispatch }, { tokenA, tokenB }) {
+      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
       const { decodedResult: totalSupply } = await pair.methods.total_supply();
       return totalSupply;
     },
@@ -164,12 +191,12 @@ export default {
      * @return {number} returns the (reserveTokenA/reserveTokenB)
     */
     async getRate({
-      state: { factory },
-      rootState: { address: owner, sdk },
+      dispatch,
+      rootState: { address: owner },
     }, {
       tokenA, tokenB,
     }) {
-      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
       const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
       const { decodedResult: token0 } = await pair.methods.token0(owner);
       const [reserveA, reserveB] = token0 === tokenA
@@ -187,19 +214,19 @@ export default {
      * @return {number} returns the (newPrice - oldPrice) * 100 / oldPrice
     */
     async getPriceImpact({
-      state: { factory },
-      rootState: { address: owner, sdk },
+      dispatch,
+      rootState: { address: owner },
     }, {
       tokenA, tokenB,
       amountA,
     }) {
-      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
       const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
       const { decodedResult: token0 } = await pair.methods.token0(owner);
       const [reserveA, reserveB] = token0 === tokenA
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
-      getPriceImpact(reserveA, reserveB, amountA);
+      return getPriceImpact(reserveA, reserveB, amountA);
     },
     /**
      * @description get infor about the pool
@@ -210,12 +237,12 @@ export default {
      * @return {object} returns {totalSupply,reserveA,reserveB}
     */
     async getPoolInfo({
-      state: { factory },
-      rootState: { address: owner, sdk },
+      dispatch,
+      rootState: { address: owner },
     }, {
       tokenA, tokenB,
     }) {
-      const pair = await getPairByTokens(sdk, factory, tokenA, tokenB);
+      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
       const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
       const { decodedResult: token0 } = await pair.methods.token0(owner);
       const [reserveA, reserveB] = token0 === tokenA
@@ -311,16 +338,16 @@ export default {
      * @param {bigint} p2.amount
     */
     async createAllowance({
+      dispatch,
       state: { router },
-      rootState: { sdk },
     }, {
       token: tokenAddress,
       amount,
     }) {
-      const token = await getTokenInstance(sdk, tokenAddress);
-      const routerAddr = getCtAddress(router);
+      const token = await dispatch('getTokenInstance', tokenAddress);
+      const routerAddress = getCtAddress(router);
       await token.methods.create_allowance(
-        routerAddr,
+        routerAddress,
         amount,
       );
     },
