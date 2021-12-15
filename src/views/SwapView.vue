@@ -11,14 +11,12 @@
       @update:token="setSelectedToken($event, true)"
       @update:balance="balance = $event"
     />
-    <div class="text-center">
-      <ButtonPlain
-        class="swap-button"
-        @click="setSelectedToken(null)"
-      >
-        <img src="../assets/arrow-down.svg">
-      </ButtonPlain>
-    </div>
+    <ButtonPlain
+      class="swap-button"
+      @click="setSelectedToken(null)"
+    >
+      <img src="../assets/arrow-down.svg">
+    </ButtonPlain>
     <InputToken
       :value="amountTo"
       :token="to"
@@ -171,10 +169,6 @@ export default {
 .swap-view {
   .input-token:first-of-type {
     margin-bottom: -8px;
-  }
-
-  .text-center {
-    text-align: center;
   }
 
   .swap-button + .input-token {
