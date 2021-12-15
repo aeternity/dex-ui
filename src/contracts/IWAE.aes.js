@@ -1,8 +1,4 @@
 module.exports = `
-
-
-
-
 contract interface IAEX9Minimal =
   record allowance_accounts = {from_account : address,for_account : address}
   record meta_info = {name : string,symbol : string,decimals : int}
@@ -13,7 +9,6 @@ contract interface IAEX9Minimal =
   stateful entrypoint transfer : (address, int) => unit
   stateful entrypoint create_allowance : (address, int) => unit
   stateful entrypoint transfer_allowance : (address, address, int) => unit
-
 
 main contract WAE =
   record state = {balance_of : map(WAE.owner, int),allowance : map(WAE.owner, map(WAE.spender, int))}

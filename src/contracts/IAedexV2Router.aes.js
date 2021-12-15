@@ -56,12 +56,6 @@ contract interface IAedexV2Factory =
   entrypoint set_fee_to : (address) => unit
   entrypoint set_fee_toSetter : (address) => unit
 
-
-
-
-
-
-
 payable main contract AedexV2Router =
   record state = {factory : IAedexV2Factory,wae : IWAE,wae_aex9 : IAEX9Minimal}
   type amountA = int

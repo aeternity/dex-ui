@@ -1,5 +1,4 @@
 module.exports = `
-
 main contract IAEX9Minimal = 
     record allowance_accounts = { from_account: address, for_account: address }
     record meta_info = { name : string , symbol : string , decimals : int }
