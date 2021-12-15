@@ -70,6 +70,7 @@ jobs:
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
       - name: Move cache
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
@@ -112,4 +113,3 @@ jobs:
           repository: aeternity/gitops-apps
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
           branch: stg
-
