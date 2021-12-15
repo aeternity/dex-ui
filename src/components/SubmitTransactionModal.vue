@@ -72,7 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .submit-transaction-modal {
   img {
@@ -105,7 +105,7 @@ export default {
 
       &.guide {
         font-size: 14px;
-        color: variables.$color-gray2;
+        color: variables.$color-gray;
         margin-bottom: 12px;
       }
     }

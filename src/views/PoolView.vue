@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .pool-view {
   .button-default {

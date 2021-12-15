@@ -82,7 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .confirm-add-modal .container {
   padding: 16px;

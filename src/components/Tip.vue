@@ -17,8 +17,8 @@ export default {
 @use '../styles/variables.scss';
 
 .tip {
-  color: variables.$color-blue5;
-  background-color: variables.$color-blue3;;
+  color: variables.$color-blue;
+  background-color: variables.$color-blue2;
   border-radius: 12px;
   padding: 16px;
   text-align: left;

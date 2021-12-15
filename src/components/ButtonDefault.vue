@@ -49,7 +49,7 @@ export default {
     background-color: variables.$color-blue;
 
     &:hover {
-      background-color: variables.$color-blue2;
+      background-color: variables.$color-blue-hover;
     }
   }
 
@@ -63,16 +63,16 @@ export default {
   }
 
   &.transparent-blue {
-    border: 1px solid variables.$color-blue3;
-    color: variables.$color-blue5;
-    background-color: variables.$color-blue3;
+    border: 1px solid variables.$color-blue2;
+    color: variables.$color-blue;
+    background-color: variables.$color-blue2;
 
     &:active {
       box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
     }
 
     &:hover {
-      border: 1px solid variables.$color-blue4;
+      border: 1px solid variables.$color-blue2-hover;
       color: variables.$color-blue-hover;
     }
   }
@@ -85,7 +85,7 @@ export default {
     }
 
     &:active {
-      background-color: variables.$color-black5;
+      background-color: variables.$color-black3;
     }
   }
 

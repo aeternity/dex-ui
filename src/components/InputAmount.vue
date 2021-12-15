@@ -32,7 +32,7 @@ export default {
   min-width: 56px;
 
   &:hover {
-    border: 1px solid variables.$color-gray2
+    border: 1px solid variables.$color-gray-hover
   }
 }
 </style>

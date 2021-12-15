@@ -80,7 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography';
+@use '../styles/typography.scss';
 
 .liquidity-item {
   display: flex;
@@ -157,11 +157,12 @@ export default {
     margin-top: 20px;
 
     a {
+      text-align: center;
       text-decoration: none;
-      color: variables.$color-blue2;
+      color: variables.$color-blue;
 
       &:hover {
-        color: #35b6ff;
+        color: variables.$color-blue-hover;
       }
     }
 
