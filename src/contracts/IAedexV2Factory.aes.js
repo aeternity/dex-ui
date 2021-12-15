@@ -1,7 +1,4 @@
 module.exports = `
-
-
-
 contract interface IAedexV2Callback =
   entrypoint aedex_v2_call : (address, int, int) => unit
 
