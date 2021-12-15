@@ -132,8 +132,7 @@ export default {
       }
       const { decodedResult: contractAddress } = await factory.methods.get_pair(tokenA, tokenB);
       if (contractAddress == null) {
-        // TODO: what kind of error
-        throw new Error('????');
+        throw new Error('PAIR NOT FOUND');
       }
       const instance = sdk.getContractInstance(
         {
