@@ -13,6 +13,7 @@
         v-bind="$attrs"
         type="number"
         placeholder="0.0"
+        @update:value="$emit('update:value', $event)"
       />
     </div>
     <div
