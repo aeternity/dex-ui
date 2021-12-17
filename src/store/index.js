@@ -25,16 +25,27 @@ export default createStore({
     resetState(state) {
       state.address = null;
     },
+    setNetwork(state, networkId) {
+      const [{ name }] = state.sdk.getNodesInPool()
+        .filter((node) => node.nodeNetworkId === networkId);
+      state.sdk.selectNode(name);
+    },
   },
   actions: {
     async initSdk({ commit }) {
       const options = {
-        nodes: [{ name: 'node', instance: await Node({ url: process.env.VUE_APP_NODE_URL }) }],
+        nodes: [
+          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
+          { name: 'mainnet', instance: await Node({ url: process.env.VUE_APP_MAINNET_NODE_URL }) },
+        ],
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       };
       const instance = await RpcAepp({
         ...options,
-        name: 'Superhero',
+        onNetworkChange: ({ networkId }) => {
+          commit('setNetwork', networkId);
+        },
+        name: 'DEX',
         onDisconnect() {
           commit('resetState');
         },

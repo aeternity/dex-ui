@@ -18,8 +18,8 @@ import { useStore } from 'vuex';
 import BigNumber from 'bignumber.js';
 import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullInterface.aes';
 import {
-  fetchJson, aettosToAe, handleUnknownError, isNotFoundError,
-} from '../lib/utils';
+  aettosToAe, handleUnknownError, isNotFoundError,
+} from '@/lib/utils';
 
 const pollState = {};
 let storeState;
@@ -50,7 +50,7 @@ async function poll() {
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_')) {
             state.lastValue = new BigNumber(aettosToAe(
-              (await fetchJson(`https://mainnet.aeternity.io/v3/accounts/${address}`)).balance || 0,
+              (await storeState.value.sdk.balance(address)) || 0,
             ));
           }
         } catch (e) {
