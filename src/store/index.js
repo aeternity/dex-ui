@@ -11,7 +11,7 @@ export default createStore({
     sdk: null,
     balance: 0,
     useIframeWallet: false,
-    network: null,
+    network: 'ae_mainnet',
   },
   mutations: {
     enableIframeWallet(state) {
@@ -72,7 +72,9 @@ export default createStore({
           const address = sdk.rpcClient.getCurrentAccount();
           if (!address) return;
           detector.stopScan();
+          const nodeInfo = await sdk.getNodeInfo();
           commit('setAddress', address);
+          commit('setNetwork', nodeInfo.nodeNetworkId);
           await dispatch('aeternity/initRouter', sdk);
           await dispatch('aeternity/initFactory', sdk);
           await dispatch('aeternity/initWae', sdk);

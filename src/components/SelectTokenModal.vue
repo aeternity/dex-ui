@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
@@ -56,6 +57,7 @@ export default {
     searchTerm: '',
   }),
   computed: {
+    ...mapState(['network']),
     filteredResults() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       return this.tokenList
@@ -68,8 +70,12 @@ export default {
     },
   },
   async mounted() {
+    const middleware = {
+      ae_mainnet: 'mainnet',
+      ae_uat: 'testnet',
+    }[this.network];
     this.tokenList = await fetchJson(
-      'https://mainnet.aeternity.io/mdw/aex9/by_name',
+      `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
     ).catch(() => {});
   },
 };
