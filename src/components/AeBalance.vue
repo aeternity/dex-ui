@@ -1,7 +1,13 @@
 <template>
-  <span>
+  <span v-if="balance">
     {{ balance.toFixed(fixed) }}
   </span>
+  <img
+    v-else
+    alt="loading"
+    src="../assets/animated-spinner.svg"
+    class="spinner"
+  >
 </template>
 
 <script>
@@ -17,38 +23,45 @@ import {
 
 const pollState = {};
 let storeState;
+
 async function poll() {
   await Promise.allSettled(
     Object.entries(pollState)
       .filter(([, state]) => state.refs.length)
       .map(async ([address, state]) => {
-        if (address.startsWith('ct_') && storeState.value.address) {
-          const tokenContract = await storeState.value.sdk.getContractInstance(
-            FUNGIBLE_TOKEN_CONTRACT, {
-              contractAddress: address,
-            },
-          );
-          if (!state.decimals) {
-            state.decimals = (await tokenContract.methods.meta_info()).decodedResult.decimals;
-          }
-          state.lastValue = new BigNumber(
-            (await tokenContract.methods.balance(storeState.value.address)).decodedResult || 0,
-          ).shiftedBy(-state.decimals);
-        } else if (address.startsWith('ak_')) {
-          try {
+        try {
+          if (address.startsWith('ct_') && storeState.value.address) {
+            if (!state.instance) {
+              state.instance = await storeState.value.sdk.getContractInstance(
+                {
+                  source: FUNGIBLE_TOKEN_CONTRACT,
+                  contractAddress: address,
+                  useless: 2,
+                },
+              );
+            }
+
+            if (!state.decimals) {
+              state.decimals = new BigNumber((await state.instance.methods.meta_info())
+                .decodedResult.decimals);
+            }
+            state.lastValue = new BigNumber(
+              (await state.instance.methods.balance(storeState.value.address)).decodedResult || 0,
+            ).shiftedBy(state.decimals.times(-1).toNumber());
+          } else if (address.startsWith('ak_')) {
             state.lastValue = new BigNumber(aettosToAe(
               (await fetchJson(`https://mainnet.aeternity.io/v3/accounts/${address}`)).balance,
             ));
-          } catch (e) {
-            if (isNotFoundError(e)) return;
-            handleUnknownError(e);
           }
+        } catch (e) {
+          if (isNotFoundError(e)) return;
+          handleUnknownError(e);
         }
         // eslint-disable-next-line no-return-assign, no-param-reassign
         state.refs.forEach((r) => r.value = state.lastValue);
       }),
   );
-  setTimeout(poll, 1000);
+  setTimeout(poll, 2000);
 }
 poll();
 function getBalanceRef(addressRef) {
@@ -90,3 +103,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.spinner {
+  height: 15px;
+  width: 20px;
+}
+</style>
