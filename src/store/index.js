@@ -11,6 +11,7 @@ export default createStore({
     sdk: null,
     balance: 0,
     useIframeWallet: false,
+    network: null,
   },
   mutations: {
     enableIframeWallet(state) {
@@ -29,6 +30,7 @@ export default createStore({
       const [{ name }] = state.sdk.getNodesInPool()
         .filter((node) => node.nodeNetworkId === networkId);
       state.sdk.selectNode(name);
+      state.network = networkId;
     },
   },
   actions: {
