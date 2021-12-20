@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import {
   Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
+import createPersistedState from 'vuex-persistedstate';
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
@@ -72,6 +73,9 @@ export default createStore({
     aeternity: aeternityModule,
   },
   plugins: [
+    createPersistedState({
+      paths: ['address', 'network', 'balance'],
+    }),
     modals,
   ],
 });
