@@ -4,6 +4,7 @@ import SwapView from '../views/SwapView.vue';
 import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
+import RemoveLiquidity from '../views/RemoveLiquidity.vue';
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
       path: 'add',
       name: 'add-pool',
       component: AddLiquidity,
+    },
+    {
+      path: 'remove',
+      name: 'remove-pool',
+      component: RemoveLiquidity,
     }],
   },
 ];
