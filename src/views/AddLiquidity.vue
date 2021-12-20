@@ -36,7 +36,7 @@
       <div class="body">
         <div>
           <span>
-            0.00299402
+            {{ ratio ?? '-' }}
           </span>
           <span class="second">
             {{ `${to.symbol} per ${from.symbol}` }}
@@ -44,7 +44,7 @@
         </div>
         <div>
           <span>
-            {{ 1 / 0.00299402 }}
+            {{ ratio ? 1 / ratio: '-' }}
           </span>
           <span class="second">
             {{ `${from.symbol} per ${to.symbol}` }}
@@ -52,7 +52,7 @@
         </div>
         <div>
           <span>
-            0%
+            {{ share ? share.toFixed(8) : '0.00000000' }} %
           </span>
           <span class="second">
             Share of Pool
@@ -62,7 +62,7 @@
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
-      :disabled="hasAllowanceFrom && hasAllowanceTo"
+      :disabled="isApproved"
       @click="approve"
     >
       {{ isApproved ? 'Approved' : 'Approve' }}
@@ -88,6 +88,11 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
 
+const WAE = process.env.VUE_APP_WAE_ADDRESS;
+const reduceDecimals = (val, token) => BigNumber(val)
+  .div(BigNumber(10).pow(token.decimals));
+const expandDecimals = (val, token) => BigInt(BigNumber(10)
+  .pow(token.decimals).times(val).toFixed());
 export default {
   components: {
     Tip,
@@ -102,16 +107,63 @@ export default {
     amountFrom: '',
     amountTo: '',
     isLastAmountFrom: true,
-    ratio: null,
     totalSupply: null,
     balanceFrom: null,
     balanceTo: null,
     allowanceFrom: 0,
     allowanceTo: null,
+    reserveFrom: null,
+    reserveTo: null,
 
   }),
   computed: {
-    ...mapState(['address']),
+    ...mapState({
+      address: 'address',
+      factory: (state) => state.aeternity.factory?.deployInfo.address,
+    }),
+    liquidity() {
+      if (!this.reserveFrom
+          || !this.reserveTo
+          || !this.from
+          || !this.to
+          || !this.amountFrom
+          || !this.amountTo
+      ) {
+        return 0;
+      }
+      const amountFrom = expandDecimals(this.amountFrom, this.from);
+      const amountTo = expandDecimals(this.amountTo, this.to);
+      const { totalSupply } = this;
+      const liquidityFrom = (amountFrom * totalSupply) / this.reserveFrom;
+      const liquidityTo = (amountTo * totalSupply) / this.reserveTo;
+      return liquidityFrom < liquidityTo ? liquidityFrom : liquidityTo;
+    },
+    share() {
+      if (!this.totalSupply && this.amountFrom && this.amountTo) {
+        return 100;
+      }
+      if (!this.reserveFrom
+          || !this.reserveTo
+          || !this.from
+          || !this.to
+          || !this.amountFrom
+          || !this.amountTo
+      ) {
+        return null;
+      }
+      const amountFrom = expandDecimals(this.amountFrom, this.from);
+      const amountTo = expandDecimals(this.amountTo, this.to);
+      const amount = amountFrom * amountTo;
+      const reserve = this.reserveTo * this.reserveFrom;
+      return BigNumber(amount).times(100).div(reserve).toNumber();
+    },
+    ratio() {
+      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) {
+        return null;
+      }
+      return reduceDecimals(this.reserveFrom, this.from)
+        .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
+    },
     enoughFromBalance() {
       // TODO: delete this
       return true;
@@ -134,6 +186,11 @@ export default {
       return this.amountFrom != null && this.allowanceFrom === this.amountFrom;
     },
     isApproved() {
+      if (this.from && this.from.contract_id === WAE) {
+        return this.hasAllowanceTo;
+      } if (this.to && this.to.contract_id === WAE) {
+        return this.hasAllowanceFrom;
+      }
       return this.hasAllowanceFrom && this.hasAllowanceTo;
     },
     buttonMessage() {
@@ -142,6 +199,19 @@ export default {
       if (!this.enoughFromBalance) return `Insufficient ${this.from.symbol} balance`;
       if (!this.enoughToBalance) return `Insufficient ${this.to.symbol} balance`;
       return 'Supply';
+    },
+  },
+  watch: {
+    async factory(newVal) {
+      // we have wallet connection
+      if (newVal && this.to && this.from) {
+        await this.setPairInfo();
+        if (this.amountFrom !== null || this.amountTo !== null) {
+          this.setAmount(
+            this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+          );
+        }
+      }
     },
   },
   methods: {
@@ -157,6 +227,9 @@ export default {
         this.allowanceFrom = this.allowanceTo;
         this.allowanceTo = swapAllowance;
         this.isLastAmountFrom = !this.isLastAmountFrom;
+        const swapReserve = this.reserveFrom;
+        this.reserveFrom = this.reserveTo;
+        this.reserveTo = swapReserve;
       } else if (isFrom && oldFrom && this.from && oldFrom.contract_id !== this.from.contract_id) {
         this.allowanceFrom = null;
       } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
@@ -168,6 +241,28 @@ export default {
       this.setAmount(
         this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
       );
+    },
+    getAePair() {
+      if (this.from && this.to) {
+        if (this.from.contract_id === WAE) {
+          return {
+            isTokenFrom: false,
+            token: this.to,
+            tokenAmount: this.amountTo,
+            wae: this.from,
+            aeAmount: this.amountFrom,
+          };
+        } if (this.to.contract_id === WAE) {
+          return {
+            isTokenFrom: true,
+            token: this.from,
+            tokenAmount: this.amountFrom,
+            wae: this.to,
+            aeAmount: this.amountTo,
+          };
+        }
+      }
+      return null;
     },
     async setPairInfo() {
       try {
@@ -183,10 +278,8 @@ export default {
           tokenB: this.to.contract_id,
         });
         this.totalSupply = totalSupply;
-        const reduceDecimals = (val, token) => BigNumber(val)
-          .div(BigNumber(10).pow(token.decimals));
-        this.ratio = reduceDecimals(reserveA, this.from)
-          .div(reduceDecimals(reserveB, this.to)).toNumber();
+        this.reserveFrom = reserveA;
+        this.reserveTo = reserveB;
       } catch (e) {
         if (e.message !== 'PAIR NOT FOUND') {
           handleUnknownError(e);
@@ -224,10 +317,20 @@ export default {
     },
     async approve() {
       try {
-        await this.createAllowance(this.from, this.amountFrom);
-        this.allowanceFrom = this.amountFrom;
-        await this.createAllowance(this.to, this.amountTo);
-        this.allowanceTo = this.amountTo;
+        const aePair = this.getAePair();
+        if (!aePair) {
+          await this.createAllowance(this.from, this.amountFrom);
+          this.allowanceFrom = this.amountFrom;
+          await this.createAllowance(this.to, this.amountTo);
+          this.allowanceTo = this.amountTo;
+        } else {
+          await this.createAllowance(aePair.token, aePair.tokenAmount);
+          if (aePair.isTokenFrom) {
+            this.allowanceFrom = aePair.tokenAmount;
+          } else {
+            this.allowanceTo = aePair.tokenAmount;
+          }
+        }
       } catch (ex) {
         handleUnknownError(ex);
       }
@@ -253,20 +356,36 @@ export default {
           secondToken: this.to,
           firstAmount: this.amountFrom,
           secondAmount: this.amountTo,
-          receive: +this.amountFrom + +this.amountTo, // Should be calculated
+          ratio: this.ratio,
+          receive: BigNumber(this.liquidity).div(BigNumber(10).pow(18)),
+          share: this.share,
         });
         const addDecimals = (token, amount) => BigInt(BigNumber(10)
           .pow(token.decimals).times(amount));
 
-        await this.$store.dispatch('aeternity/addLiquidity', {
-          tokenA: this.from.contract_id,
-          tokenB: this.to.contract_id,
-          amountADesired: addDecimals(this.from, this.amountFrom),
-          amountBDesired: addDecimals(this.to, this.amountTo),
-          // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
-          minimumLiquidity: 1000n,
-        });
-        console.log('IT IS DONE');
+        const aePair = this.getAePair();
+        // if none of the selected tokens are WAE
+        if (!aePair) {
+          await this.$store.dispatch('aeternity/addLiquidity', {
+            tokenA: this.from.contract_id,
+            tokenB: this.to.contract_id,
+            amountADesired: addDecimals(this.from, this.amountFrom),
+            amountBDesired: addDecimals(this.to, this.amountTo),
+            // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
+            minimumLiquidity: 1000n,
+          });
+        } else {
+          await this.$store.dispatch('aeternity/addLiquidityAe', {
+            token: aePair.token.contract_id,
+            amountTokenDesired: addDecimals(aePair.token, aePair.tokenAmount),
+            amountAeDesired: addDecimals(aePair.wae, aePair.aeAmount),
+            // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
+            minimumLiquidity: 1000n,
+          });
+        }
+        this.allowanceTo = null;
+        this.allowanceFrom = null;
+        alert('IT IS DONE');
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);

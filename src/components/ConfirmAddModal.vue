@@ -7,7 +7,7 @@
   >
     <div class="container">
       <div class="receive">
-        {{ receive }}
+        {{ receive ? receive.toFixed(5) : '-' }}
         <img :src="`https://avatars.z52da5wt.xyz/${firstToken.contract_id}`">
         <img :src="`https://avatars.z52da5wt.xyz/${secondToken.contract_id}`">
       </div>
@@ -35,13 +35,13 @@
         <div class="rates">
           <span>Rates</span>
           <div>
-            <span>{{ `1 ${secondToken.symbol} = ${1 / 0.005} ${firstToken.symbol}` }}</span>
-            {{ `1 ${firstToken.symbol} = ${0.005} ${secondToken.symbol}` }}
+            <span>{{ `1 ${secondToken.symbol} = ${sndRatio} ${firstToken.symbol}` }}</span>
+            {{ `1 ${firstToken.symbol} = ${fstRatio} ${secondToken.symbol}` }}
           </div>
         </div>
         <div>
           <span>Share of Pool:</span>
-          <div>0.00001503%</div>
+          <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
       <ButtonDefault @click="allowHandler">
@@ -68,6 +68,22 @@ export default {
     secondAmount: { type: [String, Number], required: true },
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
+    ratio: { type: [String, Number], required: false, default: 0 },
+    share: { type: [String, Number], required: false, default: 0 },
+    liquidity: { type: [String, Number], required: false, default: 0 },
+  },
+  computed: {
+    fstRatio() {
+      if (this.ratio) {
+        return this.ratio;
+      }
+      return this.firstAmount && this.secondAmount
+        ? this.firstAmount / this.secondAmount
+        : 1;
+    },
+    sndRatio() {
+      return 1 / this.fstRatio;
+    },
   },
   methods: {
     denyHandler() {
