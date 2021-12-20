@@ -4,6 +4,7 @@ import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import aex9Inteface from 'aeternity-fungible-token/FungibleTokenInterface.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
+import { cttoak } from '../../lib/utils';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
@@ -18,7 +19,6 @@ export const getPriceImpact = (reserveA, reserveB, amountA) => {
   return newPrice.minus(marketPrice).times(100).div(marketPrice).toNumber();
 };
 const getAddress = (x) => x.deployInfo.address;
-const cttoak = (value) => value.replace('ct_', 'ak_');
 const getCtAddress = (contract) => cttoak(getAddress(contract));
 
 const sortTokens = (tokenA, tokenB, transform) => {
@@ -43,8 +43,8 @@ const extraGas = {
  * @param slippage percentage (eg. 10,20...100)
  * @return biging representing final value
 */
-const addSlippage = (value, slippage) => value + (value * slippage) / 100;
-const subSlippage = (value, slippage) => value - (value * slippage) / 100;
+const addSlippage = (value, slippage) => value + (value * slippage) / 100n;
+const subSlippage = (value, slippage) => value - (value * slippage) / 100n;
 
 export default {
   namespaced: true,
@@ -191,13 +191,12 @@ export default {
     */
     async getRate({
       dispatch,
-      rootState: { address: owner },
     }, {
       tokenA, tokenB,
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
-      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
+      const { decodedResult: token0 } = await pair.methods.token0();
       const [reserveA, reserveB] = token0 === tokenA
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
@@ -214,14 +213,13 @@ export default {
     */
     async getPriceImpact({
       dispatch,
-      rootState: { address: owner },
     }, {
       tokenA, tokenB,
       amountA,
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
-      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
+      const { decodedResult: token0 } = await pair.methods.token0();
       const [reserveA, reserveB] = token0 === tokenA
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
@@ -237,13 +235,12 @@ export default {
     */
     async getPoolInfo({
       dispatch,
-      rootState: { address: owner },
     }, {
       tokenA, tokenB,
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves(owner);
-      const { decodedResult: token0 } = await pair.methods.token0(owner);
+      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
+      const { decodedResult: token0 } = await pair.methods.token0();
       const [reserveA, reserveB] = token0 === tokenA
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
@@ -336,19 +333,40 @@ export default {
      * @param {string} p2.token
      * @param {bigint} p2.amount
     */
-    async createAllowance({
+    async createTokenAllowance({
       dispatch,
       state: { router },
+      rootState: { address },
     }, {
       token: tokenAddress,
       amount,
     }) {
       const token = await dispatch('getTokenInstance', tokenAddress);
       const routerAddress = getCtAddress(router);
-      await token.methods.create_allowance(
-        routerAddress,
-        amount,
-      );
+      // see first if we have any allowance
+      const { decodedResult: currentAllowance } = await token.methods.allowance({
+        from_account: address,
+        for_account: routerAddress,
+      });
+
+      console.log(`currentAllowance is ${currentAllowance}`);
+      if (currentAllowance == null) {
+        console.log('creating new allowance');
+        // we don't have any allowance entry, let's create one
+        await token.methods.create_allowance(
+          routerAddress,
+          amount,
+        );
+      } else if (currentAllowance < amount) {
+        // we have something there but is less then
+        // what we need, let's increase it
+        console.log(`changing the allowance to ${amount - currentAllowance}`);
+        await token.methods.change_allowance(
+          routerAddress,
+          amount - currentAllowance,
+        );
+      }
+      console.log('we are good we have enough allowance');
     },
 
     /**

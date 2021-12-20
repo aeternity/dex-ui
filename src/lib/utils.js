@@ -10,6 +10,7 @@ export const aettosToAe = (v) => AmountFormatter.formatAmount(v, {
   targetDenomination: AmountFormatter.AE_AMOUNT_FORMATS.AE,
 });
 
+export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
   const result = [from, to, false];
   if (!token
