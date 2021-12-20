@@ -52,7 +52,10 @@
         >
           Add
         </ButtonDefault>
-        <ButtonDefault fill="transparent-blue">
+        <ButtonDefault
+          fill="transparent-blue"
+          :to="{ name: 'remove-pool' }"
+        >
           Remove
         </ButtonDefault>
       </div>
