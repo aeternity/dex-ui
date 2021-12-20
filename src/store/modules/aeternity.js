@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
-import routerInterface from '../../contracts/IAedexV2Router.aes';
-import waeInterface from '../../contracts/IWAE.aes';
-import aex9Inteface from '../../contracts/IAEX9Minimal.aes';
-import factoryInteface from '../../contracts/IAedexV2Factory.aes';
-import pairInteface from '../../contracts/IAedexV2Pair.aes';
+import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
+import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
+import aex9Inteface from 'aeternity-fungible-token/FungibleTokenInterface.aes';
+import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
+import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
