@@ -77,6 +77,35 @@ export default {
     this.tokenList = await fetchJson(
       `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
     ).catch(() => {});
+
+    const fstTkn = {
+      contract_id: 'ct_KPfzobzyoPZjADKMWxDTbeZYfE9kSPpoJDbC6MkMztKtXJHRx',
+      decimals: 18,
+      name: 'First',
+      symbol: 'FST',
+    };
+    const sndTkn = {
+      contract_id: 'ct_upFEPXmz17bW9MfNoxFjFvhFBRXJK17rzHeVR5AGEDDxudAZU',
+      decimals: 18,
+      name: 'Second',
+      symbol: 'SND',
+    };
+    const waePartnetTkn = {
+      contract_id: 'ct_7bsapRtBe8eQVpgGh8kywE7mWcVAGCmFfN7GBFFByGL13e8tL',
+      decimals: 18,
+      name: 'Third',
+      symbol: 'SND',
+    };
+    const waeTkn = {
+      contract_id: 'ct_RzxedNERBDa9Kfx8FENNKQ33TQTt5FzV8i1WppiaTSC4adRXd',
+      decimals: 18,
+      name: 'AE',
+      symbol: 'AE',
+    };
+    this.tokenList.splice(0, 0, waeTkn);
+    this.tokenList.splice(0, 0, waePartnetTkn);
+    this.tokenList.splice(0, 0, sndTkn);
+    this.tokenList.splice(0, 0, fstTkn);
   },
 };
 </script>
