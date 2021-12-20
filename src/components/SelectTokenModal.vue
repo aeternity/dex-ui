@@ -94,10 +94,10 @@ export default {
       contract_id: 'ct_7bsapRtBe8eQVpgGh8kywE7mWcVAGCmFfN7GBFFByGL13e8tL',
       decimals: 18,
       name: 'Third',
-      symbol: 'SND',
+      symbol: 'AE Partner',
     };
     const waeTkn = {
-      contract_id: 'ct_RzxedNERBDa9Kfx8FENNKQ33TQTt5FzV8i1WppiaTSC4adRXd',
+      contract_id: process.env.VUE_APP_WAE_ADDRESS,
       decimals: 18,
       name: 'AE',
       symbol: 'AE',

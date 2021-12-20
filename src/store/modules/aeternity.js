@@ -349,9 +349,7 @@ export default {
         for_account: routerAddress,
       });
 
-      console.log(`currentAllowance is ${currentAllowance}`);
       if (currentAllowance == null) {
-        console.log('creating new allowance');
         // we don't have any allowance entry, let's create one
         await token.methods.create_allowance(
           routerAddress,
@@ -360,13 +358,12 @@ export default {
       } else if (currentAllowance < amount) {
         // we have something there but is less then
         // what we need, let's increase it
-        console.log(`changing the allowance to ${amount - currentAllowance}`);
         await token.methods.change_allowance(
           routerAddress,
           amount - currentAllowance,
         );
       }
-      console.log('we are good we have enough allowance');
+      // at this point we are good we have enough allowance
     },
 
     /**
