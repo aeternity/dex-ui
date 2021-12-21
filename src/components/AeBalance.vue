@@ -50,7 +50,7 @@ async function poll() {
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_')) {
             state.lastValue = new BigNumber(aettosToAe(
-              (await fetchJson(`https://mainnet.aeternity.io/v3/accounts/${address}`)).balance,
+              (await fetchJson(`https://mainnet.aeternity.io/v3/accounts/${address}`)).balance || 0,
             ));
           }
         } catch (e) {
