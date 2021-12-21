@@ -93,6 +93,10 @@ const reduceDecimals = (val, token) => BigNumber(val)
   .div(BigNumber(10).pow(token.decimals));
 const expandDecimals = (val, token) => BigInt(BigNumber(10)
   .pow(token.decimals).times(val).toFixed());
+
+// TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
+const minimumLiquidity = 1000n;
+
 export default {
   components: {
     Tip,
@@ -122,18 +126,25 @@ export default {
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     liquidity() {
-      if (!this.reserveFrom
-          || !this.reserveTo
-          || !this.from
+      if (!this.from
           || !this.to
           || !this.amountFrom
           || !this.amountTo
       ) {
         return 0;
       }
+      const { totalSupply } = this;
       const amountFrom = expandDecimals(this.amountFrom, this.from);
       const amountTo = expandDecimals(this.amountTo, this.to);
-      const { totalSupply } = this;
+
+      // if there is no pair yet we have a special
+      // case for the first provided liquidity
+      if (!this.reserveFrom || !this.reserveTo || !totalSupply) {
+        return BigNumber(amountFrom)
+          .times(amountTo)
+          .sqrt()
+          .minus(minimumLiquidity);
+      }
       const liquidityFrom = (amountFrom * totalSupply) / this.reserveFrom;
       const liquidityTo = (amountTo * totalSupply) / this.reserveTo;
       return liquidityFrom < liquidityTo ? liquidityFrom : liquidityTo;
@@ -371,16 +382,14 @@ export default {
             tokenB: this.to.contract_id,
             amountADesired: addDecimals(this.from, this.amountFrom),
             amountBDesired: addDecimals(this.to, this.amountTo),
-            // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
-            minimumLiquidity: 1000n,
+            minimumLiquidity,
           });
         } else {
           await this.$store.dispatch('aeternity/addLiquidityAe', {
             token: aePair.token.contract_id,
             amountTokenDesired: addDecimals(aePair.token, aePair.tokenAmount),
             amountAeDesired: addDecimals(aePair.wae, aePair.aeAmount),
-            // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
-            minimumLiquidity: 1000n,
+            minimumLiquidity,
           });
         }
         this.allowanceTo = null;
