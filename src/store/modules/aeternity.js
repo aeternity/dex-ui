@@ -335,7 +335,7 @@ export default {
     */
     async createTokenAllowance({
       dispatch,
-      state: { router },
+      state: { router, slippage },
       rootState: { address },
     }, {
       token: tokenAddress,
@@ -349,18 +349,19 @@ export default {
         for_account: routerAddress,
       });
 
+      const amountWithSlippage = addSlippage(amount, slippage);
       if (currentAllowance == null) {
         // we don't have any allowance entry, let's create one
         await token.methods.create_allowance(
           routerAddress,
           amount,
         );
-      } else if (currentAllowance < amount) {
+      } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
         // what we need, let's increase it
         await token.methods.change_allowance(
           routerAddress,
-          amount - currentAllowance,
+          amountWithSlippage - currentAllowance,
         );
       }
       // at this point we are good we have enough allowance
