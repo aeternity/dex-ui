@@ -28,6 +28,7 @@ export default createStore({
       state.address = null;
     },
     setNetwork(state, networkId) {
+      console.log(networkId);
       const [{ name }] = state.sdk.getNodesInPool()
         .filter((node) => node.nodeNetworkId === networkId);
       state.sdk.selectNode(name);
@@ -73,9 +74,9 @@ export default createStore({
           const address = sdk.rpcClient.getCurrentAccount();
           if (!address) return;
           detector.stopScan();
-          const nodeInfo = await sdk.getNodeInfo();
+          const { networkId } = sdk.rpcClient.info;
           commit('setAddress', address);
-          commit('setNetwork', nodeInfo.nodeNetworkId);
+          commit('setNetwork', networkId);
           await dispatch('aeternity/initRouter', sdk);
           await dispatch('aeternity/initFactory', sdk);
           await dispatch('aeternity/initWae', sdk);
