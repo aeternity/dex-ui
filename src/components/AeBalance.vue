@@ -50,11 +50,11 @@ async function poll() {
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_')) {
             state.lastValue = new BigNumber(aettosToAe(
-              (await storeState.value.sdk.balance(address)) || 0,
+              (await storeState.value.sdk.balance(address)
+                .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e)))),
             ));
           }
         } catch (e) {
-          if (isNotFoundError(e)) return;
           handleUnknownError(e);
         }
         // eslint-disable-next-line no-return-assign, no-param-reassign
