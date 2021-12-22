@@ -57,7 +57,7 @@ export default {
     searchTerm: '',
   }),
   computed: {
-    ...mapState(['network']),
+    ...mapState(['networkId']),
     filteredResults() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       return this.tokenList
