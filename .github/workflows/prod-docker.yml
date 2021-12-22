@@ -1,8 +1,8 @@
-name: Production Dex UI Pipeline 
+name: Production Dex UI Pipeline
 
 on:
   push:
-    branches: 
+    branches:
       - main
     release:
       types: [created]
@@ -10,16 +10,16 @@ on:
 env:
   ENV: "prd"
   APP: "dex"
-  
+
 jobs:
   main:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     name: Web build docker
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 100
-      
+
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
@@ -27,7 +27,7 @@ jobs:
           release-type: node
           package-name: ""
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"ci","section":"CI / CD","hidden":false},{"type":"test","section":"Testing","hidden":false},{"type":"refactor","section":"Refactorings","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
-      
+
       - name: Get the tag version
         if: startsWith(github.ref, 'refs/tags/v')
         id: get_version
@@ -70,7 +70,7 @@ jobs:
             type=raw,value=${{ steps.release.outputs.tag_name }},enable=${{ endsWith(GitHub.ref, 'main') }}
             type=ref,event=tag
             type=ref,event=pr
-      
+
       - name: Build and push docker image
         if: |
           github.event_name == 'push' ||
