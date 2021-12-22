@@ -10,7 +10,7 @@
         src="../assets/alert.svg"
         alt="Warning icon"
       >
-      <h4>{{ msg }}</h4>
+      <h4>{{ message }}</h4>
     </div>
     <ButtonDefault
       fill="transparent-blue"
@@ -32,7 +32,7 @@ export default {
     ButtonDefault,
   },
   props: {
-    msg: { type: String, required: true },
+    message: { type: String, required: true },
     resolve: { type: Function, required: true },
   },
 };
