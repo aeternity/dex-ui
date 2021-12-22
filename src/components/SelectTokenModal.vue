@@ -74,9 +74,7 @@ export default {
       ae_mainnet: 'mainnet',
       ae_uat: 'testnet',
     }[this.network];
-    this.tokenList = await fetchJson(
-      `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
-    ).catch(() => {});
+    this.tokenList = [];
 
     const fstTkn = {
       contract_id: 'ct_KPfzobzyoPZjADKMWxDTbeZYfE9kSPpoJDbC6MkMztKtXJHRx',
@@ -102,10 +100,12 @@ export default {
       name: 'AE',
       symbol: 'AE',
     };
-    this.tokenList.splice(0, 0, waeTkn);
-    this.tokenList.splice(0, 0, waePartnetTkn);
-    this.tokenList.splice(0, 0, sndTkn);
-    this.tokenList.splice(0, 0, fstTkn);
+    // not waiting for the remote list
+    this.tokenList = [fstTkn, sndTkn, waePartnetTkn, waeTkn,
+      ...await fetchJson(
+        `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
+      ).catch(() => []),
+    ];
   },
 };
 </script>

@@ -114,7 +114,7 @@ export default {
     totalSupply: null,
     balanceFrom: null,
     balanceTo: null,
-    allowanceFrom: 0,
+    allowanceFrom: null,
     allowanceTo: null,
     reserveFrom: null,
     reserveTo: null,
@@ -314,16 +314,13 @@ export default {
     },
     async createAllowance(token, amount) {
       try {
-        /* await this.$store.dispatch('aeternity/resetAllowance', { */
-        /* token: token.contract_id, */
-        /* }); */
         await this.$store.dispatch('aeternity/createTokenAllowance', {
           token: token.contract_id,
           amount: BigInt(BigNumber(10).pow(token.decimals).times(amount)),
         });
       } catch (ex) {
         // TODO: this is a hack
-        console.error(ex);
+        handleUnknownError(ex);
       }
     },
     async approve() {
@@ -394,7 +391,6 @@ export default {
         }
         this.allowanceTo = null;
         this.allowanceFrom = null;
-        alert('IT IS DONE');
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);
