@@ -59,12 +59,6 @@ export default {
     display: flex;
   }
 }
-
-@include mixins.laptop {
-  .footer {
-    display: flex;
-  }
-}
 </style>
 
 <style lang="scss" src="./styles/globals.scss" />
