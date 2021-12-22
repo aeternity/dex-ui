@@ -12,7 +12,7 @@ export default createStore({
     sdk: null,
     balance: 0,
     useIframeWallet: false,
-    networkId: 'ae_mainnet',
+    networkId: 'ae_uat',
   },
   mutations: {
     enableIframeWallet(state) {
@@ -28,25 +28,21 @@ export default createStore({
       state.address = null;
     },
     setNetwork(state, networkId) {
-      const [{ name }] = state.sdk.getNodesInPool()
-        .filter((node) => node.nodeNetworkId === networkId);
-      state.sdk.selectNode(name);
       state.networkId = networkId;
     },
   },
   actions: {
-    async initSdk({ commit, state }) {
+    async initSdk({ commit, dispatch, state }) {
       const options = {
         nodes: [
           { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
-          { name: 'mainnet', instance: await Node({ url: process.env.VUE_APP_MAINNET_NODE_URL }) },
         ],
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       };
       const instance = await RpcAepp({
         ...options,
         onNetworkChange: ({ networkId }) => {
-          commit('setNetwork', networkId);
+          dispatch('selectNetwork', networkId);
         },
         name: 'DEX',
         onDisconnect() {
@@ -77,7 +73,7 @@ export default createStore({
           const { networkId: walletNetworkId } = sdk.rpcClient.info;
           commit('setAddress', address);
           if (walletNetworkId !== networkId) {
-            commit('setNetwork', walletNetworkId);
+            dispatch('selectNetwork', networkId);
           }
           await dispatch('aeternity/initRouter', sdk);
           await dispatch('aeternity/initFactory', sdk);
@@ -85,6 +81,25 @@ export default createStore({
           resolve(address);
         });
       });
+    },
+    async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
+      if (networkId !== newNetworkId) {
+        const [nodeToSelect] = sdk.getNodesInPool()
+          .filter((node) => node.nodeNetworkId === newNetworkId);
+        if (!nodeToSelect) {
+          await dispatch('modals/open', {
+            name: 'show-error',
+            message: `Network ${newNetworkId} is not supported in the DEX.
+            Please select another network in your wallet.`,
+            resolve: async () => {
+              dispatch('modals/close');
+            },
+          });
+        } else {
+          sdk.selectNode(nodeToSelect.name);
+          commit('setNetwork', newNetworkId);
+        }
+      }
     },
   },
   modules: {
