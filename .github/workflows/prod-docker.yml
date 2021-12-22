@@ -94,7 +94,7 @@ jobs:
 
       - name: Production Deploy
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: aeternity/ae-github-actions/argocd-deploy@v1
+        uses: aeternity/ae-github-actions/argocd-deploy@v3.1.0
         with:
           url-prefix: ${{ steps.get_version.outputs.TAG }}
           env: ${{ env.ENV }}
