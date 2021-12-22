@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import Header from '@/components/Header.vue';
 import NavigationMenu from '@/components/NavigationMenu.vue';
 
@@ -22,9 +22,16 @@ export default {
     Header,
     NavigationMenu,
   },
-  computed: mapGetters('modals', ['opened']),
+  computed: {
+    ...mapGetters('modals', ['opened']),
+    ...mapState(['address']),
+  },
   async mounted() {
     await this.$store.dispatch('initSdk');
+    if (this.address) {
+      await this.$watchUntilTruly(() => this.$store.state.sdk);
+      await this.$store.dispatch('scanForWallets');
+    }
   },
 };
 </script>

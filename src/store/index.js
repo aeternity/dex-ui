@@ -12,7 +12,7 @@ export default createStore({
     sdk: null,
     balance: 0,
     useIframeWallet: false,
-    network: 'ae_mainnet',
+    networkId: 'ae_mainnet',
   },
   mutations: {
     enableIframeWallet(state) {
@@ -28,15 +28,14 @@ export default createStore({
       state.address = null;
     },
     setNetwork(state, networkId) {
-      console.log(networkId);
       const [{ name }] = state.sdk.getNodesInPool()
         .filter((node) => node.nodeNetworkId === networkId);
       state.sdk.selectNode(name);
-      state.network = networkId;
+      state.networkId = networkId;
     },
   },
   actions: {
-    async initSdk({ commit }) {
+    async initSdk({ commit, state }) {
       const options = {
         nodes: [
           { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
@@ -55,8 +54,9 @@ export default createStore({
         },
       });
       commit('setSdk', instance);
+      commit('setNetwork', state.networkId);
     },
-    async scanForWallets({ commit, dispatch, state: { sdk } }) {
+    async scanForWallets({ commit, dispatch, state: { sdk, networkId } }) {
       const scannerConnection = await BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
       });
@@ -74,9 +74,11 @@ export default createStore({
           const address = sdk.rpcClient.getCurrentAccount();
           if (!address) return;
           detector.stopScan();
-          const { networkId } = sdk.rpcClient.info;
+          const { networkId: walletNetworkId } = sdk.rpcClient.info;
           commit('setAddress', address);
-          commit('setNetwork', networkId);
+          if (walletNetworkId !== networkId) {
+            commit('setNetwork', walletNetworkId);
+          }
           await dispatch('aeternity/initRouter', sdk);
           await dispatch('aeternity/initFactory', sdk);
           await dispatch('aeternity/initWae', sdk);
@@ -90,7 +92,7 @@ export default createStore({
   },
   plugins: [
     createPersistedState({
-      paths: ['address', 'network', 'balance'],
+      paths: ['address', 'network'],
     }),
     modals,
   ],
