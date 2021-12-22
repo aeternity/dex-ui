@@ -73,7 +73,7 @@ export default {
     const middleware = {
       ae_mainnet: 'mainnet',
       ae_uat: 'testnet',
-    }[this.network];
+    }[this.networkId];
     this.tokenList = [];
 
     const fstTkn = {
