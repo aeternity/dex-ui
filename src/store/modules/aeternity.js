@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
+import aex9Inteface from 'aeternity-fungible-token/FungibleTokenFull.aes';
 import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
-import aex9Inteface from 'aeternity-fungible-token/FungibleTokenInterface.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import { cttoak } from '../../lib/utils';
@@ -97,7 +97,6 @@ export default {
           contractAddress: factoryAddress,
         },
       );
-
       commit('setFactoryInstance', contract);
     },
     async initWae({ commit }, sdk) {
