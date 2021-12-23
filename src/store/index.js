@@ -83,22 +83,21 @@ export default createStore({
       });
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-      if (networkId !== newNetworkId) {
-        const [nodeToSelect] = sdk.getNodesInPool()
-          .filter((node) => node.nodeNetworkId === newNetworkId);
-        if (!nodeToSelect) {
-          await dispatch('modals/open', {
-            name: 'show-error',
-            message: `Network ${newNetworkId} is not supported in the DEX.
+      if (networkId === newNetworkId) return;
+      const nodeToSelect = sdk.getNodesInPool()
+        .find((node) => node.nodeNetworkId === newNetworkId);
+      if (!nodeToSelect) {
+        await dispatch('modals/open', {
+          name: 'show-error',
+          message: `Network ${newNetworkId} is not supported in the DEX.
             Please select another network in your wallet.`,
-            resolve: async () => {
-              dispatch('modals/close');
-            },
-          });
-        } else {
-          sdk.selectNode(nodeToSelect.name);
-          commit('setNetwork', newNetworkId);
-        }
+          resolve: async () => {
+            dispatch('modals/close');
+          },
+        });
+      } else {
+        sdk.selectNode(nodeToSelect.name);
+        commit('setNetwork', newNetworkId);
       }
     },
   },
