@@ -40,7 +40,6 @@ import { mapState } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
-import { fetchJson } from '../lib/utils';
 
 export default {
   components: {
@@ -70,10 +69,10 @@ export default {
     },
   },
   async mounted() {
-    const middleware = {
-      ae_mainnet: 'mainnet',
-      ae_uat: 'testnet',
-    }[this.networkId];
+    // const middleware = {
+    //   ae_mainnet: 'mainnet',
+    //   ae_uat: 'testnet',
+    // }[this.networkId];
     this.tokenList = [];
 
     const fstTkn = {
@@ -102,9 +101,9 @@ export default {
     };
     // not waiting for the remote list
     this.tokenList = [fstTkn, sndTkn, waePartnetTkn, waeTkn,
-      ...await fetchJson(
-        `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
-      ).catch(() => []),
+      // ...await fetchJson(
+      //   `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
+      // ).catch(() => []),
     ];
   },
 };
@@ -173,7 +172,6 @@ export default {
         }
 
         .name {
-          color: white;
           color: variables.$color-gray2;
           font-size: 12px;
         }
