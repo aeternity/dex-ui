@@ -54,10 +54,16 @@ export default {
     amountTo: { type: [String, Number], required: true },
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
+    work: { type: Function, required: true },
   },
   data: () => ({
     isConfirmed: false,
   }),
+  async created() {
+    await this.work();
+    // TODO here we should deal with error message
+    this.isConfirmed = true;
+  },
   methods: {
     clickHandler() {
       if (this.isConfirmed) {

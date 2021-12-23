@@ -27,11 +27,13 @@
       v-if="to && from"
       class="price"
     >
-      {{ `1 ${to.symbol} = ${1 / testRatio} ${from.symbol}` }}
+      {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
+      :disabled="hasAllowance"
+      @click="approve"
     >
       <div class="allowance">
         <img :src="`https://avatars.z52da5wt.xyz/${from.contract_id}`">
@@ -59,12 +61,17 @@
 
 <script>
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
+import {
+  expandDecimals, reduceDecimals, calculateSelectedToken, handleUnknownError,
+} from '../lib/utils';
+
+const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
 export default {
   components: {
@@ -81,13 +88,25 @@ export default {
     amountFrom: '',
     amountTo: '',
     isLastAmountFrom: true,
-    testRatio: 0.0005,
     balance: null,
+    totalSupply: null,
+    allowanceFrom: null,
+    allowanceTo: null,
+    reserveFrom: null,
+    reserveTo: null,
   }),
   computed: {
-    ...mapState(['address']),
+    ...mapState({
+      address: 'address',
+      factory: (state) => state.aeternity.factory?.deployInfo.address,
+    }),
     enoughBalance() {
-      return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
+      return (this.from && this.from.contract_id === WAE)
+      || this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
+    },
+    hasAllowance() {
+      return this.amountFrom != null
+      && ((this.from && this.from.contract_id === WAE) || this.allowanceFrom === this.amountFrom);
     },
     isDisabled() {
       return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
@@ -98,9 +117,41 @@ export default {
       if (!this.enoughBalance) return `Insufficient ${this.from.symbol} balance`;
       return 'Swap';
     },
+    ratio() {
+      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) {
+        return null;
+      }
+      return reduceDecimals(this.reserveFrom, this.from)
+        .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
+    },
+    path() {
+      return !this.from || !this.to
+        ? []
+        : [this.from.contract_id, this.to.contract_id];
+    },
+    amountFromExpanded() {
+      return !this.from || !this.amountFrom ? 0 : expandDecimals(this.amountFrom, this.from);
+    },
+    amountToExpanded() {
+      return !this.to || !this.amountTo ? 0 : expandDecimals(this.amountTo, this.to);
+    },
+  },
+  watch: {
+    async factory(newVal) {
+      // we have wallet connection
+      if (newVal && this.to && this.from) {
+        await this.setPairInfo();
+        if (this.amountFrom !== null || this.amountTo !== null) {
+          this.setAmount(
+            this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+          );
+        }
+      }
+    },
   },
   methods: {
-    setSelectedToken(token, isFrom) {
+    async setSelectedToken(token, isFrom) {
+      const [oldFrom, oldTo] = [this.from, this.to];
       let swapped;
       [this.from, this.to, swapped] = calculateSelectedToken(token, this.from, this.to, isFrom);
       if (swapped) {
@@ -108,19 +159,104 @@ export default {
         this.amountFrom = this.amountTo;
         this.amountTo = swap;
         this.isLastAmountFrom = !this.isLastAmountFrom;
+
+        const swapAllowance = this.allowanceFrom;
+        this.allowanceFrom = this.allowanceTo;
+        this.allowanceTo = swapAllowance;
+
+        const swapReserve = this.reserveFrom;
+        this.reserveFrom = this.reserveTo;
+        this.reserveTo = swapReserve;
+      } else if (isFrom && oldFrom && this.from && oldFrom.contract_id !== this.from.contract_id) {
+        this.allowanceFrom = null;
+      } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
+        this.allowanceTo = null;
       }
+      // TODO: what if it fails?
+      await this.setPairInfo();
       this.setAmount(
         this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
       );
     },
+    getAePair() {
+      if (this.from && this.to) {
+        if (this.from.contract_id === WAE) {
+          return {
+            isTokenFrom: false,
+            token: this.to,
+            tokenAmount: this.amountTo,
+            wae: this.from,
+            aeAmount: this.amountFrom,
+          };
+        } if (this.to.contract_id === WAE) {
+          return {
+            isTokenFrom: true,
+            token: this.from,
+            tokenAmount: this.amountFrom,
+            wae: this.to,
+            aeAmount: this.amountTo,
+          };
+        }
+      }
+      return null;
+    },
+    async setPairInfo() {
+      try {
+        if (!this.from || !this.to || !this.address) {
+          return;
+        }
+        const {
+          totalSupply,
+          reserveA,
+          reserveB,
+        } = await this.$store.dispatch('aeternity/getPoolInfo', {
+          tokenA: this.from.contract_id,
+          tokenB: this.to.contract_id,
+        });
+        this.totalSupply = totalSupply;
+        this.reserveFrom = reserveA;
+        this.reserveTo = reserveB;
+      } catch (e) {
+        if (e.message !== 'PAIR NOT FOUND') {
+          handleUnknownError(e);
+        }
+      }
+    },
     setAmount(amount, isFrom) {
       this.isLastAmountFrom = isFrom;
+      const isValid = this.ratio !== null && this.to && this.from;
       if (isFrom) {
         this.amountFrom = amount;
-        this.amountTo = this.to && this.from ? amount * this.testRatio : '';
+        if (isValid && amount != null) {
+          this.amountTo = amount / this.ratio;
+        }
       } else {
         this.amountTo = amount;
-        this.amountFrom = this.to && this.from ? amount / this.testRatio : '';
+        if (isValid && amount != null) {
+          this.amountFrom = amount * this.ratio;
+        }
+      }
+    },
+    async createAllowance(amount) {
+      try {
+        await this.$store.dispatch('aeternity/createTokenAllowance', {
+          token: this.from.contract_id,
+          amount: BigInt(BigNumber(10).pow(this.from.decimals).times(amount).toFixed()),
+        });
+      } catch (ex) {
+        // TODO: this is a hack
+        handleUnknownError(ex);
+      }
+    },
+    async approve() {
+      try {
+        const aePair = this.getAePair();
+        if (!aePair || aePair.isTokenFrom) {
+          await this.createAllowance(this.amountFrom);
+          this.allowanceFrom = this.amountFrom;
+        }
+      } catch (ex) {
+        handleUnknownError(ex);
       }
     },
     clickHandler() {
@@ -136,6 +272,78 @@ export default {
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
     },
+    async swapProcess() {
+      const aePair = this.getAePair();
+      // if none of the selected tokens are WAE
+      if (!aePair) {
+        if (this.isLastAmountFrom) {
+          await this.swapExactTokensForTokens();
+        } else {
+          await this.swapTokensForExactTokens();
+        }
+      } else if (aePair.isTokenFrom) {
+        if (this.isLastAmountFrom) {
+          await this.swapExactTokensForAe();
+        } else {
+          await this.swapTokensForExactAe();
+        }
+      } else if (this.isLastAmountFrom) {
+        await this.swapExactAeForTokens();
+      } else {
+        await this.swapAeForExactTokens();
+      }
+      await this.reset();
+    },
+    async reset() {
+      await this.setPairInfo();
+      this.amountFrom = null;
+      this.amountTo = null;
+      this.allowanceFrom = null;
+      this.allowanceTo = null;
+      this.isLastAmountFrom = true;
+    },
+    swapExactTokensForTokens() {
+      return this.$store.dispatch('aeternity/swapExactTokensForTokens', {
+        amountIn: this.amountFromExpanded,
+        amountOutDesired: this.amountToExpanded,
+        path: this.path,
+      });
+    },
+    swapTokensForExactTokens() {
+      return this.$store.dispatch('aeternity/swapTokensForExactTokens', {
+        amountInDesired: this.amountFromExpanded,
+        amountOut: this.amountToExpanded,
+        path: this.path,
+      });
+    },
+    swapExactTokensForAe() {
+      return this.$store.dispatch('aeternity/swapExactTokensForAe', {
+        amountIn: this.amountFromExpanded,
+        amountAeOutDesired: this.amountToExpanded,
+        path: this.path,
+      });
+    },
+    swapTokensForExactAe() {
+      return this.$store.dispatch('aeternity/swapTokensForExactAe', {
+        amountTokenInDesired: this.amountFromExpanded,
+        amountAeOut: this.amountToExpanded,
+        path: this.path,
+      });
+    },
+    swapExactAeForTokens() {
+      return this.$store.dispatch('aeternity/swapExactAeForTokens', {
+        amountAeIn: this.amountFromExpanded,
+        amountOutDesired: this.amountToExpanded,
+        path: this.path,
+      });
+    },
+    swapAeForExactTokens() {
+      return this.$store.dispatch('aeternity/swapAeForExactTokens', {
+        amountAeInDesired: this.amountFromExpanded,
+        amountOut: this.amountToExpanded,
+        path: this.path,
+      });
+    },
     async swap() {
       try {
         await this.$store.dispatch('modals/open', {
@@ -144,7 +352,7 @@ export default {
           to: this.to,
           amountFrom: this.amountFrom,
           amountTo: this.amountTo,
-          ratio: this.testRatio,
+          ratio: this.ratio,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
@@ -152,6 +360,7 @@ export default {
           toSymbol: this.to.symbol,
           amountFrom: this.amountFrom,
           amountTo: this.amountTo,
+          work: this.swapProcess,
         });
       } catch (e) {
         if (e.message === 'Rejected by user') return;

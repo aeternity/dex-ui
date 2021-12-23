@@ -14,7 +14,7 @@
     "@fontsource/ibm-plex-sans": "^4.5.1",
     "@popperjs/core": "^2.10.2",
     "aeternity-fungible-token": "^2.0.0",
-    "dex-contracts-v2": "github:aeternity/dex-contracts-v2#master",
+    "dex-contracts-v2": "github:aeternity/dex-contracts-v2#dummy-event-for-router",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.8.3",
     "node-polyfill-webpack-plugin": "^1.1.4",

@@ -86,13 +86,11 @@ import Tip from '@/components/Tip.vue';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
+import {
+  reduceDecimals, expandDecimals, calculateSelectedToken, handleUnknownError,
+} from '../lib/utils';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
-const reduceDecimals = (val, token) => BigNumber(val)
-  .div(BigNumber(10).pow(token.decimals));
-const expandDecimals = (val, token) => BigInt(BigNumber(10)
-  .pow(token.decimals).times(val).toFixed());
 
 // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
 const minimumLiquidity = 1000n;
@@ -176,10 +174,12 @@ export default {
         .div(reduceDecimals(this.reserveTokenB, this.tokenB)).toNumber();
     },
     enoughBalanceTokenA() {
-      return this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA);
+      return (this.tokenA && this.tokenA.contract_id === WAE)
+        || (this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA));
     },
     enoughBalanceTokenB() {
-      return this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB);
+      return (this.tokenB && this.tokenB.contract_id === WAE)
+       || (this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB));
     },
     isDisabled() {
       return this.address
@@ -324,7 +324,7 @@ export default {
       try {
         await this.$store.dispatch('aeternity/createTokenAllowance', {
           token: token.contract_id,
-          amount: BigInt(BigNumber(10).pow(token.decimals).times(amount)),
+          amount: BigInt(BigNumber(10).pow(token.decimals).times(amount).toFixed()),
         });
       } catch (ex) {
         // TODO: this is a hack
@@ -376,8 +376,6 @@ export default {
           receive: BigNumber(this.liquidity).div(BigNumber(10).pow(18)),
           share: this.share,
         });
-        const addDecimals = (token, amount) => BigInt(BigNumber(10)
-          .pow(token.decimals).times(amount));
 
         const aePair = this.getAePair();
         // if none of the selected tokens are WAE
@@ -385,15 +383,15 @@ export default {
           await this.$store.dispatch('aeternity/addLiquidity', {
             tokenA: this.tokenA.contract_id,
             tokenB: this.tokenB.contract_id,
-            amountADesired: addDecimals(this.tokenA, this.amountTokenA),
-            amountBDesired: addDecimals(this.tokenB, this.amountTokenB),
+            amountADesired: expandDecimals(this.amountTokenA, this.tokenA),
+            amountBDesired: expandDecimals(this.amountTokenB, this.tokenB),
             minimumLiquidity,
           });
         } else {
           await this.$store.dispatch('aeternity/addLiquidityAe', {
             token: aePair.token.contract_id,
-            amountTokenDesired: addDecimals(aePair.token, aePair.tokenAmount),
-            amountAeDesired: addDecimals(aePair.wae, aePair.aeAmount),
+            amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token),
+            amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae),
             minimumLiquidity,
           });
         }
