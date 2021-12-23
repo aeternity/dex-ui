@@ -11,23 +11,23 @@
       to your share of the pool, and can be redeemed at any time.`"
     />
     <InputToken
-      :value="amountFrom"
-      :token="from"
+      :value="amountTokenA"
+      :token="tokenA"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
-      @update:balance="balanceFrom = $event"
+      @update:balance="balanceTokenA = $event"
     />
     <img src="../assets/plus.svg">
     <InputToken
-      :value="amountTo"
-      :token="to"
+      :value="amountTokenB"
+      :token="tokenB"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
-      @update:balance="balanceTo = $event"
+      @update:balance="balanceTokenB = $event"
     />
 
     <div
-      v-if="to && from"
+      v-if="tokenB && tokenA"
       class="pool-info"
     >
       <div class="header">
@@ -39,15 +39,15 @@
             {{ ratio ?? '-' }}
           </span>
           <span class="second">
-            {{ `${to.symbol} per ${from.symbol}` }}
+            {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
           </span>
         </div>
         <div>
           <span>
-            {{ ratio ? 1 / ratio: '-' }}
+            {{ ratio ? 1 / ratio : '-' }}
           </span>
           <span class="second">
-            {{ `${from.symbol} per ${to.symbol}` }}
+            {{ `${ tokenA.symbol } per ${ tokenB.symbol }` }}
           </span>
         </div>
         <div>
@@ -106,18 +106,18 @@ export default {
   },
   data: () => ({
     loading: false,
-    to: null,
-    from: null,
-    amountFrom: '',
-    amountTo: '',
-    isLastAmountFrom: true,
+    tokenB: null,
+    tokenA: null,
+    amountTokenA: '',
+    amountTokenB: '',
+    isLastInputTokenA: true,
     totalSupply: null,
-    balanceFrom: null,
-    balanceTo: null,
-    allowanceFrom: null,
-    allowanceTo: null,
-    reserveFrom: null,
-    reserveTo: null,
+    balanceTokenA: null,
+    balanceTokenB: null,
+    allowanceTokenA: null,
+    allowanceTokenB: null,
+    reserveTokenA: null,
+    reserveTokenB: null,
 
   }),
   computed: {
@@ -126,150 +126,166 @@ export default {
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     liquidity() {
-      if (!this.from
-          || !this.to
-          || !this.amountFrom
-          || !this.amountTo
+      if (!this.tokenA
+        || !this.tokenB
+        || !this.amountTokenA
+        || !this.amountTokenB
       ) {
         return 0;
       }
       const { totalSupply } = this;
-      const amountFrom = expandDecimals(this.amountFrom, this.from);
-      const amountTo = expandDecimals(this.amountTo, this.to);
+      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA);
+      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB);
 
       // if there is no pair yet we have a special
       // case for the first provided liquidity
-      if (!this.reserveFrom || !this.reserveTo || !totalSupply) {
-        return BigNumber(amountFrom)
-          .times(amountTo)
+      if (!this.reserveTokenA || !this.reserveTokenB || !totalSupply) {
+        return BigNumber(amountTokenA)
+          .times(amountTokenB)
           .sqrt()
           .minus(minimumLiquidity);
       }
-      const liquidityFrom = (amountFrom * totalSupply) / this.reserveFrom;
-      const liquidityTo = (amountTo * totalSupply) / this.reserveTo;
-      return liquidityFrom < liquidityTo ? liquidityFrom : liquidityTo;
+      const liquidityTokenA = (amountTokenA * totalSupply) / this.reserveTokenA;
+      const liquidityTokenB = (amountTokenB * totalSupply) / this.reserveTokenB;
+      return liquidityTokenA < liquidityTokenB ? liquidityTokenA : liquidityTokenB;
     },
     share() {
-      if (!this.totalSupply && this.amountFrom && this.amountTo) {
+      if (!this.totalSupply && this.amountTokenA && this.amountTokenB) {
         return 100;
       }
-      if (!this.reserveFrom
-          || !this.reserveTo
-          || !this.from
-          || !this.to
-          || !this.amountFrom
-          || !this.amountTo
+      if (!this.reserveTokenA
+        || !this.reserveTokenB
+        || !this.tokenA
+        || !this.tokenB
+        || !this.amountTokenA
+        || !this.amountTokenB
       ) {
         return null;
       }
-      const amountFrom = expandDecimals(this.amountFrom, this.from);
-      const amountTo = expandDecimals(this.amountTo, this.to);
-      const amount = amountFrom * amountTo;
-      const reserve = this.reserveTo * this.reserveFrom;
+      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA);
+      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB);
+      const amount = amountTokenA * amountTokenB;
+      const reserve = this.reserveTokenB * this.reserveTokenA;
       return BigNumber(amount).times(100).div(reserve).toNumber();
     },
     ratio() {
-      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) {
+      if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) {
         return null;
       }
-      return reduceDecimals(this.reserveFrom, this.from)
-        .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
+      return reduceDecimals(this.reserveTokenA, this.tokenA)
+        .div(reduceDecimals(this.reserveTokenB, this.tokenB)).toNumber();
     },
-    enoughFromBalance() {
+    enoughBalanceTokenA() {
       // TODO: delete this
       return true;
-      /* return this.balanceFrom && this.balanceFrom.isGreaterThanOrEqualTo(this.amountFrom); */
+      /*
+       return this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA);
+       */
     },
-    enoughToBalance() {
+    enoughBalanceTokenB() {
       // TODO: delete this
       return true;
-      /* return this.balanceTo && this.balanceTo.isGreaterThanOrEqualTo(this.amountTo); */
+      /*
+       return this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB);
+       */
     },
     isDisabled() {
       return this.address
-        && (!this.to || !this.from || !this.amountFrom
-        || !this.enoughToBalance || !this.enoughFromBalance);
+        && (!this.tokenB || !this.tokenA || !this.amountTokenA
+          || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
-    hasAllowanceFrom() {
-      return this.amountFrom != null && this.allowanceFrom === this.amountFrom;
+    hasAllowanceTokenA() {
+      return this.amountTokenA != null && this.allowanceTokenA === this.amountTokenA;
     },
-    hasAllowanceTo() {
-      return this.amountFrom != null && this.allowanceFrom === this.amountFrom;
+    hasAllowanceTokenB() {
+      return this.amountTokenA != null && this.allowanceTokenA === this.amountTokenA;
     },
     isApproved() {
-      if (this.from && this.from.contract_id === WAE) {
-        return this.hasAllowanceTo;
-      } if (this.to && this.to.contract_id === WAE) {
-        return this.hasAllowanceFrom;
+      if (this.tokenA && this.tokenA.contract_id === WAE) {
+        return this.hasAllowanceTokenB;
       }
-      return this.hasAllowanceFrom && this.hasAllowanceTo;
+      if (this.tokenB && this.tokenB.contract_id === WAE) {
+        return this.hasAllowanceTokenA;
+      }
+      return this.hasAllowanceTokenA && this.hasAllowanceTokenB;
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
-      if (!this.amountFrom || !this.amountTo) return 'Enter amount';
-      if (!this.enoughFromBalance) return `Insufficient ${this.from.symbol} balance`;
-      if (!this.enoughToBalance) return `Insufficient ${this.to.symbol} balance`;
+      if (!this.amountTokenA || !this.amountTokenB) return 'Enter amount';
+      if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
+      if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
       return 'Supply';
     },
   },
   watch: {
     async factory(newVal) {
       // we have wallet connection
-      if (newVal && this.to && this.from) {
+      if (newVal && this.tokenB && this.tokenA) {
         await this.setPairInfo();
-        if (this.amountFrom !== null || this.amountTo !== null) {
+        if (this.amountTokenA !== null || this.amountTokenB !== null) {
           this.setAmount(
-            this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
           );
         }
       }
     },
   },
   methods: {
-    async setSelectedToken(token, isFrom) {
-      const [oldFrom, oldTo] = [this.from, this.to];
+    async setSelectedToken(token, isTokenA) {
+      const [oldTokenA, oldTokenB] = [this.tokenA, this.tokenB];
       let swapped;
-      [this.from, this.to, swapped] = calculateSelectedToken(token, this.from, this.to, isFrom);
+      [this.tokenA, this.tokenB, swapped] = calculateSelectedToken(
+        token,
+        this.tokenA,
+        this.tokenB,
+        isTokenA,
+      );
       if (swapped) {
-        const swap = this.amountFrom;
-        this.amountFrom = this.amountTo;
-        this.amountTo = swap;
-        const swapAllowance = this.allowanceFrom;
-        this.allowanceFrom = this.allowanceTo;
-        this.allowanceTo = swapAllowance;
-        this.isLastAmountFrom = !this.isLastAmountFrom;
-        const swapReserve = this.reserveFrom;
-        this.reserveFrom = this.reserveTo;
-        this.reserveTo = swapReserve;
-      } else if (isFrom && oldFrom && this.from && oldFrom.contract_id !== this.from.contract_id) {
-        this.allowanceFrom = null;
-      } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
-        this.allowanceTo = null;
+        const swap = this.amountTokenA;
+        this.amountTokenA = this.amountTokenB;
+        this.amountTokenB = swap;
+        const swapAllowance = this.allowanceTokenA;
+        this.allowanceTokenA = this.allowanceTokenB;
+        this.allowanceTokenB = swapAllowance;
+        this.isLastInputTokenA = !this.isLastInputTokenA;
+        const swapReserve = this.reserveTokenA;
+        this.reserveTokenA = this.reserveTokenB;
+        this.reserveTokenB = swapReserve;
+      } else if (
+        isTokenA
+        && oldTokenA
+        && this.tokenA
+        && oldTokenA.contract_id !== this.tokenA.contract_id
+      ) {
+        this.allowanceTokenA = null;
+      } else if (oldTokenB && this.tokenB && oldTokenB.contract_id !== this.tokenB.contract_id) {
+        this.allowanceTokenB = null;
       }
 
       // TODO: what if it fails?
       await this.setPairInfo();
       this.setAmount(
-        this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
       );
     },
     getAePair() {
-      if (this.from && this.to) {
-        if (this.from.contract_id === WAE) {
+      if (this.tokenA && this.tokenB) {
+        if (this.tokenA.contract_id === WAE) {
           return {
-            isTokenFrom: false,
-            token: this.to,
-            tokenAmount: this.amountTo,
-            wae: this.from,
-            aeAmount: this.amountFrom,
+            isTokenA: false,
+            token: this.tokenB,
+            tokenAmount: this.amountTokenB,
+            wae: this.tokenA,
+            aeAmount: this.amountTokenA,
           };
-        } if (this.to.contract_id === WAE) {
+        }
+        if (this.tokenB.contract_id === WAE) {
           return {
-            isTokenFrom: true,
-            token: this.from,
-            tokenAmount: this.amountFrom,
-            wae: this.to,
-            aeAmount: this.amountTo,
+            isTokenA: true,
+            token: this.tokenA,
+            tokenAmount: this.amountTokenA,
+            wae: this.tokenB,
+            aeAmount: this.amountTokenB,
           };
         }
       }
@@ -277,7 +293,7 @@ export default {
     },
     async setPairInfo() {
       try {
-        if (!this.from || !this.to || !this.address) {
+        if (!this.tokenA || !this.tokenB || !this.address) {
           return;
         }
         const {
@@ -285,30 +301,30 @@ export default {
           reserveA,
           reserveB,
         } = await this.$store.dispatch('aeternity/getPoolInfo', {
-          tokenA: this.from.contract_id,
-          tokenB: this.to.contract_id,
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
         });
         this.totalSupply = totalSupply;
-        this.reserveFrom = reserveA;
-        this.reserveTo = reserveB;
+        this.reserveTokenA = reserveA;
+        this.reserveTokenB = reserveB;
       } catch (e) {
         if (e.message !== 'PAIR NOT FOUND') {
           handleUnknownError(e);
         }
       }
     },
-    setAmount(amount, isFrom) {
-      this.isLastAmountFrom = isFrom;
-      const isValid = this.ratio !== null && this.to && this.from;
-      if (isFrom) {
-        this.amountFrom = amount;
+    setAmount(amount, isLastInputTokenA) {
+      this.isLastInputTokenA = isLastInputTokenA;
+      const isValid = this.ratio !== null && this.tokenB && this.tokenA;
+      if (isLastInputTokenA) {
+        this.amountTokenA = amount;
         if (isValid) {
-          this.amountTo = amount / this.ratio;
+          this.amountTokenB = amount / this.ratio;
         }
       } else {
-        this.amountTo = amount;
+        this.amountTokenB = amount;
         if (isValid) {
-          this.amountFrom = amount * this.ratio;
+          this.amountTokenA = amount * this.ratio;
         }
       }
     },
@@ -327,16 +343,16 @@ export default {
       try {
         const aePair = this.getAePair();
         if (!aePair) {
-          await this.createAllowance(this.from, this.amountFrom);
-          this.allowanceFrom = this.amountFrom;
-          await this.createAllowance(this.to, this.amountTo);
-          this.allowanceTo = this.amountTo;
+          await this.createAllowance(this.tokenA, this.amountTokenA);
+          this.allowanceTokenA = this.amountTokenA;
+          await this.createAllowance(this.tokenB, this.amountTokenB);
+          this.allowanceTokenB = this.amountTokenB;
         } else {
           await this.createAllowance(aePair.token, aePair.tokenAmount);
-          if (aePair.isTokenFrom) {
-            this.allowanceFrom = aePair.tokenAmount;
+          if (aePair.isTokenA) {
+            this.allowanceTokenA = aePair.tokenAmount;
           } else {
-            this.allowanceTo = aePair.tokenAmount;
+            this.allowanceTokenB = aePair.tokenAmount;
           }
         }
       } catch (ex) {
@@ -360,10 +376,10 @@ export default {
       try {
         await this.$store.dispatch('modals/open', {
           name: 'confirm-add',
-          firstToken: this.from,
-          secondToken: this.to,
-          firstAmount: this.amountFrom,
-          secondAmount: this.amountTo,
+          firstToken: this.tokenA,
+          secondToken: this.tokenB,
+          firstAmount: this.amountTokenA,
+          secondAmount: this.amountTokenB,
           ratio: this.ratio,
           receive: BigNumber(this.liquidity).div(BigNumber(10).pow(18)),
           share: this.share,
@@ -375,10 +391,10 @@ export default {
         // if none of the selected tokens are WAE
         if (!aePair) {
           await this.$store.dispatch('aeternity/addLiquidity', {
-            tokenA: this.from.contract_id,
-            tokenB: this.to.contract_id,
-            amountADesired: addDecimals(this.from, this.amountFrom),
-            amountBDesired: addDecimals(this.to, this.amountTo),
+            tokenA: this.tokenA.contract_id,
+            tokenB: this.tokenB.contract_id,
+            amountADesired: addDecimals(this.tokenA, this.amountTokenA),
+            amountBDesired: addDecimals(this.tokenB, this.amountTokenB),
             minimumLiquidity,
           });
         } else {
@@ -389,8 +405,8 @@ export default {
             minimumLiquidity,
           });
         }
-        this.allowanceTo = null;
-        this.allowanceFrom = null;
+        this.allowanceTokenB = null;
+        this.allowanceTokenA = null;
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);
