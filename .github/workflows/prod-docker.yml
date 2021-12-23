@@ -28,11 +28,6 @@ jobs:
           package-name: ""
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"ci","section":"CI / CD","hidden":false},{"type":"test","section":"Testing","hidden":false},{"type":"refactor","section":"Refactorings","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
 
-      - name: Get the tag version
-        if: startsWith(github.ref, 'refs/tags/v')
-        id: get_version
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
-
       - name: Set up Docker Buildx
         id: buildx
         # Use the action from the master, as we've seen some inconsistencies with @v1
@@ -100,11 +95,6 @@ jobs:
           ref: prd
           persist-credentials: false
           fetch-depth: 0
-
-      - name: Get the tag version
-        if: startsWith(github.ref, 'refs/tags/v')
-        id: get_version
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
 
       - name: Production Deploy
         if: ${{ steps.release.outputs.release_created }}
