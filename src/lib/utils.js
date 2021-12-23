@@ -1,4 +1,5 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
+import BigNumber from 'bignumber.js';
 
 export const fetchJson = async (...args) => {
   const response = await fetch(...args);
@@ -28,6 +29,11 @@ export const calculateSelectedToken = (token, from, to, isFrom) => {
   }
   return result;
 };
+
+export const reduceDecimals = (val, token) => BigNumber(val)
+  .div(BigNumber(10).pow(token.decimals));
+export const expandDecimals = (val, token) => BigInt(BigNumber(10)
+  .pow(token.decimals).times(val).toFixed());
 
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
 

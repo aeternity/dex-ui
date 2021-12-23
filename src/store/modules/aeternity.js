@@ -463,12 +463,14 @@ export default {
       amountIn,
       amountOutDesired,
       path,
+      deadline,
     }) {
       const { decodedResult } = await router.methods.swap_exact_tokens_for_tokens(
         amountIn,
         subSlippage(amountOutDesired, slippage),
         path,
         to,
+        deadline || defaultDeadline(),
         undefined,
         extraGas,
       );
