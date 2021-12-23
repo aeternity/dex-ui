@@ -176,18 +176,10 @@ export default {
         .div(reduceDecimals(this.reserveTokenB, this.tokenB)).toNumber();
     },
     enoughBalanceTokenA() {
-      // TODO: delete this
-      return true;
-      /*
-       return this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA);
-       */
+      return this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA);
     },
     enoughBalanceTokenB() {
-      // TODO: delete this
-      return true;
-      /*
-       return this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB);
-       */
+      return this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB);
     },
     isDisabled() {
       return this.address
