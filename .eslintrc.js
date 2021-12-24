@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: {
     node: true,
-    es2020: true, // <- activate “es2020” globals
+    es2020: true,
   },
   extends: [
     'plugin:vue/vue3-recommended',
