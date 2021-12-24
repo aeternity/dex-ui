@@ -103,3 +103,10 @@ jobs:
           url-prefix: ${{ steps.release.outputs.tag_name }}
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          repository: aeternity/gitops-apps
+          github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          branch: prd
