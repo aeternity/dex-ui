@@ -37,7 +37,7 @@
         <div>
           <span>
             <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
-            {{ ratio?.toFixed(8)??'-' }}
+            {{ ratio?.toFixed(8) ?? '-' }}
           </span>
           <span class="second">
             {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
