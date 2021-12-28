@@ -209,7 +209,7 @@ export default {
     },
     approveButtonMessage() {
       if (this.isApproved) return 'Approved';
-      if (this.approving) { return 'Approving...'; }
+      if (this.approving) return 'Approving...';
       return 'Approve';
     },
     buttonMessage() {
