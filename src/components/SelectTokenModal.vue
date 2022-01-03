@@ -98,6 +98,7 @@ export default {
       decimals: 18,
       name: 'AE',
       symbol: 'AE',
+      is_ae: true,
     };
     // not waiting for the remote list
     this.tokenList = [fstTkn, sndTkn, waePartnetTkn, waeTkn,
