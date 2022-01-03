@@ -98,7 +98,7 @@ jobs:
 
       - name: Production Deploy
         if: ${{ steps.release.outputs.release_created }}
-        uses: aeternity/ae-github-actions/argocd-deploy@v3.1.0
+        uses: aeternity/ae-github-actions/argocd-deploy@v4
         with:
           url-prefix: ${{ steps.release.outputs.tag_name }}
           env: ${{ env.ENV }}

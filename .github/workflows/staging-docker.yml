@@ -54,6 +54,13 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
       
+      - name: Get commit sha on PR Sync
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'  
+        id: git-sha
+        shell: bash
+        run: |
+          echo "::set-output name=git-sha::$(git rev-parse --short HEAD)"
+      
       - name: Build and push docker image
         if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         uses: docker/build-push-action@v2
@@ -81,6 +88,15 @@ jobs:
           ref: stg
           persist-credentials: false
           fetch-depth: 0
+      
+      - name: Staging PR Sync
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        uses: aeternity/ae-github-actions/argocd-pr-sync@v4
+        with:
+          git-sha: ${{ steps.git-sha.outputs.git-sha }}
+          url-prefix: pr-${{ env.PR_NUMBER }}
+          env: ${{ env.ENV }}
+          app: ${{ env.APP }}
 
       - name: Staging deploy
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
