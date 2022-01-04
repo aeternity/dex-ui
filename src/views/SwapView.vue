@@ -100,13 +100,16 @@ export default {
       address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
+    isAeVsWAE() {
+      return this.from && this.to && this.from.contract_id === WAE && this.to.contract_id === WAE;
+    },
     enoughBalance() {
       return (this.from && this.from.contract_id === WAE)
       || this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
     },
     hasAllowance() {
       return this.amountFrom != null
-      && ((this.from && this.from.contract_id === WAE) || this.allowanceFrom === this.amountFrom);
+      && ((this.from && this.from.is_ae) || this.allowanceFrom === this.amountFrom);
     },
     isDisabled() {
       return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
@@ -180,7 +183,7 @@ export default {
     },
     getAePair() {
       if (this.from && this.to) {
-        if (this.from.contract_id === WAE) {
+        if (this.from.is_ae) {
           return {
             isTokenFrom: false,
             token: this.to,
@@ -188,7 +191,7 @@ export default {
             wae: this.from,
             aeAmount: this.amountFrom,
           };
-        } if (this.to.contract_id === WAE) {
+        } if (this.to.is_ae) {
           return {
             isTokenFrom: true,
             token: this.from,
@@ -203,6 +206,12 @@ export default {
     async setPairInfo() {
       try {
         if (!this.from || !this.to || !this.address) {
+          return;
+        }
+        if (this.isAeVsWAE) {
+          this.totalSupply = 0;
+          this.reserveFrom = 1;
+          this.reserveTo = 1;
           return;
         }
         const {

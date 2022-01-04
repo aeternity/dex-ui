@@ -14,9 +14,10 @@ export const aettosToAe = (v) => AmountFormatter.formatAmount(v, {
 export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
   const result = [from, to, false];
+  const getKey = (t) => t?.contract_id + (!!t?.is_ae);
   if (!token
-    || (token.contract_id === from?.contract_id && !isFrom)
-    || (token.contract_id === to?.contract_id && isFrom)) {
+    || (getKey(token) === getKey(from) && !isFrom)
+    || (getKey(token) === getKey(to) && isFrom)) {
     result[1] = from;
     result[0] = to;
     result[2] = true;
