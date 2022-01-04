@@ -28,15 +28,15 @@
       <div class="title">
         Transaction Details
       </div>
-      <div>
+      <div v-if="!isAeVsWae">
         <span>Liquidity Provider Fee</span>
         <span>{{ `${(amountFrom*0.03).toFixed(8)} ${from.symbol}` }}</span>
       </div>
-      <div>
+      <div v-if="!isAeVsWae">
         <span>Price Impact</span>
         <span>{{ priceImpact.toFixed(8) }}%</span>
       </div>
-      <div>
+      <div v-if="!isAeVsWae">
         <span>Allowed Slippage</span>
         <span>{{ slippage }}%</span>
       </div>
@@ -80,18 +80,23 @@ export default {
     reject: { type: Function, required: true },
     priceImpact: { type: [Object, Number], required: true },
     isLastAmountFrom: { type: Boolean, required: true },
+    isAeVsWae: { type: Boolean },
   },
   computed: {
     ...mapState({
       slippage: (state) => state.aeternity.slippage,
     }),
     minimumReceived() {
-      const { amountTo } = this;
-      return BigNumber(amountTo).minus(BigNumber(amountTo).times(this.slippage).div(100));
+      const { amountTo, isAeVsWae } = this;
+      return isAeVsWae
+        ? BigNumber(amountTo)
+        : BigNumber(amountTo).minus(BigNumber(amountTo).times(this.slippage).div(100));
     },
     maximumSpent() {
-      const { amountFrom } = this;
-      return BigNumber(amountFrom).plus(BigNumber(amountFrom).times(this.slippage).div(100));
+      const { amountFrom, isAeVsWae } = this;
+      return isAeVsWae
+        ? BigNumber(amountFrom)
+        : BigNumber(amountFrom).plus(BigNumber(amountFrom).times(this.slippage).div(100));
     },
     receivedOrSpentValueMsg() {
       return this.isLastAmountFrom

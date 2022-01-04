@@ -100,7 +100,7 @@ export default {
       address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
-    isAeVsWAE() {
+    isAeVsWae() {
       return this.from && this.to && this.from.contract_id === WAE && this.to.contract_id === WAE;
     },
     enoughBalance() {
@@ -109,7 +109,7 @@ export default {
     },
     hasAllowance() {
       return this.amountFrom != null
-      && ((this.from && this.from.is_ae) || this.allowanceFrom === this.amountFrom);
+      && (this.isAeVsWae || this.allowanceFrom === this.amountFrom);
     },
     isDisabled() {
       return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
@@ -208,7 +208,7 @@ export default {
         if (!this.from || !this.to || !this.address) {
           return;
         }
-        if (this.isAeVsWAE) {
+        if (this.isAeVsWae) {
           this.totalSupply = 0;
           this.reserveFrom = 1;
           this.reserveTo = 1;
@@ -303,6 +303,16 @@ export default {
       }
       await this.reset();
     },
+    async swapAeVsWaeProcess() {
+      if (this.from.is_ae) {
+        await this.$store.dispatch('aeternity/swapExactAeForExactWae',
+          this.amountFromExpanded);
+      } else {
+        await this.$store.dispatch('aeternity/swapExactWaeForExactAe',
+          this.amountFromExpanded);
+      }
+      await this.reset();
+    },
     async reset() {
       await this.setPairInfo();
       this.amountFrom = null;
@@ -355,11 +365,13 @@ export default {
     },
     async swap() {
       try {
-        const priceImpact = await this.$store.dispatch('aeternity/getPriceImpact', {
-          tokenA: this.from.contract_id,
-          tokenB: this.to.contract_id,
-          amountA: expandDecimals(this.amountFrom, this.from),
-        });
+        const priceImpact = this.isAeVsWae
+          ? 0
+          : await this.$store.dispatch('aeternity/getPriceImpact', {
+            tokenA: this.from.contract_id,
+            tokenB: this.to.contract_id,
+            amountA: expandDecimals(this.amountFrom, this.from),
+          });
         await this.$store.dispatch('modals/open', {
           name: 'confirm-swap',
           from: this.from,
@@ -369,6 +381,7 @@ export default {
           ratio: this.ratio,
           priceImpact,
           isLastAmountFrom: this.isLastAmountFrom,
+          isAeVsWae: this.isAeVsWae,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
@@ -376,7 +389,7 @@ export default {
           toSymbol: this.to.symbol,
           amountFrom: this.amountFrom,
           amountTo: this.amountTo,
-          work: this.swapProcess,
+          work: this.isAeVsWae ? this.swapAeVsWaeProcess : this.swapProcess,
         });
       } catch (e) {
         if (e.message === 'Rejected by user') return;

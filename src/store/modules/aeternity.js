@@ -37,13 +37,20 @@ const extraGas = {
 
 /**
  * adds slippage to a given value
- * NOTE: both values should be biging
  * @async
- * @param value given value
- * @param slippage percentage (eg. 10,20...100)
+ * @param {bigint} value given value
+ * @param {bigint} slippage percentage (eg. 10,20...100)
  * @return biging representing final value
 */
 const addSlippage = (value, slippage) => value + (value * slippage) / 100n;
+
+/**
+ * subtracts slippage from a given value
+ * @async
+ * @param {bigint} value given value
+ * @param {bigint} slippage percentage (eg. 10,20...100)
+ * @return biging representing final value
+*/
 const subSlippage = (value, slippage) => value - (value * slippage) / 100n;
 
 export default {
@@ -251,8 +258,8 @@ export default {
       };
     },
     /**
-     * @description remove the liquidity provided to a pair
-     * for p2.tokenA*p2.tokenB
+     * @description remove the liquidity provided from a pair
+     * of p2.tokenA*p2.tokenB
      * NOTE: before calling this you should call `pair.create_allowance` allowing
      * router to withdraw liquidity tokens from the pair
      * @async
@@ -290,7 +297,7 @@ export default {
     },
 
     /**
-     * @description remove the liquidity provided to a pair of p2.token*wae
+     * @description remove the liquidity provided from a pair of p2.token*wae
      * NOTE: before calling this you should call `waePair.create_allowance` allowing
      * router to withdraw liquidity tokens from the pair
      * @async
@@ -446,7 +453,22 @@ export default {
       );
       return decodedResult;
     },
-
+    /**
+     * @description swaps AE to WAE token bypassing any dex/router entrypoints
+     * @param p1 vuex context
+     * @param {bigint} p2.amount exact amount of AE to be transformed into WAE
+    */
+    async swapExactAeForExactWae({ state: { wae } }, amount) {
+      await wae.methods.deposit({ amount: amount.toString() });
+    },
+    /**
+     * @description swaps WAE to AE token bypassing any dex/router entrypoints
+     * @param p1 vuex context
+     * @param {bigint} p2.amount exact amount WAE to be transformed into AE
+    */
+    async swapExactWaeForExactAe({ state: { wae } }, amount) {
+      await wae.methods.withdraw(amount);
+    },
     /**
      * @description
      * NOTE: before calling this you should call `path[0].create_allowance`
