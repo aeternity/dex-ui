@@ -50,6 +50,7 @@ export default {
   props: {
     resolve: { type: Function, required: true },
     close: { type: Function, default: null },
+    includeWae: { type: Boolean, default: true },
   },
   data: () => ({
     tokenList: [],
@@ -61,10 +62,11 @@ export default {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       return this.tokenList
         .filter(
-          (token) => !searchTerm
+          (token) => (!searchTerm
             || token.symbol.toLowerCase().includes(searchTerm)
             || token.name.toLowerCase().includes(searchTerm)
-            || token.contract_id.toLowerCase().includes(searchTerm),
+            || token.contract_id.toLowerCase().includes(searchTerm)
+          ) && (token.symbol !== 'WAE' || this.includeWae),
         );
     },
   },
@@ -93,15 +95,22 @@ export default {
       name: 'Third',
       symbol: 'AE Partner',
     };
-    const waeTkn = {
+    const aeTkn = {
       contract_id: process.env.VUE_APP_WAE_ADDRESS,
       decimals: 18,
       name: 'AE',
       symbol: 'AE',
       is_ae: true,
     };
+    const waeTkn = {
+      contract_id: process.env.VUE_APP_WAE_ADDRESS,
+      decimals: 18,
+      name: 'WAE',
+      symbol: 'WAE',
+      is_ae: false,
+    };
     // not waiting for the remote list
-    this.tokenList = [fstTkn, sndTkn, waePartnetTkn, waeTkn,
+    this.tokenList = [fstTkn, sndTkn, waePartnetTkn, aeTkn, waeTkn,
       // ...await fetchJson(
       //   `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
       // ).catch(() => []),

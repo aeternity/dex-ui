@@ -13,6 +13,7 @@
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
+      :include-wae="false"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balanceTokenA = $event"
@@ -21,6 +22,7 @@
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
+      :include-wae="false"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
       @update:balance="balanceTokenB = $event"
