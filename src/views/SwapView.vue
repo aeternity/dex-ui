@@ -355,6 +355,11 @@ export default {
     },
     async swap() {
       try {
+        const priceImpact = await this.$store.dispatch('aeternity/getPriceImpact', {
+          tokenA: this.from.contract_id,
+          tokenB: this.to.contract_id,
+          amountA: expandDecimals(this.amountFrom, this.from),
+        });
         await this.$store.dispatch('modals/open', {
           name: 'confirm-swap',
           from: this.from,
@@ -362,6 +367,8 @@ export default {
           amountFrom: this.amountFrom,
           amountTo: this.amountTo,
           ratio: this.ratio,
+          priceImpact,
+          isLastAmountFrom: this.isLastAmountFrom,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',

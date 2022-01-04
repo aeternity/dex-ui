@@ -22,7 +22,7 @@
     />
     <div class="price">
       Price
-      <span>{{ `1 ${to.symbol} = ${1 / ratio} ${from.symbol}` }}</span>
+      <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
     </div>
     <div class="transaction-details">
       <div class="title">
@@ -30,25 +30,25 @@
       </div>
       <div>
         <span>Liquidity Provider Fee</span>
-        <span>0.00015 AE</span>
+        <span>{{ `${(amountFrom*0.03).toFixed(8)} ${from.symbol}` }}</span>
       </div>
       <div>
         <span>Price Impact</span>
-        <span>-1.45%</span>
+        <span>{{ priceImpact.toFixed(8) }}%</span>
       </div>
       <div>
         <span>Allowed Slippage</span>
-        <span>0.50%</span>
+        <span>{{ slippage }}%</span>
       </div>
       <div>
-        <span>Minimum received</span>
-        <span>{{ `0.00099425 ${to.symbol}` }}</span>
+        <span>{{ isLastAmountFrom? 'Minimum received' : 'Maximum spent' }}</span>
+        <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
     </div>
     <div class="estimation">
       Output is estimated.
-      You will receive at least
-      <b>{{ `0.00099425 ${to.symbol}` }}</b>
+      {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
+      <b>{{ receivedOrSpentValueMsg }}</b>
       or the transaction will revert.
     </div>
     <ButtonDefault @click="allowHandler">
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import ModalDefault from './ModalDefault.vue';
 import TokenAmountDetails from './TokenAmountDetails.vue';
 import ButtonDefault from './ButtonDefault.vue';
@@ -76,6 +78,26 @@ export default {
     ratio: { type: [String, Number], required: true },
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
+    priceImpact: { type: [Object, Number], required: true },
+    isLastAmountFrom: { type: Boolean, required: true },
+  },
+  computed: {
+    ...mapState({
+      slippage: (state) => state.aeternity.slippage,
+    }),
+    minimumReceived() {
+      const { amountTo } = this;
+      return BigNumber(amountTo).minus(BigNumber(amountTo).times(this.slippage).div(100));
+    },
+    maximumSpent() {
+      const { amountFrom } = this;
+      return BigNumber(amountFrom).plus(BigNumber(amountFrom).times(this.slippage).div(100));
+    },
+    receivedOrSpentValueMsg() {
+      return this.isLastAmountFrom
+        ? `${this.minimumReceived} ${this.to.symbol}`
+        : `${this.maximumSpent} ${this.from.symbol}`;
+    },
   },
   methods: {
     denyHandler() {
