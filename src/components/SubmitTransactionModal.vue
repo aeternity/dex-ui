@@ -60,17 +60,16 @@ export default {
     isConfirmed: false,
   }),
   async created() {
-    await this.work();
-    // TODO here we should deal with error message
-    this.isConfirmed = true;
+    try {
+      await this.work();
+      this.isConfirmed = true;
+    } catch (ex) {
+      this.reject(ex);
+    }
   },
   methods: {
     clickHandler() {
-      if (this.isConfirmed) {
-        this.resolve();
-      } else {
-        this.reject(new Error('Rejected by user'));
-      }
+      this.resolve();
     },
   },
 };
