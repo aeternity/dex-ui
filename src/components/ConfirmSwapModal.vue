@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="estimation">
-      Output is estimated.
+      {{ isLastAmountFrom ? 'Output' : 'Input' }} is estimated.
       {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
       <b>{{ receivedOrSpentValueMsg }}</b>
       or the transaction will revert.
@@ -88,15 +88,19 @@ export default {
     }),
     minimumReceived() {
       const { amountTo, isAeVsWae } = this;
-      return isAeVsWae
-        ? BigNumber(amountTo)
-        : BigNumber(amountTo).minus(BigNumber(amountTo).times(this.slippage).div(100));
+      return BigNumber(amountTo).minus(
+        isAeVsWae
+          ? 0
+          : BigNumber(amountTo).times(this.slippage).div(100),
+      );
     },
     maximumSpent() {
       const { amountFrom, isAeVsWae } = this;
-      return isAeVsWae
-        ? BigNumber(amountFrom)
-        : BigNumber(amountFrom).plus(BigNumber(amountFrom).times(this.slippage).div(100));
+      return BigNumber(amountFrom).plus(
+        isAeVsWae
+          ? 0
+          : BigNumber(amountFrom).times(this.slippage).div(100),
+      );
     },
     receivedOrSpentValueMsg() {
       return this.isLastAmountFrom
