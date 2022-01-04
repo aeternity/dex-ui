@@ -22,7 +22,7 @@
     >
       <span>Balance:
         <AeBalance
-          :address="$attrs.token.contract_id"
+          :address="contractId"
           @update:balance="updateBalance($event)"
         />
         {{ $attrs.token.symbol }}
@@ -55,7 +55,15 @@ export default {
   data: () => ({
     balance: '',
   }),
-  computed: mapState(['address']),
+  computed: {
+    ...mapState(['address']),
+    contractId() {
+      return this.$attrs.token.is_ae
+        ? this.address
+        : this.$attrs.token.contract_id;
+    },
+
+  },
   methods: {
     async setMax() {
       this.$emit('update:value', this.balance);
