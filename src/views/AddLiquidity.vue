@@ -36,7 +36,8 @@
       <div class="body">
         <div>
           <span>
-            {{ ratio ?? '-' }}
+            <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
+            {{ ratio?.toFixed(8) ?? '-' }}
           </span>
           <span class="second">
             {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
@@ -44,7 +45,8 @@
         </div>
         <div>
           <span>
-            {{ ratio ? 1 / ratio : '-' }}
+            <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
+            {{ ratio ? (1 / ratio).toFixed(8) : '-' }}
           </span>
           <span class="second">
             {{ `${ tokenA.symbol } per ${ tokenB.symbol }` }}
@@ -62,14 +64,14 @@
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
-      :disabled="isApproved"
+      :disabled="isApproved || inProgress"
       @click="approve"
     >
-      {{ isApproved ? 'Approved' : 'Approve' }}
+      {{ approveButtonMessage }}
     </ButtonDefault>
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="isDisabled"
+      :disabled="isDisabled || inProgress"
       :spinner="loading"
       :class="{ loading }"
       @click="clickHandler"
@@ -116,6 +118,8 @@ export default {
     allowanceTokenB: null,
     reserveTokenA: null,
     reserveTokenB: null,
+    approving: false,
+    supplying: false,
 
   }),
   computed: {
@@ -123,6 +127,9 @@ export default {
       address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
+    inProgress() {
+      return this.approving || this.supplying;
+    },
     liquidity() {
       if (!this.tokenA
         || !this.tokenB
@@ -182,15 +189,14 @@ export default {
        || (this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB));
     },
     isDisabled() {
-      return this.address
-        && (!this.tokenB || !this.tokenA || !this.amountTokenA
+      return this.address && (!this.tokenB || !this.tokenA || !this.amountTokenA
           || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
     hasAllowanceTokenA() {
       return this.amountTokenA != null && this.allowanceTokenA === this.amountTokenA;
     },
     hasAllowanceTokenB() {
-      return this.amountTokenA != null && this.allowanceTokenA === this.amountTokenA;
+      return this.amountTokenB != null && this.allowanceTokenB === this.amountTokenB;
     },
     isApproved() {
       if (this.tokenA && this.tokenA.contract_id === WAE) {
@@ -201,8 +207,14 @@ export default {
       }
       return this.hasAllowanceTokenA && this.hasAllowanceTokenB;
     },
+    approveButtonMessage() {
+      if (this.isApproved) return 'Approved';
+      if (this.approving) return 'Approving...';
+      return 'Approve';
+    },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
+      if (this.supplying) return 'Supplying...';
       if (!this.amountTokenA || !this.amountTokenB) return 'Enter amount';
       if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
       if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
@@ -333,6 +345,7 @@ export default {
     },
     async approve() {
       try {
+        this.approving = true;
         const aePair = this.getAePair();
         if (!aePair) {
           await this.createAllowance(this.tokenA, this.amountTokenA);
@@ -349,6 +362,8 @@ export default {
         }
       } catch (ex) {
         handleUnknownError(ex);
+      } finally {
+        this.approving = false;
       }
     },
     clickHandler() {
@@ -364,6 +379,14 @@ export default {
       await this.$store.dispatch('scanForWallets');
       this.loading = false;
     },
+    async reset() {
+      await this.setPairInfo();
+      this.amountTokenA = null;
+      this.amountTokenB = null;
+      this.allowanceTokenA = null;
+      this.allowanceTokenB = null;
+      this.isLastInputTokenA = true;
+    },
     async supply() {
       try {
         await this.$store.dispatch('modals/open', {
@@ -378,6 +401,7 @@ export default {
         });
 
         const aePair = this.getAePair();
+        this.supplying = true;
         // if none of the selected tokens are WAE
         if (!aePair) {
           await this.$store.dispatch('aeternity/addLiquidity', {
@@ -395,11 +419,12 @@ export default {
             minimumLiquidity,
           });
         }
-        this.allowanceTokenB = null;
-        this.allowanceTokenA = null;
+        await this.reset();
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);
+      } finally {
+        this.supplying = false;
       }
     },
   },
