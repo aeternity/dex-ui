@@ -1,5 +1,28 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/aeternity/dex-ui/compare/v1.0.0...v1.0.1) (2022-01-05)
+
+
+### Bug Fixes
+
+* **input:** ae balance for input-token ([#107](https://www.github.com/aeternity/dex-ui/issues/107)) ([e5a25ad](https://www.github.com/aeternity/dex-ui/commit/e5a25add3d24553da558d686ab40b6a14ae547c5))
+* **liquidity:** general ui feedback fixes ([0b65074](https://www.github.com/aeternity/dex-ui/commit/0b650743018c3c3deebf91c2d0c56c62b5ce949d))
+* **swap:** bind confirmation modal info values ([c5b27eb](https://www.github.com/aeternity/dex-ui/commit/c5b27eb83957838b24bf8c00fa7ab8288be2c52f))
+
+
+### Miscellaneous
+
+* **lint:** add same line braces rule ([b4f9347](https://www.github.com/aeternity/dex-ui/commit/b4f93479ea6fb11ae50bfbd83166c240a7850a7e))
+* **lint:** adding space infix-operator rule ([21f502b](https://www.github.com/aeternity/dex-ui/commit/21f502b9c8ec1ef384daae8b3e51e618455ce47f))
+* remove comments ([fc6ac0d](https://www.github.com/aeternity/dex-ui/commit/fc6ac0d2a305e6a19f6e71df3a9c5c64f0e842cf))
+
+
+### CI / CD
+
+* **github:** fix app name in prod pipeline ([#110](https://www.github.com/aeternity/dex-ui/issues/110)) ([10e4d01](https://www.github.com/aeternity/dex-ui/commit/10e4d01db3c138a483530f4097dfb88e078523ae))
+* **github:** fix staging undeploy events/trigger ([0593af8](https://www.github.com/aeternity/dex-ui/commit/0593af8a45fca9003760a222e8ae79ed4816ee02))
+* **github:** make gh action to use new version of composite actions and pr sync ([4dd5056](https://www.github.com/aeternity/dex-ui/commit/4dd50561fa5b954ced7f568c8db8d500856cb433))
+
 ## 1.0.0 (2021-12-24)
 
 
