@@ -39,3 +39,22 @@ export const expandDecimals = (val, token) => BigInt(BigNumber(10)
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
 
 export const isNotFoundError = (error) => error.statusCode === 404;
+
+export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
+  const url = new URL(`${process.env.VUE_APP_WALLET_URL}/${type}`);
+  if (callbackUrl) {
+    url.searchParams.set('x-success', callbackUrl);
+    url.searchParams.set('x-cancel', callbackUrl);
+  }
+  Object.entries(params)
+    .filter(([, value]) => ![undefined, null].includes(value))
+    .forEach(([name, value]) => url.searchParams.set(name, value));
+  return url;
+};
+
+export const createOnAccountObject = (address) => ({
+  address: () => address,
+  sign: () => {
+    throw new Error('Private key is not available');
+  },
+});
