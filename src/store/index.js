@@ -3,6 +3,7 @@ import {
   Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
+import { createDeepLinkUrl } from '@/lib/utils';
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
@@ -104,6 +105,16 @@ export default createStore({
         sdk.selectNode(nodeToSelect.name);
         commit('setNetwork', newNetworkId);
       }
+    },
+    sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {
+      return createDeepLinkUrl({
+        type: 'sign-transaction',
+        transaction: encodedTx,
+        networkId,
+        broadcast: true,
+        'x-success': window.location.href.split('?')[0],
+        'x-cancel': window.location.href.split('?')[0],
+      });
     },
   },
   modules: {
