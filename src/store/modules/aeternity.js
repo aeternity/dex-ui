@@ -172,7 +172,7 @@ export default {
       if (contractAddress == null) {
         throw new Error('PAIR NOT FOUND');
       }
-      const instance = sdk.getContractInstance(
+      const instance = await sdk.getContractInstance(
         {
           source: pairInteface,
           contractAddress,

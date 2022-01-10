@@ -9,8 +9,8 @@
     <div class="right">
       <ButtonDefault
         v-if="!address"
-        :spinner="loading"
-        :disabled="loading"
+        :spinner="connectingToWallet"
+        :disabled="connectingToWallet"
         class="connect-wallet"
         fill="transparent-blue"
         @click="connectWallet"
@@ -65,15 +65,12 @@ export default {
   },
   data: () => ({
     walletUrl: process.env.VUE_APP_WALLET_URL,
-    loading: false,
   }),
-  computed: mapState(['address', 'useIframeWallet']),
+  computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
   methods: {
     async connectWallet() {
-      this.loading = true;
       await this.$watchUntilTruly(() => this.$store.state.sdk);
-      await this.$store.dispatch('scanForWallets');
-      this.loading = false;
+      await this.$store.dispatch('connectWallet');
     },
   },
 };

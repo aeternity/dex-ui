@@ -74,8 +74,8 @@
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
       :disabled="isDisabled || inProgress"
-      :spinner="loading"
-      :class="{ loading }"
+      :spinner="connectingToWallet"
+      :class="{ loading: connectingToWallet }"
       @click="clickHandler"
     >
       {{ buttonMessage }}
@@ -107,7 +107,6 @@ export default {
     ButtonDefault,
   },
   data: () => ({
-    loading: false,
     tokenB: null,
     tokenA: null,
     amountTokenA: '',
@@ -125,12 +124,12 @@ export default {
 
   }),
   computed: {
+    ...mapState(['address', 'connectingToWallet']),
     ...mapState({
-      address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     inProgress() {
-      return this.approving || this.supplying;
+      return this.approving || this.supplying || this.connectingToWallet;
     },
     liquidity() {
       if (!this.tokenA
@@ -368,18 +367,13 @@ export default {
         this.approving = false;
       }
     },
-    clickHandler() {
+    async clickHandler() {
       if (this.address) {
         this.supply();
       } else {
-        this.connectWallet();
+        await this.$watchUntilTruly(() => this.$store.state.sdk);
+        await this.$store.dispatch('connectWallet');
       }
-    },
-    async connectWallet() {
-      this.loading = true;
-      await this.$watchUntilTruly(() => this.$store.state.sdk);
-      await this.$store.dispatch('scanForWallets');
-      this.loading = false;
     },
     async reset() {
       await this.setPairInfo();
