@@ -28,8 +28,13 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('initSdk');
-    if (this.address) {
-      await this.$watchUntilTruly(() => this.$store.state.sdk);
+    await this.$watchUntilTruly(() => this.$store.state.sdk);
+    await this.$store.dispatch('aeternity/initRouter', this.$store.state.sdk);
+    await this.$store.dispatch('aeternity/initFactory', this.$store.state.sdk);
+    await this.$store.dispatch('aeternity/initWae', this.$store.state.sdk);
+    if (this.$isMobile) {
+      await this.$store.dispatch('addMobileWallet');
+    } else {
       await this.$store.dispatch('scanForWallets');
     }
   },

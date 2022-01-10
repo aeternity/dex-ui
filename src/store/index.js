@@ -14,6 +14,7 @@ export const dataStore = {
 };
 export default createStore({
   state: {
+    connectingToWallet: false,
     address: null,
     sdk: null,
     balance: 0,
@@ -21,6 +22,12 @@ export default createStore({
     networkId: 'ae_uat',
   },
   mutations: {
+    useSdkWallet(state) {
+      state.useSdkWallet = true;
+    },
+    setConnectingToWallet(state, payload) {
+      state.connectingToWallet = payload;
+    },
     enableIframeWallet(state) {
       state.useIframeWallet = true;
     },
@@ -58,6 +65,20 @@ export default createStore({
       commit('setSdk', instance);
       commit('setNetwork', state.networkId);
     },
+    async connectWallet({ dispatch, commit }) {
+      commit('setConnectingToWallet', true);
+      if (window.navigator.userAgent.includes('Mobi')) {
+        const addressDeepLink = createDeepLinkUrl({
+          type: 'address',
+          'x-success': `${window.location}?address={address}`,
+          'x-cancel': window.location,
+        });
+        window.location = addressDeepLink;
+      } else {
+        await dispatch('scanForWallets');
+      }
+      commit('setConnectingToWallet', false);
+    },
     async scanForWallets({ commit, dispatch, state: { sdk, networkId } }) {
       const scannerConnection = await BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
@@ -81,12 +102,18 @@ export default createStore({
           if (walletNetworkId !== networkId) {
             dispatch('selectNetwork', networkId);
           }
-          await dispatch('aeternity/initRouter', sdk);
-          await dispatch('aeternity/initFactory', sdk);
-          await dispatch('aeternity/initWae', sdk);
           resolve(address);
         });
       });
+    },
+    async addMobileWallet({
+      commit,
+      state: { address: currentAddress, route },
+    }) {
+      const { address: newAddress } = route.query;
+      const address = newAddress || currentAddress;
+      commit('setAddress', address);
+      return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
       if (networkId === newNetworkId) return;

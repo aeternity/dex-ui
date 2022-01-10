@@ -100,8 +100,9 @@
           v-if="!address"
           fill="transparent-blue"
           class="connect-btn"
-          :spinner="loading"
-          :class="{ loading }"
+          :disabled="connectingToWallet"
+          :spinner="connectingToWallet"
+          :class="{ loading: connectingToWallet }"
           @click="connectWallet"
         >
           Connect Wallet
@@ -178,7 +179,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       detailed: false,
       percentage: 0,
       firstAssetInput: BigNumber(0),
@@ -187,15 +187,11 @@ export default {
       approved: false,
     };
   },
-  computed: {
-    ...mapState(['address']),
-  },
+  computed: mapState(['address', 'connectingToWallet']),
   methods: {
     async connectWallet() {
-      this.loading = true;
       await this.$watchUntilTruly(() => this.$store.state.sdk);
-      await this.$store.dispatch('scanForWallets');
-      this.loading = false;
+      await this.$store.dispatch('connectWallet');
     },
     updatePercent(p) {
       this.percentage = p;

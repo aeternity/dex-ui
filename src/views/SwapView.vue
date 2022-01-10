@@ -49,9 +49,9 @@
 
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="isDisabled"
-      :spinner="loading"
-      :class="{ loading }"
+      :disabled="connectingToWallet || isDisabled"
+      :spinner="connectingToWallet"
+      :class="{ loading: connectingToWallet }"
       @click="clickHandler"
     >
       {{ buttonMessage }}
@@ -82,7 +82,6 @@ export default {
     ButtonTooltip,
   },
   data: () => ({
-    loading: false,
     to: null,
     from: null,
     amountFrom: '',
@@ -96,8 +95,8 @@ export default {
     reserveTo: null,
   }),
   computed: {
+    ...mapState(['address', 'connectingToWallet']),
     ...mapState({
-      address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     isAeVsWae() {
@@ -271,18 +270,13 @@ export default {
         handleUnknownError(ex);
       }
     },
-    clickHandler() {
+    async clickHandler() {
       if (this.address) {
         this.swap();
       } else {
-        this.connectWallet();
+        await this.$watchUntilTruly(() => this.$store.state.sdk);
+        await this.$store.dispatch('connectWallet');
       }
-    },
-    async connectWallet() {
-      this.loading = true;
-      await this.$watchUntilTruly(() => this.$store.state.sdk);
-      await this.$store.dispatch('scanForWallets');
-      this.loading = false;
     },
     async swapProcess() {
       const aePair = this.getAePair();
