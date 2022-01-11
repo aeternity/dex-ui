@@ -20,6 +20,7 @@ app.config.globalProperties.$watchUntilTruly = function watchUntilTruly(getter) 
     );
   });
 };
+app.config.globalProperties.$isMobile = window.navigator.userAgent.includes('Mobi');
 
 registerModals();
 
