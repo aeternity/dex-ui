@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import {
-  Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection,
+  Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection, Universal,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import { createDeepLinkUrl } from '@/lib/utils';
@@ -19,6 +19,7 @@ export default createStore({
     sdk: null,
     balance: 0,
     useIframeWallet: false,
+    useSdkWallet: false,
     networkId: 'ae_uat',
   },
   mutations: {
@@ -45,6 +46,15 @@ export default createStore({
     },
   },
   actions: {
+    async initUniversal({ commit }) {
+      const instance = await Universal({
+        nodes: [
+          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
+        ],
+        compilerUrl: process.env.VUE_APP_COMPILER_URL,
+      });
+      commit('setSdk', instance);
+    },
     async initSdk({ commit, dispatch, state }) {
       const options = {
         nodes: [
@@ -87,7 +97,7 @@ export default createStore({
       // eslint-disable-next-line no-underscore-dangle
       const webWalletTimeout = window.navigator.userAgent.includes('Mobi') ? 0
         : setTimeout(() => commit('enableIframeWallet'), 10000);
-
+      commit('useSdkWallet');
       return new Promise((resolve) => {
         detector.scan(async ({ newWallet }) => {
           if (!newWallet) return;

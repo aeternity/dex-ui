@@ -4,7 +4,7 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
-import { cttoak } from '../../lib/utils';
+import { cttoak, createOnAccountObject } from '../../lib/utils';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
@@ -33,6 +33,27 @@ const getPairId = (tokenA, tokenB) => {
 // TODO: remove this after testing the actual gas and before production
 const extraGas = {
   gas: 150000,
+};
+
+const genRouterMethodAction = (method, argsMapper) => async (
+  context,
+  args,
+) => {
+  const {
+    dispatch,
+    state: { router },
+    rootState: { address, useSdkWallet },
+  } = context;
+  if (useSdkWallet) {
+    const { decodedResult } = await router.methods[method](...argsMapper(context, args));
+    return decodedResult;
+  }
+  const onAccount = createOnAccountObject(address);
+  const methodArgs = argsMapper(context, args);
+  methodArgs[methodArgs.length - 1] = { ...methodArgs[methodArgs.length - 1], onAccount };
+  const { tx } = await router.methods[method].get(...methodArgs);
+  window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+  return null;
 };
 
 /**
@@ -334,28 +355,15 @@ export default {
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for tokenA and tokenB
     */
-    async removeLiquidity({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      tokenA, tokenB,
-      liquidity,
-      amountADesired,
-      amountBDesired,
-      deadline,
-    }) {
-      const { decodedResult } = router.methods.remove_liquidity(
-        tokenA,
-        tokenB,
-        liquidity,
-        subSlippage(amountADesired, slippage), // minumum amount to be removed
-        subSlippage(amountBDesired, slippage), // minumum amount to be removed
-        to,
-        deadline || defaultDeadline(),
-        extraGas,
-      );
-      return decodedResult;
-    },
+    removeLiquidity: genRouterMethodAction(
+      'remove_liquidity',
+      ({ state, rootState }, {
+        tokenA, tokenB, liquidity, amountADesired, amountBDesired, deadline,
+      }) => ([tokenA, tokenB, liquidity,
+        subSlippage(amountADesired, state.slippage), // minumum amount to be removed
+        subSlippage(amountBDesired, state.slippage), // minumum amount to be removed
+        rootState.address, deadline || defaultDeadline(), extraGas]),
+    ),
 
     /**
      * @description remove the liquidity provided from a pair of p2.token*wae
@@ -371,26 +379,14 @@ export default {
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for token and wae
     */
-    async removeLiquidityAe({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      token,
-      liquidity,
-      amountTokenDesired,
-      amountAEDesired,
-      deadline,
-    }) {
-      await router.methods.remove_liquidity_ae(
-        token,
-        liquidity,
-        subSlippage(amountTokenDesired, slippage), // minumum amount to be removed
-        subSlippage(amountAEDesired, slippage), // minumum amount to be removed
-        to,
-        deadline || defaultDeadline(),
-        extraGas,
-      );
-    },
+    removeLiquidityAe: genRouterMethodAction(
+      'remove_liquidity_ae',
+      ({ state, rootState }, {
+        token, liquidity, amountTokenDesired, amountAEDesired, deadline,
+      }) => ([token, liquidity, subSlippage(amountTokenDesired, state.slippage), // minumum removed
+        subSlippage(amountAEDesired, state.slippage), // minumum amount to be removed
+        rootState.address, deadline || defaultDeadline(), extraGas]),
+    ),
 
     /**
      * @description create allowance for a token AEX9 complient
@@ -403,7 +399,7 @@ export default {
     async createTokenAllowance({
       dispatch,
       state: { router, slippage },
-      rootState: { address },
+      rootState: { address, useSdkWallet },
     }, {
       token: tokenAddress,
       amount,
@@ -415,21 +411,40 @@ export default {
         from_account: address,
         for_account: routerAddress,
       });
-
       const amountWithSlippage = addSlippage(amount, slippage);
       if (currentAllowance == null) {
         // we don't have any allowance entry, let's create one
-        await token.methods.create_allowance(
-          routerAddress,
-          amount,
-        );
+        if (useSdkWallet) {
+          await token.methods.create_allowance(
+            routerAddress,
+            amount,
+          );
+        } else {
+          const onAccount = createOnAccountObject(address);
+          const { tx } = await token.methods.create_allowance.get(
+            routerAddress,
+            amount,
+            { onAccount },
+          );
+          window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+        }
       } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
         // what we need, let's increase it
-        await token.methods.change_allowance(
-          routerAddress,
-          amountWithSlippage - currentAllowance,
-        );
+        if (useSdkWallet) {
+          await token.methods.change_allowance(
+            routerAddress,
+            amountWithSlippage - currentAllowance,
+          );
+        } else {
+          const onAccount = createOnAccountObject(address);
+          const { tx } = await token.methods.change_allowance.get(
+            routerAddress,
+            amountWithSlippage - currentAllowance,
+            { onAccount },
+          );
+          window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+        }
       }
       // at this point we are good we have enough allowance
     },
@@ -450,31 +465,14 @@ export default {
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for tokenA and tokenB and the liquidity
     */
-    async addLiquidity({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      tokenA, tokenB,
-      amountADesired,
-      amountBDesired,
-      minimumLiquidity,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.add_liquidity(
-        tokenA,
-        tokenB,
-        amountADesired,
-        amountBDesired,
-        subSlippage(amountADesired, slippage), // min amount to be added
-        subSlippage(amountBDesired, slippage), // min amount to be added
-        to,
-        minimumLiquidity,
-        deadline || defaultDeadline(),
-        extraGas,
-      );
-
-      return decodedResult;
-    },
+    addLiquidity: genRouterMethodAction(
+      'add_liquidity',
+      ({ state, rootState }, {
+        tokenA, tokenB, amountADesired, amountBDesired, minimumLiquidity, deadline,
+      }) => ([tokenA, tokenB, amountADesired, amountBDesired,
+        subSlippage(amountADesired, state.slippage), subSlippage(amountBDesired, state.slippage),
+        rootState.address, minimumLiquidity, deadline || defaultDeadline(), extraGas]),
+    ),
 
     /**
      * @description adds liquidity to a pair of token*wae
@@ -491,46 +489,39 @@ export default {
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for token and AE and the liquidity
     */
-    async addLiquidityAe({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      token,
-      amountTokenDesired,
-      amountAeDesired,
-      minimumLiquidity,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.add_liquidity_ae(
-        token,
-        amountTokenDesired,
-        subSlippage(amountTokenDesired, slippage), // min amount
-        subSlippage(amountAeDesired, slippage), // min amount
-        to,
-        minimumLiquidity,
-        deadline || defaultDeadline(), {
-          ...extraGas,
-          amount: amountAeDesired.toString(), // if less is added the diff is returned at the end
-        },
-      );
+    addLiquidityAe: genRouterMethodAction(
+      'add_liquidity_ae',
+      ({ state, rootState }, {
+        token, amountTokenDesired, amountAeDesired, minimumLiquidity, deadline,
+      }) => ([token, amountTokenDesired, subSlippage(amountTokenDesired, state.slippage),
+        subSlippage(amountAeDesired, state.slippage), rootState.address, minimumLiquidity,
+        deadline || defaultDeadline(), { ...extraGas, amount: amountAeDesired.toString() }]),
+    ),
 
-      return decodedResult;
-    },
-    /**
-     * @description swaps AE to WAE token bypassing any dex/router entrypoints
-     * @param p1 vuex context
-     * @param {bigint} p2.amount exact amount of AE to be transformed into WAE
-    */
-    async swapExactAeForExactWae({ state: { wae } }, amount) {
-      await wae.methods.deposit({ amount: amount.toString() });
+    async swapExactAeForExactWae({
+      dispatch, state: { wae }, rootState: { useSdkWallet, address },
+    }, amount) {
+      if (useSdkWallet) {
+        await wae.methods.deposit({ amount: amount.toString() });
+      }
+      const onAccount = createOnAccountObject(address);
+      const { tx } = await wae.methods.deposit.get({ amount: amount.toString(), onAccount });
+      window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
     },
     /**
      * @description swaps WAE to AE token bypassing any dex/router entrypoints
      * @param p1 vuex context
      * @param {bigint} p2.amount exact amount WAE to be transformed into AE
     */
-    async swapExactWaeForExactAe({ state: { wae } }, amount) {
-      await wae.methods.withdraw(amount);
+    async swapExactWaeForExactAe({
+      dispatch, state: { wae }, rootState: { useSdkWallet, address },
+    }, amount) {
+      if (useSdkWallet) {
+        await wae.methods.withdraw({ amount: amount.toString() });
+      }
+      const onAccount = createOnAccountObject(address);
+      const { tx } = await wae.methods.withdraw.get({ amount: amount.toString(), onAccount });
+      window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
     },
     /**
      * @description
@@ -541,26 +532,13 @@ export default {
      * @param {bigint} p2.amountOutDesired desired amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    async swapExactTokensForTokens({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountIn,
-      amountOutDesired,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_exact_tokens_for_tokens(
-        amountIn,
-        subSlippage(amountOutDesired, slippage),
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined,
-        extraGas,
-      );
-      return decodedResult;
-    },
+    swapExactTokensForTokens: genRouterMethodAction(
+      'swap_exact_tokens_for_tokens',
+      ({ state, rootState }, {
+        amountIn, amountOutDesired, path, deadline,
+      }) => ([amountIn, subSlippage(amountOutDesired, state.slippage), path,
+        rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+    ),
 
     /**
      * @description
@@ -571,26 +549,13 @@ export default {
      * @param {bigint} p2.amountInDesired desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    async swapTokensForExactTokens({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountOut,
-      amountInDesired,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_tokens_for_exact_tokens(
-        amountOut,
-        addSlippage(amountInDesired, slippage), // this is maximum
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined,
-        extraGas,
-      );
-      return decodedResult;
-    },
+    swapTokensForExactTokens: genRouterMethodAction(
+      'swap_tokens_for_exact_tokens',
+      ({ state, rootState }, {
+        amountOut, amountInDesired, path, deadline,
+      }) => ([amountOut, addSlippage(amountInDesired, state.slippage), path,
+        rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+    ),
 
     /**
      * @param p1 vuex context
@@ -599,27 +564,13 @@ export default {
      * amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    async swapExactAeForTokens({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountAeIn,
-      amountOutDesired,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_exact_ae_for_tokens(
-        subSlippage(amountOutDesired, slippage),
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined, {
-          ...extraGas,
-          amount: amountAeIn.toString(),
-        },
-      );
-      return decodedResult;
-    },
+    swapExactAeForTokens: genRouterMethodAction(
+      'swap_exact_ae_for_tokens',
+      ({ state, rootState }, {
+        amountAeIn, amountOutDesired, path, deadline,
+      }) => ([subSlippage(amountOutDesired, state.slippage), path, rootState.address,
+        deadline || defaultDeadline(), undefined, { ...extraGas, amount: amountAeIn.toString() }]),
+    ),
 
     /**
      * @description
@@ -630,26 +581,13 @@ export default {
      * @param {bigint} p2.amountTokenInDesired desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    async swapTokensForExactAe({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountAeOut,
-      amountTokenInDesired,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_tokens_for_exact_ae(
-        amountAeOut,
-        addSlippage(amountTokenInDesired, slippage), // not more than this
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined,
-        extraGas,
-      );
-      return decodedResult;
-    },
+    swapTokensForExactAe: genRouterMethodAction(
+      'swap_tokens_for_exact_ae',
+      ({ state, rootState }, {
+        amountAeOut, amountTokenInDesired, path, deadline,
+      }) => ([amountAeOut, addSlippage(amountTokenInDesired, state.slippage), // not more than this
+        path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+    ),
 
     /**
      * @description
@@ -660,26 +598,13 @@ export default {
      * @param {bigint} p2.amountAeOutDesired desired amount out for the AE found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    async swapExactTokensForAe({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountIn,
-      amountAeOutDesired,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_exact_tokens_for_ae(
-        amountIn,
-        subSlippage(amountAeOutDesired, slippage), // no less than this
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined,
-        extraGas,
-      );
-      return decodedResult;
-    },
+    swapExactTokensForAe: genRouterMethodAction(
+      'swap_exact_tokens_for_ae',
+      ({ state, rootState }, {
+        amountIn, amountAeOutDesired, path, deadline,
+      }) => ([amountIn, subSlippage(amountAeOutDesired, state.slippage), // no less than this
+        path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+    ),
 
     /**
      * @param p1 vuex context
@@ -687,30 +612,14 @@ export default {
      * @param {bigint} p2.amountAeInDesired desired amount in for the AE found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    async swapAeForExactTokens({
-      state: { router, slippage },
-      rootState: { address: to },
-    }, {
-      amountAeInDesired,
-      amountOut,
-      path,
-      deadline,
-    }) {
-      const { decodedResult } = await router.methods.swap_ae_for_exact_tokens(
-        amountOut,
-        path,
-        to,
-        deadline || defaultDeadline(),
-        undefined,
-        {
-          ...extraGas,
-          // this is the diff between the desired+slippage and
-          // the actual amount will be return into owner's wallet
-          amount: addSlippage(amountAeInDesired, slippage).toString(),
-        },
-      );
-      return decodedResult;
-    },
-
+    swapAeForExactTokens: genRouterMethodAction(
+      'swap_ae_for_exact_tokens',
+      ({ state, rootState }, {
+        amountAeInDesired, amountOut, path, deadline,
+      }) => ([amountOut, path, rootState.address, deadline || defaultDeadline(), undefined,
+        { ...extraGas, amount: addSlippage(amountAeInDesired, state.slippage).toString() }]),
+      // this is the diff between the desired+slippage and
+      // the actual amount will be return into owner's wallet
+    ),
   },
 };

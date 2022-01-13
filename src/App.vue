@@ -27,7 +27,11 @@ export default {
     ...mapState(['address']),
   },
   async mounted() {
-    await this.$store.dispatch('initSdk');
+    if (this.$isMobile) {
+      await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
+    } else {
+      await this.$store.dispatch('initSdk');
+    }
     await this.$watchUntilTruly(() => this.$store.state.sdk);
     await this.$store.dispatch('aeternity/initRouter', this.$store.state.sdk);
     await this.$store.dispatch('aeternity/initFactory', this.$store.state.sdk);
