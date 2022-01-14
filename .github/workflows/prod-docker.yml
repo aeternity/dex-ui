@@ -9,7 +9,7 @@ on:
 
 env:
   ENV: "prd"
-  APP: "dex"
+  APP: "dex-ui"
 
 jobs:
   main:
