@@ -24,7 +24,7 @@
       @update:token="setSelectedToken($event, false)"
     />
     <div
-      v-if="to && from"
+      v-if="to && from && ratio != null"
       class="price"
     >
       {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
@@ -121,6 +121,9 @@ export default {
       return 'Swap';
     },
     ratio() {
+      if (this.isAeVsWae) {
+        return 1;
+      }
       if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) {
         return null;
       }
