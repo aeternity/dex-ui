@@ -4,6 +4,7 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
+import createPersistedState from 'vuex-persistedstate';
 import { cttoak } from '../../lib/utils';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
@@ -63,12 +64,14 @@ export default {
     // TODO: should this be the default?
     slippage: 10n,
     pairs: {},
-  },
-
-  getters: {
+    liquidity: {},
+    poolInfo: {},
   },
 
   mutations: {
+    setLiquidity(state, liquidity) {
+      state.liquidity = liquidity;
+    },
     setWaeInstance(state, instance) {
       state.wae = instance;
     },
@@ -83,6 +86,34 @@ export default {
     },
     addPair(state, { tokenA, tokenB, instance }) {
       state.pairs[getPairId(tokenA, tokenB)] = instance;
+    },
+    updateProvidedLiquidity(state, {
+      tokenA, tokenB,
+      tokenASymbol, tokenBSymbol,
+      tokenADecimals, tokenBDecimals,
+      balance,
+    }) {
+      const [token0, token1] = sortTokens(
+        { cid: tokenA, symbol: tokenASymbol, decimals: tokenADecimals },
+        { cid: tokenB, symbol: tokenBSymbol, decimals: tokenBDecimals },
+        (x) => x.cid,
+      );
+      state.liquidity[getPairId(tokenA, tokenB)] = balance ? {
+        token0, token1, balance,
+      } : undefined;
+      console.log(state.liquidity[getPairId(tokenA, tokenB)]);
+    },
+    updatePoolInfo(state, {
+      tokenA, tokenB, reserveA, reserveB, totalSupply,
+    }) {
+      const [token0, token1] = sortTokens(
+        { cid: tokenA, reserve: reserveA },
+        { cid: tokenB, reserve: reserveB },
+        (x) => x.cid,
+      );
+      state.poolInfo[getPairId(tokenA, tokenB)] = {
+        token0, token1, totalSupply,
+      };
     },
   },
 
@@ -163,15 +194,27 @@ export default {
      * @param {string} p2.tokenB tokenA address
      * @return {int | null} returns the owner liquidity
     */
-    async getAccountLiquidity({
+    async pullAccountLiquidity({
       dispatch,
+      commit,
       rootState: { address: owner },
     }, {
       tokenA, tokenB,
+      tokenASymbol, tokenBSymbol,
+      tokenADecimals, tokenBDecimals,
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
 
       const { decodedResult: balance } = await pair.methods.balance(owner);
+      commit('updateProvidedLiquidity', {
+        tokenA,
+        tokenB,
+        balance,
+        tokenASymbol,
+        tokenBSymbol,
+        tokenADecimals,
+        tokenBDecimals,
+      });
       return balance;
     },
     /**
@@ -241,6 +284,7 @@ export default {
     */
     async getPoolInfo({
       dispatch,
+      commit,
     }, {
       tokenA, tokenB,
     }) {
@@ -251,6 +295,14 @@ export default {
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
       const { decodedResult: totalSupply } = await pair.methods.total_supply();
+
+      commit('updatePoolInfo', {
+        tokenA,
+        tokenB,
+        reserveA,
+        reserveB,
+        totalSupply,
+      });
       return {
         totalSupply,
         reserveA,
@@ -411,6 +463,7 @@ export default {
         deadline || defaultDeadline(),
         extraGas,
       );
+
       return decodedResult;
     },
 
@@ -451,6 +504,7 @@ export default {
           amount: amountAeDesired.toString(), // if less is added the diff is returned at the end
         },
       );
+
       return decodedResult;
     },
     /**
@@ -650,4 +704,9 @@ export default {
     },
 
   },
+  plugins: [
+    createPersistedState({
+      paths: ['liquidity'],
+    }),
+  ],
 };

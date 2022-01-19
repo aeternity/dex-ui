@@ -2,12 +2,12 @@
   <div :class="['liquidity-item', { hidden: !show }]">
     <ButtonPlain
       class="header"
-      @click="show = !show"
+      @click="onShow"
     >
       <div>
         <img src="../assets/logo.png">
         <img src="../assets/ae.svg">
-        <span>VUE/AE</span>
+        <span>{{ token0.symbol+'/'+token1.symbol }}</span>
       </div>
       <img
         src="../assets/arrow.svg"
@@ -16,26 +16,26 @@
     </ButtonPlain>
     <div class="body">
       <div>
-        <span>Pooled AE:</span>
+        <span>Pooled {{ token0.symbol }}:</span>
         <div>
-          0.00015
+          {{ amount0Text }}
           <img src="../assets/ae.svg">
         </div>
       </div>
       <div>
-        <span>Pooled VUE:</span>
+        <span>Pooled {{ token1.symbol }}:</span>
         <div>
-          0.00000231212
+          {{ amount1Text }}
           <img src="../assets/logo.png">
         </div>
       </div>
       <div>
         <span>Your pool tokens:</span>
-        <span>0.000000072</span>
+        <span>{{ balanceText }}</span>
       </div>
       <div>
         <span>Your pool share:</span>
-        <span>0.01%</span>
+        <span>{{ shareText }}%</span>
       </div>
     </div>
     <div class="buttons">
@@ -64,20 +64,98 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import ButtonPlain from './ButtonPlain.vue';
 import ButtonDefault from './ButtonDefault.vue';
+import { reduceDecimals } from '../lib/utils';
 
+const calculateAmount = (balance, totalSupply, reserve) => {
+  if (!balance || !totalSupply || !reserve) {
+    return null;
+  }
+  const share = BigNumber(balance).times(100).div(totalSupply);
+  const amount = BigNumber(reserve).times(share).div(100);
+  return BigInt(amount.toFixed(0));
+};
+const getAmountText = (amount, token) => {
+  if (amount == null) {
+    return '-';
+  }
+  return reduceDecimals(amount, token);
+};
 export default {
   components: {
     ButtonPlain,
     ButtonDefault,
   },
   props: {
-    poolInfo: { type: Object, required: true }, // that will be displayed within this component
+    poolId: { type: String, required: true },
+    poolInfo: { type: Object, required: true },
   },
   data: () => ({
     show: false,
   }),
+  computed: {
+    ...mapState({
+      supplyInfoObject: (state) => state.aeternity.poolInfo,
+    }),
+    supplyInfo() {
+      return this.supplyInfoObject[this.poolId];
+    },
+    token0() {
+      return this.poolInfo.token0;
+    },
+    token1() {
+      return this.poolInfo.token1;
+    },
+    reserve0() {
+      return this.supplyInfo?.token0.reserve;
+    },
+    reserve1() {
+      return this.supplyInfo?.token1.reserve;
+    },
+    totalSupply() {
+      return this.supplyInfo?.totalSupply;
+    },
+    balance() {
+      return this.poolInfo.balance;
+    },
+    balanceText() {
+      return reduceDecimals(this.poolInfo.balance, { decimals: 18 });
+    },
+    amount0() {
+      return calculateAmount(this.balance, this.totalSupply, this.reserve0);
+    },
+    amount0Text() {
+      return getAmountText(this.amount0, this.token0);
+    },
+    amount1() {
+      return calculateAmount(this.balance, this.totalSupply, this.reserve1);
+    },
+    amount1Text() {
+      return getAmountText(this.amount1, this.token1);
+    },
+    shareText() {
+      if (this.balance == null || !this.totalSupply) {
+        return '-';
+      }
+      return BigNumber(this.balance).times(100).div(this.totalSupply).toFixed(6);
+    },
+
+  },
+  methods: {
+    async onShow() {
+      this.show = !this.show;
+      if (this.show) {
+        await this.$store.dispatch('aeternity/getPoolInfo', {
+          tokenA: this.token0.cid,
+          tokenB: this.token1.cid,
+        });
+        console.log(this);
+      }
+    },
+  },
 };
 </script>
 

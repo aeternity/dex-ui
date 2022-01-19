@@ -413,12 +413,31 @@ export default {
             amountBDesired: expandDecimals(this.amountTokenB, this.tokenB),
             minimumLiquidity,
           });
+          // to refresh liquidity list
+          await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+            tokenA: this.tokenA.contract_id,
+            tokenB: this.tokenB.contract_id,
+            tokenASymbol: this.tokenA.symbol,
+            tokenBSymbol: this.tokenB.symbol,
+            tokenADecimals: this.tokenA.decimals,
+            tokenBDecimals: this.tokenB.decimals,
+          });
         } else {
           await this.$store.dispatch('aeternity/addLiquidityAe', {
             token: aePair.token.contract_id,
             amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token),
             amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae),
             minimumLiquidity,
+          });
+
+          // to refresh liquidity list
+          await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+            tokenA: aePair.token.contract_id,
+            tokenASymbol: aePair.token.symbol,
+            tokenADecimals: aePair.token.decimals,
+            tokenB: aePair.wae.contract_id,
+            tokenBSymbol: aePair.wae.symbol,
+            tokenBDecimals: aePair.wae.decimals,
           });
         }
         await this.reset();
