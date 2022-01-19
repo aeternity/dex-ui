@@ -19,9 +19,10 @@
       </ButtonTooltip>
     </div>
     <LiquidityItem
-      v-for="info in poolsInfo"
+      v-for="info in liquidity"
       :key="info.id"
-      :pool-info="info"
+      :pool-id="info.id"
+      :pool-info="info.payload"
     />
     <span class="import">
       Don't see a pool you've joined?
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import MainWrapper from '../components/MainWrapper.vue';
 import ButtonDefault from '../components/ButtonDefault.vue';
 import ButtonTooltip from '../components/ButtonTooltip.vue';
@@ -43,9 +45,14 @@ export default {
     ButtonTooltip,
     LiquidityItem,
   },
-  data: () => ({
-    poolsInfo: [{ id: 1 }], // contract should provide such info
-  }),
+  computed: {
+    ...mapState({
+      liquidity: (state) => Object.keys(state.aeternity.liquidity).map((key) => ({
+        id: key,
+        payload: state.aeternity.liquidity[key],
+      })),
+    }),
+  },
 };
 </script>
 
