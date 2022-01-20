@@ -50,7 +50,7 @@ export default {
       liquidity: (state) => Object.keys(state.aeternity.liquidity).map((key) => ({
         id: key,
         payload: state.aeternity.liquidity[key],
-      })),
+      })).filter((x) => x.payload),
     }),
   },
 };

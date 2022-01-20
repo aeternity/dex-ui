@@ -152,7 +152,6 @@ export default {
           tokenA: this.token0.cid,
           tokenB: this.token1.cid,
         });
-        console.log(this);
       }
     },
   },

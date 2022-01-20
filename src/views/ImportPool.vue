@@ -7,22 +7,21 @@
       <Tip tip="Use this tool to find v2 pools that don't automatically appear in the interface." />
       <ButtonToken
         fill="transparent"
-        :token="from"
+        :token="tokenA"
+        :include-wae="false"
         arrow
         @update:token="setSelectedToken($event, true)"
       />
       <img src="../assets/plus.svg">
       <ButtonToken
         fill="transparent"
-        :token="to"
+        :token="tokenB"
+        :include-wae="false"
         arrow
         @update:token="setSelectedToken($event, false)"
       />
       <div class="connect">
-        {{ address
-          ? 'Select a token to find your v2 liquidity.'
-          : 'Connect to a wallet to find pools'
-        }}
+        {{ footerText }}
       </div>
     </MainWrapper>
   </div>
@@ -33,7 +32,7 @@ import { mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
-import { calculateSelectedToken } from '../lib/utils';
+import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
 
 export default {
   components: {
@@ -42,13 +41,49 @@ export default {
     Tip,
   },
   data: () => ({
-    to: null,
-    from: null,
+    tokenA: null,
+    tokenB: null,
+    imported: false,
+    importing: false,
   }),
-  computed: mapState(['address']),
+  computed: {
+    ...mapState(['address']),
+    footerText() {
+      if (this.importing) return 'Fetching data...';
+      if (!this.address) return 'Connect to a wallet to find pools';
+      if (!this.tokenA || !this.tokenB) return 'Select both tokens to find your provided liquidity.';
+      if (this.imported) return 'The liquidity is imported, you can go back to see your provided liquidity in the main pool screen';
+      return 'You have no provided liquidity for the selected tokens';
+    },
+  },
   methods: {
-    setSelectedToken(token, isFrom) {
-      [this.from, this.to] = calculateSelectedToken(token, this.from, this.to, isFrom);
+    async setSelectedToken(token, isFrom) {
+      [this.tokenA, this.tokenB] = calculateSelectedToken(token, this.tokenA, this.tokenB, isFrom);
+      if (this.tokenA && this.tokenB) {
+        // to refresh liquidity list
+        try {
+          this.importing = true;
+          const balance = await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+            tokenA: this.tokenA.contract_id,
+            tokenB: this.tokenB.contract_id,
+            tokenASymbol: this.tokenA.symbol,
+            tokenBSymbol: this.tokenB.symbol,
+            tokenADecimals: this.tokenA.decimals,
+            tokenBDecimals: this.tokenB.decimals,
+          });
+          if (balance) {
+            this.imported = true;
+            return;
+          }
+        } catch (e) {
+          if (e.message !== 'PAIR NOT FOUND') {
+            handleUnknownError(e);
+          }
+        } finally {
+          this.importing = false;
+        }
+      }
+      this.imported = false;
     },
   },
 };
@@ -65,7 +100,7 @@ export default {
   .connect {
     color: white;
     width: 100%;
-    padding: 45px 0;
+    padding: 45px 16px;
     border-radius: 16px;
     border: 1px solid variables.$color-black;
     background-color: variables.$color-black2;
