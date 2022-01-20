@@ -119,10 +119,10 @@ export default {
       return this.supplyInfo?.totalSupply;
     },
     balance() {
-      return this.poolInfo.balance;
+      return this.poolInfo.balanceStr && BigInt(this.poolInfo.balanceStr);
     },
     balanceText() {
-      return reduceDecimals(this.poolInfo.balance, { decimals: 18 });
+      return reduceDecimals(this.balance, { decimals: 18 });
     },
     amount0() {
       return calculateAmount(this.balance, this.totalSupply, this.reserve0);
