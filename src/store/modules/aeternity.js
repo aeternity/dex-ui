@@ -101,7 +101,6 @@ export default {
       state.liquidity[getPairId(tokenA, tokenB)] = balance ? {
         token0, token1, balance,
       } : undefined;
-      console.log(state.liquidity[getPairId(tokenA, tokenB)]);
     },
     updatePoolInfo(state, {
       tokenA, tokenB, reserveA, reserveB, totalSupply,
