@@ -6,6 +6,11 @@ import createPersistedState from 'vuex-persistedstate';
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
+export const dataStore = {
+  state: {
+    data: [],
+  },
+};
 export default createStore({
   state: {
     address: null,
@@ -103,10 +108,11 @@ export default createStore({
   },
   modules: {
     aeternity: aeternityModule,
+    dataStore,
   },
   plugins: [
     createPersistedState({
-      paths: ['address', 'network'],
+      paths: ['address', 'network', 'slippage', 'aeternity.providedLiquidity'],
     }),
     modals,
   ],

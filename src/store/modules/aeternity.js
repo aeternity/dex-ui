@@ -4,7 +4,6 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
-import createPersistedState from 'vuex-persistedstate';
 import { cttoak } from '../../lib/utils';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
@@ -64,7 +63,7 @@ export default {
     // TODO: should this be the default?
     slippage: 10n,
     pairs: {},
-    liquidity: {},
+    providedLiquidity: {},
     poolInfo: {},
   },
 
@@ -87,6 +86,9 @@ export default {
     addPair(state, { tokenA, tokenB, instance }) {
       state.pairs[getPairId(tokenA, tokenB)] = instance;
     },
+    eraseProvidedLiquidity(state) {
+      state.providedLiquidity = {};
+    },
     updateProvidedLiquidity(state, {
       tokenA, tokenB,
       tokenASymbol, tokenBSymbol,
@@ -98,8 +100,8 @@ export default {
         { cid: tokenB, symbol: tokenBSymbol, decimals: tokenBDecimals },
         (x) => x.cid,
       );
-      state.liquidity[getPairId(tokenA, tokenB)] = balance ? {
-        token0, token1, balance,
+      state.providedLiquidity[getPairId(tokenA, tokenB)] = balance ? {
+        token0, token1, balanceStr: balance.toString(),
       } : undefined;
     },
     updatePoolInfo(state, {
@@ -184,6 +186,14 @@ export default {
         source: aex9Inteface,
         contractAddress,
       });
+    },
+    /**
+     * @description reset provided liquidity
+    */
+    resetProvidedLiquidity({
+      commit,
+    }) {
+      commit('eraseProvidedLiquidity');
     },
     /**
      * @description retrieve the liquidity share from a pool
@@ -703,9 +713,4 @@ export default {
     },
 
   },
-  plugins: [
-    createPersistedState({
-      paths: ['liquidity'],
-    }),
-  ],
 };
