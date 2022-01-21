@@ -80,6 +80,7 @@ export default createStore({
           if (walletNetworkId !== networkId) {
             dispatch('selectNetwork', networkId);
           }
+          await dispatch('aeternity/resetProvidedLiquidity', sdk);
           await dispatch('aeternity/initRouter', sdk);
           await dispatch('aeternity/initFactory', sdk);
           await dispatch('aeternity/initWae', sdk);
