@@ -18,12 +18,14 @@
         <img src="../assets/question-circle.svg">
       </ButtonTooltip>
     </div>
-    <LiquidityItem
-      v-for="info in liquidity"
-      :key="info.id"
-      :pool-id="info.id"
-      :pool-info="info.payload"
-    />
+    <div v-if="address != null">
+      <LiquidityItem
+        v-for="info in liquidity"
+        :key="info.id"
+        :pool-id="info.id"
+        :pool-info="info.payload"
+      />
+    </div>
     <span class="import">
       Don't see a pool you've joined?
       <RouterLink :to="{ name: 'import-pool' }">Import it.</RouterLink>
@@ -47,6 +49,7 @@ export default {
   },
   computed: {
     ...mapState({
+      address: 'address',
       liquidity: (state) => Object.keys(state.aeternity.providedLiquidity).map((key) => ({
         id: key,
         payload: state.aeternity.providedLiquidity[key],
