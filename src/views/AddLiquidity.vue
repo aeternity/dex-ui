@@ -140,8 +140,8 @@ export default {
         return 0;
       }
       const { totalSupply } = this;
-      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA);
-      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB);
+      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA.decimals);
+      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB.decimals);
 
       // if there is no pair yet we have a special
       // case for the first provided liquidity
@@ -168,8 +168,8 @@ export default {
       ) {
         return null;
       }
-      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA);
-      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB);
+      const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA.decimals);
+      const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB.decimals);
       const amount = amountTokenA * amountTokenB;
       const reserve = this.reserveTokenB * this.reserveTokenA;
       return BigNumber(amount).times(100).div(reserve).toNumber();
@@ -178,8 +178,8 @@ export default {
       if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) {
         return null;
       }
-      return reduceDecimals(this.reserveTokenA, this.tokenA)
-        .div(reduceDecimals(this.reserveTokenB, this.tokenB)).toNumber();
+      return reduceDecimals(this.reserveTokenA, this.tokenA.decimals)
+        .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
     },
     enoughBalanceTokenA() {
       return (this.tokenA && this.tokenA.contract_id === WAE)
@@ -296,7 +296,7 @@ export default {
       try {
         await this.$store.dispatch('aeternity/createTokenAllowance', {
           token: token.contract_id,
-          amount: BigInt(BigNumber(10).pow(token.decimals).times(amount).toFixed()),
+          amount: expandDecimals(amount, token.decimals),
         });
       } catch (ex) {
         // TODO: this is a hack
@@ -354,7 +354,7 @@ export default {
           firstAmount: this.amountTokenA,
           secondAmount: this.amountTokenB,
           ratio: this.ratio,
-          receive: BigNumber(this.liquidity).div(BigNumber(10).pow(18)),
+          receive: reduceDecimals(this.liquidity, 18),
           share: this.share,
         });
 
@@ -367,8 +367,8 @@ export default {
           await this.$store.dispatch('aeternity/addLiquidity', {
             tokenA: this.tokenA.contract_id,
             tokenB: this.tokenB.contract_id,
-            amountADesired: expandDecimals(this.amountTokenA, this.tokenA),
-            amountBDesired: expandDecimals(this.amountTokenB, this.tokenB),
+            amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
+            amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
             minimumLiquidity,
           });
           // to refresh liquidity list
@@ -383,8 +383,8 @@ export default {
         } else {
           await this.$store.dispatch('aeternity/addLiquidityAe', {
             token: aePair.token.contract_id,
-            amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token),
-            amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae),
+            amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
+            amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
             minimumLiquidity,
           });
 

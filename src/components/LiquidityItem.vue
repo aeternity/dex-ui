@@ -108,7 +108,7 @@ export default {
       return this.poolInfo.balanceStr && BigInt(this.poolInfo.balanceStr);
     },
     balanceText() {
-      return reduceDecimals(this.balance, { decimals: 18 });
+      return reduceDecimals(this.balance, 18);
     },
     amount0() {
       return this.calculateAmount(this.balance, this.totalSupply, this.reserve0);
@@ -143,7 +143,7 @@ export default {
       if (amount == null) {
         return '-';
       }
-      return reduceDecimals(amount, token);
+      return reduceDecimals(amount, token.decimals);
     },
     async onShow() {
       this.show = !this.show;
