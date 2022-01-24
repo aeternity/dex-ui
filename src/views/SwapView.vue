@@ -199,8 +199,8 @@ export default {
           });
           this.allowanceFrom = this.amountFrom;
         }
-      } catch (ex) {
-        handleUnknownError(ex);
+      } catch (e) {
+        handleUnknownError(e);
       }
     },
     async clickHandler() {

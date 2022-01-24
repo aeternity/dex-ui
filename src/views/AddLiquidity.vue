@@ -298,9 +298,9 @@ export default {
           token: token.contract_id,
           amount: expandDecimals(amount, token.decimals),
         });
-      } catch (ex) {
+      } catch (e) {
         // TODO: this is a hack
-        handleUnknownError(ex);
+        handleUnknownError(e);
       }
     },
     async approve() {
@@ -322,8 +322,8 @@ export default {
             this.allowanceTokenB = aePair.tokenAmount;
           }
         }
-      } catch (ex) {
-        handleUnknownError(ex);
+      } catch (e) {
+        handleUnknownError(e);
       } finally {
         this.approving = false;
       }

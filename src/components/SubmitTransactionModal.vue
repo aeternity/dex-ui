@@ -63,8 +63,8 @@ export default {
     try {
       await this.work();
       this.isConfirmed = true;
-    } catch (ex) {
-      this.reject(ex);
+    } catch (e) {
+      this.reject(e);
     }
   },
   methods: {
