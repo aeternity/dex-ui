@@ -58,3 +58,27 @@ export const createOnAccountObject = (address) => ({
     throw new Error('Private key is not available');
   },
 });
+
+export const getAePair = (from, to, amountFrom, amountTo, includeWae) => {
+  if (from && to) {
+    if ((includeWae && from.is_ae) || (from.contract_id === process.env.VUE_APP_WAE_ADDRESS)) {
+      return {
+        isTokenFrom: false,
+        token: to,
+        tokenAmount: amountTo,
+        wae: from,
+        aeAmount: amountFrom,
+      };
+    }
+    if ((includeWae && to.is_ae) || (to.contract_id === process.env.VUE_APP_WAE_ADDRESS)) {
+      return {
+        isTokenFrom: true,
+        token: from,
+        tokenAmount: amountFrom,
+        wae: to,
+        aeAmount: amountTo,
+      };
+    }
+  }
+  return null;
+};
