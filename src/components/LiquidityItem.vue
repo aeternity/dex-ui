@@ -70,20 +70,6 @@ import ButtonPlain from './ButtonPlain.vue';
 import ButtonDefault from './ButtonDefault.vue';
 import { reduceDecimals } from '../lib/utils';
 
-const calculateAmount = (balance, totalSupply, reserve) => {
-  if (!balance || !totalSupply || !reserve) {
-    return null;
-  }
-  const share = BigNumber(balance).times(100).div(totalSupply);
-  const amount = BigNumber(reserve).times(share).div(100);
-  return BigInt(amount.toFixed(0));
-};
-const getAmountText = (amount, token) => {
-  if (amount == null) {
-    return '-';
-  }
-  return reduceDecimals(amount, token);
-};
 export default {
   components: {
     ButtonPlain,
@@ -125,16 +111,16 @@ export default {
       return reduceDecimals(this.balance, { decimals: 18 });
     },
     amount0() {
-      return calculateAmount(this.balance, this.totalSupply, this.reserve0);
+      return this.calculateAmount(this.balance, this.totalSupply, this.reserve0);
     },
     amount0Text() {
-      return getAmountText(this.amount0, this.token0);
+      return this.getAmountText(this.amount0, this.token0);
     },
     amount1() {
-      return calculateAmount(this.balance, this.totalSupply, this.reserve1);
+      return this.calculateAmount(this.balance, this.totalSupply, this.reserve1);
     },
     amount1Text() {
-      return getAmountText(this.amount1, this.token1);
+      return this.getAmountText(this.amount1, this.token1);
     },
     shareText() {
       if (this.balance == null || !this.totalSupply) {
@@ -145,6 +131,20 @@ export default {
 
   },
   methods: {
+    calculateAmount(balance, totalSupply, reserve) {
+      if (!balance || !totalSupply || !reserve) {
+        return null;
+      }
+      const share = BigNumber(balance).times(100).div(totalSupply);
+      const amount = BigNumber(reserve).times(share).div(100);
+      return BigInt(amount.toFixed(0));
+    },
+    getAmountText(amount, token) {
+      if (amount == null) {
+        return '-';
+      }
+      return reduceDecimals(amount, token);
+    },
     async onShow() {
       this.show = !this.show;
       if (this.show) {
