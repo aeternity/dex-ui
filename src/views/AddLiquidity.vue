@@ -293,15 +293,10 @@ export default {
       }
     },
     async createAllowance(token, amount) {
-      try {
-        await this.$store.dispatch('aeternity/createTokenAllowance', {
-          token: token.contract_id,
-          amount: expandDecimals(amount, token.decimals),
-        });
-      } catch (e) {
-        // TODO: this is a hack
-        handleUnknownError(e);
-      }
+      await this.$store.dispatch('aeternity/createTokenAllowance', {
+        token: token.contract_id,
+        amount: expandDecimals(amount, token.decimals),
+      });
     },
     async approve() {
       try {
