@@ -91,7 +91,7 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import {
-  reduceDecimals, expandDecimals, calculateSelectedToken, handleUnknownError,
+  reduceDecimals, expandDecimals, calculateSelectedToken, handleUnknownError, getAePair,
 } from '../lib/utils';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
@@ -273,29 +273,6 @@ export default {
         this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
       );
     },
-    getAePair() {
-      if (this.tokenA && this.tokenB) {
-        if (this.tokenA.contract_id === WAE) {
-          return {
-            isTokenA: false,
-            token: this.tokenB,
-            tokenAmount: this.amountTokenB,
-            wae: this.tokenA,
-            aeAmount: this.amountTokenA,
-          };
-        }
-        if (this.tokenB.contract_id === WAE) {
-          return {
-            isTokenA: true,
-            token: this.tokenA,
-            tokenAmount: this.amountTokenA,
-            wae: this.tokenB,
-            aeAmount: this.amountTokenB,
-          };
-        }
-      }
-      return null;
-    },
     async setPairInfo() {
       try {
         if (!this.tokenA || !this.tokenB || !this.address) {
@@ -347,7 +324,9 @@ export default {
     async approve() {
       try {
         this.approving = true;
-        const aePair = this.getAePair();
+        const aePair = getAePair(
+          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB, false,
+        );
         if (!aePair) {
           await this.createAllowance(this.tokenA, this.amountTokenA);
           this.allowanceTokenA = this.amountTokenA;
@@ -355,7 +334,7 @@ export default {
           this.allowanceTokenB = this.amountTokenB;
         } else {
           await this.createAllowance(aePair.token, aePair.tokenAmount);
-          if (aePair.isTokenA) {
+          if (aePair.isTokenFrom) {
             this.allowanceTokenA = aePair.tokenAmount;
           } else {
             this.allowanceTokenB = aePair.tokenAmount;
@@ -396,7 +375,9 @@ export default {
           share: this.share,
         });
 
-        const aePair = this.getAePair();
+        const aePair = getAePair(
+          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB, false,
+        );
         this.supplying = true;
         // if none of the selected tokens are WAE
         if (!aePair) {

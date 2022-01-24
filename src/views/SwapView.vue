@@ -68,7 +68,7 @@ import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
 import {
-  expandDecimals, reduceDecimals, calculateSelectedToken, handleUnknownError,
+  expandDecimals, reduceDecimals, calculateSelectedToken, handleUnknownError, getAePair,
 } from '../lib/utils';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
@@ -183,28 +183,6 @@ export default {
         this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
       );
     },
-    getAePair() {
-      if (this.from && this.to) {
-        if (this.from.is_ae) {
-          return {
-            isTokenFrom: false,
-            token: this.to,
-            tokenAmount: this.amountTo,
-            wae: this.from,
-            aeAmount: this.amountFrom,
-          };
-        } if (this.to.is_ae) {
-          return {
-            isTokenFrom: true,
-            token: this.from,
-            tokenAmount: this.amountFrom,
-            wae: this.to,
-            aeAmount: this.amountTo,
-          };
-        }
-      }
-      return null;
-    },
     async setPairInfo() {
       try {
         if (!this.from || !this.to || !this.address) {
@@ -261,7 +239,7 @@ export default {
     },
     async approve() {
       try {
-        const aePair = this.getAePair();
+        const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo, true);
         if (!aePair || aePair.isTokenFrom) {
           await this.createAllowance(this.amountFrom);
           this.allowanceFrom = this.amountFrom;
@@ -279,7 +257,7 @@ export default {
       }
     },
     async swapProcess() {
-      const aePair = this.getAePair();
+      const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo, true);
       // if none of the selected tokens are WAE
       if (!aePair) {
         if (this.isLastAmountFrom) {
