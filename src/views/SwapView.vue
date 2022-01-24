@@ -129,11 +129,6 @@ export default {
       return reduceDecimals(this.reserveFrom, this.from)
         .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
     },
-    path() {
-      return !this.from || !this.to
-        ? []
-        : [this.from.contract_id, this.to.contract_id];
-    },
     amountFromExpanded() {
       return !this.from || !this.amountFrom ? 0 : expandDecimals(this.amountFrom, this.from);
     },
@@ -261,20 +256,20 @@ export default {
       // if none of the selected tokens are WAE
       if (!aePair) {
         if (this.isLastAmountFrom) {
-          await this.swapExactTokensForTokens();
+          await this.callSwapAction('swapExactTokensForTokens');
         } else {
-          await this.swapTokensForExactTokens();
+          await this.callSwapAction('swapTokensForExactTokens');
         }
       } else if (aePair.isTokenFrom) {
         if (this.isLastAmountFrom) {
-          await this.swapExactTokensForAe();
+          await this.callSwapAction('swapExactTokensForAe');
         } else {
-          await this.swapTokensForExactAe();
+          await this.callSwapAction('swapTokensForExactAe');
         }
       } else if (this.isLastAmountFrom) {
-        await this.swapExactAeForTokens();
+        await this.callSwapAction('swapExactAeForTokens');
       } else {
-        await this.swapAeForExactTokens();
+        await this.callSwapAction('swapAeForExactTokens');
       }
       await this.reset();
     },
@@ -296,46 +291,11 @@ export default {
       this.allowanceTo = null;
       this.isLastAmountFrom = true;
     },
-    swapExactTokensForTokens() {
-      return this.$store.dispatch('aeternity/swapExactTokensForTokens', {
+    callSwapAction(action) {
+      return this.$store.dispatch(`aeternity/${action}`, {
         amountIn: this.amountFromExpanded,
-        amountOutDesired: this.amountToExpanded,
-        path: this.path,
-      });
-    },
-    swapTokensForExactTokens() {
-      return this.$store.dispatch('aeternity/swapTokensForExactTokens', {
-        amountInDesired: this.amountFromExpanded,
         amountOut: this.amountToExpanded,
-        path: this.path,
-      });
-    },
-    swapExactTokensForAe() {
-      return this.$store.dispatch('aeternity/swapExactTokensForAe', {
-        amountIn: this.amountFromExpanded,
-        amountAeOutDesired: this.amountToExpanded,
-        path: this.path,
-      });
-    },
-    swapTokensForExactAe() {
-      return this.$store.dispatch('aeternity/swapTokensForExactAe', {
-        amountTokenInDesired: this.amountFromExpanded,
-        amountAeOut: this.amountToExpanded,
-        path: this.path,
-      });
-    },
-    swapExactAeForTokens() {
-      return this.$store.dispatch('aeternity/swapExactAeForTokens', {
-        amountAeIn: this.amountFromExpanded,
-        amountOutDesired: this.amountToExpanded,
-        path: this.path,
-      });
-    },
-    swapAeForExactTokens() {
-      return this.$store.dispatch('aeternity/swapAeForExactTokens', {
-        amountAeInDesired: this.amountFromExpanded,
-        amountOut: this.amountToExpanded,
-        path: this.path,
+        path: [this.from.contract_id, this.to.contract_id],
       });
     },
     async swap() {
