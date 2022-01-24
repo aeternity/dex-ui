@@ -110,7 +110,7 @@ export default {
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
-      if (!this.amountFrom || !this.amountTo) return 'Enter amount';
+      if (!this.amountFrom || !this.amountTo || !this.to || !this.from) return 'Enter amount';
       if (!this.enoughBalance) return `Insufficient ${this.from.symbol} balance`;
       return 'Swap';
     },
