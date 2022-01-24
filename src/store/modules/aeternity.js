@@ -529,14 +529,14 @@ export default {
      * allowing the router to transfer tokens from the first token balance
      * @param p1 vuex context
      * @param {bigint} p2.amountIn exact amount for the token found at path[0]
-     * @param {bigint} p2.amountOutDesired desired amount out for the token found at path[n-1]
+     * @param {bigint} p2.amountOut desired amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
     swapExactTokensForTokens: genRouterMethodAction(
       'swap_exact_tokens_for_tokens',
       ({ state, rootState }, {
-        amountIn, amountOutDesired, path, deadline,
-      }) => ([amountIn, subSlippage(amountOutDesired, state.slippage), path,
+        amountIn, amountOut, path, deadline,
+      }) => ([amountIn, subSlippage(amountOut, state.slippage), path,
         rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
     ),
 
@@ -546,30 +546,30 @@ export default {
      * allowing the router to transfer tokens from the first token balance
      * @param p1 vuex context
      * @param {bigint} p2.amountOut exact amount for the token found at path[n-1]
-     * @param {bigint} p2.amountInDesired desired amount in for the token found at path[0]
+     * @param {bigint} p2.amountIn desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
     swapTokensForExactTokens: genRouterMethodAction(
       'swap_tokens_for_exact_tokens',
       ({ state, rootState }, {
-        amountOut, amountInDesired, path, deadline,
-      }) => ([amountOut, addSlippage(amountInDesired, state.slippage), path,
+        amountOut, amountIn, path, deadline,
+      }) => ([amountOut, addSlippage(amountIn, state.slippage), path,
         rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
     ),
 
     /**
      * @param p1 vuex context
-     * @param {bigint} p2.amountAeIn exact amount in for the AE found at path[0]
-     * @param {bigint} p2.amountOutDesired desired
+     * @param {bigint} p2.amountIn exact amount in for the AE found at path[0]
+     * @param {bigint} p2.amountOut desired
      * amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
     swapExactAeForTokens: genRouterMethodAction(
       'swap_exact_ae_for_tokens',
       ({ state, rootState }, {
-        amountAeIn, amountOutDesired, path, deadline,
-      }) => ([subSlippage(amountOutDesired, state.slippage), path, rootState.address,
-        deadline || defaultDeadline(), undefined, { ...extraGas, amount: amountAeIn.toString() }]),
+        amountIn, amountOut, path, deadline,
+      }) => ([subSlippage(amountOut, state.slippage), path, rootState.address,
+        deadline || defaultDeadline(), undefined, { ...extraGas, amount: amountIn.toString() }]),
     ),
 
     /**
@@ -577,15 +577,15 @@ export default {
      * NOTE: before calling this you should call `path[0].create_allowance`
      * allowing the router to transfer tokens from the first token balance
      * @param p1 vuex context
-     * @param {bigint} p2.amountAeOut exact amount out for the AE found at path[n-1]
-     * @param {bigint} p2.amountTokenInDesired desired amount in for the token found at path[0]
+     * @param {bigint} p2.amountOut exact amount out for the AE found at path[n-1]
+     * @param {bigint} p2.amountIn desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
     swapTokensForExactAe: genRouterMethodAction(
       'swap_tokens_for_exact_ae',
       ({ state, rootState }, {
-        amountAeOut, amountTokenInDesired, path, deadline,
-      }) => ([amountAeOut, addSlippage(amountTokenInDesired, state.slippage), // not more than this
+        amountOut, amountIn, path, deadline,
+      }) => ([amountOut, addSlippage(amountIn, state.slippage), // not more than this
         path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
     ),
 
@@ -595,29 +595,29 @@ export default {
      * allowing the router to transfer tokens from the first token balance
      * @param p1 vuex context
      * @param {bigint} p2.amountIn exact amount in for the token found at path[0]
-     * @param {bigint} p2.amountAeOutDesired desired amount out for the AE found at path[n-1]
+     * @param {bigint} p2.amountOut desired amount out for the AE found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
     swapExactTokensForAe: genRouterMethodAction(
       'swap_exact_tokens_for_ae',
       ({ state, rootState }, {
-        amountIn, amountAeOutDesired, path, deadline,
-      }) => ([amountIn, subSlippage(amountAeOutDesired, state.slippage), // no less than this
+        amountIn, amountOut, path, deadline,
+      }) => ([amountIn, subSlippage(amountOut, state.slippage), // no less than this
         path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
     ),
 
     /**
      * @param p1 vuex context
      * @param {bigint} p2.amountOut exact amount out for the token found at path[n-1]
-     * @param {bigint} p2.amountAeInDesired desired amount in for the AE found at path[0]
+     * @param {bigint} p2.amountIn desired amount in for the AE found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
     swapAeForExactTokens: genRouterMethodAction(
       'swap_ae_for_exact_tokens',
       ({ state, rootState }, {
-        amountAeInDesired, amountOut, path, deadline,
+        amountIn, amountOut, path, deadline,
       }) => ([amountOut, path, rootState.address, deadline || defaultDeadline(), undefined,
-        { ...extraGas, amount: addSlippage(amountAeInDesired, state.slippage).toString() }]),
+        { ...extraGas, amount: addSlippage(amountIn, state.slippage).toString() }]),
       // this is the diff between the desired+slippage and
       // the actual amount will be return into owner's wallet
     ),
