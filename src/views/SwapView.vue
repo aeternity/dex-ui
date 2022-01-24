@@ -117,14 +117,15 @@ export default {
     ratio() {
       if (this.isAeVsWae) return 1;
       if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) return null;
-      return reduceDecimals(this.reserveFrom, this.from)
-        .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
+      return reduceDecimals(this.reserveFrom, this.from.decimals)
+        .div(reduceDecimals(this.reserveTo, this.to.decimals)).toNumber();
     },
     amountFromExpanded() {
-      return !this.from || !this.amountFrom ? 0 : expandDecimals(this.amountFrom, this.from);
+      return !this.from || !this.amountFrom
+        ? 0 : expandDecimals(this.amountFrom, this.from.decimals);
     },
     amountToExpanded() {
-      return !this.to || !this.amountTo ? 0 : expandDecimals(this.amountTo, this.to);
+      return !this.to || !this.amountTo ? 0 : expandDecimals(this.amountTo, this.to.decimals);
     },
   },
   watch: {
@@ -194,7 +195,7 @@ export default {
         if (!aePair || aePair.isTokenFrom) {
           await this.$store.dispatch('aeternity/createTokenAllowance', {
             token: this.from.contract_id,
-            amount: expandDecimals(this.amountFrom, this.from),
+            amount: expandDecimals(this.amountFrom, this.from.decimals),
           });
           this.allowanceFrom = this.amountFrom;
         }
@@ -263,7 +264,7 @@ export default {
           : await this.$store.dispatch('aeternity/getPriceImpact', {
             tokenA: this.from.contract_id,
             tokenB: this.to.contract_id,
-            amountA: expandDecimals(this.amountFrom, this.from),
+            amountA: expandDecimals(this.amountFrom, this.from.decimals),
           });
         await this.$store.dispatch('modals/open', {
           name: 'confirm-swap',
