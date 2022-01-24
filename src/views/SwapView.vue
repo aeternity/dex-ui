@@ -32,7 +32,7 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="hasAllowance"
+      :disabled="amountFrom != null && (isAeVsWae || allowanceFrom === amountFrom)"
       @click="approve"
     >
       <div class="allowance">
@@ -61,7 +61,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import BigNumber from 'bignumber.js';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
@@ -106,10 +105,6 @@ export default {
       return (this.from && this.from.contract_id === WAE)
       || this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
     },
-    hasAllowance() {
-      return this.amountFrom != null
-      && (this.isAeVsWae || this.allowanceFrom === this.amountFrom);
-    },
     isDisabled() {
       return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
     },
@@ -120,12 +115,8 @@ export default {
       return 'Swap';
     },
     ratio() {
-      if (this.isAeVsWae) {
-        return 1;
-      }
-      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) {
-        return null;
-      }
+      if (this.isAeVsWae) return 1;
+      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) return null;
       return reduceDecimals(this.reserveFrom, this.from)
         .div(reduceDecimals(this.reserveTo, this.to)).toNumber();
     },
@@ -221,22 +212,14 @@ export default {
         }
       }
     },
-    async createAllowance(amount) {
-      try {
-        await this.$store.dispatch('aeternity/createTokenAllowance', {
-          token: this.from.contract_id,
-          amount: BigInt(BigNumber(10).pow(this.from.decimals).times(amount).toFixed()),
-        });
-      } catch (ex) {
-        // TODO: this is a hack
-        handleUnknownError(ex);
-      }
-    },
     async approve() {
       try {
         const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo, true);
         if (!aePair || aePair.isTokenFrom) {
-          await this.createAllowance(this.amountFrom);
+          await this.$store.dispatch('aeternity/createTokenAllowance', {
+            token: this.from.contract_id,
+            amount: expandDecimals(this.amountFrom, this.from),
+          });
           this.allowanceFrom = this.amountFrom;
         }
       } catch (ex) {
@@ -275,11 +258,9 @@ export default {
     },
     async swapAeVsWaeProcess() {
       if (this.from.is_ae) {
-        await this.$store.dispatch('aeternity/swapExactAeForExactWae',
-          this.amountFromExpanded);
+        await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountFromExpanded);
       } else {
-        await this.$store.dispatch('aeternity/swapExactWaeForExactAe',
-          this.amountFromExpanded);
+        await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountFromExpanded);
       }
       await this.reset();
     },
