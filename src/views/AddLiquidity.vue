@@ -216,7 +216,7 @@ export default {
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
       if (this.supplying) return 'Supplying...';
-      if (!this.amountTokenA || !this.amountTokenB) return 'Enter amount';
+      if (!this.amountTokenA || !this.amountTokenB || !this.tokenA || !this.tokenB) return 'Enter amount';
       if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
       if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
       return 'Supply';
