@@ -99,7 +99,7 @@ export default {
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     isAeVsWae() {
-      return this.from && this.to && this.from.contract_id === WAE && this.to.contract_id === WAE;
+      return this.from?.contract_id === WAE && this.to?.contract_id === WAE;
     },
     enoughBalance() {
       return (this.from && this.from.contract_id === WAE)
@@ -131,7 +131,8 @@ export default {
     async factory(newVal) {
       // we have wallet connection
       if (newVal && this.to && this.from) {
-        await this.setPairInfo();
+        [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
+          { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
         if (this.amountFrom !== null || this.amountTo !== null) {
           this.setAmount(
             this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
@@ -164,38 +165,13 @@ export default {
         this.allowanceTo = null;
       }
       // TODO: what if it fails?
-      await this.setPairInfo();
+      if (!swapped) {
+        [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
+          { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
+      }
       this.setAmount(
         this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
       );
-    },
-    async setPairInfo() {
-      try {
-        if (!this.from || !this.to || !this.address) {
-          return;
-        }
-        if (this.isAeVsWae) {
-          this.totalSupply = 0;
-          this.reserveFrom = 1;
-          this.reserveTo = 1;
-          return;
-        }
-        const {
-          totalSupply,
-          reserveA,
-          reserveB,
-        } = await this.$store.dispatch('aeternity/getPoolInfo', {
-          tokenA: this.from.contract_id,
-          tokenB: this.to.contract_id,
-        });
-        this.totalSupply = totalSupply;
-        this.reserveFrom = reserveA;
-        this.reserveTo = reserveB;
-      } catch (e) {
-        if (e.message !== 'PAIR NOT FOUND') {
-          handleUnknownError(e);
-        }
-      }
     },
     setAmount(amount, isFrom) {
       this.isLastAmountFrom = isFrom;
@@ -265,7 +241,8 @@ export default {
       await this.reset();
     },
     async reset() {
-      await this.setPairInfo();
+      [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
+        { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
       this.amountFrom = null;
       this.amountTo = null;
       this.allowanceFrom = null;

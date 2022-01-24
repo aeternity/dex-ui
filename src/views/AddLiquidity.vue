@@ -226,7 +226,8 @@ export default {
     async factory(newVal) {
       // we have wallet connection
       if (newVal && this.tokenB && this.tokenA) {
-        await this.setPairInfo();
+        [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
+          { tokenA: this.tokenA, tokenB: this.tokenB });
         if (this.amountTokenA !== null || this.amountTokenB !== null) {
           this.setAmount(
             this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
@@ -268,32 +269,13 @@ export default {
       }
 
       // TODO: what if it fails?
-      await this.setPairInfo();
+      if (!swapped) {
+        [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
+          { tokenA: this.tokenA, tokenB: this.tokenB });
+      }
       this.setAmount(
         this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
       );
-    },
-    async setPairInfo() {
-      try {
-        if (!this.tokenA || !this.tokenB || !this.address) {
-          return;
-        }
-        const {
-          totalSupply,
-          reserveA,
-          reserveB,
-        } = await this.$store.dispatch('aeternity/getPoolInfo', {
-          tokenA: this.tokenA.contract_id,
-          tokenB: this.tokenB.contract_id,
-        });
-        this.totalSupply = totalSupply;
-        this.reserveTokenA = reserveA;
-        this.reserveTokenB = reserveB;
-      } catch (e) {
-        if (e.message !== 'PAIR NOT FOUND') {
-          handleUnknownError(e);
-        }
-      }
     },
     setAmount(amount, isLastInputTokenA) {
       this.isLastInputTokenA = isLastInputTokenA;
@@ -355,7 +337,8 @@ export default {
       }
     },
     async reset() {
-      await this.setPairInfo();
+      [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
+        { tokenA: this.tokenA, tokenB: this.tokenB });
       this.amountTokenA = null;
       this.amountTokenB = null;
       this.allowanceTokenA = null;

@@ -4,7 +4,7 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
-import { cttoak, createOnAccountObject } from '../../lib/utils';
+import { cttoak, createOnAccountObject, handleUnknownError } from '../../lib/utils';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
@@ -338,6 +338,25 @@ export default {
         reserveA,
         reserveB,
       };
+    },
+
+    async getPairInfo({ dispatch, rootState: { address } }, { tokenA, tokenB, isAeVsWae = false }) {
+      try {
+        if (!tokenA || !tokenB || !address) {
+          return [];
+        }
+        if (isAeVsWae) return [0, 1, 1]; // [totalSupply, reserveA, reserveB];
+        const { totalSupply, reserveA, reserveB } = await dispatch('getPoolInfo', {
+          tokenA: tokenA.contract_id,
+          tokenB: tokenB.contract_id,
+        });
+        return [totalSupply, reserveA, reserveB];
+      } catch (e) {
+        if (e.message !== 'PAIR NOT FOUND') {
+          handleUnknownError(e);
+        }
+        return [];
+      }
     },
     /**
      * @description remove the liquidity provided from a pair
