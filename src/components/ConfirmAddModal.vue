@@ -35,8 +35,8 @@
         <div class="rates">
           <span>Rates</span>
           <div>
-            <span>{{ `1 ${secondToken.symbol} = ${sndRatio} ${firstToken.symbol}` }}</span>
-            {{ `1 ${firstToken.symbol} = ${fstRatio} ${secondToken.symbol}` }}
+            <span>{{ `1 ${firstToken.symbol} = ${sndRatio} ${secondToken.symbol}` }}</span>
+            {{ `1 ${secondToken.symbol} = ${fstRatio} ${firstToken.symbol}` }}
           </div>
         </div>
         <div>
