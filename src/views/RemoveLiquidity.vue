@@ -68,32 +68,57 @@
         v-else
         class="remove-container"
       >
-        <div class="token-row">
+        <div
+          v-if="share"
+          class="token-row"
+        >
           <div class="amount">
-            {{ formatBigNumber(firstAssetInput) }}
+            {{ poolTokenInput.toFixed(5) }}
           </div>
-          <img src="../assets/ae.svg">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
           <span>
-            AE
+            {{ `${tokenA.symbol}/${tokenB.symbol}` }}
           </span>
         </div>
-        <div class="token-row">
+        <div
+          v-if="tokenA"
+          class="token-row"
+        >
           <div class="amount">
-            {{ formatBigNumber(secondAssetInput) }}
+            {{ tokenAInput.toFixed(5) }}
           </div>
-          <img src="../assets/logo.png">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
           <span>
-            VUE
+            {{ tokenA.symbol }}
+          </span>
+        </div>
+        <div
+          v-if="tokenB"
+          class="token-row"
+        >
+          <div class="amount">
+            {{ tokenBInput.toFixed(5) }}
+          </div>
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          <span>
+            {{ tokenB.symbol }}
           </span>
         </div>
       </div>
-      <div class="space-between">
+      <div
+        v-if="tokenA && tokenB && ratioA !== null"
+        class="space-between"
+      >
         <span>Price:</span>
-        <span>1 AE = 5 VUE</span>
+        <span>{{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }}</span>
       </div>
-      <div class="space-between">
+      <div
+        v-if="tokenA && tokenB && ratioB !== null"
+        class="space-between"
+      >
         <span />
-        <span>1 VUE = 0.2 AE</span>
+        <span>{{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}</span>
       </div>
       <div class="btns-row">
         <ButtonDefault
@@ -111,42 +136,51 @@
           v-if="address"
           class="remove-btn"
           :class="{'transparent' : approved}"
-          :disabled="approved"
-          @click="approved = true"
+          :disabled="!approveButtonEnabled"
+          @click="approve"
         >
-          {{ approved? 'Approved' : 'Approve' }}
+          {{ approveButtonMessage }}
         </ButtonDefault>
         <ButtonDefault
           v-if="address"
           class="remove-btn"
           :class="{'transparent' : !approved}"
-          :disabled="!approved"
+          :disabled="!removeButtonEnabled"
           @click="handleRemove"
         >
           Remove
         </ButtonDefault>
       </div>
     </MainWrapper>
-    <div class="pool-info">
+    <div
+      v-if="position"
+      class="pool-info"
+    >
       <div>
         <div class="space-between">
           <span>Your position</span>
         </div>
         <div class="space-between pool-token">
-          <span>AE/VUE</span>
-          <span>{{ formatBigNumber(poolToken) }}</span>
+          <span>
+            {{ `${tokenA.symbol}/${tokenB.symbol}` }}
+          </span>
+          <div>
+            <span>{{ positionBalance(position).toFixed(5) }}</span>
+            <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+            <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          </div>
         </div>
         <div class="space-between">
           <span>Your pool share</span>
-          <span>0.01%</span>
+          <span>{{ (share*100).toFixed(5) }}%</span>
         </div>
         <div class="space-between">
-          <span>AE:</span>
-          <span>{{ formatBigNumber(firstAsset) }}</span>
+          <span>{{ tokenA.symbol }}:</span>
+          <span>{{ (positionBalance(reserveA)*share).toFixed(5) }}</span>
         </div>
         <div class="space-between">
-          <span>VUE:</span>
-          <span>{{ formatBigNumber(secondAsset) }}</span>
+          <span>{{ tokenB.symbol }}:</span>
+          <span>{{ (positionBalance(reserveB)*share).toFixed(5) }}</span>
         </div>
       </div>
     </div>
@@ -162,6 +196,13 @@ import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
+import {
+  handleUnknownError,
+  reduceDecimals,
+  expandDecimals,
+  getTokenList,
+  getAePair,
+} from '../lib/utils';
 
 export default {
   components: {
@@ -172,38 +213,172 @@ export default {
     InputRange,
     InputToken,
   },
-  props: {
-    firstAsset: { type: BigNumber, default: BigNumber(0.00015) },
-    secondAsset: { type: BigNumber, default: BigNumber(0.00000231212) },
-    poolToken: { type: BigNumber, default: BigNumber(0.000000072) },
-  },
   data() {
     return {
       detailed: false,
       percentage: 0,
-      firstAssetInput: BigNumber(0),
-      secondAssetInput: BigNumber(0),
+      tokenAInput: BigNumber(0),
+      tokenBInput: BigNumber(0),
       poolTokenInput: BigNumber(0),
       approved: false,
+      pairId: '',
+      poolInstance: null,
+      tokenA: null,
+      tokenB: null,
+      reserveA: null,
+      reserveB: null,
+      position: null,
+      totalSupply: null,
+      approving: false,
     };
   },
-  computed: mapState(['address', 'connectingToWallet']),
+  computed: {
+    ...mapState({
+      address: 'address',
+      factory: (state) => state.aeternity.factory?.deployInfo.address,
+    }),
+    share() {
+      return BigNumber(this.position).div(this.totalSupply).toNumber();
+    },
+    balanceA() {
+      return this.reserveA.times(this.share).div(BigNumber(10).pow(18));
+    },
+    balanceB() {
+      return BigNumber(this.reserveB).times(this.share).div(BigNumber(10).pow(18));
+    },
+    ratioA() {
+      if (!this.reserveA || !this.reserveB || !this.tokenA || !this.tokenB) {
+        return null;
+      }
+      return reduceDecimals(this.reserveA, this.tokenA.decimals)
+        .div(reduceDecimals(this.reserveB, this.tokenB.decimals)).toNumber();
+    },
+    ratioB() {
+      if (!this.reserveA || !this.reserveB || !this.tokenA || !this.tokenB) {
+        return null;
+      }
+      return reduceDecimals(this.reserveB, this.tokenB.decimals)
+        .div(reduceDecimals(this.reserveA, this.tokenA.decimals)).toNumber();
+    },
+    approveButtonEnabled() {
+      return !this.approved && this.poolTokenInput.gt(0);
+    },
+    removeButtonEnabled() {
+      return this.approved && !this.approving && this.poolTokenInput.gt(0);
+    },
+    approveButtonMessage() {
+      if (this.approving) return 'Approving...';
+      if (this.approved) return 'Approved';
+      return 'Approve';
+    },
+  },
+  async mounted() {
+    this.pairId = this.$route.params.id;
+    const [tokenAContract, tokenBContract] = this.pairId.split('|');
+    await this.$watchUntilTruly(() => this.$store.state.sdk);
+    await this.$watchUntilTruly(() => this.$store.state.aeternity.factory);
+    const tokenList = getTokenList();
+    this.tokenA = tokenList.find((t) => t.contract_id === tokenAContract);
+    this.tokenB = tokenList.find((t) => t.contract_id === tokenBContract);
+    await this.setPairInfo();
+  },
   methods: {
     async connectWallet() {
       await this.$watchUntilTruly(() => this.$store.state.sdk);
       await this.$store.dispatch('connectWallet');
     },
+    async approve() {
+      try {
+        this.approving = true;
+        await this.$store.dispatch('aeternity/createPairAllowance', {
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
+          amount: BigInt(BigNumber(10).pow(18).times(this.poolTokenInput).toFixed()),
+        });
+        this.approved = true;
+      } catch (ex) {
+        // TODO: this is a hack
+        handleUnknownError(ex);
+      } finally {
+        this.approving = false;
+      }
+    },
     updatePercent(p) {
       this.percentage = p;
-      this.firstAssetInput = this.firstAsset.multipliedBy(p / 100);
-      this.secondAssetInput = this.secondAsset.multipliedBy(p / 100);
-      this.poolTokenInput = this.poolToken.multipliedBy(p / 100);
+      this.tokenAInput = this.positionBalance(this.reserveA).times(this.share).times(p / 100);
+      this.tokenBInput = this.positionBalance(this.reserveB).times(this.share).times(p / 100);
+      this.poolTokenInput = this.positionBalance(this.position).times(p / 100);
+      this.approved = false;
     },
-    handleRemove() {
-      console.log('Pool removed');
+    async handleRemove() {
+      try {
+        const aePair = getAePair(
+          this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput, false,
+        );
+        const liquidity = expandDecimals(this.poolTokenInput, 18);
+        if (!aePair) {
+          await this.$store.dispatch('aeternity/removeLiquidity', {
+            tokenA: this.tokenA.contract_id,
+            tokenB: this.tokenB.contract_id,
+            liquidity,
+            amountADesired: expandDecimals(this.tokenAInput, this.tokenA.decimals),
+            amountBDesired: expandDecimals(this.tokenBInput, this.tokenB.decimals),
+          });
+        } else {
+          const { token, isTokenFrom } = aePair;
+          await this.$store.dispatch('aeternity/removeLiquidityAe', {
+            token: token.contract_id,
+            liquidity,
+            amountTokenDesired: isTokenFrom
+              ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
+              : expandDecimals(this.tokenBInput, this.tokenB.decimals),
+            amountAEDesired: isTokenFrom
+              ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
+              : expandDecimals(this.tokenBInput, this.tokenB.decimals),
+          });
+        }
+        await this.setPairInfo();
+      } catch (e) {
+        if (e.message === 'Rejected by user') return;
+        handleUnknownError(e);
+      }
     },
     formatBigNumber(value) {
       return value.toFormat();
+    },
+    positionBalance(amount) {
+      return reduceDecimals(amount, 18);
+    },
+    async setPairInfo() {
+      try {
+        if (!this.tokenA || !this.tokenB || !this.address) {
+          return;
+        }
+        const {
+          totalSupply,
+          reserveA,
+          reserveB,
+        } = await this.$store.dispatch('aeternity/getPoolInfo', {
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
+        });
+        this.totalSupply = totalSupply;
+        this.reserveA = BigNumber(reserveA);
+        this.reserveB = BigNumber(reserveB);
+        const position = await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+          tokenA: this.tokenA.contract_id,
+          tokenASymbol: this.tokenA.symbol,
+          tokenADecimals: this.tokenA.decimals,
+          tokenB: this.tokenB.contract_id,
+          tokenBSymbol: this.tokenB.symbol,
+          tokenBDecimals: this.tokenB.decimals,
+        });
+        this.position = position;
+      } catch (e) {
+        if (e.message !== 'PAIR NOT FOUND') {
+          handleUnknownError(e);
+        }
+      }
     },
   },
 };
@@ -238,7 +413,7 @@ export default {
     }
 
     .percentage {
-      font-size: 72px;
+      font-size: 64px;
       text-align: left;
       font-weight: 500;
     }
@@ -259,7 +434,7 @@ export default {
     .token-row {
       display: flex;
       align-items: center;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 500;
 
       .amount {
@@ -272,6 +447,15 @@ export default {
         height: 24px;
         border-radius: 50%;
         margin-right: 12px;
+      }
+
+      img:nth-of-type(1) {
+        margin-left: 4px;
+        z-index: 1;
+      }
+
+      img:nth-of-type(2) {
+        margin-left: -24px;
       }
     }
   }
@@ -289,6 +473,7 @@ export default {
   .btns-row {
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 
     .connect-btn {
       width: 100%;
@@ -331,6 +516,20 @@ export default {
     .pool-token {
       font-weight: 500;
       font-size: 20px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      img:nth-of-type(1) {
+        margin-left: 4px;
+        z-index: 1;
+      }
+
+      img:nth-of-type(2) {
+        margin-left: -10px;
+      }
     }
   }
 }
