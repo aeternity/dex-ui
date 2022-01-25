@@ -25,7 +25,7 @@ const sortTokens = (tokenA, tokenB, transform) => {
   const f = transform || ((x) => x);
   return (f(tokenA) < f(tokenB)) ? [tokenA, tokenB] : [tokenB, tokenA];
 };
-const getPairId = (tokenA, tokenB) => {
+export const getPairId = (tokenA, tokenB) => {
   const [token0, token1] = sortTokens(tokenA, tokenB);
   return `${token0}|${token1}`;
 };
