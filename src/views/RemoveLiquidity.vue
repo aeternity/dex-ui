@@ -230,8 +230,9 @@ export default {
       .button-plain {
         font-size: 16px;
         color: variables.$color-blue;
+
         &:hover {
-        color: variables.$color-blue-hover;
+          color: variables.$color-blue-hover;
         }
       }
     }
@@ -274,14 +275,17 @@ export default {
       }
     }
   }
-    .arrow-down {
-      width: 16px;
-    }
+
+  .arrow-down {
+    width: 16px;
+  }
+
   .space-between {
     display: flex;
     justify-content: space-between;
     color: variables.$color-white;
   }
+
   .btns-row {
     display: flex;
     justify-content: space-between;
@@ -297,11 +301,12 @@ export default {
         padding: 0;
       }
 
-      ::v-deep img {
+      :deep(img) {
         height: 52px;
         width: 52px;
       }
     }
+
     .remove-btn {
       width: 48%;
       padding: 16px;
