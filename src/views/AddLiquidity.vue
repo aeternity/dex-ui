@@ -42,7 +42,7 @@
             {{ ratio?.toFixed(8) ?? '-' }}
           </span>
           <span class="second">
-            {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
+            {{ `${ tokenA.symbol } per ${ tokenB.symbol }` }}
           </span>
         </div>
         <div>
@@ -51,7 +51,7 @@
             {{ ratio ? (1 / ratio).toFixed(8) : '-' }}
           </span>
           <span class="second">
-            {{ `${ tokenA.symbol } per ${ tokenB.symbol }` }}
+            {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
           </span>
         </div>
         <div>
