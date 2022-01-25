@@ -54,7 +54,6 @@
         </ButtonDefault>
         <ButtonDefault
           fill="transparent-blue"
-          :to="{ name: 'remove-pool' }"
         >
           Remove
         </ButtonDefault>

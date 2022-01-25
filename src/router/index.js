@@ -35,7 +35,7 @@ const routes = [
       component: AddLiquidity,
     },
     {
-      path: 'remove',
+      path: 'remove/:id',
       name: 'remove-pool',
       component: RemoveLiquidity,
     }],
