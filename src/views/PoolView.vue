@@ -18,7 +18,7 @@
         <img src="../assets/question-circle.svg">
       </ButtonTooltip>
     </div>
-    <div v-if="address != null">
+    <div v-if="address">
       <LiquidityItem
         v-for="info in liquidity"
         :key="info.id"

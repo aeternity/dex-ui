@@ -24,7 +24,7 @@
       @update:token="setSelectedToken($event, false)"
     />
     <div
-      v-if="to && from && ratio != null"
+      v-if="to && from && ratio !== null"
       class="price"
     >
       {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
@@ -32,7 +32,7 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="amountFrom != null && (isAeVsWae || allowanceFrom === amountFrom)"
+      :disabled="amountFrom !== null && (isAeVsWae || allowanceFrom === amountFrom)"
       @click="approve"
     >
       <div class="allowance">
@@ -179,12 +179,12 @@ export default {
       const isValid = this.ratio !== null && this.to && this.from;
       if (isFrom) {
         this.amountFrom = amount;
-        if (isValid && amount != null) {
+        if (isValid && amount !== null) {
           this.amountTo = amount / this.ratio;
         }
       } else {
         this.amountTo = amount;
-        if (isValid && amount != null) {
+        if (isValid && amount !== null) {
           this.amountFrom = amount * this.ratio;
         }
       }

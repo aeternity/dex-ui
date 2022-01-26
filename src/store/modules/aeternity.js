@@ -190,7 +190,7 @@ export default {
         return pair;
       }
       const { decodedResult: contractAddress } = await factory.methods.get_pair(tokenA, tokenB);
-      if (contractAddress == null) {
+      if (contractAddress === null) {
         throw new Error('PAIR NOT FOUND');
       }
       const instance = await sdk.getContractInstance(
@@ -431,7 +431,7 @@ export default {
         for_account: routerAddress,
       });
       const amountWithSlippage = addSlippage(amount, slippage);
-      if (currentAllowance == null) {
+      if (currentAllowance === null) {
         // we don't have any allowance entry, let's create one
         if (useSdkWallet) {
           await token.methods.create_allowance(
