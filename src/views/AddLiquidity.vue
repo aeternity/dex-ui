@@ -139,20 +139,19 @@ export default {
       ) {
         return 0;
       }
-      const { totalSupply } = this;
       const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA.decimals);
       const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB.decimals);
 
       // if there is no pair yet we have a special
       // case for the first provided liquidity
-      if (!this.reserveTokenA || !this.reserveTokenB || !totalSupply) {
+      if (!this.reserveTokenA || !this.reserveTokenB || !this.totalSupply) {
         return BigNumber(amountTokenA)
           .times(amountTokenB)
           .sqrt()
           .minus(minimumLiquidity);
       }
-      const liquidityTokenA = (amountTokenA * totalSupply) / this.reserveTokenA;
-      const liquidityTokenB = (amountTokenB * totalSupply) / this.reserveTokenB;
+      const liquidityTokenA = (amountTokenA * this.totalSupply) / this.reserveTokenA;
+      const liquidityTokenB = (amountTokenB * this.totalSupply) / this.reserveTokenB;
       return liquidityTokenA < liquidityTokenB ? liquidityTokenA : liquidityTokenB;
     },
     share() {

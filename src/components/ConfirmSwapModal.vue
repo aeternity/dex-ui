@@ -85,19 +85,17 @@ export default {
   computed: {
     ...mapState('aeternity', ['slippage']),
     minimumReceived() {
-      const { amountTo, isAeVsWae } = this;
-      return BigNumber(amountTo).minus(
-        isAeVsWae
+      return BigNumber(this.amountTo).minus(
+        this.isAeVsWae
           ? 0
-          : BigNumber(amountTo).times(this.slippage).div(100),
+          : BigNumber(this.amountTo).times(this.slippage).div(100),
       );
     },
     maximumSpent() {
-      const { amountFrom, isAeVsWae } = this;
-      return BigNumber(amountFrom).plus(
-        isAeVsWae
+      return BigNumber(this.amountFrom).plus(
+        this.isAeVsWae
           ? 0
-          : BigNumber(amountFrom).times(this.slippage).div(100),
+          : BigNumber(this.amountFrom).times(this.slippage).div(100),
       );
     },
     receivedOrSpentValueMsg() {
