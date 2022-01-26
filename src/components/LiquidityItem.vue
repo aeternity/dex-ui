@@ -123,7 +123,7 @@ export default {
       return this.getAmountText(this.amount1, this.token1);
     },
     shareText() {
-      if (this.balance == null || !this.totalSupply) {
+      if (this.balance === null || !this.totalSupply) {
         return '-';
       }
       return BigNumber(this.balance).times(100).div(this.totalSupply).toFixed(6);
@@ -140,7 +140,7 @@ export default {
       return BigInt(amount.toFixed(0));
     },
     getAmountText(amount, token) {
-      if (amount == null) {
+      if (amount === null) {
         return '-';
       }
       return reduceDecimals(amount, token.decimals);

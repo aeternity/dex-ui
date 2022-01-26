@@ -193,10 +193,10 @@ export default {
           || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
     hasAllowanceTokenA() {
-      return this.amountTokenA != null && this.allowanceTokenA === this.amountTokenA;
+      return this.amountTokenA !== null && this.allowanceTokenA === this.amountTokenA;
     },
     hasAllowanceTokenB() {
-      return this.amountTokenB != null && this.allowanceTokenB === this.amountTokenB;
+      return this.amountTokenB !== null && this.allowanceTokenB === this.amountTokenB;
     },
     isApproved() {
       if (this.tokenA && this.tokenA.contract_id === WAE) {
