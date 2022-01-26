@@ -24,7 +24,7 @@
       @update:token="setSelectedToken($event, false)"
     />
     <div
-      v-if="to && from && ratio !== null"
+      v-if="to && from && ratio"
       class="price"
     >
       {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
@@ -32,7 +32,7 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="amountFrom !== null && (isAeVsWae || allowanceFrom === amountFrom)"
+      :disabled="amountFrom && (isAeVsWae || allowanceFrom === amountFrom)"
       @click="approve"
     >
       <div class="allowance">
@@ -134,7 +134,7 @@ export default {
       if (newVal && this.to && this.from) {
         [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
           { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
-        if (this.amountFrom !== null || this.amountTo !== null) {
+        if (this.amountFrom || this.amountTo) {
           this.setAmount(
             this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
           );
@@ -176,17 +176,12 @@ export default {
     },
     setAmount(amount, isFrom) {
       this.isLastAmountFrom = isFrom;
-      const isValid = this.ratio !== null && this.to && this.from;
       if (isFrom) {
         this.amountFrom = amount;
-        if (isValid && amount !== null) {
-          this.amountTo = amount / this.ratio;
-        }
+        this.amountTo = this.ratio && amount ? amount / this.ratio : '';
       } else {
         this.amountTo = amount;
-        if (isValid && amount !== null) {
-          this.amountFrom = amount * this.ratio;
-        }
+        this.amountFrom = this.ratio && amount ? amount * this.ratio : '';
       }
     },
     async approve() {
@@ -244,8 +239,8 @@ export default {
     async reset() {
       [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
         { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
-      this.amountFrom = null;
-      this.amountTo = null;
+      this.amountFrom = '';
+      this.amountTo = '';
       this.allowanceFrom = null;
       this.allowanceTo = null;
       this.isLastAmountFrom = true;

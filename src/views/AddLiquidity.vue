@@ -193,10 +193,10 @@ export default {
           || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
     hasAllowanceTokenA() {
-      return this.amountTokenA !== null && this.allowanceTokenA === this.amountTokenA;
+      return this.amountTokenA && this.allowanceTokenA === this.amountTokenA;
     },
     hasAllowanceTokenB() {
-      return this.amountTokenB !== null && this.allowanceTokenB === this.amountTokenB;
+      return this.amountTokenB && this.allowanceTokenB === this.amountTokenB;
     },
     isApproved() {
       if (this.tokenA && this.tokenA.contract_id === WAE) {
@@ -227,7 +227,7 @@ export default {
       if (newVal && this.tokenB && this.tokenA) {
         [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
           { tokenA: this.tokenA, tokenB: this.tokenB });
-        if (this.amountTokenA !== null || this.amountTokenB !== null) {
+        if (this.amountTokenA || this.amountTokenB) {
           this.setAmount(
             this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
           );
@@ -278,17 +278,12 @@ export default {
     },
     setAmount(amount, isLastInputTokenA) {
       this.isLastInputTokenA = isLastInputTokenA;
-      const isValid = this.ratio !== null && this.tokenB && this.tokenA;
       if (isLastInputTokenA) {
         this.amountTokenA = amount;
-        if (isValid) {
-          this.amountTokenB = amount / this.ratio;
-        }
+        this.amountTokenB = this.ratio && amount ? amount / this.ratio : '';
       } else {
         this.amountTokenB = amount;
-        if (isValid) {
-          this.amountTokenA = amount * this.ratio;
-        }
+        this.amountTokenA = this.ratio && amount ? amount * this.ratio : '';
       }
     },
     async createAllowance(token, amount) {
