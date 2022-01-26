@@ -83,9 +83,7 @@ export default {
     isAeVsWae: { type: Boolean },
   },
   computed: {
-    ...mapState({
-      slippage: (state) => state.aeternity.slippage,
-    }),
+    ...mapState('aeternity', ['slippage']),
     minimumReceived() {
       const { amountTo, isAeVsWae } = this;
       return BigNumber(amountTo).minus(
