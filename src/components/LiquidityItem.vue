@@ -114,19 +114,18 @@ export default {
       return this.calculateAmount(this.balance, this.totalSupply, this.reserve0);
     },
     amount0Text() {
-      return this.getAmountText(this.amount0, this.token0);
+      return this.amount0 === null ? '-' : reduceDecimals(this.amount0, this.token0.decimals);
     },
     amount1() {
       return this.calculateAmount(this.balance, this.totalSupply, this.reserve1);
     },
     amount1Text() {
-      return this.getAmountText(this.amount1, this.token1);
+      return this.amount1 === null ? '-' : reduceDecimals(this.amount1, this.token1.decimals);
     },
     shareText() {
-      if (this.balance === null || !this.totalSupply) {
-        return '-';
-      }
-      return BigNumber(this.balance).times(100).div(this.totalSupply).toFixed(6);
+      return this.balance === null || !this.totalSupply
+        ? '-'
+        : BigNumber(this.balance).times(100).div(this.totalSupply).toFixed(6);
     },
 
   },
@@ -138,12 +137,6 @@ export default {
       const share = BigNumber(balance).times(100).div(totalSupply);
       const amount = BigNumber(reserve).times(share).div(100);
       return BigInt(amount.toFixed(0));
-    },
-    getAmountText(amount, token) {
-      if (amount === null) {
-        return '-';
-      }
-      return reduceDecimals(amount, token.decimals);
     },
     async onShow() {
       this.show = !this.show;
