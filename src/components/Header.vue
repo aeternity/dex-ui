@@ -43,7 +43,7 @@
       </ActionsMenu>
     </div>
     <iframe
-      v-if="useIframeWallet && !address"
+      v-if="useIframeWallet"
       :src="walletUrl"
     />
   </div>
