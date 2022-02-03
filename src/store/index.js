@@ -9,11 +9,6 @@ import {
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
-export const dataStore = {
-  state: {
-    data: [],
-  },
-};
 export default createStore({
   state: {
     connectingToWallet: false,
@@ -168,13 +163,16 @@ export default createStore({
     },
 
   },
-  modules: {
-    aeternity: aeternityModule,
-    dataStore,
-  },
+  modules: { aeternity: aeternityModule },
   plugins: [
     createPersistedState({
-      paths: ['address', 'network', 'slippage', 'aeternity.providedLiquidity'],
+      reducer: ({
+        address, networkId, aeternity: { providedLiquidity, slippage },
+      }) => ({
+        address,
+        networkId,
+        aeternity: { providedLiquidity, slippage },
+      }),
     }),
     modals,
   ],
