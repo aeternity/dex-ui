@@ -5,6 +5,7 @@ import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import { cttoak, createOnAccountObject, handleUnknownError } from '../../lib/utils';
+import { DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE } from '../../lib/constants';
 
 const defaultDeadline = () => Date.now() + 30 * 60000;
 
@@ -66,7 +67,7 @@ const genRouterMethodAction = (method, argsMapper) => async (
  * @param {bigint} slippage percentage (eg. 10,20...100)
  * @return biging representing final value
 */
-const addSlippage = (value, slippage) => value + (value * slippage) / 100n;
+const addSlippage = (value, slippage) => value + (value * BigInt(slippage * 10)) / 1000n;
 
 /**
  * subtracts slippage from a given value
@@ -75,7 +76,7 @@ const addSlippage = (value, slippage) => value + (value * slippage) / 100n;
  * @param {bigint} slippage percentage (eg. 10,20...100)
  * @return biging representing final value
 */
-const subSlippage = (value, slippage) => value - (value * slippage) / 100n;
+const subSlippage = (value, slippage) => value - (value * BigInt(slippage * 10)) / 1000n;
 
 export default {
   namespaced: true,
@@ -84,8 +85,7 @@ export default {
     router: null,
     wae: null,
     factory: null,
-    // TODO: should this be the default?
-    slippage: 10n,
+    slippage: DEFAULT_SLIPPAGE, // percentage with 1 digit after separator
     pairs: {},
     providedLiquidity: {},
     poolInfo: {},
@@ -105,7 +105,8 @@ export default {
       state.router = instance;
     },
     setSlippage(state, slippage) {
-      state.slippage = slippage;
+      state.slippage = slippage > MIN_SLIPPAGE && slippage < MAX_SLIPPAGE
+        ? (+slippage).toFixed(1) : DEFAULT_SLIPPAGE;
     },
     addPair(state, { tokenA, tokenB, instance }) {
       state.pairs[getPairId(tokenA, tokenB)] = instance;
