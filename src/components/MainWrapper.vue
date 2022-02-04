@@ -15,7 +15,10 @@
       <div class="title">
         {{ title }}
       </div>
-      <div class="right">
+      <div
+        class="right"
+        @click="settingsClickHandler"
+      >
         <ActionsMenu v-if="settings">
           <template #display>
             <img src="../assets/cog.svg">
@@ -31,11 +34,17 @@
               class="slippage"
             >
               <div>
-                <ButtonDefault>Auto</ButtonDefault>
+                <ButtonDefault
+                  :fill="showedSlippage ? 'second-dark' : 'blue'"
+                  @click="updateSlippage()"
+                >
+                  Auto
+                </ButtonDefault>
                 <InputAmount
-                  v-model:value="slip"
-                  placeholder="0.10"
+                  :value="showedSlippage"
+                  :placeholder="DEFAULT_SLIPPAGE"
                   :class="slippageStatus"
+                  @update:value="updateSlippage($event)"
                 >
                   <template
                     #left
@@ -65,7 +74,7 @@
               class="deadline"
             >
               <InputAmount
-                v-model:value="slip"
+                v-model:value="deadline"
                 placeholder="30"
               />
               <span>minutes</span>
@@ -83,10 +92,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ButtonDefault from './ButtonDefault.vue';
 import ActionsMenu from './ActionsMenu.vue';
 import SettingsItem from './SettingsItem.vue';
 import InputAmount from './InputAmount.vue';
+import { DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE } from '../lib/constants';
 
 export default {
   components: {
@@ -101,16 +112,26 @@ export default {
     settings: { type: Boolean },
   },
   data: () => ({
-    slip: null,
+    deadline: null,
+    showedSlippage: '',
+    DEFAULT_SLIPPAGE,
   }),
   computed: {
+    ...mapState('aeternity', ['slippage']),
     slippageStatus() {
-      if (this.slip > 10 && this.slip < 51) return 'warning';
-      if (this.slip > 51 || this.slip < 0) return 'alert';
+      if (this.showedSlippage > MIN_SLIPPAGE * 2 && this.showedSlippage < MAX_SLIPPAGE) return 'warning';
+      if (this.showedSlippage && (this.showedSlippage >= MAX_SLIPPAGE || this.showedSlippage < DEFAULT_SLIPPAGE)) return 'alert';
       return '';
     },
   },
   methods: {
+    settingsClickHandler() {
+      this.showedSlippage = this.slippage === DEFAULT_SLIPPAGE ? '' : this.slippage;
+    },
+    updateSlippage(newSlippage) {
+      this.showedSlippage = newSlippage;
+      this.$store.commit('aeternity/setSlippage', newSlippage);
+    },
     back() {
       if (!this.$store.state.route.from.name) {
         this.$router.push({ name: 'swap' });
