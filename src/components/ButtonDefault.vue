@@ -26,6 +26,7 @@ export default {
         'transparent-blue',
         'blue',
         'dark',
+        'second-dark',
         'transparent',
         'plain',
       ].includes(value),
@@ -86,6 +87,14 @@ export default {
 
     &:active {
       background-color: variables.$color-black3;
+    }
+  }
+
+  &.second-dark {
+    background: variables.$color-black2;
+
+    &:hover {
+      background: variables.$color-black;
     }
   }
 
