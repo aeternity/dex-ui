@@ -30,9 +30,12 @@ const getPairId = (tokenA, tokenB) => {
   return `${token0}|${token1}`;
 };
 
-// TODO: remove this after testing the actual gas and before production
-const extraGas = {
+const extraOpts = {
+  // TODO: remove this after testing the actual gas and before production
   gas: 150000,
+  // TODO: this is added because of the 'unknown event' related error,
+  // after investigation a decision should be made
+  omitUnknown: true,
 };
 
 const genRouterMethodAction = (method, argsMapper) => async (
@@ -381,7 +384,7 @@ export default {
       }) => ([tokenA, tokenB, liquidity,
         subSlippage(amountADesired, state.slippage), // minumum amount to be removed
         subSlippage(amountBDesired, state.slippage), // minumum amount to be removed
-        rootState.address, deadline || defaultDeadline(), extraGas]),
+        rootState.address, deadline || defaultDeadline(), extraOpts]),
     ),
 
     /**
@@ -489,8 +492,9 @@ export default {
       ({ state, rootState }, {
         tokenA, tokenB, amountADesired, amountBDesired, minimumLiquidity, deadline,
       }) => ([tokenA, tokenB, amountADesired, amountBDesired,
-        subSlippage(amountADesired, state.slippage), subSlippage(amountBDesired, state.slippage),
-        rootState.address, minimumLiquidity, deadline || defaultDeadline(), extraGas]),
+        subSlippage(amountADesired, state.slippage), // min token A amount received
+        subSlippage(amountBDesired, state.slippage), // min token B amount received
+        rootState.address, minimumLiquidity, deadline || defaultDeadline(), extraOpts]),
     ),
 
     /**
@@ -512,9 +516,14 @@ export default {
       'add_liquidity_ae',
       ({ state, rootState }, {
         token, amountTokenDesired, amountAeDesired, minimumLiquidity, deadline,
-      }) => ([token, amountTokenDesired, subSlippage(amountTokenDesired, state.slippage),
-        subSlippage(amountAeDesired, state.slippage), rootState.address, minimumLiquidity,
-        deadline || defaultDeadline(), { ...extraGas, amount: amountAeDesired.toString() }]),
+      }) => ([token, amountTokenDesired,
+        subSlippage(amountTokenDesired, state.slippage), // min token amount received
+        subSlippage(amountAeDesired, state.slippage), // min AE amount received
+        rootState.address, minimumLiquidity,
+        deadline || defaultDeadline(), {
+          ...extraOpts,
+          amount: amountAeDesired.toString(), // if less is added the diff is returned at the end
+        }]),
     ),
 
     async swapExactAeForExactWae({
@@ -556,7 +565,7 @@ export default {
       ({ state, rootState }, {
         amountIn, amountOut, path, deadline,
       }) => ([amountIn, subSlippage(amountOut, state.slippage), path,
-        rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+        rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
     ),
 
     /**
@@ -573,7 +582,7 @@ export default {
       ({ state, rootState }, {
         amountOut, amountIn, path, deadline,
       }) => ([amountOut, addSlippage(amountIn, state.slippage), path,
-        rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+        rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
     ),
 
     /**
@@ -588,7 +597,7 @@ export default {
       ({ state, rootState }, {
         amountIn, amountOut, path, deadline,
       }) => ([subSlippage(amountOut, state.slippage), path, rootState.address,
-        deadline || defaultDeadline(), undefined, { ...extraGas, amount: amountIn.toString() }]),
+        deadline || defaultDeadline(), undefined, { ...extraOpts, amount: amountIn.toString() }]),
     ),
 
     /**
@@ -605,7 +614,7 @@ export default {
       ({ state, rootState }, {
         amountOut, amountIn, path, deadline,
       }) => ([amountOut, addSlippage(amountIn, state.slippage), // not more than this
-        path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+        path, rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
     ),
 
     /**
@@ -622,7 +631,7 @@ export default {
       ({ state, rootState }, {
         amountIn, amountOut, path, deadline,
       }) => ([amountIn, subSlippage(amountOut, state.slippage), // no less than this
-        path, rootState.address, deadline || defaultDeadline(), undefined, extraGas]),
+        path, rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
     ),
 
     /**
@@ -635,10 +644,13 @@ export default {
       'swap_ae_for_exact_tokens',
       ({ state, rootState }, {
         amountIn, amountOut, path, deadline,
-      }) => ([amountOut, path, rootState.address, deadline || defaultDeadline(), undefined,
-        { ...extraGas, amount: addSlippage(amountIn, state.slippage).toString() }]),
-      // this is the diff between the desired+slippage and
-      // the actual amount will be return into owner's wallet
+      }) => ([amountOut, path, rootState.address, deadline || defaultDeadline(),
+        undefined, {
+          ...extraOpts,
+          // this is the diff between the desired+slippage and
+          // the actual amount will be return into owner's wallet
+          amount: addSlippage(amountIn, state.slippage).toString(),
+        }]),
     ),
   },
 };
