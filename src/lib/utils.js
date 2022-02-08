@@ -94,9 +94,9 @@ export const createOnAccountObject = (address) => ({
   },
 });
 
-export const getAePair = (from, to, amountFrom, amountTo, includeWae) => {
+export const getAePair = (from, to, amountFrom, amountTo) => {
   if (from && to) {
-    if ((includeWae && from.is_ae) || (from.contract_id === process.env.VUE_APP_WAE_ADDRESS)) {
+    if (from.is_ae) {
       return {
         isTokenFrom: false,
         token: to,
@@ -105,7 +105,7 @@ export const getAePair = (from, to, amountFrom, amountTo, includeWae) => {
         aeAmount: amountFrom,
       };
     }
-    if ((includeWae && to.is_ae) || (to.contract_id === process.env.VUE_APP_WAE_ADDRESS)) {
+    if (to.is_ae) {
       return {
         isTokenFrom: true,
         token: from,

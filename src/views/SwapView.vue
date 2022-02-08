@@ -186,7 +186,7 @@ export default {
     },
     async approve() {
       try {
-        const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo, true);
+        const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
         if (!aePair || aePair.isTokenFrom) {
           await this.$store.dispatch('aeternity/createTokenAllowance', {
             token: this.from.contract_id,
@@ -207,7 +207,7 @@ export default {
       }
     },
     async swapProcess() {
-      const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo, true);
+      const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
       // if none of the selected tokens are WAE
       if (!aePair) {
         if (this.isLastAmountFrom) {

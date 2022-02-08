@@ -222,7 +222,6 @@ export default {
       poolTokenInput: BigNumber(0),
       approved: false,
       pairId: '',
-      poolInstance: null,
       tokenA: null,
       tokenB: null,
       reserveA: null,
@@ -275,7 +274,6 @@ export default {
   async mounted() {
     this.pairId = this.$route.params.id;
     const [tokenAContract, tokenBContract] = this.pairId.split('|');
-    await this.$watchUntilTruly(() => this.$store.state.sdk);
     await this.$watchUntilTruly(() => this.$store.state.aeternity.factory);
     const tokenList = getTokenList();
     this.tokenA = tokenList.find((t) => t.contract_id === tokenAContract);
@@ -293,12 +291,12 @@ export default {
         await this.$store.dispatch('aeternity/createPairAllowance', {
           tokenA: this.tokenA.contract_id,
           tokenB: this.tokenB.contract_id,
-          amount: BigInt(BigNumber(10).pow(18).times(this.poolTokenInput).toFixed()),
+          amount: expandDecimals(this.poolTokenInput, 18),
         });
         this.approved = true;
-      } catch (ex) {
+      } catch (e) {
         // TODO: this is a hack
-        handleUnknownError(ex);
+        handleUnknownError(e);
       } finally {
         this.approving = false;
       }
@@ -312,9 +310,7 @@ export default {
     },
     async handleRemove() {
       try {
-        const aePair = getAePair(
-          this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput, false,
-        );
+        const aePair = getAePair(this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput);
         const liquidity = expandDecimals(this.poolTokenInput, 18);
         if (!aePair) {
           await this.$store.dispatch('aeternity/removeLiquidity', {
@@ -333,8 +329,8 @@ export default {
               ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
               : expandDecimals(this.tokenBInput, this.tokenB.decimals),
             amountAEDesired: isTokenFrom
-              ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
-              : expandDecimals(this.tokenBInput, this.tokenB.decimals),
+              ? expandDecimals(this.tokenBInput, this.tokenB.decimals)
+              : expandDecimals(this.tokenAInput, this.tokenA.decimals),
           });
         }
         await this.setPairInfo();
@@ -342,9 +338,6 @@ export default {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);
       }
-    },
-    formatBigNumber(value) {
-      return value.toFormat();
     },
     positionBalance(amount) {
       return reduceDecimals(amount, 18);

@@ -296,7 +296,7 @@ export default {
       try {
         this.approving = true;
         const aePair = getAePair(
-          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB, false,
+          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
         );
         if (!aePair) {
           await this.createAllowance(this.tokenA, this.amountTokenA);
@@ -348,7 +348,7 @@ export default {
         });
 
         const aePair = getAePair(
-          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB, false,
+          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
         );
         this.supplying = true;
         // if none of the selected tokens are WAE
