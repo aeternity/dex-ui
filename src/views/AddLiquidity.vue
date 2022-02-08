@@ -93,11 +93,9 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import {
   reduceDecimals, expandDecimals, calculateSelectedToken, getAePair,
 } from '../lib/utils';
+import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
-
-// TODO: this is what uniswap uses as minimumLiquidity, let's decide on it
-const minimumLiquidity = 1000n;
 
 export default {
   components: {
@@ -148,7 +146,7 @@ export default {
         return BigNumber(amountTokenA)
           .times(amountTokenB)
           .sqrt()
-          .minus(minimumLiquidity);
+          .minus(MINIMUM_LIQUIDITY);
       }
       const liquidityTokenA = (amountTokenA * this.totalSupply) / this.reserveTokenA;
       const liquidityTokenB = (amountTokenB * this.totalSupply) / this.reserveTokenB;
@@ -343,7 +341,7 @@ export default {
           firstAmount: this.amountTokenA,
           secondAmount: this.amountTokenB,
           ratio: this.ratio,
-          receive: reduceDecimals(this.liquidity, 18),
+          receive: reduceDecimals(this.liquidity, MAGNITUDE),
           share: this.share,
         });
 
@@ -358,7 +356,7 @@ export default {
             tokenB: this.tokenB.contract_id,
             amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
             amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
-            minimumLiquidity,
+            MINIMUM_LIQUIDITY,
           });
           // to refresh liquidity list
           await this.$store.dispatch('aeternity/pullAccountLiquidity', {
@@ -374,7 +372,7 @@ export default {
             token: aePair.token.contract_id,
             amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
             amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
-            minimumLiquidity,
+            MINIMUM_LIQUIDITY,
           });
 
           // to refresh liquidity list
