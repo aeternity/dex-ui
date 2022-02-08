@@ -1,6 +1,7 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexErrorMessages from 'dex-contracts-v2/build/errors';
+import { MAGNITUDE } from './constants';
 
 export const fetchJson = async (...args) => {
   const response = await fetch(...args);
@@ -75,14 +76,14 @@ export const getTokenList = () => [
   },
   {
     contract_id: process.env.VUE_APP_WAE_ADDRESS,
-    decimals: 18,
+    decimals: MAGNITUDE,
     name: 'AE',
     symbol: 'AE',
     is_ae: true,
   },
   {
     contract_id: process.env.VUE_APP_WAE_ADDRESS,
-    decimals: 18,
+    decimals: MAGNITUDE,
     name: 'WAE',
     symbol: 'WAE',
     is_ae: false,
