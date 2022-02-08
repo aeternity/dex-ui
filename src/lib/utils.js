@@ -32,7 +32,9 @@ export const calculateSelectedToken = (token, from, to, isFrom) => {
 };
 
 export const reduceDecimals = (val, decimals) => BigNumber(val).shiftedBy(-decimals);
-export const expandDecimals = (val, decimals) => BigInt(BigNumber(val).shiftedBy(decimals));
+export const expandDecimals = (val, decimals) => BigInt(
+  BigNumber(val).shiftedBy(decimals).toFixed(0),
+);
 
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
 
