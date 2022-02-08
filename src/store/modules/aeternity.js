@@ -407,44 +407,48 @@ export default {
         token, liquidity, amountTokenDesired, amountAEDesired, deadline,
       }) => ([token, liquidity, subSlippage(amountTokenDesired, state.slippage), // minumum removed
         subSlippage(amountAEDesired, state.slippage), // minumum amount to be removed
-        rootState.address, deadline || defaultDeadline(), extraGas]),
+        rootState.address, deadline || defaultDeadline(), extraOpts]),
     ),
 
     /**
-     * @description create allowance for a token AEX9 complient
-     * NOTE: the pairs created by the dex-factory are also AEX9 complient
+     * @description create allowance for a token AEX9 compliant
+     * NOTE:
+     * 1. the pairs created by the dex-factory are also AEX9 compliant
+     * 2. to be used internally with createTokenAllowance
+     * or createPairAllowance
      * @async
      * @param p1 vuex context
-     * @param {string} p2.token
+     * @param {Object} p2.instance the token instance
+     * @param {string} p2.toAccount allowance destination address
      * @param {bigint} p2.amount
     */
-    async createTokenAllowance({
+    async createAllowance({
       dispatch,
-      state: { router, slippage },
+      state: { slippage },
       rootState: { address, useSdkWallet },
     }, {
-      token: tokenAddress,
+      instance,
+      toAccount,
       amount,
     }) {
-      const token = await dispatch('getTokenInstance', tokenAddress);
-      const routerAddress = getCtAddress(router);
       // see first if we have any allowance
-      const { decodedResult: currentAllowance } = await token.methods.allowance({
+      const { decodedResult: currentAllowance } = await instance.methods.allowance({
         from_account: address,
-        for_account: routerAddress,
+        for_account: toAccount,
       });
+
       const amountWithSlippage = addSlippage(amount, slippage);
       if (currentAllowance === null) {
         // we don't have any allowance entry, let's create one
         if (useSdkWallet) {
-          await token.methods.create_allowance(
-            routerAddress,
-            amount,
+          await instance.methods.create_allowance(
+            toAccount,
+            amountWithSlippage,
           );
         } else {
           const onAccount = createOnAccountObject(address);
-          const { tx } = await token.methods.create_allowance.get(
-            routerAddress,
+          const { tx } = await instance.methods.create_allowance.get(
+            toAccount,
             amount,
             { onAccount },
           );
@@ -453,22 +457,72 @@ export default {
       } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
         // what we need, let's increase it
+        await instance.methods.change_allowance(
+          toAccount,
+          amountWithSlippage - currentAllowance,
+        );
+        // we have something there but is less then
+        // what we need, let's increase it
         if (useSdkWallet) {
-          await token.methods.change_allowance(
-            routerAddress,
+          await instance.methods.change_allowance(
+            toAccount,
             amountWithSlippage - currentAllowance,
           );
         } else {
           const onAccount = createOnAccountObject(address);
-          const { tx } = await token.methods.change_allowance.get(
-            routerAddress,
+          const { tx } = await instance.methods.change_allowance.get(
+            toAccount,
             amountWithSlippage - currentAllowance,
             { onAccount },
           );
           window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
         }
       }
-      // at this point we are good we have enough allowance
+      // at this point we are good, we have enough allowance
+    },
+
+    /**
+     * @description create allowance for a token AEX9 compliant
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.token
+     * @param {bigint} p2.amount
+    */
+    async createTokenAllowance({
+      dispatch,
+      state: { router },
+    }, {
+      token: tokenAddress,
+      amount,
+    }) {
+      await dispatch('createAllowance', {
+        instance: await dispatch('getTokenInstance', tokenAddress),
+        toAccount: getCtAddress(router),
+        amount,
+      });
+    },
+
+    /**
+     * @description create allowance for tokens owned in a Pair
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @param {bigint} p2.amount
+    */
+    async createPairAllowance({
+      dispatch,
+      state: { router },
+    }, {
+      tokenA,
+      tokenB,
+      amount,
+    }) {
+      await dispatch('createAllowance', {
+        instance: await dispatch('getPairByTokens', { tokenA, tokenB }),
+        toAccount: getCtAddress(router),
+        amount,
+      });
     },
 
     /**
