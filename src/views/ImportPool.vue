@@ -20,8 +20,25 @@
         arrow
         @update:token="setSelectedToken($event, false)"
       />
+      <div
+        v-if="imported"
+        class="pool-found"
+      >
+        Pool found!
+      </div>
       <div class="connect">
-        {{ footerText }}
+        <div v-if="imported">
+          <LiquidityDetails
+            :pool-id="poolId"
+            :pool-info="providedLiquidity[poolId]"
+          />
+        </div>
+        <div
+          v-if="!imported"
+          class="footer-text"
+        >
+          {{ footerText }}
+        </div>
       </div>
     </MainWrapper>
   </div>
@@ -33,12 +50,15 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
 import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
+import { getPairId } from '../store/modules/aeternity';
+import LiquidityDetails from '../components/LiquidityDetails.vue';
 
 export default {
   components: {
     MainWrapper,
     ButtonToken,
     Tip,
+    LiquidityDetails,
   },
   data: () => ({
     tokenA: null,
@@ -47,7 +67,14 @@ export default {
     importing: false,
   }),
   computed: {
+    poolId() {
+      if (!this.tokenA || !this.tokenB) {
+        return null;
+      }
+      return getPairId(this.tokenA.contract_id, this.tokenB.contract_id);
+    },
     ...mapState(['address']),
+    ...mapState('aeternity', ['providedLiquidity']),
     footerText() {
       if (this.importing) return 'Fetching data...';
       if (!this.address) return 'Connect to a wallet to find pools';
@@ -73,6 +100,10 @@ export default {
           });
           if (balance) {
             this.imported = true;
+            await this.$store.dispatch('aeternity/getPoolInfo', {
+              tokenA: this.tokenA.contract_id,
+              tokenB: this.tokenB.contract_id,
+            });
             return;
           }
         } catch (e) {
@@ -91,19 +122,81 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .import-pool {
   .button-token {
     margin: 12px 0;
   }
 
+  .pool-found {
+    margin-bottom: 12px;
+    color: variables.$color-white;
+  }
+
   .connect {
-    color: white;
+    color: variables.$color-white;
     width: 100%;
-    padding: 45px 16px;
+    padding: 10px 15px;
     border-radius: 16px;
     border: 1px solid variables.$color-black;
     background-color: variables.$color-black2;
+
+    p {
+      margin: 0;
+    }
+
+    .footer-text {
+      width: 100%;
+      padding: 35px 0;
+    }
+
+    .manage-btn {
+      color: variables.$color-blue;
+
+      @extend %face-sans-16-regular;
+
+      &:hover {
+        color: variables.$color-blue-hover;
+      }
+    }
+
+    .pool-info {
+      border: 1px solid variables.$color-black;
+      background-color: variables.$color-black2;
+      border-radius: 20px;
+      padding: 16px;
+      text-align: left;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .balance {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+
+        img:nth-of-type(1) {
+          margin-left: 4px;
+          z-index: 1;
+        }
+
+        img:nth-of-type(2) {
+          margin-left: -10px;
+        }
+      }
+    }
+  }
+
+  .price {
+    display: flex;
+    color: white;
+    justify-content: flex-end;
+    margin-top: 8px;
+
+    @extend %face-sans-14-medium;
   }
 }
 </style>
