@@ -38,6 +38,43 @@ export const handleUnknownError = (error) => console.warn('Unknown rejection', e
 
 export const isNotFoundError = (error) => error.statusCode === 404;
 
+// TODO: in the end this should must be replaced by
+// the tokenlis from the backend
+//
+export const getTokenList = () => [
+  {
+    contract_id: 'ct_6QW59xdMKbZpRCF5f6gD4aAqYM54f5E1FfB5mpvg6isridEZ6',
+    decimals: 18,
+    name: 'First',
+    symbol: 'FST',
+  },
+  {
+    contract_id: 'ct_2FgBrHgVG8rbSwN78KZHPK7kekxRopSeUcZwVVmqinBftvoaQg',
+    decimals: 18,
+    name: 'Second',
+    symbol: 'SND',
+  },
+  {
+    contract_id: 'ct_eWW5hrHvyVcsCAVmoZRPeeCbsqKXFpVH81qVmUkaAju8H2esi',
+    decimals: 18,
+    name: 'Third',
+    symbol: 'AE Partner',
+  },
+  {
+    contract_id: process.env.VUE_APP_WAE_ADDRESS,
+    decimals: 18,
+    name: 'AE',
+    symbol: 'AE',
+    is_ae: true,
+  },
+  {
+    contract_id: process.env.VUE_APP_WAE_ADDRESS,
+    decimals: 18,
+    name: 'WAE',
+    symbol: 'WAE',
+    is_ae: false,
+  },
+];
 export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
   const url = new URL(`${process.env.VUE_APP_WALLET_URL}/${type}`);
   if (callbackUrl) {

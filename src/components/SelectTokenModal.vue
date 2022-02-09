@@ -40,6 +40,7 @@ import { mapState } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
+import { getTokenList } from '../lib/utils';
 
 export default {
   components: {
@@ -70,51 +71,8 @@ export default {
         );
     },
   },
-  async mounted() {
-    // const middleware = {
-    //   ae_mainnet: 'mainnet',
-    //   ae_uat: 'testnet',
-    // }[this.networkId];
-    this.tokenList = [];
-
-    const fstTkn = {
-      contract_id: 'ct_KPfzobzyoPZjADKMWxDTbeZYfE9kSPpoJDbC6MkMztKtXJHRx',
-      decimals: 18,
-      name: 'First',
-      symbol: 'FST',
-    };
-    const sndTkn = {
-      contract_id: 'ct_upFEPXmz17bW9MfNoxFjFvhFBRXJK17rzHeVR5AGEDDxudAZU',
-      decimals: 18,
-      name: 'Second',
-      symbol: 'SND',
-    };
-    const waePartnetTkn = {
-      contract_id: 'ct_7bsapRtBe8eQVpgGh8kywE7mWcVAGCmFfN7GBFFByGL13e8tL',
-      decimals: 18,
-      name: 'Third',
-      symbol: 'AE Partner',
-    };
-    const aeTkn = {
-      contract_id: process.env.VUE_APP_WAE_ADDRESS,
-      decimals: 18,
-      name: 'AE',
-      symbol: 'AE',
-      is_ae: true,
-    };
-    const waeTkn = {
-      contract_id: process.env.VUE_APP_WAE_ADDRESS,
-      decimals: 18,
-      name: 'WAE',
-      symbol: 'WAE',
-      is_ae: false,
-    };
-    // not waiting for the remote list
-    this.tokenList = [fstTkn, sndTkn, waePartnetTkn, aeTkn, waeTkn,
-      // ...await fetchJson(
-      //   `https://${middleware}.aeternity.io/mdw/aex9/by_name`,
-      // ).catch(() => []),
-    ];
+  mounted() {
+    this.tokenList = getTokenList();
   },
 };
 </script>
