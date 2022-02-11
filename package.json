@@ -7,7 +7,9 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint:script": "vue-cli-service lint --no-fix",
+    "lint:style": "stylelint src/**/*.{css,scss,vue}",
+    "lint": "npm run lint:script && npm run lint:style"
   },
   "dependencies": {
     "@aeternity/aepp-sdk": "^10.0.0",
