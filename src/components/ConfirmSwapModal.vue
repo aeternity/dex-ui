@@ -123,7 +123,7 @@ export default {
   color: white;
 
   :deep(.body) {
-    padding: 0px 16px 16px 16px;
+    padding: 0 16px 16px 16px;
   }
 
   .arrow {

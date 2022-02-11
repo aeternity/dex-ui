@@ -83,7 +83,7 @@ export default {
   border-radius: 12px;
   text-align: left;
   border: 1px solid variables.$color-black;
-  box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 0px;
+  box-shadow: rgb(0 0 0 / 10%) 0 4px 8px 0;
 
   &.v-enter-active,
   &.v-leave-active {

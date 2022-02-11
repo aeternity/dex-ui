@@ -29,7 +29,7 @@
     }
 
     &:hover {
-      color: white
+      color: white;
     }
 
     &.router-link-active {
