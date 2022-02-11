@@ -342,7 +342,8 @@ export default {
       justify-content: space-between;
       margin-bottom: 12px;
 
-      &, div {
+      &,
+      div {
         display: flex;
         align-items: center;
       }

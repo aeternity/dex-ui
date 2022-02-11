@@ -55,10 +55,10 @@ export default {
 
   &.transparent {
     background-color: transparent;
-    border:1px solid variables.$color-black;
+    border: 1px solid variables.$color-black;
 
     &:hover {
-      box-shadow: rgb(86 90 105) 0px 0px 0px 1px;
+      box-shadow: rgb(86 90 105) 0 0 0 1px;
     }
   }
 
@@ -68,7 +68,7 @@ export default {
     background-color: variables.$color-blue2;
 
     &:active {
-      box-shadow: rgb(55 107 173 / 44%) 0px 0px 0px 1pt;
+      box-shadow: rgb(55 107 173 / 44%) 0 0 0 1pt;
     }
 
     &:hover {

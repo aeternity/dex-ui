@@ -132,14 +132,18 @@ export default {
   border-radius: 24px;
   max-width: 480px;
   background: variables.$color-black3;
-  box-shadow: rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px,
-    rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px;
+  box-shadow:
+    rgb(0 0 0 / 1%) 0 0 1px,
+    rgb(0 0 0 / 4%) 0 4px 8px,
+    rgb(0 0 0 / 4%) 0 16px 24px,
+    rgb(0 0 0 / 1%) 0 24px 32px;
 
   .header {
     display: flex;
     padding: 16px 16px 0 16px;
 
-    .left, .right {
+    .left,
+    .right {
       flex-grow: 1;
       flex-basis: 0;
       display: flex;

@@ -73,7 +73,7 @@ export default {
     margin: auto;
     background-color: variables.$color-black3;
     border: 1px solid variables.$color-black2;
-    box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px 0px;
+    box-shadow: rgb(0 0 0 / 5%) 0 4px 8px 0;
     border-radius: 20px;
 
     .header {

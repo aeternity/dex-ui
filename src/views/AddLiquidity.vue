@@ -424,7 +424,8 @@ export default {
       justify-content: space-between;
       margin-bottom: 12px;
 
-      &, div {
+      &,
+      div {
         display: flex;
         align-items: center;
       }
@@ -460,11 +461,13 @@ export default {
       text-align: left;
     }
 
-    .header, .body {
+    .header,
+    .body {
       padding: 16px;
     }
 
-    &, > .body {
+    &,
+    > .body {
       border: 1px solid variables.$color-black;
       background-color: variables.$color-black2;
       border-radius: 20px;
