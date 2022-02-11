@@ -148,7 +148,7 @@
           :disabled="!removeButtonEnabled"
           @click="handleRemove"
         >
-          Remove
+          {{ removing ? 'Removing...' : 'Remove' }}
         </ButtonDefault>
       </div>
     </MainWrapper>
@@ -221,6 +221,8 @@ export default {
       tokenBInput: BigNumber(0),
       poolTokenInput: BigNumber(0),
       approved: false,
+      approving: false,
+      removing: false,
       pairId: '',
       tokenA: null,
       tokenB: null,
@@ -228,7 +230,6 @@ export default {
       reserveB: null,
       position: null,
       totalSupply: null,
-      approving: false,
     };
   },
   computed: {
@@ -260,10 +261,10 @@ export default {
         .div(reduceDecimals(this.reserveA, this.tokenA.decimals)).toNumber();
     },
     approveButtonEnabled() {
-      return !this.approved && this.poolTokenInput.gt(0);
+      return !this.approved && !this.approving && this.poolTokenInput.gt(0);
     },
     removeButtonEnabled() {
-      return this.approved && !this.approving && this.poolTokenInput.gt(0);
+      return this.approved && !this.approving && !this.removing && this.poolTokenInput.gt(0);
     },
     approveButtonMessage() {
       if (this.approving) return 'Approving...';
@@ -310,7 +311,10 @@ export default {
     },
     async handleRemove() {
       try {
-        const aePair = getAePair(this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput);
+        this.removing = true;
+        const aePair = getAePair(
+          this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput,
+        );
         const liquidity = expandDecimals(this.poolTokenInput, 18);
         if (!aePair) {
           await this.$store.dispatch('aeternity/removeLiquidity', {
@@ -334,9 +338,12 @@ export default {
           });
         }
         await this.setPairInfo();
+        this.updatePercent(0);
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         handleUnknownError(e);
+      } finally {
+        this.removing = false;
       }
     },
     positionBalance(amount) {
