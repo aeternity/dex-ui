@@ -3,7 +3,9 @@ import {
   Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection, Universal,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
-import { createDeepLinkUrl } from '@/lib/utils';
+import {
+  handleUnknownError, findErrorExplanation, createDeepLinkUrl,
+} from '@/lib/utils';
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
@@ -153,6 +155,18 @@ export default createStore({
         'x-cancel': window.location.href.split('?')[0],
       });
     },
+    /**
+    * this should be used only as a result of an error triggered
+    * by user interaction and never inside a loop
+    */
+    showUnknownError({ dispatch }, error) {
+      handleUnknownError(error);
+      const message = error?.message
+        ? findErrorExplanation(error.message)
+        : 'Unknown error';
+      dispatch('modals/open', { name: 'show-error', message });
+    },
+
   },
   modules: {
     aeternity: aeternityModule,

@@ -91,7 +91,7 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import {
-  reduceDecimals, expandDecimals, calculateSelectedToken, handleUnknownError, getAePair,
+  reduceDecimals, expandDecimals, calculateSelectedToken, getAePair,
 } from '../lib/utils';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
@@ -312,7 +312,7 @@ export default {
           }
         }
       } catch (e) {
-        handleUnknownError(e);
+        await this.$store.dispatch('showUnknownError', e);
       } finally {
         this.approving = false;
       }
@@ -390,7 +390,7 @@ export default {
         await this.reset();
       } catch (e) {
         if (e.message === 'Rejected by user') return;
-        handleUnknownError(e);
+        await this.$store.dispatch('showUnknownError', e);
       } finally {
         this.supplying = false;
       }
