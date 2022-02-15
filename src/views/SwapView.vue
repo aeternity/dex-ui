@@ -40,7 +40,7 @@
         {{ `Allow the DEX Protocol to use your ${from.symbol}` }}
       </div>
       <ButtonTooltip
-        :tooltip="`You must give the DEX smart contracts pernission to use your ${from.symbol}.
+        :tooltip="`You must give the DEX smart contracts permission to use your ${from.symbol}.
           You only have to do this once per token.`"
       >
         <img src="../assets/question-circle.svg">
