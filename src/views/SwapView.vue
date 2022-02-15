@@ -67,7 +67,7 @@ import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
 import {
-  expandDecimals, reduceDecimals, calculateSelectedToken, handleUnknownError, getAePair,
+  expandDecimals, reduceDecimals, calculateSelectedToken, getAePair,
 } from '../lib/utils';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
@@ -195,7 +195,7 @@ export default {
           this.allowanceFrom = this.amountFrom;
         }
       } catch (e) {
-        handleUnknownError(e);
+        await this.$store.dispatch('showUnknownError', e);
       }
     },
     async clickHandler() {
@@ -282,7 +282,7 @@ export default {
         });
       } catch (e) {
         if (e.message === 'Rejected by user') return;
-        handleUnknownError(e);
+        await this.$store.dispatch('showUnknownError', e);
       }
     },
   },

@@ -49,7 +49,7 @@ import { mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
-import { calculateSelectedToken, handleUnknownError } from '../lib/utils';
+import { calculateSelectedToken } from '../lib/utils';
 import { getPairId } from '../store/modules/aeternity';
 import LiquidityDetails from '../components/LiquidityDetails.vue';
 
@@ -107,9 +107,8 @@ export default {
             return;
           }
         } catch (e) {
-          if (e.message !== 'PAIR NOT FOUND') {
-            handleUnknownError(e);
-          }
+          if (e.message === 'PAIR NOT FOUND') return;
+          await this.$store.dispatch('showUnknownError', e);
         } finally {
           this.importing = false;
         }

@@ -1,5 +1,6 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
+import dexErrorMessages from 'dex-contracts-v2/build/errors';
 
 export const fetchJson = async (...args) => {
   const response = await fetch(...args);
@@ -37,6 +38,16 @@ export const expandDecimals = (val, decimals) => BigInt(
 );
 
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
+
+export const findErrorExplanation = (message) => {
+  if (!message) {
+    return message;
+  }
+  const found = message.replace('Invocation failed: "', '').split('"')[0];
+
+  const errorExplanation = dexErrorMessages[found];
+  return errorExplanation || message;
+};
 
 export const isNotFoundError = (error) => error.statusCode === 404;
 
