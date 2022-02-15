@@ -1,7 +1,6 @@
 <template>
   <MainWrapper
     title="Pool"
-    back-button
     class="pool-view"
   >
     <ButtonDefault :to="{ name: 'add-pool' }">
