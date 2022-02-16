@@ -83,7 +83,7 @@
     </ButtonDefault>
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="isDisabled || inProgress || fetchingPairInfo"
+      :disabled="!isApproved || isDisabled || inProgress || fetchingPairInfo"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
