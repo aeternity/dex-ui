@@ -167,11 +167,11 @@ export default createStore({
   plugins: [
     createPersistedState({
       reducer: ({
-        address, networkId, aeternity: { providedLiquidity, slippage },
+        address, networkId, aeternity: { providedLiquidity, slippage, deadline },
       }) => ({
         address,
         networkId,
-        aeternity: { providedLiquidity, slippage },
+        aeternity: { providedLiquidity, slippage, deadline },
       }),
     }),
     modals,

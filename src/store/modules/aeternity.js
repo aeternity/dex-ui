@@ -5,9 +5,12 @@ import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import { cttoak, createOnAccountObject, handleUnknownError } from '../../lib/utils';
-import { DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE } from '../../lib/constants';
+import {
+  DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
+  DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
+} from '../../lib/constants';
 
-const defaultDeadline = () => Date.now() + 30 * 60000;
+const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
 export const getPriceImpact = (reserveA, reserveB, amountA) => {
   const k = BigNumber(reserveA).times(reserveB);
@@ -86,6 +89,7 @@ export default {
     wae: null,
     factory: null,
     slippage: DEFAULT_SLIPPAGE, // percentage with 1 digit after separator
+    deadline: DEFAULT_DEADLINE, // minutes with 1 digit after separator
     pairs: {},
     providedLiquidity: {},
     poolInfo: {},
@@ -107,6 +111,10 @@ export default {
     setSlippage(state, slippage) {
       state.slippage = slippage > MIN_SLIPPAGE && slippage < MAX_SLIPPAGE
         ? (+slippage).toFixed(1) : DEFAULT_SLIPPAGE;
+    },
+    setDeadline(state, deadline) {
+      state.deadline = deadline > MIN_DEADLINE && deadline < MAX_DEADLINE
+        ? (+deadline).toFixed(1) : DEFAULT_DEADLINE;
     },
     addPair(state, { tokenA, tokenB, instance }) {
       state.pairs[getPairId(tokenA, tokenB)] = instance;
@@ -374,18 +382,17 @@ export default {
      * @param {bigint} p2.liquidity
      * @param {bigint} p2.amountADesired
      * @param {bigint} p2.amountBDesired
-     * @param {bigint | null} p2.deadline
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for tokenA and tokenB
     */
     removeLiquidity: genRouterMethodAction(
       'remove_liquidity',
       ({ state, rootState }, {
-        tokenA, tokenB, liquidity, amountADesired, amountBDesired, deadline,
+        tokenA, tokenB, liquidity, amountADesired, amountBDesired,
       }) => ([tokenA, tokenB, liquidity,
         subSlippage(amountADesired, state.slippage), // minumum amount to be removed
         subSlippage(amountBDesired, state.slippage), // minumum amount to be removed
-        rootState.address, deadline || defaultDeadline(), extraOpts]),
+        rootState.address, calculateDeadline(state.deadline), extraOpts]),
     ),
 
     /**
@@ -398,17 +405,16 @@ export default {
      * @param {bigint} p2.liquidity
      * @param {bigint} p2.amountTokenDesired
      * @param {bigint} p2.amountAEDesired
-     * @param {bigint | null} p2.deadline
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for token and wae
     */
     removeLiquidityAe: genRouterMethodAction(
       'remove_liquidity_ae',
       ({ state, rootState }, {
-        token, liquidity, amountTokenDesired, amountAEDesired, deadline,
+        token, liquidity, amountTokenDesired, amountAEDesired,
       }) => ([token, liquidity, subSlippage(amountTokenDesired, state.slippage), // minumum removed
         subSlippage(amountAEDesired, state.slippage), // minumum amount to be removed
-        rootState.address, deadline || defaultDeadline(), extraOpts]),
+        rootState.address, calculateDeadline(state.deadline), extraOpts]),
     ),
 
     /**
@@ -538,18 +544,17 @@ export default {
      * @param {bigint} p2.amountBDesired
      * @param {bigint} p2.minimumLiquidity if the pair was not created at
      * the point of creation the factory needs the minimum liquidity value
-     * @param {bigint | null} p2.deadline
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for tokenA and tokenB and the liquidity
     */
     addLiquidity: genRouterMethodAction(
       'add_liquidity',
       ({ state, rootState }, {
-        tokenA, tokenB, amountADesired, amountBDesired, minimumLiquidity, deadline,
+        tokenA, tokenB, amountADesired, amountBDesired, minimumLiquidity,
       }) => ([tokenA, tokenB, amountADesired, amountBDesired,
         subSlippage(amountADesired, state.slippage), // min token A amount received
         subSlippage(amountBDesired, state.slippage), // min token B amount received
-        rootState.address, minimumLiquidity, deadline || defaultDeadline(), extraOpts]),
+        rootState.address, minimumLiquidity, calculateDeadline(state.deadline), extraOpts]),
     ),
 
     /**
@@ -561,7 +566,6 @@ export default {
      * @param {string} p2.token
      * @param {bigint} p2.amountTokenDesired
      * @param {bigint} p2.amountAeDesired
-     * @param {bigint | null} p2.deadline
      * @param {bigint} p2.minimumLiquidity if the pair was not created at
      * the point of creation the factory needs the minimum liquidity value
      * @return {Promise<[bigint,bigint,liquidity]>}
@@ -570,12 +574,12 @@ export default {
     addLiquidityAe: genRouterMethodAction(
       'add_liquidity_ae',
       ({ state, rootState }, {
-        token, amountTokenDesired, amountAeDesired, minimumLiquidity, deadline,
+        token, amountTokenDesired, amountAeDesired, minimumLiquidity,
       }) => ([token, amountTokenDesired,
         subSlippage(amountTokenDesired, state.slippage), // min token amount received
         subSlippage(amountAeDesired, state.slippage), // min AE amount received
         rootState.address, minimumLiquidity,
-        deadline || defaultDeadline(), {
+        calculateDeadline(state.deadline), {
           ...extraOpts,
           amount: amountAeDesired.toString(), // if less is added the diff is returned at the end
         }]),
@@ -618,9 +622,9 @@ export default {
     swapExactTokensForTokens: genRouterMethodAction(
       'swap_exact_tokens_for_tokens',
       ({ state, rootState }, {
-        amountIn, amountOut, path, deadline,
+        amountIn, amountOut, path,
       }) => ([amountIn, subSlippage(amountOut, state.slippage), path,
-        rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
+        rootState.address, calculateDeadline(state.deadline), undefined, extraOpts]),
     ),
 
     /**
@@ -635,9 +639,9 @@ export default {
     swapTokensForExactTokens: genRouterMethodAction(
       'swap_tokens_for_exact_tokens',
       ({ state, rootState }, {
-        amountOut, amountIn, path, deadline,
+        amountOut, amountIn, path,
       }) => ([amountOut, addSlippage(amountIn, state.slippage), path,
-        rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
+        rootState.address, calculateDeadline(state.deadline), undefined, extraOpts]),
     ),
 
     /**
@@ -650,9 +654,10 @@ export default {
     swapExactAeForTokens: genRouterMethodAction(
       'swap_exact_ae_for_tokens',
       ({ state, rootState }, {
-        amountIn, amountOut, path, deadline,
+        amountIn, amountOut, path,
       }) => ([subSlippage(amountOut, state.slippage), path, rootState.address,
-        deadline || defaultDeadline(), undefined, { ...extraOpts, amount: amountIn.toString() }]),
+        calculateDeadline(state.deadline),
+        undefined, { ...extraOpts, amount: amountIn.toString() }]),
     ),
 
     /**
@@ -667,9 +672,9 @@ export default {
     swapTokensForExactAe: genRouterMethodAction(
       'swap_tokens_for_exact_ae',
       ({ state, rootState }, {
-        amountOut, amountIn, path, deadline,
+        amountOut, amountIn, path,
       }) => ([amountOut, addSlippage(amountIn, state.slippage), // not more than this
-        path, rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
+        path, rootState.address, calculateDeadline(state.deadline), undefined, extraOpts]),
     ),
 
     /**
@@ -684,9 +689,9 @@ export default {
     swapExactTokensForAe: genRouterMethodAction(
       'swap_exact_tokens_for_ae',
       ({ state, rootState }, {
-        amountIn, amountOut, path, deadline,
+        amountIn, amountOut, path,
       }) => ([amountIn, subSlippage(amountOut, state.slippage), // no less than this
-        path, rootState.address, deadline || defaultDeadline(), undefined, extraOpts]),
+        path, rootState.address, calculateDeadline(state.deadline), undefined, extraOpts]),
     ),
 
     /**
@@ -698,8 +703,8 @@ export default {
     swapAeForExactTokens: genRouterMethodAction(
       'swap_ae_for_exact_tokens',
       ({ state, rootState }, {
-        amountIn, amountOut, path, deadline,
-      }) => ([amountOut, path, rootState.address, deadline || defaultDeadline(),
+        amountIn, amountOut, path,
+      }) => ([amountOut, path, rootState.address, calculateDeadline(state.deadline),
         undefined, {
           ...extraOpts,
           // this is the diff between the desired+slippage and

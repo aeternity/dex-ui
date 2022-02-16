@@ -74,8 +74,10 @@
               class="deadline"
             >
               <InputAmount
-                v-model:value="deadline"
-                placeholder="30"
+                :value="showedDeadline"
+                :placeholder="DEFAULT_DEADLINE"
+                :class="{ error: isInvalidDeadline }"
+                @update:value="updateDeadline($event)"
               />
               <span>minutes</span>
             </SettingsItem>
@@ -97,7 +99,9 @@ import ButtonDefault from './ButtonDefault.vue';
 import ActionsMenu from './ActionsMenu.vue';
 import SettingsItem from './SettingsItem.vue';
 import InputAmount from './InputAmount.vue';
-import { DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE } from '../lib/constants';
+import {
+  DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE, DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
+} from '../lib/constants';
 
 export default {
   components: {
@@ -112,25 +116,35 @@ export default {
     settings: { type: Boolean },
   },
   data: () => ({
-    deadline: null,
     showedSlippage: '',
+    showedDeadline: '',
     DEFAULT_SLIPPAGE,
+    DEFAULT_DEADLINE,
   }),
   computed: {
-    ...mapState('aeternity', ['slippage']),
+    ...mapState('aeternity', ['slippage', 'deadline']),
     slippageStatus() {
       if (this.showedSlippage > MIN_SLIPPAGE * 2 && this.showedSlippage < MAX_SLIPPAGE) return 'warning';
       if (this.showedSlippage && (this.showedSlippage >= MAX_SLIPPAGE || this.showedSlippage < DEFAULT_SLIPPAGE)) return 'alert';
       return '';
     },
+    isInvalidDeadline() {
+      return (this.showedDeadline
+        && (this.showedDeadline > MAX_DEADLINE || this.showedDeadline < MIN_DEADLINE));
+    },
   },
   methods: {
     settingsClickHandler() {
       this.showedSlippage = this.slippage === DEFAULT_SLIPPAGE ? '' : this.slippage;
+      this.showedDeadline = this.deadline === DEFAULT_DEADLINE ? '' : this.deadline;
     },
     updateSlippage(newSlippage) {
       this.showedSlippage = newSlippage;
       this.$store.commit('aeternity/setSlippage', newSlippage);
+    },
+    updateDeadline(newDeadline) {
+      this.showedDeadline = newDeadline;
+      this.$store.commit('aeternity/setDeadline', newDeadline);
     },
     back() {
       if (!this.$store.state.route.from.name) {
@@ -257,6 +271,10 @@ export default {
           .deadline .input-amount {
             width: 80px;
             margin-right: 8px;
+
+            &.error :deep(.input-field) {
+              color: variables.$color-red;
+            }
           }
 
           .input-amount {
