@@ -411,6 +411,79 @@ export default {
     ),
 
     /**
+     * @description testing if an address has enough allowance
+     * @async
+     * @param p1 vuex context
+     * @param {Object} p2.instance the token instance
+     * @param {string} p2.toAccount allowance destination address
+     * @param {bigint} p2.amount desired allowance to be tested
+     * @returns {bool}
+    */
+    async hasEnoughAllowance({
+      state: { slippage },
+      rootState: { address },
+    }, {
+      instance,
+      toAccount,
+      amount,
+    }) {
+      const { decodedResult: currentAllowance } = await instance.methods.allowance({
+        from_account: address,
+        for_account: toAccount,
+      });
+      const allowance = addSlippage(currentAllowance ?? 0n, slippage);
+      return allowance >= amount;
+    },
+
+    /**
+     * @description testing if the router has enough allowance
+     * for a token
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.token
+     * @param {bigint} p2.amount desired allowance to be tested
+     * @returns {bool}
+    */
+    async hasRouterEnoughTokenAllowance({
+      dispatch,
+      state: { router },
+    }, {
+      token: tokenAddress,
+      amount,
+    }) {
+      return dispatch('hasEnoughAllowance', {
+        instance: await dispatch('getTokenInstance', tokenAddress),
+        toAccount: getCtAddress(router),
+        amount,
+      });
+    },
+
+    /**
+     * @description testing if the router has enough allowance
+     * for tokens owned in a Pair
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @param {bigint} p2.amount desired allowance to be tested
+     * @returns {bool}
+    */
+    async hasRouterEnoughPairAllowance({
+      dispatch,
+      state: { router },
+    }, {
+      tokenA,
+      tokenB,
+      amount,
+    }) {
+      return dispatch('hasEnoughAllowance', {
+        instance: await dispatch('getPairByTokens', { tokenA, tokenB }),
+        toAccount: getCtAddress(router),
+        amount,
+      });
+    },
+
+    /**
      * @description create allowance for a token AEX9 compliant
      * NOTE:
      * 1. the pairs created by the dex-factory are also AEX9 compliant
