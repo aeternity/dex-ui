@@ -14,7 +14,10 @@
       <div class="remove-container">
         <div class="remove-subheader">
           <div>Remove amount</div>
-          <ButtonPlain @click="detailed = !detailed">
+          <ButtonPlain
+            v-if="UNFINISHED_FEATURES"
+            @click="detailed = !detailed"
+          >
             {{ detailed ? 'Simple' : 'Detailed' }}
           </ButtonPlain>
         </div>
@@ -230,6 +233,7 @@ export default {
       reserveB: null,
       position: null,
       totalSupply: null,
+      UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
     };
   },
   computed: {
