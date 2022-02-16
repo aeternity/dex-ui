@@ -102,8 +102,7 @@ export default {
       return this.from?.contract_id === WAE && this.to?.contract_id === WAE;
     },
     enoughBalance() {
-      return (this.from && this.from.contract_id === WAE)
-      || this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
+      return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
     },
     isDisabled() {
       return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
