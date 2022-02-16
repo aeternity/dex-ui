@@ -203,14 +203,14 @@ export default {
        || (this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB));
     },
     isDisabled() {
-      return this.address && (!this.tokenB || !this.tokenA || !this.amountTokenA
+      return this.address && (!this.tokenB || !this.tokenA || +this.amountTokenA <= 0
           || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
     hasAllowanceTokenA() {
-      return this.amountTokenA && this.allowanceTokenA === this.amountTokenA;
+      return +this.amountTokenA && this.allowanceTokenA === this.amountTokenA;
     },
     hasAllowanceTokenB() {
-      return this.amountTokenB && this.allowanceTokenB === this.amountTokenB;
+      return +this.amountTokenB && this.allowanceTokenB === this.amountTokenB;
     },
     isApproved() {
       if (this.tokenA && this.tokenA.contract_id === WAE) {
@@ -229,7 +229,7 @@ export default {
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
       if (this.supplying) return 'Supplying...';
-      if (!this.amountTokenA || !this.amountTokenB || !this.tokenA || !this.tokenB) return 'Enter amount';
+      if (+this.amountTokenA <= 0 || !this.amountTokenB || !this.tokenA || !this.tokenB) return 'Enter amount';
       if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
       if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
       return 'Supply';
