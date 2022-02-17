@@ -38,8 +38,6 @@ export default {
     await this.$store.dispatch('aeternity/initWae', this.$store.state.sdk);
     if (this.$isMobile) {
       await this.$store.dispatch('addMobileWallet');
-    } else {
-      await this.$store.dispatch('scanForWallets');
     }
   },
 };
