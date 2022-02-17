@@ -127,7 +127,6 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
-@use '../styles/typography.scss';
 
 .import-pool {
   .button-token {
@@ -155,53 +154,6 @@ export default {
       width: 100%;
       padding: 35px 0;
     }
-
-    .manage-btn {
-      color: variables.$color-blue;
-
-      @extend %face-sans-16-regular;
-
-      &:hover {
-        color: variables.$color-blue-hover;
-      }
-    }
-
-    .pool-info {
-      border: 1px solid variables.$color-black;
-      background-color: variables.$color-black2;
-      border-radius: 20px;
-      padding: 16px;
-      text-align: left;
-
-      img {
-        width: 20px;
-        height: 20px;
-      }
-
-      .balance {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-
-        img:nth-of-type(1) {
-          margin-left: 4px;
-          z-index: 1;
-        }
-
-        img:nth-of-type(2) {
-          margin-left: -10px;
-        }
-      }
-    }
-  }
-
-  .price {
-    display: flex;
-    color: white;
-    justify-content: flex-end;
-    margin-top: 8px;
-
-    @extend %face-sans-14-medium;
   }
 }
 </style>
