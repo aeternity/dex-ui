@@ -14,8 +14,11 @@
         {{ isConfirmed ? 'Transaction Submitted' : 'Waiting For Confirmation' }}
       </span>
       <template v-if="!isConfirmed">
-        <span class="swap-info">
-          {{ `Swapping ${amountFrom} ${fromSymbol} for ${amountTo} ${toSymbol}` }}
+        <span
+          v-if="submitMessage"
+          class="swap-info"
+        >
+          {{ submitMessage }}
         </span>
         <span class="guide">Confirm this transaction in your wallet</span>
       </template>
@@ -48,10 +51,7 @@ export default {
     DownArrow,
   },
   props: {
-    fromSymbol: { type: String, required: true },
-    toSymbol: { type: String, required: true },
-    amountFrom: { type: [String, Number], required: true },
-    amountTo: { type: [String, Number], required: true },
+    submitMessage: { type: String, default: '' },
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
     work: { type: Function, required: true },
