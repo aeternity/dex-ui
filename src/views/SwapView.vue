@@ -288,10 +288,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          fromSymbol: this.from.symbol,
-          toSymbol: this.to.symbol,
-          amountFrom: this.amountFrom,
-          amountTo: this.amountTo,
+          submitMessage: `Swapping ${this.amountFrom} ${this.from.symbol} for ${this.amountTo} ${this.to.symbol}`,
           work: this.isAeVsWae ? this.swapAeVsWaeProcess : this.swapProcess,
         });
       } catch (e) {
