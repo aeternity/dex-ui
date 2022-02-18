@@ -17,6 +17,9 @@
     <LiquidityDetails
       :pool-id="poolId"
       :pool-info="poolInfo"
+      :pool-info-importing="poolInfoImporting"
+      :pool-info-import-failed="poolInfoImportFailed"
+      @load:pool-info="getPoolInfo"
     />
   </div>
 </template>
@@ -36,6 +39,8 @@ export default {
   },
   data: () => ({
     show: false,
+    poolInfoImporting: false,
+    poolInfoImportFailed: false,
   }),
   computed: {
     token0() {
@@ -49,10 +54,21 @@ export default {
     async onShow() {
       this.show = !this.show;
       if (this.show) {
+        this.getPoolInfo();
+      }
+    },
+    async getPoolInfo() {
+      try {
+        this.poolInfoImporting = true;
         await this.$store.dispatch('aeternity/getPoolInfo', {
           tokenA: this.token0.cid,
           tokenB: this.token1.cid,
         });
+        this.poolInfoImportFailed = false;
+      } catch (error) {
+        this.poolInfoImportFailed = true;
+      } finally {
+        this.poolInfoImporting = false;
       }
     },
   },
