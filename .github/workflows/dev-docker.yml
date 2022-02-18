@@ -1,4 +1,4 @@
-name: Production Dex UI Pipeline
+name: Development Dex UI Pipeline
 
 on:
   push:
