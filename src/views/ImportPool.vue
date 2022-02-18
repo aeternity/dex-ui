@@ -31,6 +31,7 @@
           <LiquidityDetails
             :pool-id="poolId"
             :pool-info="providedLiquidity[poolId]"
+            :pool-info-importing="poolInfoImporting"
           />
         </div>
         <div
@@ -65,6 +66,7 @@ export default {
     tokenB: null,
     imported: false,
     importing: false,
+    poolInfoImporting: false,
   }),
   computed: {
     poolId() {
@@ -100,10 +102,12 @@ export default {
           });
           if (balance) {
             this.imported = true;
+            this.poolInfoImporting = true;
             await this.$store.dispatch('aeternity/getPoolInfo', {
               tokenA: this.tokenA.contract_id,
               tokenB: this.tokenB.contract_id,
             });
+            this.poolInfoImporting = false;
             return;
           }
         } catch (e) {

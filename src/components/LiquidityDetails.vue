@@ -3,15 +3,36 @@
     <div>
       <span>Pooled {{ token0.symbol }}:</span>
       <div>
+        <div
+          v-if="poolInfoImportFailed"
+          class="error"
+        >
+          Loading Failed
+          <div
+            class="reload"
+            @click="$emit('load:pool-info')"
+          >
+            <img
+              :class="{rotating: poolInfoImporting}"
+              src="../assets/refresh.svg"
+            >
+          </div>
+        </div>
         {{ getAmountText(amount0,token0) }}
-        <img :src="`https://avatars.z52da5wt.xyz/${token0.cid}`">
+        <img
+          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
+          :src="`https://avatars.z52da5wt.xyz/${token0.cid}`"
+        >
       </div>
     </div>
     <div>
       <span>Pooled {{ token1.symbol }}:</span>
       <div>
         {{ getAmountText(amount1,token1) }}
-        <img :src="`https://avatars.z52da5wt.xyz/${token1.cid}`">
+        <img
+          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
+          :src="`https://avatars.z52da5wt.xyz/${token1.cid}`"
+        >
       </div>
     </div>
     <div>
@@ -60,7 +81,10 @@ export default {
   props: {
     poolId: { type: String, required: true },
     poolInfo: { type: Object, required: true },
+    poolInfoImporting: { type: Boolean, required: false },
+    poolInfoImportFailed: { type: Boolean, required: false },
   },
+  emits: ['load:pool-info'],
   computed: {
     ...mapState({
       supplyInfoObject: (state) => state.aeternity.poolInfo,
@@ -118,6 +142,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/animations.scss';
 
 .body {
   margin-top: 8px;
@@ -174,4 +199,17 @@ export default {
     }
   }
 }
+
+.error {
+  color: variables.$color-red;
+
+  .reload {
+    padding: 0 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 </style>
