@@ -408,8 +408,8 @@ export default {
       ({ state, rootState }, {
         tokenA, tokenB, liquidity, amountADesired, amountBDesired,
       }) => ([tokenA, tokenB, liquidity,
-        subSlippage(amountADesired, state.slippage), // minumum amount to be removed
-        subSlippage(amountBDesired, state.slippage), // minumum amount to be removed
+        subSlippage(amountADesired, state.slippage), // min received tokenA after the removal
+        subSlippage(amountBDesired, state.slippage), // min received tokenB after the removal
         rootState.address, calculateDeadline(state.deadline), extraOpts]),
     ),
 
@@ -430,8 +430,9 @@ export default {
       'remove_liquidity_ae',
       ({ state, rootState }, {
         token, liquidity, amountTokenDesired, amountAEDesired,
-      }) => ([token, liquidity, subSlippage(amountTokenDesired, state.slippage), // minumum removed
-        subSlippage(amountAEDesired, state.slippage), // minumum amount to be removed
+      }) => ([token, liquidity,
+        subSlippage(amountTokenDesired, state.slippage), // min received Token after the removal
+        subSlippage(amountAEDesired, state.slippage), // min received AE after the removal
         rootState.address, calculateDeadline(state.deadline), extraOpts]),
     ),
 
