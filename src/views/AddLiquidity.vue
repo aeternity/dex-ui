@@ -356,7 +356,7 @@ export default {
             tokenB: this.tokenB.contract_id,
             amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
             amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
-            MINIMUM_LIQUIDITY,
+            minimumLiquidity: MINIMUM_LIQUIDITY,
           });
           // to refresh liquidity list
           await this.$store.dispatch('aeternity/pullAccountLiquidity', {
@@ -372,7 +372,7 @@ export default {
             token: aePair.token.contract_id,
             amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
             amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
-            MINIMUM_LIQUIDITY,
+            minimumLiquidity: MINIMUM_LIQUIDITY,
           });
 
           // to refresh liquidity list
