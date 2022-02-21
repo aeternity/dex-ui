@@ -105,16 +105,17 @@ export default {
           if (balance) {
             this.imported = true;
             this.poolInfoImporting = true;
-            await this.$store.dispatch('aeternity/getPoolInfo', {
-              tokenA: this.tokenA.contract_id,
-              tokenB: this.tokenB.contract_id,
+            await this.$store.dispatch('aeternity/getPairInfo', {
+              tokenA: this.tokenA,
+              tokenB: this.tokenB,
             });
             this.poolInfoImporting = false;
             return;
           }
         } catch (e) {
-          if (e.message === 'PAIR NOT FOUND') return;
-          await this.$store.dispatch('showUnknownError', e);
+          if (e.message !== 'PAIR NOT FOUND') {
+            await this.$store.dispatch('showUnknownError', e);
+          }
         } finally {
           this.importing = false;
         }

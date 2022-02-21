@@ -92,6 +92,7 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import {
   reduceDecimals, expandDecimals, calculateSelectedToken, getAePair,
+  handleUnknownError,
 } from '../lib/utils';
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
@@ -225,8 +226,7 @@ export default {
     async factory(newVal) {
       // we have wallet connection
       if (newVal && this.tokenB && this.tokenA) {
-        [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
-          { tokenA: this.tokenA, tokenB: this.tokenB });
+        await this.setPairInfo();
         if (this.amountTokenA || this.amountTokenB) {
           this.setAmount(
             this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
@@ -269,12 +269,25 @@ export default {
 
       // TODO: what if it fails?
       if (!swapped) {
-        [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
-          { tokenA: this.tokenA, tokenB: this.tokenB });
+        await this.setPairInfo();
       }
       this.setAmount(
         this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
       );
+    },
+    async setPairInfo() {
+      try {
+        [
+          this.totalSupply,
+          this.reserveTokenA,
+          this.reserveTokenB,
+        ] = await this.$store.dispatch('aeternity/getPairInfo', {
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
+        });
+      } catch (e) {
+        handleUnknownError(e);
+      }
     },
     setAmount(amount, isLastInputTokenA) {
       this.isLastInputTokenA = isLastInputTokenA;
@@ -326,8 +339,7 @@ export default {
       }
     },
     async reset() {
-      [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch('aeternity/getPairInfo',
-        { tokenA: this.tokenA, tokenB: this.tokenB });
+      await this.setPairInfo();
       this.amountTokenA = null;
       this.amountTokenB = null;
       this.allowanceTokenA = null;

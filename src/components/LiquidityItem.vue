@@ -25,6 +25,7 @@
 import ButtonPlain from './ButtonPlain.vue';
 import LiquidityDetails from './LiquidityDetails.vue';
 import DownChevron from '../assets/arrow.svg?vue-component';
+import { handleUnknownError } from '@/lib/utils';
 
 export default {
   components: {
@@ -59,12 +60,13 @@ export default {
     async getPoolInfo() {
       try {
         this.poolInfoImporting = true;
-        await this.$store.dispatch('aeternity/getPoolInfo', {
+        await this.$store.dispatch('aeternity/fetchPoolInfo', {
           tokenA: this.token0.cid,
           tokenB: this.token1.cid,
         });
         this.poolInfoImportFailed = false;
       } catch (error) {
+        handleUnknownError(error);
         this.poolInfoImportFailed = true;
       } finally {
         this.poolInfoImporting = false;
