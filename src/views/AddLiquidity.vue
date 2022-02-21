@@ -346,60 +346,67 @@ export default {
       this.allowanceTokenB = null;
       this.isLastInputTokenA = true;
     },
+    async supplyProcess() {
+      const aePair = getAePair(
+        this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
+      );
+      this.supplying = true;
+      // if none of the selected tokens are WAE
+      if (!aePair) {
+        await this.$store.dispatch('aeternity/addLiquidity', {
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
+          amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
+          amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
+          minimumLiquidity: MINIMUM_LIQUIDITY,
+        });
+        // to refresh liquidity list
+        await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
+          tokenASymbol: this.tokenA.symbol,
+          tokenBSymbol: this.tokenB.symbol,
+          tokenADecimals: this.tokenA.decimals,
+          tokenBDecimals: this.tokenB.decimals,
+        });
+      } else {
+        await this.$store.dispatch('aeternity/addLiquidityAe', {
+          token: aePair.token.contract_id,
+          amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
+          amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
+          minimumLiquidity: MINIMUM_LIQUIDITY,
+        });
+
+        // to refresh liquidity list
+        await this.$store.dispatch('aeternity/pullAccountLiquidity', {
+          tokenA: aePair.token.contract_id,
+          tokenASymbol: aePair.token.symbol,
+          tokenADecimals: aePair.token.decimals,
+          tokenB: aePair.wae.contract_id,
+          tokenBSymbol: aePair.wae.symbol,
+          tokenBDecimals: aePair.wae.decimals,
+        });
+      }
+      await this.reset();
+    },
     async supply() {
       try {
         await this.$store.dispatch('modals/open', {
-          name: 'confirm-add',
-          firstToken: this.tokenA,
-          secondToken: this.tokenB,
-          firstAmount: this.amountTokenA,
-          secondAmount: this.amountTokenB,
+          name: 'confirm-liquidity',
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
+          amountA: BigNumber(this.amountTokenA),
+          amountB: BigNumber(this.amountTokenB),
           ratio: this.ratio,
-          receive: reduceDecimals(this.liquidity, MAGNITUDE),
+          pairAmount: reduceDecimals(this.liquidity, MAGNITUDE),
           share: this.share,
+          isAdding: true,
         });
-
-        const aePair = getAePair(
-          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
-        );
-        this.supplying = true;
-        // if none of the selected tokens are WAE
-        if (!aePair) {
-          await this.$store.dispatch('aeternity/addLiquidity', {
-            tokenA: this.tokenA.contract_id,
-            tokenB: this.tokenB.contract_id,
-            amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
-            amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
-            minimumLiquidity: MINIMUM_LIQUIDITY,
-          });
-          // to refresh liquidity list
-          await this.$store.dispatch('aeternity/pullAccountLiquidity', {
-            tokenA: this.tokenA.contract_id,
-            tokenB: this.tokenB.contract_id,
-            tokenASymbol: this.tokenA.symbol,
-            tokenBSymbol: this.tokenB.symbol,
-            tokenADecimals: this.tokenA.decimals,
-            tokenBDecimals: this.tokenB.decimals,
-          });
-        } else {
-          await this.$store.dispatch('aeternity/addLiquidityAe', {
-            token: aePair.token.contract_id,
-            amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
-            amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
-            minimumLiquidity: MINIMUM_LIQUIDITY,
-          });
-
-          // to refresh liquidity list
-          await this.$store.dispatch('aeternity/pullAccountLiquidity', {
-            tokenA: aePair.token.contract_id,
-            tokenASymbol: aePair.token.symbol,
-            tokenADecimals: aePair.token.decimals,
-            tokenB: aePair.wae.contract_id,
-            tokenBSymbol: aePair.wae.symbol,
-            tokenBDecimals: aePair.wae.decimals,
-          });
-        }
-        await this.reset();
+        await this.$store.dispatch('modals/open', {
+          name: 'submit-transaction',
+          submitMessage: `Providing liquidity of ${this.amountTokenA} ${this.tokenA.symbol} and ${this.amountTokenB} ${this.tokenB.symbol}`,
+          work: this.supplyProcess,
+        });
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);
