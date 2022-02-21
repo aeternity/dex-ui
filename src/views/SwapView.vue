@@ -68,6 +68,7 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
 import {
   expandDecimals, reduceDecimals, calculateSelectedToken, getAePair,
+  handleUnknownError,
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
@@ -135,8 +136,7 @@ export default {
     async factory(newVal) {
       // we have wallet connection
       if (newVal && this.to && this.from) {
-        [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
-          { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
+        await this.setPairInfo();
         if (this.amountFrom || this.amountTo) {
           this.setAmount(
             this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
@@ -168,14 +168,26 @@ export default {
       } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
         this.allowanceTo = null;
       }
-      // TODO: what if it fails?
       if (!swapped) {
-        [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
-          { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
+        await this.setPairInfo();
       }
       this.setAmount(
         this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
       );
+    },
+    async setPairInfo() {
+      try {
+        [
+          this.totalSupply,
+          this.reserveFrom,
+          this.reserveTo,
+        ] = await this.$store.dispatch('aeternity/getPairInfo', {
+          tokenA: this.from,
+          tokenB: this.to,
+        });
+      } catch (e) {
+        handleUnknownError(e);
+      }
     },
     setAmount(amount, isFrom) {
       this.isLastAmountFrom = isFrom;
@@ -240,8 +252,7 @@ export default {
       await this.reset();
     },
     async reset() {
-      [this.totalSupply, this.reserveFrom, this.reserveTo] = await this.$store.dispatch('aeternity/getPairInfo',
-        { tokenA: this.from, tokenB: this.to, isAeVsWae: this.isAeVsWae });
+      await this.setPairInfo();
       this.amountFrom = '';
       this.amountTo = '';
       this.allowanceFrom = null;

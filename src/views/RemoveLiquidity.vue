@@ -359,17 +359,12 @@ export default {
         if (!this.tokenA || !this.tokenB || !this.address) {
           return;
         }
-        const {
-          totalSupply,
-          reserveA,
-          reserveB,
-        } = await this.$store.dispatch('aeternity/getPoolInfo', {
-          tokenA: this.tokenA.contract_id,
-          tokenB: this.tokenB.contract_id,
+        [
+          this.totalSupply, this.reserveA, this.reserveB,
+        ] = await this.$store.dispatch('aeternity/getPairInfo', {
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
         });
-        this.totalSupply = totalSupply;
-        this.reserveA = BigNumber(reserveA);
-        this.reserveB = BigNumber(reserveB);
         const position = await this.$store.dispatch('aeternity/pullAccountLiquidity', {
           tokenA: this.tokenA.contract_id,
           tokenASymbol: this.tokenA.symbol,
@@ -380,9 +375,7 @@ export default {
         });
         this.position = position;
       } catch (e) {
-        if (e.message !== 'PAIR NOT FOUND') {
-          handleUnknownError(e);
-        }
+        handleUnknownError(e);
       }
     },
   },

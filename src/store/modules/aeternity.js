@@ -4,7 +4,7 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
-import { cttoak, createOnAccountObject, handleUnknownError } from '../../lib/utils';
+import { cttoak, createOnAccountObject } from '../../lib/utils';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
   DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
@@ -12,6 +12,7 @@ import {
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
+const WAE = process.env.VUE_APP_WAE_ADDRESS;
 export const getPriceImpact = (reserveA, reserveB, amountA) => {
   const k = BigNumber(reserveA).times(reserveB);
   const newReserveA = BigNumber(reserveA).plus(amountA);
@@ -317,14 +318,14 @@ export default {
       return getPriceImpact(reserveA, reserveB, amountA);
     },
     /**
-     * @description get infor about the pool
+     * @description fetches the pool info and updates it into the store
      * @async
      * @param p1 vuex context
      * @param {string} p2.tokenA tokenA address
      * @param {string} p2.tokenB tokenA address
      * @return {object} returns {totalSupply,reserveA,reserveB}
     */
-    async getPoolInfo({
+    async fetchPoolInfo({
       dispatch,
       commit,
     }, {
@@ -352,20 +353,32 @@ export default {
       };
     },
 
-    async getPairInfo({ dispatch, rootState: { address } }, { tokenA, tokenB, isAeVsWae = false }) {
+    /**
+     * @description get info about the pool
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {object} returns [totalSupply,reserveA,reserveB] or []
+     * when no pair
+    */
+    async getPairInfo({ dispatch, state: { factory } }, { tokenA, tokenB }) {
       try {
-        if (!tokenA || !tokenB || !address) {
+        if (!tokenA || !tokenB || !factory) {
           return [];
         }
-        if (isAeVsWae) return [0, 1, 1]; // [totalSupply, reserveA, reserveB];
-        const { totalSupply, reserveA, reserveB } = await dispatch('getPoolInfo', {
+
+        if (tokenA.contract_id === WAE && tokenB.contract_id === WAE) {
+          return [0, 1, 1];
+        }
+        const { totalSupply, reserveA, reserveB } = await dispatch('fetchPoolInfo', {
           tokenA: tokenA.contract_id,
           tokenB: tokenB.contract_id,
         });
         return [totalSupply, reserveA, reserveB];
       } catch (e) {
         if (e.message !== 'PAIR NOT FOUND') {
-          handleUnknownError(e);
+          throw e;
         }
         return [];
       }
