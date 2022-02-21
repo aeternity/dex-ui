@@ -58,13 +58,10 @@
         </template>
       </div>
       <InputToken v-if="detailed" />
-      <img
-        src="../assets/arrow-down.svg"
-        class="arrow-down"
-      >
+      <DownArrow class="arrow-down" />
       <template v-if="detailed">
         <InputToken />
-        <img src="../assets/plus.svg">
+        <PlusIcon />
         <InputToken />
       </template>
       <div
@@ -206,6 +203,8 @@ import {
   getTokenList,
   getAePair,
 } from '../lib/utils';
+import DownArrow from '../assets/arrow-down.svg?vue-component';
+import PlusIcon from '../assets/plus.svg?vue-component';
 
 export default {
   components: {
@@ -215,6 +214,8 @@ export default {
     ButtonDefault,
     InputRange,
     InputToken,
+    DownArrow,
+    PlusIcon,
   },
   data() {
     return {
@@ -490,7 +491,7 @@ export default {
         padding: 0;
       }
 
-      :deep(img) {
+      :deep(svg) {
         height: 52px;
         width: 52px;
       }

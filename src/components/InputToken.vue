@@ -6,7 +6,7 @@
         arrow
       >
         <template #icon>
-          <img src="../assets/logo.png">
+          <AeLogo />
         </template>
       </ButtonToken>
       <InputField
@@ -43,6 +43,7 @@ import InputField from './InputField.vue';
 import ButtonToken from './ButtonToken.vue';
 import ButtonPlain from './ButtonPlain.vue';
 import AeBalance from './AeBalance.vue';
+import AeLogo from '../assets/ae.svg?vue-component';
 
 export default {
   components: {
@@ -50,6 +51,7 @@ export default {
     ButtonToken,
     ButtonPlain,
     AeBalance,
+    AeLogo,
   },
   emits: ['update:value', 'update:balance'],
   data: () => ({

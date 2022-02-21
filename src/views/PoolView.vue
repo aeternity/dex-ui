@@ -14,7 +14,7 @@
         Fees are added to the pool, accrue in real time
         and can be claimed by withdrawing your liquidity.`"
       >
-        <img src="../assets/question-circle.svg">
+        <QuestionCircle />
       </ButtonTooltip>
     </div>
     <div v-if="address">
@@ -38,6 +38,7 @@ import MainWrapper from '../components/MainWrapper.vue';
 import ButtonDefault from '../components/ButtonDefault.vue';
 import ButtonTooltip from '../components/ButtonTooltip.vue';
 import LiquidityItem from '../components/LiquidityItem.vue';
+import QuestionCircle from '../assets/question-circle.svg?vue-component';
 
 export default {
   components: {
@@ -45,6 +46,7 @@ export default {
     ButtonDefault,
     ButtonTooltip,
     LiquidityItem,
+    QuestionCircle,
   },
   computed: {
     ...mapState({
@@ -77,7 +79,7 @@ export default {
     margin: 8px 0;
     color: white;
 
-    .button-tooltip img {
+    .button-tooltip svg {
       height: 20px;
       width: 20px;
     }

@@ -2,12 +2,10 @@
   <span v-if="balance">
     {{ balance.toFixed(fixed) }}
   </span>
-  <img
+  <AnimatedSpinner
     v-else
-    alt="loading"
-    src="../assets/animated-spinner.svg"
     class="spinner"
-  >
+  />
 </template>
 
 <script>
@@ -20,6 +18,7 @@ import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullI
 import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
+import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
 const pollState = {};
 let storeState;
@@ -86,6 +85,7 @@ function getBalanceRef(addressRef) {
   return r;
 }
 export default {
+  components: { AnimatedSpinner },
   props: {
     address: { type: String, required: true },
     fixed: { type: Number, default: 2 },

@@ -15,7 +15,7 @@
             class="close"
             @click="$emit('close')"
           >
-            <img src="../assets/times.svg">
+            <Times />
           </ButtonPlain>
         </div>
         <div
@@ -39,10 +39,12 @@
 
 <script>
 import ButtonPlain from './ButtonPlain.vue';
+import Times from '../assets/times.svg?vue-component';
 
 export default {
   components: {
     ButtonPlain,
+    Times,
   },
   props: {
     close: Boolean,

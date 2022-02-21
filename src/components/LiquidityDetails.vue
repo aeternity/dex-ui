@@ -12,10 +12,7 @@
             class="reload"
             @click="$emit('load:pool-info')"
           >
-            <img
-              :class="{rotating: poolInfoImporting}"
-              src="../assets/refresh.svg"
-            >
+            <RefreshIcon :class="{rotating: poolInfoImporting}" />
           </div>
         </div>
         {{ getAmountText(amount0,token0) }}
@@ -73,10 +70,11 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ButtonDefault from './ButtonDefault.vue';
 import { reduceDecimals } from '../lib/utils';
+import RefreshIcon from '../assets/refresh.svg?vue-component';
 
 export default {
   components: {
-    ButtonDefault,
+    ButtonDefault, RefreshIcon,
   },
   props: {
     poolId: { type: String, required: true },

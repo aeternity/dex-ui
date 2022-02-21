@@ -3,7 +3,7 @@
   <div class="header">
     <div class="left">
       <span>DEX</span>
-      <img src="../assets/ae.svg">
+      <AeLogo />
     </div>
     <NavigationMenu />
     <div class="right">
@@ -38,7 +38,7 @@
           target="_blank"
         >
           About us
-          <img src="../assets/ae.svg">
+          <AeLogo />
         </a>
       </ActionsMenu>
     </div>
@@ -51,6 +51,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import AeLogo from '../assets/ae.svg?vue-component';
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
@@ -58,6 +59,7 @@ import ButtonDefault from './ButtonDefault.vue';
 
 export default {
   components: {
+    AeLogo,
     ActionsMenu,
     NavigationMenu,
     ButtonDefault,
@@ -106,7 +108,7 @@ export default {
       margin-right: 4px;
     }
 
-    img {
+    svg {
       width: 24px;
       height: 24px;
     }
@@ -180,7 +182,7 @@ export default {
           color: white;
         }
 
-        img {
+        svg {
           height: 16px;
           width: 16px;
         }

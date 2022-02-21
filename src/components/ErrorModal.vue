@@ -6,10 +6,7 @@
     @close="resolve"
   >
     <div class="error-details">
-      <img
-        src="../assets/alert.svg"
-        alt="Warning icon"
-      >
+      <Alert />
       <h4>{{ message }}</h4>
     </div>
     <ButtonDefault
@@ -24,12 +21,14 @@
 <script>
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
+import Alert from '../assets/alert.svg?vue-component';
 
 export default {
   name: 'ErrorModal',
   components: {
     ModalDefault,
     ButtonDefault,
+    Alert,
   },
   props: {
     message: { type: String, required: true },
@@ -44,7 +43,7 @@ export default {
     padding: 20px 30px;
     max-width: 480px;
 
-    img {
+    svg {
       width: 50px;
     }
 

@@ -3,21 +3,22 @@
     v-bind="$attrs"
     :class="[fill, 'button-default']"
   >
-    <img
+    <AnimatedSpinner
       v-if="spinner"
-      src="../assets/animated-spinner.svg"
       class="spinner"
-    >
+    />
     <slot v-else />
   </ButtonPlain>
 </template>
 
 <script>
 import ButtonPlain from './ButtonPlain.vue';
+import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
 export default {
   components: {
     ButtonPlain,
+    AnimatedSpinner,
   },
   props: {
     fill: {
