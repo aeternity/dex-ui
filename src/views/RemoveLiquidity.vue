@@ -245,12 +245,6 @@ export default {
     share() {
       return BigNumber(this.position).div(this.totalSupply).toNumber();
     },
-    balanceA() {
-      return this.reserveA.times(this.share).div(BigNumber(10).pow(18));
-    },
-    balanceB() {
-      return BigNumber(this.reserveB).times(this.share).div(BigNumber(10).pow(18));
-    },
     ratioA() {
       if (!this.reserveA || !this.reserveB || !this.tokenA || !this.tokenB) {
         return null;
@@ -314,36 +308,53 @@ export default {
       this.poolTokenInput = this.positionBalance(this.position).times(p / 100);
       this.approved = false;
     },
+    async removalProcess() {
+      const aePair = getAePair(
+        this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput,
+      );
+      const liquidity = expandDecimals(this.poolTokenInput, 18);
+      if (!aePair) {
+        await this.$store.dispatch('aeternity/removeLiquidity', {
+          tokenA: this.tokenA.contract_id,
+          tokenB: this.tokenB.contract_id,
+          liquidity,
+          amountADesired: expandDecimals(this.tokenAInput, this.tokenA.decimals),
+          amountBDesired: expandDecimals(this.tokenBInput, this.tokenB.decimals),
+        });
+      } else {
+        const { token, isTokenFrom } = aePair;
+        await this.$store.dispatch('aeternity/removeLiquidityAe', {
+          token: token.contract_id,
+          liquidity,
+          amountTokenDesired: isTokenFrom
+            ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
+            : expandDecimals(this.tokenBInput, this.tokenB.decimals),
+          amountAEDesired: isTokenFrom
+            ? expandDecimals(this.tokenBInput, this.tokenB.decimals)
+            : expandDecimals(this.tokenAInput, this.tokenA.decimals),
+        });
+      }
+      await this.setPairInfo();
+      this.updatePercent(0);
+    },
     async handleRemove() {
       try {
         this.removing = true;
-        const aePair = getAePair(
-          this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput,
-        );
-        const liquidity = expandDecimals(this.poolTokenInput, 18);
-        if (!aePair) {
-          await this.$store.dispatch('aeternity/removeLiquidity', {
-            tokenA: this.tokenA.contract_id,
-            tokenB: this.tokenB.contract_id,
-            liquidity,
-            amountADesired: expandDecimals(this.tokenAInput, this.tokenA.decimals),
-            amountBDesired: expandDecimals(this.tokenBInput, this.tokenB.decimals),
-          });
-        } else {
-          const { token, isTokenFrom } = aePair;
-          await this.$store.dispatch('aeternity/removeLiquidityAe', {
-            token: token.contract_id,
-            liquidity,
-            amountTokenDesired: isTokenFrom
-              ? expandDecimals(this.tokenAInput, this.tokenA.decimals)
-              : expandDecimals(this.tokenBInput, this.tokenB.decimals),
-            amountAEDesired: isTokenFrom
-              ? expandDecimals(this.tokenBInput, this.tokenB.decimals)
-              : expandDecimals(this.tokenAInput, this.tokenA.decimals),
-          });
-        }
-        await this.setPairInfo();
-        this.updatePercent(0);
+        await this.$store.dispatch('modals/open', {
+          name: 'confirm-liquidity',
+          isAdding: false,
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
+          pairAmount: this.poolTokenInput,
+          amountA: this.tokenAInput,
+          amountB: this.tokenBInput,
+          ratio: this.ratioA,
+        });
+        await this.$store.dispatch('modals/open', {
+          name: 'submit-transaction',
+          submitMessage: `Removing around ${this.poolTokenInput.toFixed(5)} ${this.tokenA.symbol}/${this.tokenB.symbol} pool tokens from the provided liquidity`,
+          work: this.removalProcess,
+        });
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);

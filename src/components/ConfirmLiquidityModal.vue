@@ -1,57 +1,69 @@
 <template>
   <ModalDefault
     class="confirm-add-modal"
-    title="You will receive"
+    :title="isAdding ? 'You will receive' : 'Tokens to be removed'"
     close
     @close="denyHandler"
   >
     <div class="container">
       <div class="receive">
-        {{ receive ? receive.toFixed(5) : '-' }}
-        <img :src="`https://avatars.z52da5wt.xyz/${firstToken.contract_id}`">
-        <img :src="`https://avatars.z52da5wt.xyz/${secondToken.contract_id}`">
+        {{ pairAmount ? pairAmount.toFixed(5) : '-' }}
+        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+        <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
       </div>
       <div class="tokens">
-        {{ `${firstToken.symbol}/${secondToken.symbol} Pool Tokens` }}
+        {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
       </div>
       <span class="estimation">
-        Output is estimated. If the price changes by more than 0.5% your transaction will revert.
+        Output is estimated. If the price changes by more than {{ slippage }}%
+        your transaction will revert.
       </span>
       <div class="transaction-details">
         <div>
-          <span>{{ `${firstToken.symbol} Deposited` }}</span>
+          <span>{{ tokenA.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
           <div>
-            <img :src="`https://avatars.z52da5wt.xyz/${firstToken.contract_id}`">
-            {{ firstAmount }}
+            <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+            {{ amountA ? amountA.toFixed(5) : '-' }}
           </div>
         </div>
         <div>
-          <span>{{ `${secondToken.symbol} Deposited` }}</span>
+          <span>{{ tokenB.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
           <div>
-            <img :src="`https://avatars.z52da5wt.xyz/${secondToken.contract_id}`">
-            {{ secondAmount }}
+            <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+            {{ amountB ? amountB.toFixed(5) : '-' }}
           </div>
         </div>
         <div class="rates">
           <span>Rates</span>
           <div>
-            <span>{{ `1 ${firstToken.symbol} = ${sndRatio} ${secondToken.symbol}` }}</span>
-            {{ `1 ${secondToken.symbol} = ${fstRatio} ${firstToken.symbol}` }}
+            <span>{{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }}</span>
+            {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
           </div>
         </div>
-        <div>
+        <div v-if="isAdding">
           <span>Share of Pool:</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
+      <div
+        v-if="!isAdding"
+        class="estimation"
+      >
+        You will receive at least
+        <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
+        and at least <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
+        or the transaction will revert.
+      </div>
       <ButtonDefault @click="allowHandler">
-        Confirm Supply
+        Confirm {{ isAdding ? 'Supply' : 'Removal' }}
       </ButtonDefault>
     </div>
   </ModalDefault>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
 
@@ -61,31 +73,38 @@ export default {
     ButtonDefault,
   },
   props: {
-    receive: { type: [String, Number], required: true },
-    firstToken: { type: Object, required: true },
-    secondToken: { type: Object, required: true },
-    firstAmount: { type: [String, Number], required: true },
-    secondAmount: { type: [String, Number], required: true },
+    isAdding: { type: Boolean, required: true },
+    tokenA: { type: Object, required: true },
+    tokenB: { type: Object, required: true },
+    amountA: { type: Object, required: true },
+    amountB: { type: Object, required: true },
+    pairAmount: { type: Object, required: true },
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
-    ratio: { type: [String, Number], required: false, default: 0 },
-    share: { type: [String, Number], required: false, default: 0 },
-    liquidity: { type: [String, Number], required: false, default: 0 },
+    ratio: { type: [String, Number], required: true },
+    share: { type: [String, Number], default: 0 },
   },
   computed: {
-    fstRatio() {
+    ...mapState('aeternity', ['slippage']),
+    ratioA() {
       if (this.ratio) {
-        return this.ratio;
+        return BigNumber(this.ratio);
       }
-      return this.firstAmount && this.secondAmount
-        ? this.firstAmount / this.secondAmount
+      // this is for adding liquidity when there is no pool created yet
+      return this.amountA && this.amountB
+        ? this.amountA.div(this.amountB)
         : 1;
     },
-    sndRatio() {
-      return 1 / this.fstRatio;
+    ratioB() {
+      return BigNumber(1).div(this.ratioA);
     },
   },
   methods: {
+    minimumReceived(amount) {
+      return BigNumber(amount).minus(
+        BigNumber(amount).times(this.slippage).div(100),
+      );
+    },
     denyHandler() {
       this.reject(new Error('Rejected by user'));
     },
@@ -131,6 +150,7 @@ export default {
   }
 
   .estimation {
+    margin: 12px 0;
     display: block;
     max-width: 380px;
     color: variables.$color-white2;
