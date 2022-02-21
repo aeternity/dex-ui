@@ -18,7 +18,7 @@
       @update:token="setSelectedToken($event, true)"
       @update:balance="balanceTokenA = $event"
     />
-    <img src="../assets/plus.svg">
+    <PlusIcon />
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
@@ -94,6 +94,7 @@ import {
   reduceDecimals, expandDecimals, calculateSelectedToken, getAePair,
 } from '../lib/utils';
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
+import PlusIcon from '../assets/plus.svg?vue-component';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
@@ -103,6 +104,7 @@ export default {
     MainWrapper,
     InputToken,
     ButtonDefault,
+    PlusIcon,
   },
   data: () => ({
     tokenB: null,
@@ -431,12 +433,12 @@ export default {
       .allowance {
         max-width: 350px;
 
-        img {
+        svg {
           margin-right: 8px;
         }
       }
 
-      img {
+      svg {
         width: 20px;
         height: 20px;
       }

@@ -15,7 +15,7 @@
       class="swap-button"
       @click="setSelectedToken(null)"
     >
-      <img src="../assets/arrow-down.svg">
+      <DownArrow />
     </ButtonPlain>
     <InputToken
       :value="amountTo"
@@ -43,7 +43,7 @@
         :tooltip="`You must give the DEX smart contracts permission to use your ${from.symbol}.
           You only have to do this once per token.`"
       >
-        <img src="../assets/question-circle.svg">
+        <QuestionCircle />
       </ButtonTooltip>
     </ButtonDefault>
 
@@ -69,6 +69,8 @@ import ButtonTooltip from '@/components/ButtonTooltip.vue';
 import {
   expandDecimals, reduceDecimals, calculateSelectedToken, getAePair,
 } from '../lib/utils';
+import DownArrow from '../assets/arrow-down.svg?vue-component';
+import QuestionCircle from '../assets/question-circle.svg?vue-component';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
@@ -79,6 +81,8 @@ export default {
     ButtonPlain,
     ButtonDefault,
     ButtonTooltip,
+    DownArrow,
+    QuestionCircle,
   },
   data: () => ({
     to: null,
@@ -355,7 +359,8 @@ export default {
         }
       }
 
-      img {
+      img,
+      svg {
         width: 20px;
         height: 20px;
       }

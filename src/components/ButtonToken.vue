@@ -12,19 +12,20 @@
       >
       <span>{{ token && token.symbol || 'Select token' }}</span>
     </div>
-    <img
+    <DownChevron
       v-if="arrow"
-      src="../assets/arrow.svg"
-    >
+    />
   </ButtonDefault>
 </template>
 
 <script>
 import ButtonDefault from './ButtonDefault.vue';
+import DownChevron from '../assets/arrow.svg?vue-component';
 
 export default {
   components: {
     ButtonDefault,
+    DownChevron,
   },
   props: {
     token: { type: Object, default: null },
@@ -72,7 +73,7 @@ export default {
     }
   }
 
-  img {
+  svg {
     width: 24px;
     height: 24px;
   }

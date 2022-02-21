@@ -12,7 +12,7 @@
         arrow
         @update:token="setSelectedToken($event, true)"
       />
-      <img src="../assets/plus.svg">
+      <PlusIcon />
       <ButtonToken
         fill="transparent"
         :token="tokenB"
@@ -53,6 +53,7 @@ import Tip from '@/components/Tip.vue';
 import { calculateSelectedToken } from '../lib/utils';
 import { getPairId } from '../store/modules/aeternity';
 import LiquidityDetails from '../components/LiquidityDetails.vue';
+import PlusIcon from '../assets/plus.svg?vue-component';
 
 export default {
   components: {
@@ -60,6 +61,7 @@ export default {
     ButtonToken,
     Tip,
     LiquidityDetails,
+    PlusIcon,
   },
   data: () => ({
     tokenA: null,

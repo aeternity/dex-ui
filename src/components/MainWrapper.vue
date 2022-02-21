@@ -9,7 +9,7 @@
           fill="plain"
           @click="back"
         >
-          <img src="../assets/back.svg">
+          <BackArrow />
         </ButtonDefault>
       </div>
       <div class="title">
@@ -21,7 +21,7 @@
       >
         <ActionsMenu v-if="settings">
           <template #display>
-            <img src="../assets/cog.svg">
+            <Cog />
           </template>
           <div class="settings">
             <div class="title">
@@ -49,10 +49,9 @@
                   <template
                     #left
                   >
-                    <img
+                    <Warning
                       v-show="slippageStatus === 'warning'"
-                      src="../assets/warning.svg"
-                    >
+                    />
                   </template>
                   <template #right>
                     <span>%</span>
@@ -102,6 +101,9 @@ import InputAmount from './InputAmount.vue';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE, DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
 } from '../lib/constants';
+import BackArrow from '../assets/back.svg?vue-component';
+import Cog from '../assets/cog.svg?vue-component';
+import Warning from '../assets/warning.svg?vue-component';
 
 export default {
   components: {
@@ -109,6 +111,9 @@ export default {
     ActionsMenu,
     SettingsItem,
     InputAmount,
+    BackArrow,
+    Cog,
+    Warning,
   },
   props: {
     backButton: { type: Boolean },
@@ -184,7 +189,7 @@ export default {
       display: flex;
     }
 
-    .left img {
+    .left svg {
       height: 24px;
       width: 24px;
       color: white;
@@ -200,7 +205,7 @@ export default {
       justify-content: end;
 
       .actions-menu {
-        img {
+        svg {
           height: 24px;
           width: 24px;
         }
@@ -241,7 +246,7 @@ export default {
                 }
               }
 
-              img {
+              svg {
                 width: 20px;
                 height: 20px;
               }

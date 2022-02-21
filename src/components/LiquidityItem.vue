@@ -9,10 +9,7 @@
         <img :src="`https://avatars.z52da5wt.xyz/${token1.cid}`">
         <span>{{ token0.symbol + '/' + token1.symbol }}</span>
       </div>
-      <img
-        src="../assets/arrow.svg"
-        :class="{ rotated: show }"
-      >
+      <DownChevron :class="{ rotated: show }" />
     </ButtonPlain>
     <LiquidityDetails
       :pool-id="poolId"
@@ -27,11 +24,13 @@
 <script>
 import ButtonPlain from './ButtonPlain.vue';
 import LiquidityDetails from './LiquidityDetails.vue';
+import DownChevron from '../assets/arrow.svg?vue-component';
 
 export default {
   components: {
     ButtonPlain,
     LiquidityDetails,
+    DownChevron,
   },
   props: {
     poolId: { type: String, required: true },
@@ -95,6 +94,7 @@ export default {
     max-height: 49px;
   }
 
+  svg,
   img {
     height: 20px;
     width: 20px;

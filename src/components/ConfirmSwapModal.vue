@@ -12,7 +12,7 @@
       :amount="amountFrom"
     />
     <div class="arrow">
-      <img src="../assets/arrow-down.svg">
+      <DownArrow />
     </div>
     <TokenAmountDetails
       label="To"
@@ -63,12 +63,14 @@ import BigNumber from 'bignumber.js';
 import ModalDefault from './ModalDefault.vue';
 import TokenAmountDetails from './TokenAmountDetails.vue';
 import ButtonDefault from './ButtonDefault.vue';
+import DownArrow from '../assets/arrow-down.svg?vue-component';
 
 export default {
   components: {
     ModalDefault,
     TokenAmountDetails,
     ButtonDefault,
+    DownArrow,
   },
   props: {
     from: { type: Object, required: true },

@@ -4,15 +4,11 @@
     class="submit-transaction-modal"
     @close="clickHandler"
   >
-    <img
+    <AnimatedSpinner
       v-if="!isConfirmed"
-      src="../assets/animated-spinner.svg"
-    >
-    <img
-      v-else
-      src="../assets/arrow-down.svg"
-      class="arrow"
-    >
+      class="spinner"
+    />
+    <DownArrow v-else />
     <div class="transaction-status">
       <span class="status">
         {{ isConfirmed ? 'Transaction Submitted' : 'Waiting For Confirmation' }}
@@ -41,11 +37,15 @@
 <script>
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
+import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import DownArrow from '../assets/arrow-down.svg?vue-component';
 
 export default {
   components: {
     ModalDefault,
     ButtonDefault,
+    AnimatedSpinner,
+    DownArrow,
   },
   props: {
     fromSymbol: { type: String, required: true },
@@ -80,7 +80,7 @@ export default {
 @use '../styles/typography.scss';
 
 .submit-transaction-modal {
-  img {
+  svg {
     height: 100px;
     width: 100px;
 
