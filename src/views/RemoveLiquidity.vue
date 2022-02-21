@@ -301,8 +301,8 @@ export default {
         });
         this.approved = true;
       } catch (e) {
-        // TODO: this is a hack
-        handleUnknownError(e);
+        this.approved = false;
+        await this.$store.dispatch('showUnknownError', e);
       } finally {
         this.approving = false;
       }
@@ -346,7 +346,7 @@ export default {
         this.updatePercent(0);
       } catch (e) {
         if (e.message === 'Rejected by user') return;
-        handleUnknownError(e);
+        await this.$store.dispatch('showUnknownError', e);
       } finally {
         this.removing = false;
       }
