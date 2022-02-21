@@ -153,7 +153,12 @@ export default {
   },
 
   actions: {
-    async initRouter({ commit }, sdk) {
+    async init({ dispatch }) {
+      await dispatch('initRouter');
+      await dispatch('initFactory');
+      await dispatch('initWae');
+    },
+    async initRouter({ commit, rootState: { sdk } }) {
       const contract = await sdk.getContractInstance(
         {
           source: routerInterface,
@@ -162,7 +167,7 @@ export default {
       );
       commit('setRouterInstance', contract);
     },
-    async initFactory({ commit, state: { router } }, sdk) {
+    async initFactory({ commit, state: { router }, rootState: { sdk } }) {
       const { decodedResult: factoryAddress } = await router.methods.factory();
       const contract = await sdk.getContractInstance(
         {
@@ -172,11 +177,11 @@ export default {
       );
       commit('setFactoryInstance', contract);
     },
-    async initWae({ commit }, sdk) {
+    async initWae({ commit, rootState: { sdk } }) {
       const contract = await sdk.getContractInstance(
         {
           source: waeInterface,
-          contractAddress: process.env.VUE_APP_WAE_ADDRESS,
+          contractAddress: WAE,
         },
       );
       commit('setWaeInstance', contract);
