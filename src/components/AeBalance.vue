@@ -72,7 +72,7 @@ function getBalanceRef(addressRef) {
         // eslint-disable-next-line vue/no-ref-as-operand
         pollState[prevAddress].refs = pollState[prevAddress].refs.filter((i) => i !== r);
       }
-      pollState[address] ||= { refs: [], lastValue: 0 };
+      pollState[address] ||= { refs: [], lastValue: BigNumber(0) };
       pollState[address].refs.push(r);
       r.value = pollState[address].lastValue;
     },
