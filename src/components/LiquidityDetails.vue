@@ -43,6 +43,7 @@
   </div>
   <div class="buttons">
     <a
+      v-if="UNFINISHED_FEATURES"
       href="https://aeternity.com/"
       target="_blank"
     >
@@ -83,6 +84,9 @@ export default {
     poolInfoImportFailed: { type: Boolean, required: false },
   },
   emits: ['load:pool-info'],
+  data: () => ({
+    UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
+  }),
   computed: {
     ...mapState({
       supplyInfoObject: (state) => state.aeternity.poolInfo,
