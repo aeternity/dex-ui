@@ -65,13 +65,10 @@
         <InputToken />
       </template>
       <div
-        v-else
+        v-else-if="share"
         class="remove-container"
       >
-        <div
-          v-if="share"
-          class="token-row"
-        >
+        <div class="token-row">
           <div class="amount">
             {{ poolTokenInput.toFixed(5) }}
           </div>
@@ -81,10 +78,7 @@
             {{ `${tokenA.symbol}/${tokenB.symbol}` }}
           </span>
         </div>
-        <div
-          v-if="tokenA"
-          class="token-row"
-        >
+        <div class="token-row">
           <div class="amount">
             {{ tokenAInput.toFixed(5) }}
           </div>
@@ -93,10 +87,7 @@
             {{ tokenA.symbol }}
           </span>
         </div>
-        <div
-          v-if="tokenB"
-          class="token-row"
-        >
+        <div class="token-row">
           <div class="amount">
             {{ tokenBInput.toFixed(5) }}
           </div>
@@ -221,9 +212,6 @@ export default {
     return {
       detailed: false,
       percentage: 0,
-      tokenAInput: BigNumber(0),
-      tokenBInput: BigNumber(0),
-      poolTokenInput: BigNumber(0),
       approved: false,
       approving: false,
       removing: false,
@@ -242,8 +230,19 @@ export default {
       address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
+    tokenAInput() {
+      return this.positionBalance(this.reserveA ?? 0)
+        .times(this.share).times(this.percentage / 100);
+    },
+    tokenBInput() {
+      return this.positionBalance(this.reserveB ?? 0)
+        .times(this.share).times(this.percentage / 100);
+    },
+    poolTokenInput() {
+      return this.positionBalance(this.position ?? 0).times(this.percentage / 100);
+    },
     share() {
-      return BigNumber(this.position).div(this.totalSupply).toNumber();
+      return this.totalSupply ? BigNumber(this.position ?? 0).div(this.totalSupply).toNumber() : 0;
     },
     balanceA() {
       return this.reserveA.times(this.share).div(BigNumber(10).pow(18));
@@ -309,9 +308,6 @@ export default {
     },
     updatePercent(p) {
       this.percentage = p;
-      this.tokenAInput = this.positionBalance(this.reserveA).times(this.share).times(p / 100);
-      this.tokenBInput = this.positionBalance(this.reserveB).times(this.share).times(p / 100);
-      this.poolTokenInput = this.positionBalance(this.position).times(p / 100);
       this.approved = false;
     },
     async handleRemove() {
