@@ -696,7 +696,7 @@ export default {
       dispatch, state: { wae }, rootState: { useSdkWallet, address },
     }, amount) {
       if (useSdkWallet) {
-        await wae.methods.withdraw({ amount: amount.toString() });
+        await wae.methods.withdraw(amount);
         return;
       }
       const onAccount = createOnAccountObject(address);
