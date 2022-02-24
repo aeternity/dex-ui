@@ -681,6 +681,7 @@ export default {
     }, amount) {
       if (useSdkWallet) {
         await wae.methods.deposit({ amount: amount.toString() });
+        return;
       }
       const onAccount = createOnAccountObject(address);
       const { tx } = await wae.methods.deposit.get({ amount: amount.toString(), onAccount });
@@ -696,6 +697,7 @@ export default {
     }, amount) {
       if (useSdkWallet) {
         await wae.methods.withdraw({ amount: amount.toString() });
+        return;
       }
       const onAccount = createOnAccountObject(address);
       const { tx } = await wae.methods.withdraw.get({ amount: amount.toString(), onAccount });
