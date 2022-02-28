@@ -24,7 +24,14 @@
       @update:token="setSelectedToken($event, false)"
     />
     <div
-      v-if="to && from && ratio"
+      v-if="fetchingPairInfo"
+      class="fetching-pair-info"
+    >
+      <AnimatedSpinner />
+      <span>Fetching best price...</span>
+    </div>
+    <div
+      v-else-if="to && from && ratio"
       class="price"
     >
       {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
@@ -32,7 +39,7 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="amountFrom && (isAeVsWae || allowanceFrom === amountFrom)"
+      :disabled="(amountFrom && (isAeVsWae || allowanceFrom === amountFrom)) || fetchingPairInfo"
       @click="approve"
     >
       <div class="allowance">
@@ -49,7 +56,7 @@
 
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="connectingToWallet || isDisabled"
+      :disabled="connectingToWallet || isDisabled || fetchingPairInfo"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -72,6 +79,7 @@ import {
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
@@ -84,6 +92,7 @@ export default {
     ButtonTooltip,
     DownArrow,
     QuestionCircle,
+    AnimatedSpinner,
   },
   data: () => ({
     to: null,
@@ -102,6 +111,7 @@ export default {
     ...mapState(['address', 'connectingToWallet']),
     ...mapState({
       factory: (state) => state.aeternity.factory?.deployInfo.address,
+      fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
     }),
     isAeVsWae() {
       return this.from?.contract_id === WAE && this.to?.contract_id === WAE;
@@ -332,12 +342,30 @@ export default {
   }
 
   .price {
+    height: 24px;
     display: flex;
     color: white;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 8px;
 
     @extend %face-sans-14-medium;
+  }
+
+  .fetching-pair-info {
+    height: 24px;
+    display: flex;
+    color: white;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px;
+
+    @extend %face-sans-14-medium;
+
+    svg {
+      width: 22px;
+      margin-right: 6px;
+    }
   }
 
   .button-default {
