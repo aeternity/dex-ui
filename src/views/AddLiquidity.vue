@@ -35,7 +35,17 @@
       <div class="header">
         Prices and pool share
       </div>
-      <div class="body">
+      <div
+        v-if="fetchingPairInfo"
+        class="body fetching-pair-info"
+      >
+        <AnimatedSpinner />
+        <span>Fetching best price...</span>
+      </div>
+      <div
+        v-else
+        class="body"
+      >
         <div>
           <span>
             <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
@@ -66,14 +76,14 @@
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
-      :disabled="isApproved || inProgress"
+      :disabled="isApproved || inProgress || fetchingPairInfo"
       @click="approve"
     >
       {{ approveButtonMessage }}
     </ButtonDefault>
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="isDisabled || inProgress"
+      :disabled="isDisabled || inProgress || fetchingPairInfo"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -96,6 +106,7 @@ import {
 } from '../lib/utils';
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
@@ -106,6 +117,7 @@ export default {
     InputToken,
     ButtonDefault,
     PlusIcon,
+    AnimatedSpinner,
   },
   data: () => ({
     tokenB: null,
@@ -128,6 +140,7 @@ export default {
     ...mapState(['address', 'connectingToWallet']),
     ...mapState({
       factory: (state) => state.aeternity.factory?.deployInfo.address,
+      fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
     }),
     inProgress() {
       return this.approving || this.supplying || this.connectingToWallet;
@@ -495,6 +508,13 @@ export default {
     .body {
       display: flex;
       justify-content: space-evenly;
+      align-items: center;
+
+      &.fetching-pair-info {
+        svg {
+          width: 32px;
+        }
+      }
 
       div {
         display: flex;

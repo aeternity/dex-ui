@@ -94,9 +94,13 @@ export default {
     pairs: {},
     providedLiquidity: {},
     poolInfo: {},
+    fetchingPairInfo: false,
   },
 
   mutations: {
+    setFetchingPairInfo(state, status) {
+      state.fetchingPairInfo = status;
+    },
     setLiquidity(state, liquidity) {
       state.liquidity = liquidity;
     },
@@ -367,7 +371,7 @@ export default {
      * @return {object} returns [totalSupply,reserveA,reserveB] or []
      * when no pair
     */
-    async getPairInfo({ dispatch, state: { factory } }, { tokenA, tokenB }) {
+    async getPairInfo({ dispatch, commit, state: { factory } }, { tokenA, tokenB }) {
       try {
         if (!tokenA || !tokenB || !factory) {
           return [];
@@ -376,12 +380,17 @@ export default {
         if (tokenA.contract_id === WAE && tokenB.contract_id === WAE) {
           return [0, 1, 1];
         }
+        commit('setFetchingPairInfo', true);
+
         const { totalSupply, reserveA, reserveB } = await dispatch('fetchPoolInfo', {
           tokenA: tokenA.contract_id,
           tokenB: tokenB.contract_id,
         });
+        commit('setFetchingPairInfo', false);
+
         return [totalSupply, reserveA, reserveB];
       } catch (e) {
+        commit('setFetchingPairInfo', false);
         if (e.message !== 'PAIR NOT FOUND') {
           throw e;
         }
