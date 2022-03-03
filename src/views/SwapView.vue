@@ -39,12 +39,18 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="(amountFrom && (isAeVsWae || allowanceFrom === amountFrom)) || fetchingPairInfo"
+      :disabled="
+        approving || !amountFrom || allowanceFrom === amountFrom ||
+          !from || from.is_ae || isAeVsWae || fetchingPairInfo
+      "
       @click="approve"
     >
       <div class="allowance">
         <img :src="`https://avatars.z52da5wt.xyz/${from.contract_id}`">
-        {{ `Allow the DEX Protocol to use your ${from.symbol}` }}
+        {{ approving
+          ? `Verifying approval...`
+          : `Allow the DEX Protocol to use your ${from.symbol}`
+        }}
       </div>
       <ButtonTooltip
         :tooltip="`You must give the DEX smart contracts permission to use your ${from.symbol}.
@@ -56,7 +62,7 @@
 
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="connectingToWallet || isDisabled || fetchingPairInfo"
+      :disabled="connectingToWallet || isDisabled || approving || fetchingPairInfo"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -81,8 +87,6 @@ import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
 
-const WAE = process.env.VUE_APP_WAE_ADDRESS;
-
 export default {
   components: {
     MainWrapper,
@@ -106,6 +110,8 @@ export default {
     allowanceTo: null,
     reserveFrom: null,
     reserveTo: null,
+    approving: false,
+    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['address', 'connectingToWallet']),
@@ -114,7 +120,7 @@ export default {
       fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
     }),
     isAeVsWae() {
-      return this.from?.contract_id === WAE && this.to?.contract_id === WAE;
+      return this.from?.contract_id === this.WAE && this.to?.contract_id === this.WAE;
     },
     enoughBalance() {
       return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
@@ -211,6 +217,7 @@ export default {
     },
     async approve() {
       try {
+        this.approving = true;
         const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
         if (!aePair || aePair.isTokenFrom) {
           await this.$store.dispatch('aeternity/createTokenAllowance', {
@@ -221,6 +228,8 @@ export default {
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
+      } finally {
+        this.approving = false;
       }
     },
     async clickHandler() {
