@@ -1,9 +1,16 @@
 const { defineConfig } = require('@vue/cli-service');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
+const parseBool = (val) => (val ? JSON.parse(val) : false);
+
 module.exports = defineConfig({
   transpileDependencies: true,
   chainWebpack: (config) => {
+    config.plugin('define').tap((options) => {
+      const definitions = { ...options[0] };
+      definitions['process.env.UNFINISHED_FEATURES'] = parseBool(process.env.VUE_APP_UNFINISHED_FEATURES);
+      return [definitions];
+    });
     config.module.rule('aes')
       .test(/\.aes$/)
       .use('raw-loader')
