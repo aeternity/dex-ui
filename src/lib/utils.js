@@ -52,24 +52,24 @@ export const findErrorExplanation = (message) => {
 
 export const isNotFoundError = (error) => error.statusCode === 404;
 
-// TODO: in the end this should must be replaced by
-// the tokenlis from the backend
+// TODO: in the end this should be replaced by
+// a tokenlist fetched from the backend
 //
 export const getTokenList = () => [
   {
-    contract_id: 'ct_6QW59xdMKbZpRCF5f6gD4aAqYM54f5E1FfB5mpvg6isridEZ6',
+    contract_id: 'ct_NH6qfe8Gu5QdX7fdmdyD5iQ5yHC64FE4ELsMUok4VWDuqBkct',
     decimals: 18,
     name: 'First',
     symbol: 'FST',
   },
   {
-    contract_id: 'ct_2FgBrHgVG8rbSwN78KZHPK7kekxRopSeUcZwVVmqinBftvoaQg',
+    contract_id: 'ct_2Th7msdjUumYbcnjCkSTr7frXssQAcif39o1SzP7KvdaijAhaE',
     decimals: 18,
     name: 'Second',
     symbol: 'SND',
   },
   {
-    contract_id: 'ct_eWW5hrHvyVcsCAVmoZRPeeCbsqKXFpVH81qVmUkaAju8H2esi',
+    contract_id: 'ct_FgayKuf3U9sAKJa3dVtbxfRLCXh5nznab6ULDqQxfgfmszjRo',
     decimals: 18,
     name: 'Third',
     symbol: 'AE Partner',
