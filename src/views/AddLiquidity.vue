@@ -306,10 +306,14 @@ export default {
       this.isLastInputTokenA = isLastInputTokenA;
       if (isLastInputTokenA) {
         this.amountTokenA = amount;
-        this.amountTokenB = this.ratio && amount ? amount / this.ratio : '';
+        if (this.ratio) {
+          this.amountTokenB = amount ? amount / this.ratio : '';
+        }
       } else {
         this.amountTokenB = amount;
-        this.amountTokenA = this.ratio && amount ? amount * this.ratio : '';
+        if (this.ratio) {
+          this.amountTokenA = amount ? amount * this.ratio : '';
+        }
       }
     },
     async createAllowance(token, amount) {
