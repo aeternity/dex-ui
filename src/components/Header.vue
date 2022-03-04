@@ -33,13 +33,67 @@
             •••
           </div>
         </template>
-        <a
-          href="https://aeternity.com/"
-          target="_blank"
-        >
-          About us
-          <AeLogo />
-        </a>
+        <div v-if="activeMenu === 'main'">
+          <a
+            href="https://aeternity.com/"
+            target="_blank"
+          >
+            About us
+            <AeLogo />
+          </a>
+          <a
+            v-if="UNFINISHED_FEATURES"
+            href="https://aeternity.com/"
+            target="_blank"
+          >
+            Terms & Condition
+            <AeLogo />
+          </a>
+          <div
+            v-if="UNFINISHED_FEATURES"
+            class="link"
+            @click.prevent="activeMenu = 'settings'"
+          >
+            Settings
+            <Cog />
+          </div>
+        </div>
+
+        <div v-if="activeMenu === 'settings'">
+          <div
+            class="link"
+            @click.prevent="activeMenu = 'main'"
+          >
+            <BackArrow />
+          </div>
+          <div
+            class="link"
+            @click.prevent="activeMenu = 'languages'"
+          >
+            Languages
+          </div>
+
+          <div class="link">
+            Light Theme
+          </div>
+        </div>
+
+        <div v-if="activeMenu === 'languages'">
+          <div
+            class="link"
+            @click.prevent="activeMenu = 'settings'"
+          >
+            <BackArrow />
+          </div>
+
+          <div class="link">
+            English
+          </div>
+
+          <div class="link">
+            French
+          </div>
+        </div>
       </ActionsMenu>
     </div>
     <iframe
@@ -52,6 +106,9 @@
 <script>
 import { mapState } from 'vuex';
 import AeLogo from '../assets/ae.svg?vue-component';
+import BackArrow from '../assets/back.svg?vue-component';
+import Cog from '../assets/cog.svg?vue-component';
+
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
@@ -60,6 +117,8 @@ import ButtonDefault from './ButtonDefault.vue';
 export default {
   components: {
     AeLogo,
+    BackArrow,
+    Cog,
     ActionsMenu,
     NavigationMenu,
     ButtonDefault,
@@ -67,6 +126,8 @@ export default {
   },
   data: () => ({
     walletUrl: process.env.VUE_APP_WALLET_URL,
+    activeMenu: 'main',
+    UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
   }),
   computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
   methods: {
@@ -172,7 +233,8 @@ export default {
         }
       }
 
-      a {
+      a,
+      .link {
         color: variables.$color-white2;
         text-decoration: none;
         display: flex;
