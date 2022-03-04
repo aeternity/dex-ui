@@ -4,3 +4,14 @@
   font-family: variables.$font-sans;
   box-sizing: border-box;
 }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 8px;
+  background-color: variables.$color-black2;
+}

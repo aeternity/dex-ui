@@ -106,11 +106,13 @@ export default {
 
     span {
       margin-right: 4px;
+      color: white;
     }
 
     svg {
       width: 24px;
       height: 24px;
+      fill: white;
     }
   }
 
