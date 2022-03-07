@@ -6,6 +6,9 @@ import createPersistedState from 'vuex-persistedstate';
 import {
   handleUnknownError, findErrorExplanation, createDeepLinkUrl,
 } from '@/lib/utils';
+import {
+  DEFAULT_NETWORKS,
+} from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import modals from './plugins/modals';
 
@@ -18,6 +21,16 @@ export default createStore({
     useIframeWallet: false,
     useSdkWallet: false,
     networkId: 'ae_uat',
+  },
+  getters: {
+    networks() {
+      return [
+        ...DEFAULT_NETWORKS,
+      ].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
+    },
+    activeNetwork({ networkId }, { networks }) {
+      return networks[networkId];
+    },
   },
   mutations: {
     useSdkWallet(state) {

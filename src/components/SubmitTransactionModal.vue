@@ -21,7 +21,8 @@
       </template>
       <template v-else>
         <a
-          href="https://aeternity.com/"
+          v-if="hash"
+          :href="transactionUrl"
           target="_blank"
         >
           View on Explorer
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
@@ -58,10 +60,19 @@ export default {
   },
   data: () => ({
     isConfirmed: false,
+    hash: null,
   }),
+  computed: {
+    ...mapGetters(['activeNetwork']),
+    transactionUrl() {
+      return `${this.activeNetwork.explorerUrl}/transactions/${this.hash}`;
+    },
+  },
   async created() {
     try {
-      await this.work();
+      this.hash = null;
+      const result = await this.work();
+      this.hash = result.hash;
       this.isConfirmed = true;
     } catch (e) {
       this.reject(e);
