@@ -126,7 +126,7 @@
         <ButtonDefault
           v-if="address"
           class="remove-btn"
-          :class="{'transparent' : approved}"
+          :class="{'transparent' : enoughAllowance}"
           :disabled="!approveButtonEnabled"
           @click="approve"
         >
@@ -135,7 +135,7 @@
         <ButtonDefault
           v-if="address"
           class="remove-btn"
-          :class="{'transparent' : !approved}"
+          :class="{'transparent' : !enoughAllowance}"
           :disabled="!removeButtonEnabled"
           @click="handleRemove"
         >
@@ -188,6 +188,9 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
 import {
+  getPairId,
+} from '../store/modules/aeternity';
+import {
   handleUnknownError,
   reduceDecimals,
   expandDecimals,
@@ -196,6 +199,7 @@ import {
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import PlusIcon from '../assets/plus.svg?vue-component';
+import approvalMixin from '../lib/allowance-mixin';
 
 export default {
   components: {
@@ -208,14 +212,16 @@ export default {
     DownArrow,
     PlusIcon,
   },
+  mixins: [approvalMixin],
   data() {
     return {
       detailed: false,
       percentage: 0,
       approved: false,
       approving: false,
+      // we cache multiple allowances in order to prepare the solution for
+      // when the user will be able to select manually different tokens
       removing: false,
-      pairId: '',
       tokenA: null,
       tokenB: null,
       reserveA: null,
@@ -230,6 +236,7 @@ export default {
       address: 'address',
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
+    ...mapState('aeternity', ['slippage']),
     tokenAInput() {
       return this.positionBalance(this.reserveA ?? 0)
         .times(this.share).times(this.percentage / 100);
@@ -243,6 +250,13 @@ export default {
     },
     share() {
       return this.totalSupply ? BigNumber(this.position ?? 0).div(this.totalSupply).toNumber() : 0;
+    },
+    pairId() {
+      return getPairId(this.tokenA.contract_id, this.tokenB.contract_id);
+    },
+    enoughAllowance() {
+      if (!this.tokenA || !this.tokenB || !this.poolTokenInput) return false;
+      return this.enoughTokenAllowance(this.pairId, this.poolTokenInput, 18);
     },
     ratioA() {
       if (!this.reserveA || !this.reserveB || !this.tokenA || !this.tokenB) {
@@ -259,29 +273,39 @@ export default {
         .div(reduceDecimals(this.reserveA, this.tokenA.decimals)).toNumber();
     },
     approveButtonEnabled() {
-      return !this.approved && !this.approving && this.poolTokenInput.gt(0);
+      return !this.fetchingAllowance && !this.enoughAllowance
+          && !this.approving && this.poolTokenInput.gt(0);
     },
     removeButtonEnabled() {
-      return this.approved && !this.approving && !this.removing && this.poolTokenInput.gt(0);
+      return this.enoughAllowance && !this.approving && !this.removing && this.poolTokenInput.gt(0);
     },
     approveButtonMessage() {
       if (this.approving) return 'Approving...';
-      if (this.approved) return 'Approved';
+      if (this.fetchingAllowance) return 'Verifying approval...';
+      if (this.enoughAllowance) return 'Approved';
       return 'Approve';
     },
   },
   async mounted() {
-    this.pairId = this.$route.params.id;
-    const [tokenAContract, tokenBContract] = this.pairId.split('|');
+    const [tokenAContract, tokenBContract] = this.$route.params.id.split('|');
     await this.$watchUntilTruly(() => this.$store.state.aeternity.factory);
     const tokenList = getTokenList();
     this.tokenA = tokenList.find((t) => t.contract_id === tokenAContract);
     this.tokenB = tokenList.find((t) => t.contract_id === tokenBContract);
     await this.setPairInfo();
+    if (this.pairId) {
+      await this.refreshAllowance(this.pairId, this.fetchAlowance);
+    }
   },
   methods: {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
+    },
+    fetchAlowance() {
+      return this.$store.dispatch('aeternity/getRouterPairAllowance', {
+        tokenA: this.tokenA.contract_id,
+        tokenB: this.tokenB.contract_id,
+      });
     },
     async approve() {
       try {
@@ -291,7 +315,7 @@ export default {
           tokenB: this.tokenB.contract_id,
           amount: expandDecimals(this.poolTokenInput, 18),
         });
-        this.approved = true;
+        await this.safeRefreshAllowance(this.pairId, this.poolTokenInput, 18, this.fetchAlowance);
       } catch (e) {
         this.approved = false;
         await this.$store.dispatch('showUnknownError', e);
@@ -330,6 +354,7 @@ export default {
         });
       }
       await this.setPairInfo();
+      await this.refreshAllowance(this.pairId, this.fetchAlowance);
       this.updatePercent(0);
     },
     async handleRemove() {
