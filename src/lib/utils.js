@@ -40,14 +40,10 @@ export const expandDecimals = (val, decimals) => BigInt(
 
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
 
-export const findErrorExplanation = (message, { networkId } = {}) => {
+export const findErrorExplanation = (message) => {
   if (!message) {
     return message;
   }
-  if (message === 'Unsupported Network') {
-    return `Network ${networkId} is not supported, please switch to Testnet`;
-  }
-
   const found = message.replace('Invocation failed: "', '').split('"')[0];
 
   const errorExplanation = dexErrorMessages[found];
