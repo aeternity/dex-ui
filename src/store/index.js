@@ -129,8 +129,7 @@ export default createStore({
       if (!nodeToSelect) {
         await dispatch('modals/open', {
           name: 'show-error',
-          message: `Network ${newNetworkId} is not supported in the DEX.
-            Please select another network in your wallet.`,
+          message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
           resolve: async () => {
             dispatch('modals/close');
           },
@@ -154,10 +153,10 @@ export default createStore({
     * this should be used only as a result of an error triggered
     * by user interaction and never inside a loop
     */
-    showUnknownError({ dispatch }, error) {
+    showUnknownError({ dispatch, state }, error) {
       handleUnknownError(error);
       const message = error?.message
-        ? findErrorExplanation(error.message)
+        ? findErrorExplanation(error.message, state)
         : 'Unknown error';
       dispatch('modals/open', { name: 'show-error', message });
     },
