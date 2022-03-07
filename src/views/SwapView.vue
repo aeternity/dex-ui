@@ -247,34 +247,42 @@ export default {
       }
     },
     async swapProcess() {
+      let result = null;
       const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
       // if none of the selected tokens are WAE
       if (!aePair) {
         if (this.isLastAmountFrom) {
-          await this.callSwapAction('swapExactTokensForTokens');
+          result = await this.callSwapAction('swapExactTokensForTokens');
         } else {
-          await this.callSwapAction('swapTokensForExactTokens');
+          result = await this.callSwapAction('swapTokensForExactTokens');
         }
       } else if (aePair.isTokenFrom) {
         if (this.isLastAmountFrom) {
-          await this.callSwapAction('swapExactTokensForAe');
+          result = await this.callSwapAction('swapExactTokensForAe');
         } else {
-          await this.callSwapAction('swapTokensForExactAe');
+          result = await this.callSwapAction('swapTokensForExactAe');
         }
       } else if (this.isLastAmountFrom) {
-        await this.callSwapAction('swapExactAeForTokens');
+        result = await this.callSwapAction('swapExactAeForTokens');
       } else {
-        await this.callSwapAction('swapAeForExactTokens');
+        result = await this.callSwapAction('swapAeForExactTokens');
       }
+
       await this.reset();
+
+      return result;
     },
     async swapAeVsWaeProcess() {
+      let result = null;
       if (this.from.is_ae) {
-        await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountFromExpanded);
+        result = await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountFromExpanded);
       } else {
-        await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountFromExpanded);
+        result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountFromExpanded);
       }
+
       await this.reset();
+
+      return result;
     },
     async reset() {
       await this.setPairInfo();
@@ -284,12 +292,13 @@ export default {
       this.allowanceTo = null;
       this.isLastAmountFrom = true;
     },
-    callSwapAction(action) {
-      return this.$store.dispatch(`aeternity/${action}`, {
+    async callSwapAction(action) {
+      const result = await this.$store.dispatch(`aeternity/${action}`, {
         amountIn: this.amountFromExpanded,
         amountOut: this.amountToExpanded,
         path: [this.from.contract_id, this.to.contract_id],
       });
+      return result;
     },
     async swap() {
       try {
