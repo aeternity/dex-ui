@@ -1,5 +1,50 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/aeternity/dex-ui/compare/v1.1.0...v1.2.0) (2022-03-07)
+
+
+### Features
+
+* add confirmation and loading modals ([29c3a04](https://www.github.com/aeternity/dex-ui/commit/29c3a043123870e4821ca48dae55db8e80664e40))
+* added header menu items [#157](https://www.github.com/aeternity/dex-ui/issues/157) ([3921c32](https://www.github.com/aeternity/dex-ui/commit/3921c32e2772025cd08805dda48afa915c5e2889))
+* added inline svg loader [#46](https://www.github.com/aeternity/dex-ui/issues/46) ([2575136](https://www.github.com/aeternity/dex-ui/commit/2575136cfd70415beb6480e5d61ea7b4c2d907b3))
+* added sentry [#202](https://www.github.com/aeternity/dex-ui/issues/202) ([db053d3](https://www.github.com/aeternity/dex-ui/commit/db053d363a084b44ae373ea841dcb24e03ea75f3))
+* adjust network support message [#214](https://www.github.com/aeternity/dex-ui/issues/214) ([950d785](https://www.github.com/aeternity/dex-ui/commit/950d785d5accfba42480884f999f073f3a660e13))
+* change contract vresion with newer ones ([a2345c9](https://www.github.com/aeternity/dex-ui/commit/a2345c9233e542e09c81f7771c19b1d400323301))
+* on fetching pair show loading indicators & disable action buttons [#148](https://www.github.com/aeternity/dex-ui/issues/148) ([d17a1ef](https://www.github.com/aeternity/dex-ui/commit/d17a1efb3dae41a0093e45c386546eb766e4e2ed))
+* only allow numbers on amount fields [#218](https://www.github.com/aeternity/dex-ui/issues/218) ([bc0adcc](https://www.github.com/aeternity/dex-ui/commit/bc0adccb5422780425becd669313ec82fed25fdf))
+* **remove-liquidity:** add error modal ([7a39e7b](https://www.github.com/aeternity/dex-ui/commit/7a39e7b831070294bee51cc79714e34ca60b7770))
+* **swap:** disable approve button on process [#149](https://www.github.com/aeternity/dex-ui/issues/149) ([c58e5fd](https://www.github.com/aeternity/dex-ui/commit/c58e5fd011b8e18e109d43d1a6d827881c7fce06))
+* **swap:** disable swap when amounts are invalid [#220](https://www.github.com/aeternity/dex-ui/issues/220) ([e087909](https://www.github.com/aeternity/dex-ui/commit/e087909e2945612214fbb83256efc05175dc5557))
+* **swap:** view transaction link [#169](https://www.github.com/aeternity/dex-ui/issues/169) ([36e2307](https://www.github.com/aeternity/dex-ui/commit/36e2307585e39cc6cb95c7f03668cc6b0d43c518))
+* update dark background color [#212](https://www.github.com/aeternity/dex-ui/issues/212) ([049d57e](https://www.github.com/aeternity/dex-ui/commit/049d57e36ca8f88ba2c68b8fdbe52295c3ab5c80))
+
+
+### Bug Fixes
+
+* **add-liquidity:** disable buttons on invalid amount ([45d8cfb](https://www.github.com/aeternity/dex-ui/commit/45d8cfb71853208d768ef28c83b23af8c791ee4d))
+* **add-liquidity:** disable supply if not approved ([9d3b75a](https://www.github.com/aeternity/dex-ui/commit/9d3b75a2965917567da99851503a5bd4eea4b5bf))
+* adding liquidity on new pairs ([2ec59b8](https://www.github.com/aeternity/dex-ui/commit/2ec59b856f8cfb70a8a959e8ed71b3e8cbcde72c))
+* **aeternity:** call correct wae methods once ([5c65210](https://www.github.com/aeternity/dex-ui/commit/5c65210de77e0f63d1f067765e31b957ed08bef3))
+* **aeternity:** call wae withdraw with a proper param ([64bc436](https://www.github.com/aeternity/dex-ui/commit/64bc4360b3f411475aee46d9079d875106ca2a15))
+* call getPairInfo when factory is ready ([af10e7f](https://www.github.com/aeternity/dex-ui/commit/af10e7f1f61c863481add958680fc4db3d086b03))
+* migrate svg icons import to inline component [#46](https://www.github.com/aeternity/dex-ui/issues/46) ([006a10c](https://www.github.com/aeternity/dex-ui/commit/006a10c2f492d291d27501f7b7b2fa88aacfa975))
+* only allow number when input type is number [#218](https://www.github.com/aeternity/dex-ui/issues/218) ([d78555e](https://www.github.com/aeternity/dex-ui/commit/d78555e52905c2e4160eebdc4fa7befb19aea247))
+* **remove-liquidity:** show only loaded pool info ([c3cbd35](https://www.github.com/aeternity/dex-ui/commit/c3cbd35757bd60ea647dafe98f192b922baa77f5))
+* **unfinished-features:** load flag for unfinished features properly ([9018830](https://www.github.com/aeternity/dex-ui/commit/90188304194e56fd478d39f3976eb0a199d945bc))
+
+
+### Miscellaneous
+
+* **liquidity-details:** hide not working link [#156](https://www.github.com/aeternity/dex-ui/issues/156) ([23a8138](https://www.github.com/aeternity/dex-ui/commit/23a8138bd15fe2856e3209f39584352311734ab0))
+* make SubmitTransactionModal more general ([7fde63f](https://www.github.com/aeternity/dex-ui/commit/7fde63f5a83da32221571972b12e8f6a982d32e3))
+
+
+### Refactorings
+
+* modify comments ([5043b14](https://www.github.com/aeternity/dex-ui/commit/5043b14c96cb9679a8e9e4aff1236a23dee7cdd7))
+* move contracts initialization into one action ([450753f](https://www.github.com/aeternity/dex-ui/commit/450753f1c69a243fefbc278f7394688df6a1a1dd))
+
 ## [1.1.0](https://www.github.com/aeternity/dex-ui/compare/v1.0.0...v1.1.0) (2022-02-21)
 
 
