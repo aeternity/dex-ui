@@ -125,12 +125,18 @@ export default {
     enoughBalance() {
       return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
     },
+    isValidAmount() {
+      return !(
+        !this.amountFrom
+        || Number.parseFloat(this.isLastAmountFrom ? this.amountFrom : this.amountTo) <= 0
+      );
+    },
     isDisabled() {
-      return this.address && (!this.to || !this.from || !this.amountFrom || !this.enoughBalance);
+      return this.address && (!this.to || !this.from || !this.isValidAmount || !this.enoughBalance);
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
-      if (!this.amountFrom || !this.amountTo || !this.to || !this.from) return 'Enter amount';
+      if (!this.isValidAmount || !this.to || !this.from) return 'Enter amount';
       if (!this.enoughBalance) return `Insufficient ${this.from.symbol} balance`;
       return 'Swap';
     },
