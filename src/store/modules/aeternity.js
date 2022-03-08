@@ -690,12 +690,12 @@ export default {
       dispatch, state: { wae }, rootState: { useSdkWallet, address },
     }, amount) {
       if (useSdkWallet) {
-        await wae.methods.deposit({ amount: amount.toString() });
-        return;
+        return wae.methods.deposit({ amount: amount.toString() });
       }
       const onAccount = createOnAccountObject(address);
-      const { tx } = await wae.methods.deposit.get({ amount: amount.toString(), onAccount });
-      window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+      const result = await wae.methods.deposit.get({ amount: amount.toString(), onAccount });
+      window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
+      return result;
     },
     /**
      * @description swaps WAE to AE token bypassing any dex/router entrypoints
@@ -706,12 +706,12 @@ export default {
       dispatch, state: { wae }, rootState: { useSdkWallet, address },
     }, amount) {
       if (useSdkWallet) {
-        await wae.methods.withdraw(amount);
-        return;
+        return wae.methods.withdraw(amount);
       }
       const onAccount = createOnAccountObject(address);
-      const { tx } = await wae.methods.withdraw.get({ amount: amount.toString(), onAccount });
-      window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+      const result = await wae.methods.withdraw.get({ amount: amount.toString(), onAccount });
+      window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
+      return result;
     },
     /**
      * @description
