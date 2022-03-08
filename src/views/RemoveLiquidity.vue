@@ -305,12 +305,13 @@ export default {
       this.approved = false;
     },
     async removalProcess() {
+      let result;
       const aePair = getAePair(
         this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput,
       );
       const liquidity = expandDecimals(this.poolTokenInput, 18);
       if (!aePair) {
-        await this.$store.dispatch('aeternity/removeLiquidity', {
+        result = await this.$store.dispatch('aeternity/removeLiquidity', {
           tokenA: this.tokenA.contract_id,
           tokenB: this.tokenB.contract_id,
           liquidity,
@@ -319,7 +320,7 @@ export default {
         });
       } else {
         const { token, isTokenFrom } = aePair;
-        await this.$store.dispatch('aeternity/removeLiquidityAe', {
+        result = await this.$store.dispatch('aeternity/removeLiquidityAe', {
           token: token.contract_id,
           liquidity,
           amountTokenDesired: isTokenFrom
@@ -332,6 +333,7 @@ export default {
       }
       await this.setPairInfo();
       this.updatePercent(0);
+      return result;
     },
     async handleRemove() {
       try {
