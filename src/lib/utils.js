@@ -61,6 +61,13 @@ export const isNotFoundError = (error) => error.statusCode === 404;
 //
 export const getTokenList = () => [
   {
+    contract_id: process.env.VUE_APP_WAE_ADDRESS,
+    decimals: MAGNITUDE,
+    name: 'AE',
+    symbol: 'AE',
+    is_ae: true,
+  },
+  {
     contract_id: 'ct_NH6qfe8Gu5QdX7fdmdyD5iQ5yHC64FE4ELsMUok4VWDuqBkct',
     decimals: 18,
     name: 'First',
@@ -77,13 +84,6 @@ export const getTokenList = () => [
     decimals: 18,
     name: 'Third',
     symbol: 'AE Partner',
-  },
-  {
-    contract_id: process.env.VUE_APP_WAE_ADDRESS,
-    decimals: MAGNITUDE,
-    name: 'AE',
-    symbol: 'AE',
-    is_ae: true,
   },
   {
     contract_id: process.env.VUE_APP_WAE_ADDRESS,
