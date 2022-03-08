@@ -370,13 +370,14 @@ export default {
       this.$store.commit('navigation/setPool', null);
     },
     async supplyProcess() {
+      let result;
       const aePair = getAePair(
         this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
       );
       this.supplying = true;
       // if none of the selected tokens are WAE
       if (!aePair) {
-        await this.$store.dispatch('aeternity/addLiquidity', {
+        result = await this.$store.dispatch('aeternity/addLiquidity', {
           tokenA: this.tokenA.contract_id,
           tokenB: this.tokenB.contract_id,
           amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
@@ -393,7 +394,7 @@ export default {
           tokenBDecimals: this.tokenB.decimals,
         });
       } else {
-        await this.$store.dispatch('aeternity/addLiquidityAe', {
+        result = await this.$store.dispatch('aeternity/addLiquidityAe', {
           token: aePair.token.contract_id,
           amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
           amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
@@ -411,6 +412,7 @@ export default {
         });
       }
       await this.reset();
+      return result;
     },
     async supply() {
       try {
