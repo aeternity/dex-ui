@@ -135,3 +135,21 @@ export const getAePair = (from, to, amountFrom, amountTo) => {
   }
   return null;
 };
+
+/**
+ * adds slippage to a given value
+ * @async
+ * @param {bigint} value given value
+ * @param {bigint} slippage percentage (eg. 10,20...100)
+ * @return biging representing final value
+*/
+export const addSlippage = (value, slippage) => value + (value * BigInt(slippage * 10)) / 1000n;
+
+/**
+ * subtracts slippage from a given value
+ * @async
+ * @param {bigint} value given value
+ * @param {bigint} slippage percentage (eg. 10,20...100)
+ * @return biging representing final value
+*/
+export const subSlippage = (value, slippage) => value - (value * BigInt(slippage * 10)) / 1000n;
