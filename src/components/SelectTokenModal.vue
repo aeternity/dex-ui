@@ -19,7 +19,11 @@
         class="toke-list-item"
         @click="resolve(token)"
       >
-        <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`">
+        <AeLogo v-if="WAE === token.contract_id" />
+        <img
+          v-else
+          :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`"
+        >
         <div class="token">
           <span class="symbol">{{ token.symbol }}</span>
           <span class="name">{{ token.name }}</span>
@@ -41,12 +45,14 @@ import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
 import { getTokenList } from '../lib/utils';
+import AeLogo from '../assets/ae.svg?vue-component';
 
 export default {
   components: {
     ModalDefault,
     InputField,
     ButtonPlain,
+    AeLogo,
   },
   props: {
     resolve: { type: Function, required: true },
@@ -56,6 +62,7 @@ export default {
   data: () => ({
     tokenList: [],
     searchTerm: '',
+    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['networkId']),
@@ -79,10 +86,15 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .select-token-modal {
   :deep(.container) {
     min-height: 60vh;
+
+    @media (min-width: 500px) {
+      width: 400px;
+    }
 
     .body {
       margin-bottom: 40px;
@@ -123,9 +135,10 @@ export default {
         background-color: variables.$color-black;
       }
 
-      img {
-        width: 24px;
-        height: 24px;
+      img,
+      svg {
+        width: 32px;
+        height: 32px;
         margin-right: 16px;
       }
 
@@ -133,6 +146,8 @@ export default {
         display: flex;
         flex-direction: column;
         text-align: left;
+
+        @extend %face-sans-18-regular;
 
         .symbol {
           color: white;
