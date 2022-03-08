@@ -565,12 +565,6 @@ export default {
       } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
         // what we need, let's increase it
-        await instance.methods.change_allowance(
-          toAccount,
-          amountWithSlippage - currentAllowance,
-        );
-        // we have something there but is less then
-        // what we need, let's increase it
         if (useSdkWallet) {
           await instance.methods.change_allowance(
             toAccount,
