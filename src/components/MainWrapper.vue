@@ -180,7 +180,7 @@ export default {
 
   .header {
     display: flex;
-    padding: 16px 16px 0 16px;
+    padding: 20px 20px 0 20px;
 
     .left,
     .right {
