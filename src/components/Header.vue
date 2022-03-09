@@ -22,7 +22,10 @@
         class="account-info"
       >
         <span><AeBalance :address="address" /> AE</span>
-        <div class="address">
+        <div
+          class="address"
+          @click.prevent="openAccountInfo()"
+        >
           <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
           <img :src="`https://avatars.z52da5wt.xyz/${address}`">
         </div>
@@ -134,6 +137,9 @@ export default {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
+    openAccountInfo() {
+      this.$store.dispatch('modals/open', { name: 'account-info' });
+    },
   },
 };
 </script>
@@ -206,6 +212,10 @@ export default {
         img {
           height: 16px;
           width: 16px;
+        }
+
+        &:hover {
+          cursor: pointer;
         }
       }
     }
