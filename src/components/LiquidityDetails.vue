@@ -52,7 +52,13 @@
     <div>
       <ButtonDefault
         fill="transparent-blue"
-        :to="{ name: 'add-pool' }"
+        :to="{
+          name: 'add-pool',
+          query: {
+            from: getTokenIdentifier(token0),
+            to: getTokenIdentifier(token1)
+          }
+        }"
       >
         Add
       </ButtonDefault>
@@ -137,6 +143,10 @@ export default {
     },
     getAmountText(amount, token) {
       return amount == null ? '-' : reduceDecimals(amount, token.decimals);
+    },
+    getTokenIdentifier(token) {
+      if (!token) return null;
+      return token.symbol === 'AE' ? token.symbol : token.cid;
     },
   },
 };

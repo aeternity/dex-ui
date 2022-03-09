@@ -86,6 +86,7 @@ import {
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import saveTokenSelection from '../mixins/saveTokenSelection';
 
 export default {
   components: {
@@ -98,6 +99,7 @@ export default {
     QuestionCircle,
     AnimatedSpinner,
   },
+  mixins: [saveTokenSelection],
   data: () => ({
     to: null,
     from: null,
@@ -190,6 +192,9 @@ export default {
       } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
         this.allowanceTo = null;
       }
+
+      this.saveTokenSelection(this.from, this.to);
+
       if (!swapped) {
         await this.setPairInfo();
       }
@@ -220,6 +225,7 @@ export default {
         this.amountTo = amount;
         this.amountFrom = this.ratio && amount ? amount * this.ratio : '';
       }
+      this.saveAmountSelection(amount, isFrom);
     },
     async approve() {
       try {
@@ -290,6 +296,7 @@ export default {
       this.allowanceFrom = null;
       this.allowanceTo = null;
       this.isLastAmountFrom = true;
+      this.$store.commit('navigation/setSwap', null);
     },
     async callSwapAction(action) {
       const result = await this.$store.dispatch(`aeternity/${action}`, {

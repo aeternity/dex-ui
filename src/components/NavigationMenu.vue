@@ -1,14 +1,33 @@
 <template>
   <nav class="navigation-menu">
-    <router-link to="/swap">
+    <router-link :to="getSwapPath">
       Swap
     </router-link>
-    <router-link to="/pool">
+    <router-link :to="getPoolPath">
       Pool
     </router-link>
   </nav>
 </template>
-
+<script>
+export default {
+  computed: {
+    getSwapPath() {
+      const query = this.$store.state.navigation.swap;
+      if (!query || this.$route.name === 'swap') {
+        return '/swap';
+      }
+      return { path: '/swap', query };
+    },
+    getPoolPath() {
+      const query = this.$store.state.navigation.pool;
+      if (!query || this.$route.name === 'add-pool') {
+        return '/pool';
+      }
+      return { path: '/pool/add', query };
+    },
+  },
+};
+</script>
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 
