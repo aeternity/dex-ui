@@ -10,6 +10,7 @@ import {
   DEFAULT_NETWORKS,
 } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
+import navigation from './modules/navigation';
 import modals from './plugins/modals';
 
 export default createStore({
@@ -175,7 +176,11 @@ export default createStore({
     },
 
   },
-  modules: { aeternity: aeternityModule },
+
+  modules: {
+    aeternity: aeternityModule,
+    navigation,
+  },
   plugins: [
     createPersistedState({
       reducer: ({

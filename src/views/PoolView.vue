@@ -57,6 +57,9 @@ export default {
       })).filter((x) => x.payload),
     }),
   },
+  mounted() {
+    this.$store.commit('navigation/setPool', null);
+  },
 };
 </script>
 

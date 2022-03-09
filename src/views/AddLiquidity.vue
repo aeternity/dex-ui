@@ -104,6 +104,8 @@ import {
   reduceDecimals, expandDecimals, calculateSelectedToken, getAePair,
   handleUnknownError,
 } from '../lib/utils';
+import saveTokenSelection from '../mixins/saveTokenSelection';
+
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
@@ -119,6 +121,7 @@ export default {
     PlusIcon,
     AnimatedSpinner,
   },
+  mixins: [saveTokenSelection],
   data: () => ({
     tokenB: null,
     tokenA: null,
@@ -280,6 +283,8 @@ export default {
         this.allowanceTokenB = null;
       }
 
+      this.saveTokenSelection(this.tokenA, this.tokenB);
+
       // TODO: what if it fails?
       if (!swapped) {
         await this.setPairInfo();
@@ -315,6 +320,7 @@ export default {
           this.amountTokenA = amount ? amount * this.ratio : '';
         }
       }
+      this.saveAmountSelection(amount, isLastInputTokenA);
     },
     async createAllowance(token, amount) {
       await this.$store.dispatch('aeternity/createTokenAllowance', {
@@ -362,6 +368,7 @@ export default {
       this.allowanceTokenA = null;
       this.allowanceTokenB = null;
       this.isLastInputTokenA = true;
+      this.$store.commit('navigation/setPool', null);
     },
     async supplyProcess() {
       const aePair = getAePair(
