@@ -16,6 +16,7 @@ import modals from './plugins/modals';
 export default createStore({
   state: {
     connectingToWallet: false,
+    walletName: null,
     address: null,
     sdk: null,
     balance: 0,
@@ -45,6 +46,9 @@ export default createStore({
     },
     setAddress(state, address) {
       state.address = address;
+    },
+    setWalletName(state, walletName) {
+      state.walletName = walletName;
     },
     setSdk(state, sdk) {
       state.sdk = sdk;
@@ -118,8 +122,9 @@ export default createStore({
           const address = sdk.rpcClient.getCurrentAccount();
           if (!address) return;
           detector.stopScan();
-          const { networkId: walletNetworkId } = sdk.rpcClient.info;
+          const { networkId: walletNetworkId, name } = sdk.rpcClient.info;
           commit('setAddress', address);
+          commit('setWalletName', name);
           if (walletNetworkId !== networkId) {
             dispatch('selectNetwork', networkId);
           }

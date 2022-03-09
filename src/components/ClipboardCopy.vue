@@ -1,0 +1,62 @@
+<template>
+  <span
+    class="clipboard"
+    @click.prevent="copy()"
+  >
+    <span>{{ copied ? 'Copied!' : title }}</span>
+    <CopyIcon />
+  </span>
+</template>
+
+<script>
+import CopyIcon from '../assets/copy.svg?vue-component';
+
+export default {
+  components: {
+    CopyIcon,
+  },
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      copied: false,
+    };
+  },
+  methods: {
+    copy() {
+      this.copied = true;
+      navigator.clipboard.writeText(this.content);
+      setTimeout(() => {
+        this.copied = false;
+      }, 500);
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@use '../styles/variables.scss';
+
+.clipboard {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  svg {
+    margin-left: 6px;
+    width: 16px;
+  }
+}
+</style>

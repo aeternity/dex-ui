@@ -1,4 +1,5 @@
 import { registerModal } from '../store/plugins/modals';
+import AccountInfoModal from '../components/AccountInfoModal.vue';
 import SelectTokenModal from '../components/SelectTokenModal.vue';
 import ErrorModal from '../components/ErrorModal.vue';
 import TooltipModal from '../components/TooltipModal.vue';
@@ -15,4 +16,5 @@ export default () => {
   registerModal({ name: 'submit-transaction', component: SubmitTransactionModal });
   registerModal({ name: 'show-error', component: ErrorModal });
   registerModal({ name: 'connect-wallet', component: ConnectWalletModal });
+  registerModal({ name: 'account-info', component: AccountInfoModal });
 };
