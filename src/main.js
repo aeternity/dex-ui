@@ -29,19 +29,22 @@ registerModals();
 
 sync(store, router);
 
-Sentry.init({
-  app,
-  dsn: process.env.VUE_APP_SENTRY_URL,
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      tracingOrigins: ['dex.prd.aepps.com', 'dex.dev.aepps.com', 'dex.aepps.com', /^\//],
-    }),
-  ],
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-});
+if (!window.location.host.includes('localhost')) {
+  Sentry.init({
+    app,
+    dsn: process.env.VUE_APP_SENTRY_URL,
+    integrations: [
+      new BrowserTracing({
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+        // https://docs.sentry.io/platforms/javascript/guides/react/performance/instrumentation/automatic-instrumentation/#tracingorigins
+        tracingOrigins: ['testnet.aeternity.io', 'mainnet.aeternity.io', /^\//],
+      }),
+    ],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+}
 
 app.use(store).use(router).mount('#app');
