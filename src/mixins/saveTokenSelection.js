@@ -21,20 +21,18 @@ const saveTokenSelection = {
       }
     },
     saveCurrentSelection(state) {
-      const query = {
-        ...this.$route.query,
-        ...state,
-      };
-
       this.$router.replace({
-        query,
+        query: {
+          ...this.$route.query,
+          ...state,
+        },
       });
 
       if (this.$route.name === 'swap') {
-        this.$store.commit('navigation/setSwap', query);
+        this.$store.commit('navigation/setSwap', state);
       }
       if (this.$route.name === 'add-pool') {
-        this.$store.commit('navigation/setPool', query);
+        this.$store.commit('navigation/setPool', state);
       }
     },
 
