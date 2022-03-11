@@ -76,14 +76,14 @@
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
-      :disabled="isApproved || inProgress || fetchingPairInfo"
+      :disabled="enoughAllowance || inProgress || fetchingAllowance || fetchingPairInfo"
       @click="approve"
     >
       {{ approveButtonMessage }}
     </ButtonDefault>
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="!isApproved || isDisabled || inProgress || fetchingPairInfo"
+      :disabled="isDisabled || inProgress || !enoughAllowance || fetchingPairInfo "
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -109,6 +109,7 @@ import saveTokenSelection from '../mixins/saveTokenSelection';
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import approvalMixin from '../lib/allowance-mixin';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
@@ -121,7 +122,7 @@ export default {
     PlusIcon,
     AnimatedSpinner,
   },
-  mixins: [saveTokenSelection],
+  mixins: [saveTokenSelection, approvalMixin],
   data: () => ({
     tokenB: null,
     tokenA: null,
@@ -131,8 +132,6 @@ export default {
     totalSupply: null,
     balanceTokenA: null,
     balanceTokenB: null,
-    allowanceTokenA: null,
-    allowanceTokenB: null,
     reserveTokenA: null,
     reserveTokenB: null,
     approving: false,
@@ -140,7 +139,8 @@ export default {
 
   }),
   computed: {
-    ...mapState(['address', 'connectingToWallet']),
+    ...mapState(['connectingToWallet']),
+    ...mapState('aeternity', ['slippage']),
     ...mapState({
       factory: (state) => state.aeternity.factory?.deployInfo.address,
       fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
@@ -209,24 +209,10 @@ export default {
       return this.address && (!this.tokenB || !this.tokenA || +this.amountTokenA <= 0
           || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
     },
-    hasAllowanceTokenA() {
-      return +this.amountTokenA && this.allowanceTokenA === this.amountTokenA;
-    },
-    hasAllowanceTokenB() {
-      return +this.amountTokenB && this.allowanceTokenB === this.amountTokenB;
-    },
-    isApproved() {
-      if (this.tokenA && this.tokenA.contract_id === WAE) {
-        return this.hasAllowanceTokenB;
-      }
-      if (this.tokenB && this.tokenB.contract_id === WAE) {
-        return this.hasAllowanceTokenA;
-      }
-      return this.hasAllowanceTokenA && this.hasAllowanceTokenB;
-    },
     approveButtonMessage() {
-      if (this.isApproved) return 'Approved';
       if (this.approving) return 'Approving...';
+      if (this.fetchingAllowance) return 'Verifying approval...';
+      if (this.enoughAllowance) return 'Approved';
       return 'Approve';
     },
     buttonMessage() {
@@ -236,6 +222,14 @@ export default {
       if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
       if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
       return 'Supply';
+    },
+    enoughAllowance() {
+      if (!this.tokenA || !this.tokenB) return false;
+      const enough = (token, amount) => token.is_ae || this.enoughTokenAllowance(
+        token.contract_id, amount, token.decimals,
+      );
+
+      return enough(this.tokenA, this.amountTokenA) && enough(this.tokenB, this.amountTokenB);
     },
   },
   watch: {
@@ -252,8 +246,12 @@ export default {
     },
   },
   methods: {
+    fetchAlowance(tokenId) {
+      return this.$store.dispatch('aeternity/getRouterTokenAllowance', {
+        token: tokenId,
+      });
+    },
     async setSelectedToken(token, isTokenA) {
-      const [oldTokenA, oldTokenB] = [this.tokenA, this.tokenB];
       let swapped;
       [this.tokenA, this.tokenB, swapped] = calculateSelectedToken(
         token,
@@ -265,22 +263,16 @@ export default {
         const swap = this.amountTokenA;
         this.amountTokenA = this.amountTokenB;
         this.amountTokenB = swap;
-        const swapAllowance = this.allowanceTokenA;
-        this.allowanceTokenA = this.allowanceTokenB;
-        this.allowanceTokenB = swapAllowance;
         this.isLastInputTokenA = !this.isLastInputTokenA;
         const swapReserve = this.reserveTokenA;
         this.reserveTokenA = this.reserveTokenB;
         this.reserveTokenB = swapReserve;
-      } else if (
-        isTokenA
-        && oldTokenA
-        && this.tokenA
-        && oldTokenA.contract_id !== this.tokenA.contract_id
-      ) {
-        this.allowanceTokenA = null;
-      } else if (oldTokenB && this.tokenB && oldTokenB.contract_id !== this.tokenB.contract_id) {
-        this.allowanceTokenB = null;
+      }
+      if (!swapped) {
+        const tokenA = isTokenA ? this.tokenA : this.tokenB;
+        if (tokenA && !tokenA.is_ae) {
+          await this.fetchAllowanceIfNone(tokenA.contract_id, this.fetchAlowance);
+        }
       }
 
       this.saveTokenSelection(this.tokenA, this.tokenB);
@@ -334,18 +326,23 @@ export default {
         const aePair = getAePair(
           this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
         );
+        const safeRefresh = (token, amount) => {
+          if (!token || token.is_ae) return null;
+          return this.safeRefreshAllowance(
+            token.contract_id, amount, token.decimals, this.fetchAlowance,
+          );
+        };
         if (!aePair) {
           await this.createAllowance(this.tokenA, this.amountTokenA);
-          this.allowanceTokenA = this.amountTokenA;
+          await safeRefresh(this.tokenA, this.amountTokenA);
           await this.createAllowance(this.tokenB, this.amountTokenB);
-          this.allowanceTokenB = this.amountTokenB;
+          await safeRefresh(this.tokenB, this.amountTokenB);
         } else {
           await this.createAllowance(aePair.token, aePair.tokenAmount);
-          if (aePair.isTokenFrom) {
-            this.allowanceTokenA = aePair.tokenAmount;
-          } else {
-            this.allowanceTokenB = aePair.tokenAmount;
-          }
+          await safeRefresh(
+            aePair.isTokenFrom ? this.tokenA : this.tokenB,
+            aePair.tokenAmount,
+          );
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
@@ -364,8 +361,12 @@ export default {
       await this.setPairInfo();
       this.amountTokenA = null;
       this.amountTokenB = null;
-      this.allowanceTokenA = null;
-      this.allowanceTokenB = null;
+      if (!this.tokenA?.is_ae) {
+        await this.refreshAllowance(this.tokenA?.contract_id, this.fetchAlowance);
+      }
+      if (!this.tokenB?.is_ae) {
+        await this.refreshAllowance(this.tokenB?.contract_id, this.fetchAlowance);
+      }
       this.isLastInputTokenA = true;
       this.$store.commit('navigation/setPool', null);
     },
