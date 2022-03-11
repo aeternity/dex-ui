@@ -132,8 +132,7 @@ export default {
   computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
   methods: {
     async connectWallet() {
-      await this.$watchUntilTruly(() => this.$store.state.sdk);
-      await this.$store.dispatch('connectWallet');
+      this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
   },
 };
