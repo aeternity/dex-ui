@@ -351,8 +351,7 @@ export default {
       if (this.address) {
         this.supply();
       } else {
-        await this.$watchUntilTruly(() => this.$store.state.sdk);
-        await this.$store.dispatch('connectWallet');
+        this.$store.dispatch('modals/open', { name: 'connect-wallet' });
       }
     },
     async reset() {
