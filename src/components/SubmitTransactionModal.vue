@@ -2,7 +2,7 @@
   <ModalDefault
     close
     class="submit-transaction-modal"
-    @close="clickHandler"
+    @close="resolve"
   >
     <AnimatedSpinner
       v-if="!isConfirmed"
@@ -23,15 +23,11 @@
         <span class="guide">Confirm this transaction in your wallet</span>
       </template>
       <template v-else>
-        <a
+        <ButtonDefault
           v-if="hash"
-          :href="transactionUrl"
-          target="_blank"
+          @click="clickHandler"
         >
           View on Explorer
-        </a>
-        <ButtonDefault @click="clickHandler">
-          Close
         </ButtonDefault>
       </template>
     </div>
@@ -62,12 +58,7 @@ export default {
     isConfirmed: false,
     hash: null,
   }),
-  computed: {
-    ...mapGetters(['activeNetwork']),
-    transactionUrl() {
-      return `${this.activeNetwork.explorerUrl}/transactions/${this.hash}`;
-    },
-  },
+  computed: mapGetters(['activeNetwork']),
   async created() {
     try {
       this.hash = null;
@@ -80,6 +71,7 @@ export default {
   },
   methods: {
     clickHandler() {
+      window.open(`${this.activeNetwork.explorerUrl}/transactions/${this.hash}`, '_blank').focus();
       this.resolve();
     },
   },

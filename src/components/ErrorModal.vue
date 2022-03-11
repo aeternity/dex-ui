@@ -2,7 +2,6 @@
   <ModalDefault
     class="error-modal"
     title="Error"
-    close
     @close="resolve"
   >
     <div class="error-details">
