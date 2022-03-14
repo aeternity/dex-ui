@@ -118,8 +118,17 @@ export default createStore({
         detector.scan(async ({ newWallet }) => {
           if (!newWallet) return;
           clearInterval(webWalletTimeout);
-          await sdk.connectToWallet(await newWallet.getConnection());
-          await sdk.subscribeAddress('subscribe', 'current');
+          try {
+            await sdk.connectToWallet(await newWallet.getConnection());
+            await sdk.subscribeAddress('subscribe', 'current');
+          } catch (e) {
+            if (e.message !== 'Operation rejected by user') {
+              dispatch('showUnknownError', e);
+            }
+            dispatch('disconnectWallet');
+            resolve(null);
+            return;
+          }
           const address = sdk.rpcClient.getCurrentAccount();
           if (!address) return;
           detector.stopScan();
