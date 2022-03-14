@@ -22,7 +22,7 @@ export default createStore({
     balance: 0,
     useIframeWallet: false,
     useSdkWallet: false,
-    networkId: 'ae_uat',
+    networkId: null,
   },
   getters: {
     networks() {
@@ -105,7 +105,7 @@ export default createStore({
       }
       commit('setConnectingToWallet', false);
     },
-    async scanForWallets({ commit, dispatch, state: { sdk, networkId } }) {
+    async scanForWallets({ commit, dispatch, state: { sdk } }) {
       const scannerConnection = await BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
       });
@@ -135,9 +135,7 @@ export default createStore({
           const { networkId: walletNetworkId, name } = sdk.rpcClient.info;
           commit('setAddress', address);
           commit('setWalletName', name);
-          if (walletNetworkId !== networkId) {
-            dispatch('selectNetwork', networkId);
-          }
+          dispatch('selectNetwork', walletNetworkId);
           resolve(address);
         });
       });
@@ -156,10 +154,13 @@ export default createStore({
       return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-      if (networkId === newNetworkId) return;
       const nodeToSelect = sdk.getNodesInPool()
         .find((node) => node.nodeNetworkId === newNetworkId);
+
+      if (nodeToSelect && networkId === newNetworkId) return;
+
       if (!nodeToSelect) {
+        commit('setNetwork', newNetworkId);
         await dispatch('modals/open', {
           name: 'show-error',
           message: `Network ${newNetworkId} is not supported, please switch to Testnet`,

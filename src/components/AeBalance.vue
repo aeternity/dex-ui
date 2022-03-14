@@ -93,7 +93,17 @@ export default {
   emits: ['update:balance'],
   setup(props, { emit }) {
     storeState = toRef(useStore(), 'state');
-    const balance = getBalanceRef(toRef(props, 'address'));
+    const balanceRef = getBalanceRef(toRef(props, 'address'));
+    const balance = ref(0);
+
+    watch(() => balanceRef.value, (newVal) => {
+      if (storeState.value.networkId === storeState.value.sdk.selectedNode.networkId) {
+        balance.value = newVal;
+      } else {
+        balance.value = new BigNumber(0);
+      }
+    });
+
     watch(() => balance.value, (newVal) => {
       emit('update:balance', newVal);
     });
