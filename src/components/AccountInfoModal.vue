@@ -11,10 +11,10 @@
           Conneced with {{ walletName }}
         </div>
         <div
-          v-if="UNFINISHED_FEATURES"
           class="change-btn"
+          @click.prevent="walletDisconnect()"
         >
-          Change
+          Disconnect
         </div>
       </div>
       <div class="address">
@@ -28,6 +28,7 @@
           :content="address"
         />
         <a
+          v-if="activeNetwork"
           :href="`${activeNetwork.explorerUrl}/account/${address}`"
           target="_blank"
         >
@@ -54,14 +55,16 @@ export default {
   props: {
     resolve: { type: Function, required: true },
     close: { type: Function, default: null },
-    includeWae: { type: Boolean, default: true },
   },
-  data: () => ({
-    UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
-  }),
   computed: {
     ...mapState(['address', 'walletName']),
     ...mapGetters(['activeNetwork']),
+  },
+  methods: {
+    async walletDisconnect() {
+      await this.$store.dispatch('disconnectWallet');
+      window.location.reload();
+    },
   },
 };
 </script>
