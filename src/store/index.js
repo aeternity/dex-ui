@@ -55,6 +55,7 @@ export default createStore({
     },
     resetState(state) {
       state.address = null;
+      state.networkId = null;
     },
     setNetwork(state, networkId) {
       state.networkId = networkId;
@@ -131,6 +132,10 @@ export default createStore({
           resolve(address);
         });
       });
+    },
+    async disconnectWallet({ commit, state: { sdk } }) {
+      await sdk.disconnectWallet();
+      commit('resetState');
     },
     async addMobileWallet({
       commit,
