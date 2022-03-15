@@ -39,18 +39,13 @@
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="
-        approving || !amountFrom || allowanceFrom === amountFrom ||
-          !from || from.is_ae || isAeVsWae || fetchingPairInfo
-      "
+      :disabled="approving || !from || !amountFrom || fetchingPairInfo || fetchingAllowance
+        || enoughAllowance"
       @click="approve"
     >
       <div class="allowance">
         <img :src="`https://avatars.z52da5wt.xyz/${from.contract_id}`">
-        {{ approving
-          ? `Verifying approval...`
-          : `Allow the DEX Protocol to use your ${from.symbol}`
-        }}
+        {{ approveBtnMessage }}
       </div>
       <ButtonTooltip
         :tooltip="`You must give the DEX smart contracts permission to use your ${from.symbol}.
@@ -62,7 +57,8 @@
 
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="connectingToWallet || isDisabled || approving || fetchingPairInfo"
+      :disabled="connectingToWallet || isDisabled || approving || fetchingPairInfo
+        || !enoughAllowance"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -87,6 +83,7 @@ import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import saveTokenSelection from '../mixins/saveTokenSelection';
+import approvalMixin from '../lib/allowance-mixin';
 
 export default {
   components: {
@@ -99,7 +96,7 @@ export default {
     QuestionCircle,
     AnimatedSpinner,
   },
-  mixins: [saveTokenSelection],
+  mixins: [approvalMixin, saveTokenSelection],
   data: () => ({
     to: null,
     from: null,
@@ -108,15 +105,14 @@ export default {
     isLastAmountFrom: true,
     balance: null,
     totalSupply: null,
-    allowanceFrom: null,
-    allowanceTo: null,
     reserveFrom: null,
     reserveTo: null,
     approving: false,
     WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
-    ...mapState(['address', 'connectingToWallet']),
+    ...mapState(['connectingToWallet']),
+    ...mapState('aeternity', ['slippage']),
     ...mapState({
       factory: (state) => state.aeternity.factory?.deployInfo.address,
       fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
@@ -127,6 +123,11 @@ export default {
     enoughBalance() {
       return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
     },
+    approveBtnMessage() {
+      if (this.fetchingAllowance) return 'Verifying approval...';
+      if (this.approving) return 'Approving...';
+      return `Allow the DEX Protocol to use your ${this.from.symbol}`;
+    },
     isValidAmount() {
       return !(
         !this.amountFrom
@@ -134,7 +135,15 @@ export default {
       );
     },
     isDisabled() {
-      return this.address && (!this.to || !this.from || !this.isValidAmount || !this.enoughBalance);
+      return !this.to || !this.from || !this.isValidAmount || !this.enoughBalance;
+    },
+    enoughAllowance() {
+      if (!this.from) return false;
+      if (this.isAeVsWae || this.from.is_ae) return true;
+      return this.enoughTokenAllowance(this.from.contract_id, this.amountFrom, this.from.decimals);
+    },
+    amountFromWithSlippage() {
+      return this.amountWithSlippage(this.amountFrom, this.from.decimals);
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
@@ -157,8 +166,13 @@ export default {
     },
   },
   watch: {
+    async address(newVal) {
+      if (newVal && this.from) {
+        await this.refreshAllowance(this.from.contract_id, this.fetchAlowance);
+      }
+    },
     async factory(newVal) {
-      // we have wallet connection
+      // we have factory , we can pull data
       if (newVal && this.to && this.from) {
         await this.setPairInfo();
         if (this.amountFrom || this.amountTo) {
@@ -170,8 +184,12 @@ export default {
     },
   },
   methods: {
+    fetchAlowance(tokenId) {
+      return this.$store.dispatch('aeternity/getRouterTokenAllowance', {
+        token: tokenId,
+      });
+    },
     async setSelectedToken(token, isFrom) {
-      const [oldFrom, oldTo] = [this.from, this.to];
       let swapped;
       [this.from, this.to, swapped] = calculateSelectedToken(token, this.from, this.to, isFrom);
       if (swapped) {
@@ -180,17 +198,12 @@ export default {
         this.amountTo = swap;
         this.isLastAmountFrom = !this.isLastAmountFrom;
 
-        const swapAllowance = this.allowanceFrom;
-        this.allowanceFrom = this.allowanceTo;
-        this.allowanceTo = swapAllowance;
-
         const swapReserve = this.reserveFrom;
         this.reserveFrom = this.reserveTo;
         this.reserveTo = swapReserve;
-      } else if (isFrom && oldFrom && this.from && oldFrom.contract_id !== this.from.contract_id) {
-        this.allowanceFrom = null;
-      } else if (oldTo && this.to && oldTo.contract_id !== this.to.contract_id) {
-        this.allowanceTo = null;
+      }
+      if (this.from && !this.from.is_ae && (isFrom || swapped)) {
+        await this.fetchAllowanceIfNone(this.from.contract_id, this.fetchAlowance);
       }
 
       this.saveTokenSelection(this.from, this.to);
@@ -236,7 +249,10 @@ export default {
             token: this.from.contract_id,
             amount: expandDecimals(this.amountFrom, this.from.decimals),
           });
-          this.allowanceFrom = this.amountFrom;
+
+          await this.safeRefreshAllowance(
+            this.from.contract_id, this.amountFrom, this.from.decimals, this.fetchAlowance,
+          );
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
@@ -291,10 +307,9 @@ export default {
     },
     async reset() {
       await this.setPairInfo();
+      await this.refreshAllowance(this.from?.contract_id, this.fetchAlowance);
       this.amountFrom = '';
       this.amountTo = '';
-      this.allowanceFrom = null;
-      this.allowanceTo = null;
       this.isLastAmountFrom = true;
       this.$store.commit('navigation/setSwap', null);
     },
