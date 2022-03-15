@@ -430,75 +430,66 @@ export default {
     ),
 
     /**
-     * @description testing if an address has enough allowance
+     * @description getting the allowance for a certain contract
      * @async
      * @param p1 vuex context
-     * @param {Object} p2.instance the token instance
+     * @param {Object} p2.instance the token (AEX9) instance
      * @param {string} p2.toAccount allowance destination address
-     * @param {bigint} p2.amount desired allowance to be tested
-     * @returns {bool}
+     * @returns {bigint} the allowance amount or 0n even in the case when
+     * no allowance was created
     */
-    async hasEnoughAllowance({
-      state: { slippage },
+    async getAllowance({
       rootState: { address },
     }, {
       instance,
       toAccount,
-      amount,
     }) {
       const { decodedResult: currentAllowance } = await instance.methods.allowance({
         from_account: address,
         for_account: toAccount,
       });
-      const allowance = addSlippage(currentAllowance ?? 0n, slippage);
-      return allowance >= amount;
+      return currentAllowance ?? 0n;
     },
 
     /**
-     * @description testing if the router has enough allowance
-     * for a token
+     * @description getting the router allowance for a Token
      * @async
      * @param p1 vuex context
      * @param {string} p2.token
-     * @param {bigint} p2.amount desired allowance to be tested
-     * @returns {bool}
+     * @returns {bigint} the allowance amount or 0n even in the case when
+     * no allowance was created
     */
-    async hasRouterEnoughTokenAllowance({
+    async getRouterTokenAllowance({
       dispatch,
       state: { router },
     }, {
       token: tokenAddress,
-      amount,
     }) {
-      return dispatch('hasEnoughAllowance', {
+      return dispatch('getAllowance', {
         instance: await dispatch('getTokenInstance', tokenAddress),
         toAccount: getCtAddress(router),
-        amount,
       });
     },
 
     /**
-     * @description testing if the router has enough allowance
-     * for tokens owned in a Pair
+     * @description getting the router allowance for a Pair
      * @async
      * @param p1 vuex context
      * @param {string} p2.tokenA tokenA address
      * @param {string} p2.tokenB tokenA address
-     * @param {bigint} p2.amount desired allowance to be tested
-     * @returns {bool}
+     * @returns {bigint} the allowance amount or 0n even in the case when
+     * no allowance was created
     */
-    async hasRouterEnoughPairAllowance({
+    async getRouterPairAllowance({
       dispatch,
       state: { router },
     }, {
       tokenA,
       tokenB,
-      amount,
     }) {
-      return dispatch('hasEnoughAllowance', {
+      return dispatch('getAllowance', {
         instance: await dispatch('getPairByTokens', { tokenA, tokenB }),
         toAccount: getCtAddress(router),
-        amount,
       });
     },
 
