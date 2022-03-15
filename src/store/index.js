@@ -143,7 +143,7 @@ export default createStore({
       });
     },
     async disconnectWallet({ commit, state: { sdk } }) {
-      await sdk.disconnectWallet();
+      await sdk.disconnectWallet(false);
       commit('resetState');
     },
     async addMobileWallet({
