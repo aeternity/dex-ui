@@ -4,7 +4,9 @@ import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
 import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
-import { cttoak, createOnAccountObject } from '../../lib/utils';
+import {
+  cttoak, createOnAccountObject, addSlippage, subSlippage,
+} from '../../lib/utils';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
   DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
@@ -63,24 +65,6 @@ const genRouterMethodAction = (method, argsMapper) => async (
   window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
   return result;
 };
-
-/**
- * adds slippage to a given value
- * @async
- * @param {bigint} value given value
- * @param {bigint} slippage percentage (eg. 10,20...100)
- * @return biging representing final value
-*/
-const addSlippage = (value, slippage) => value + (value * BigInt(slippage * 10)) / 1000n;
-
-/**
- * subtracts slippage from a given value
- * @async
- * @param {bigint} value given value
- * @param {bigint} slippage percentage (eg. 10,20...100)
- * @return biging representing final value
-*/
-const subSlippage = (value, slippage) => value - (value * BigInt(slippage * 10)) / 1000n;
 
 export default {
   namespaced: true,
