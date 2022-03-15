@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     async onWalletConnect(id) {
+      if (this.connecting) return;
       this.connecting = true;
       this.connectingTo = id;
       if (id === 'superhero') {
