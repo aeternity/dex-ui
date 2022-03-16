@@ -66,6 +66,8 @@ export const getTokenList = () => [
     name: 'AE',
     symbol: 'AE',
     is_ae: true,
+    // eslint-disable-next-line global-require
+    image: require('../assets/ae.svg'),
   },
   {
     contract_id: 'ct_NH6qfe8Gu5QdX7fdmdyD5iQ5yHC64FE4ELsMUok4VWDuqBkct',
@@ -91,6 +93,8 @@ export const getTokenList = () => [
     name: 'WAE',
     symbol: 'WAE',
     is_ae: false,
+    // eslint-disable-next-line global-require
+    image: require('../assets/ae.svg'),
   },
 ];
 export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {

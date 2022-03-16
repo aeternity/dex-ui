@@ -19,11 +19,7 @@
         class="toke-list-item"
         @click="resolve(token)"
       >
-        <AeLogo v-if="WAE === token.contract_id" />
-        <img
-          v-else
-          :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`"
-        >
+        <img :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`">
         <div class="token">
           <span class="symbol">{{ token.symbol }}</span>
           <span class="name">{{ token.name }}</span>
@@ -45,14 +41,12 @@ import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
 import { getTokenList } from '../lib/utils';
-import AeLogo from '../assets/ae.svg?vue-component';
 
 export default {
   components: {
     ModalDefault,
     InputField,
     ButtonPlain,
-    AeLogo,
   },
   props: {
     resolve: { type: Function, required: true },
@@ -135,10 +129,10 @@ export default {
         background-color: variables.$color-black;
       }
 
-      img,
-      svg {
+      img {
         width: 32px;
         height: 32px;
+        border-radius: 24px;
         margin-right: 16px;
       }
 
