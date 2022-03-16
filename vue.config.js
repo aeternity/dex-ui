@@ -31,12 +31,19 @@ module.exports = defineConfig({
       .loader('vue-svg-loader')
       .end()
       .end()
-      .oneOf('external')
-      .use('file-loader')
-      .loader('file-loader')
+      .oneOf('default')
+      .use('svg-url-loader')
+      .loader('svg-url-loader')
       .options({
-        name: 'assets/[name].[hash:8].[ext]',
-      });
+        noquotes: true,
+        limit: 4096,
+        name: 'img/[name].[hash:8].[ext]',
+        esModule: false,
+      })
+      .end()
+      .use('svgo-loader')
+      .loader('svgo-loader')
+      .end();
   },
   configureWebpack: {
     plugins: [
