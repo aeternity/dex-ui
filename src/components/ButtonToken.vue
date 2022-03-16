@@ -8,7 +8,7 @@
     <div class="token">
       <img
         v-if="token"
-        :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`"
+        :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`"
       >
       <span>{{ token && token.symbol || 'Select token' }}</span>
     </div>
