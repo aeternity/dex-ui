@@ -52,7 +52,7 @@
 
 <script>
 import ModalDefault from './ModalDefault.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 export default {
   components: {
