@@ -85,7 +85,7 @@ import {
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import saveTokenSelection from '../mixins/saveTokenSelection';
 
 export default {

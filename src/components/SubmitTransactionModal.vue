@@ -38,7 +38,7 @@
 import { mapGetters } from 'vuex';
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 
 export default {

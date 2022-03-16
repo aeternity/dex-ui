@@ -18,7 +18,7 @@ import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullI
 import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 const pollState = {};
 let storeState;

@@ -108,7 +108,7 @@ import saveTokenSelection from '../mixins/saveTokenSelection';
 
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 const WAE = process.env.VUE_APP_WAE_ADDRESS;
 
