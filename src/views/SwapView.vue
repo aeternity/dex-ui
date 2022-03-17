@@ -131,8 +131,12 @@ export default {
     isValidAmount() {
       return !(
         !this.amountFrom
+        || !this.amountTo
         || Number.parseFloat(this.isLastAmountFrom ? this.amountFrom : this.amountTo) <= 0
       );
+    },
+    hasPair() {
+      return !!(this.totalSupply || this.reserveFrom || this.reserveTo);
     },
     isDisabled() {
       return !this.to || !this.from || !this.isValidAmount || !this.enoughBalance;
@@ -147,6 +151,8 @@ export default {
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
+      if (this.factory && this.to && this.from
+        && !this.fetchingPairInfo && !this.hasPair) return 'No liquidity pool found';
       if (!this.isValidAmount || !this.to || !this.from) return 'Enter amount';
       if (!this.enoughBalance) return `Insufficient ${this.from.symbol} balance`;
       return 'Swap';
