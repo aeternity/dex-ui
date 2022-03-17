@@ -8,7 +8,7 @@
     <div class="box">
       <div class="wallet">
         <div>
-          Conneced with {{ walletName }}
+          Connected with {{ walletName }}
         </div>
         <div
           class="change-btn"
