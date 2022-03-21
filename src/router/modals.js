@@ -1,6 +1,6 @@
 import { registerModal } from '../store/plugins/modals';
 import AccountInfoModal from '../components/AccountInfoModal.vue';
-import SelectTokenModal from '../components/SelectTokenModal.vue';
+import SelectTokenModal from '../components/TokenSelector/SelectTokenModal.vue';
 import ErrorModal from '../components/ErrorModal.vue';
 import TooltipModal from '../components/TooltipModal.vue';
 import ConfirmSwapModal from '../components/ConfirmSwapModal.vue';

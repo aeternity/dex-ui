@@ -11,6 +11,7 @@ import {
 } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import navigation from './modules/navigation';
+import tokensModule from './modules/tokens';
 import modals from './plugins/modals';
 
 export default createStore({
@@ -30,8 +31,11 @@ export default createStore({
         ...DEFAULT_NETWORKS,
       ].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
     },
-    activeNetwork({ networkId }, { networks }) {
-      return networks[networkId];
+    activeNetwork({ sdk }, { networks }) {
+      if (!sdk || !sdk.selectedNode) {
+        return null;
+      }
+      return networks[sdk.selectedNode.networkId];
     },
   },
   mutations: {
@@ -189,16 +193,19 @@ export default createStore({
 
   modules: {
     aeternity: aeternityModule,
+    tokens: tokensModule,
     navigation,
   },
   plugins: [
     createPersistedState({
       reducer: ({
         address, networkId, aeternity: { providedLiquidity, slippage, deadline },
+        tokens: { userTokens },
       }) => ({
         address,
         networkId,
         aeternity: { providedLiquidity, slippage, deadline },
+        tokens: { userTokens },
       }),
     }),
     modals,

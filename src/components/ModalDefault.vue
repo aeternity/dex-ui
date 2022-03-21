@@ -9,6 +9,7 @@
           v-if="title || close"
           class="header"
         >
+          <slot name="header-left" />
           <span>{{ title }}</span>
           <ButtonPlain
             v-if="close"
