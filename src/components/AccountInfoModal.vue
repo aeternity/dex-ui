@@ -12,7 +12,7 @@
         </div>
         <div
           class="change-btn"
-          @click.prevent="walletDisconnect()"
+          @click.prevent="disconnectWallet"
         >
           Disconnect
         </div>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import ClipboardCopy from './ClipboardCopy.vue';
 import ExternalLinkIcon from '../assets/external-link.svg?vue-component';
@@ -60,12 +60,7 @@ export default {
     ...mapState(['address', 'walletName']),
     ...mapGetters(['activeNetwork']),
   },
-  methods: {
-    async walletDisconnect() {
-      await this.$store.dispatch('disconnectWallet');
-      window.location.reload();
-    },
-  },
+  methods: mapActions(['disconnectWallet']),
 };
 </script>
 
