@@ -1,5 +1,49 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/aeternity/dex-ui/compare/v1.2.0...v1.3.0) (2022-03-21)
+
+
+### Features
+
+* **add-liquidity:** approval state depending on fetched allowance ([ccf5b30](https://www.github.com/aeternity/dex-ui/commit/ccf5b306928e3648d29e8f14e4e6777e3313fec9))
+* added connect wallet modal [#215](https://www.github.com/aeternity/dex-ui/issues/215) ([07e0775](https://www.github.com/aeternity/dex-ui/commit/07e077518faafd05cdf4eb0c41897f632b67ef21))
+* keep (swap,add-liquidity) selection state on navigation [#151](https://www.github.com/aeternity/dex-ui/issues/151) ([dcc88e2](https://www.github.com/aeternity/dex-ui/commit/dcc88e2d470f1dbb972b8a225b5fbbce50860aff))
+* **remove-liquidity:** approval state depending on fetched allowance ([d2ae22f](https://www.github.com/aeternity/dex-ui/commit/d2ae22f9bfc4892c63f206dac92ec13d43faddb9))
+* removed unnecessary close buttons on modals [#219](https://www.github.com/aeternity/dex-ui/issues/219) ([b83498c](https://www.github.com/aeternity/dex-ui/commit/b83498c071b2c0a81111b342a1efaef6627ccef5))
+* **swap:** approval state depending on fetched allowance ([7f58187](https://www.github.com/aeternity/dex-ui/commit/7f58187342fc4753b654da7f261fc7b34f05f090))
+* upgrade node and dependencies [#225](https://www.github.com/aeternity/dex-ui/issues/225) ([105501c](https://www.github.com/aeternity/dex-ui/commit/105501c0af0325d56a39369596318ccdc4e9a506))
+* view wallet actions [#216](https://www.github.com/aeternity/dex-ui/issues/216) ([9cb7da6](https://www.github.com/aeternity/dex-ui/commit/9cb7da6d0eb50d1e07bf49e203821b058d80bed1))
+* wallet disconnect ([d91cece](https://www.github.com/aeternity/dex-ui/commit/d91cececcc1cdeef7f3d9ea655d80031dc37bfc3))
+
+
+### Bug Fixes
+
+* **account-info:** correct typo in wording ([a686303](https://www.github.com/aeternity/dex-ui/commit/a68630393a3ad55fe06dc9e8acefad506860d519))
+* **AeBalance:** initial balance for tokens is not BigNumber ([94d0e67](https://www.github.com/aeternity/dex-ui/commit/94d0e672e137224b016827eddc8bb6057d2d3fe3))
+* **aeternity-module:** approving twice needed allowance amount ([3a3d7af](https://www.github.com/aeternity/dex-ui/commit/3a3d7af04a60d12001bd37e46ed1412d204b322c))
+* **connect-wallet:** do not start another wallet scan while already scanning ([ce230c4](https://www.github.com/aeternity/dex-ui/commit/ce230c4ae17c5eebfe5ac56d4afb0b7c294a8f7a))
+* **connet-wallet:** remove window reload on wallet disconnect ([84bbf0c](https://www.github.com/aeternity/dex-ui/commit/84bbf0c4d5d1bf478f86a163713906ee4e496949))
+* disable sentry on localhost [#246](https://www.github.com/aeternity/dex-ui/issues/246) ([47a3a3f](https://www.github.com/aeternity/dex-ui/commit/47a3a3f550f86471ef26f366a2042d3170c68cb7))
+* **index:** disconnect wallet on connect/subscribe error ([74c028a](https://www.github.com/aeternity/dex-ui/commit/74c028aee8f4d4909663f11fc8a9666e0337ffb9))
+* **index:** force sending close connection message ([18b8719](https://www.github.com/aeternity/dex-ui/commit/18b8719ab95971f78587d3e6f9762d88a57f483f))
+* keep (swap,add-liquidity) selection state on navigation [#151](https://www.github.com/aeternity/dex-ui/issues/151) ([cf71119](https://www.github.com/aeternity/dex-ui/commit/cf711196031b69b7fe1443c58e3596ccfd9fe326))
+* show animated spinner svg correctly ([b08b5cf](https://www.github.com/aeternity/dex-ui/commit/b08b5cfc1d5d699a40911a4921a93a2243a15f01))
+* show custom token image correctly ([49a0d4a](https://www.github.com/aeternity/dex-ui/commit/49a0d4a04c01258e76b1d76bbc2aa8367aa7cb3a))
+* view transaction for the ae/wae swaps ([e654c81](https://www.github.com/aeternity/dex-ui/commit/e654c818a0e7d4ed570528a064fd751d95b223de))
+* view transaction in the explorer for each submitted transaction ([ec5e005](https://www.github.com/aeternity/dex-ui/commit/ec5e00526146c70d1f62f6f3024fa7771dc616b9))
+* **vue-config:** enable default loading svgs ([20fa4e7](https://www.github.com/aeternity/dex-ui/commit/20fa4e743c5cd2b61406bd2ef6896f6dc916857f))
+
+
+### Miscellaneous
+
+* create license ([64c2d39](https://www.github.com/aeternity/dex-ui/commit/64c2d390ec2975c3785c943563b4a8f0005cabb6))
+
+
+### Refactorings
+
+* adjust SelectTokenModal ([644ecde](https://www.github.com/aeternity/dex-ui/commit/644ecde152a6ab8179f813a5a3a6d6fc39bc963f))
+* move addSlippage and subSlippage to utils ([50a0377](https://www.github.com/aeternity/dex-ui/commit/50a0377645674f25159456cc1584a289f3d94e25))
+
 ## [1.2.0](https://www.github.com/aeternity/dex-ui/compare/v1.1.0...v1.2.0) (2022-03-07)
 
 
