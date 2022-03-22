@@ -5,9 +5,9 @@
     class="swap-view"
   >
     <InputToken
-      :value="amountFrom"
-      :token="from"
-      :chosen-tokens="(to || from) && [from, to]"
+      :value="amountTokenA"
+      :token="tokenA"
+      :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balance = $event"
@@ -19,9 +19,9 @@
       <DownArrow />
     </ButtonPlain>
     <InputToken
-      :value="amountTo"
-      :token="to"
-      :chosen-tokens="(to || from) && [to, from]"
+      :value="amountTokenB"
+      :token="tokenB"
+      :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
     />
@@ -33,24 +33,24 @@
       <span>Fetching best price...</span>
     </div>
     <div
-      v-else-if="to && from && ratio"
+      v-else-if="tokenB && tokenA && ratio"
       class="price"
     >
-      {{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}
+      {{ `1 ${tokenB.symbol} = ${ratio} ${tokenA.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address"
       class="allowance-button"
-      :disabled="approving || !from || !amountFrom || fetchingPairInfo || fetchingAllowance
+      :disabled="approving || !tokenA || !amountTokenA || fetchingPairInfo || fetchingAllowance
         || enoughAllowance"
       @click="approve"
     >
       <div class="allowance">
-        <img :src="`https://avatars.z52da5wt.xyz/${from.contract_id}`">
+        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
         {{ approveBtnMessage }}
       </div>
       <ButtonTooltip
-        :tooltip="`You must give the DEX smart contracts permission to use your ${from.symbol}.
+        :tooltip="`You must give the DEX smart contracts permission to use your ${tokenA.symbol}.
           You only have to do this once per token.`"
       >
         <QuestionCircle />
@@ -100,15 +100,15 @@ export default {
   },
   mixins: [approvalMixin, saveTokenSelection],
   data: () => ({
-    to: null,
-    from: null,
-    amountFrom: '',
-    amountTo: '',
-    isLastAmountFrom: true,
+    tokenB: null,
+    tokenA: null,
+    amountTokenA: '',
+    amountTokenB: '',
+    isLastInputTokenA: true,
     balance: null,
     totalSupply: null,
-    reserveFrom: null,
-    reserveTo: null,
+    reserveTokenA: null,
+    reserveTokenB: null,
     approving: false,
     WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
@@ -120,132 +120,136 @@ export default {
       fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
     }),
     isAeVsWae() {
-      return this.from?.contract_id === this.WAE && this.to?.contract_id === this.WAE;
+      return this.tokenA?.contract_id === this.WAE && this.tokenB?.contract_id === this.WAE;
     },
     enoughBalance() {
-      return this.balance?.isGreaterThanOrEqualTo(this.amountFrom);
+      return this.balance?.isGreaterThanOrEqualTo(this.amountTokenA);
     },
     approveBtnMessage() {
       if (this.fetchingAllowance) return 'Verifying approval...';
       if (this.approving) return 'Approving...';
-      return `Allow the DEX Protocol to use your ${this.from.symbol}`;
+      return `Allow the DEX Protocol to use your ${this.tokenA.symbol}`;
     },
     isValidAmount() {
       return !(
-        !this.amountFrom
-        || !this.amountTo
-        || Number.parseFloat(this.isLastAmountFrom ? this.amountFrom : this.amountTo) <= 0
+        !this.amountTokenA
+        || !this.amountTokenB
+        || Number.parseFloat(this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB) <= 0
       );
     },
     hasPair() {
-      return !!(this.totalSupply || this.reserveFrom || this.reserveTo);
+      return !!(this.totalSupply || this.reserveTokenA || this.reserveTokenB);
     },
     isDisabled() {
-      return !this.to || !this.from || !this.isValidAmount || !this.enoughBalance;
+      return !this.tokenB || !this.tokenA || !this.isValidAmount || !this.enoughBalance;
     },
     enoughAllowance() {
-      if (!this.from) return false;
-      if (this.isAeVsWae || this.from.is_ae) return true;
-      return this.enoughTokenAllowance(this.from.contract_id, this.amountFrom, this.from.decimals);
+      if (!this.tokenA) return false;
+      if (this.isAeVsWae || this.tokenA.is_ae) return true;
+      return this.enoughTokenAllowance(this.tokenA.contract_id,
+        this.amountTokenA, this.tokenA.decimals);
     },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
-      if (this.factory && this.to && this.from
+      if (this.factory && this.tokenB && this.tokenA
         && !this.fetchingPairInfo && !this.hasPair) return 'No liquidity pool found';
-      if (!this.isValidAmount || !this.to || !this.from) return 'Enter amount';
-      if (!this.enoughBalance) return `Insufficient ${this.from.symbol} balance`;
+      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return 'Enter amount';
+      if (!this.enoughBalance) return `Insufficient ${this.tokenA.symbol} balance`;
       return 'Swap';
     },
     ratio() {
       if (this.isAeVsWae) return 1;
-      if (!this.reserveFrom || !this.reserveTo || !this.from || !this.to) return null;
-      return reduceDecimals(this.reserveFrom, this.from.decimals)
-        .div(reduceDecimals(this.reserveTo, this.to.decimals)).toNumber();
+      if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) return null;
+      return reduceDecimals(this.reserveTokenA, this.tokenA.decimals)
+        .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
     },
-    amountFromExpanded() {
-      return !this.from || !this.amountFrom
-        ? 0 : expandDecimals(this.amountFrom, this.from.decimals);
+    amountTokenAExpanded() {
+      return !this.tokenA || !this.amountTokenA
+        ? 0 : expandDecimals(this.amountTokenA, this.tokenA.decimals);
     },
-    amountToExpanded() {
-      return !this.to || !this.amountTo ? 0 : expandDecimals(this.amountTo, this.to.decimals);
+    amountTokenBExpanded() {
+      return !this.tokenB || !this.amountTokenB
+        ? 0 : expandDecimals(this.amountTokenB, this.tokenB.decimals);
     },
   },
   watch: {
     async address(newVal) {
-      if (newVal && this.from) {
-        await this.refreshAllowance(this.from.contract_id, this.fetchAllowance);
+      if (newVal && this.tokenA) {
+        await this.refreshAllowance(this.tokenA.contract_id, this.fetchAllowance);
       }
     },
     async factory(newVal) {
       // we have factory , we can pull data
-      if (newVal && this.to && this.from) {
+      if (newVal && this.tokenB && this.tokenA) {
         await this.setPairInfo();
-        if (this.amountFrom || this.amountTo) {
+        if (this.amountTokenA || this.amountTokenB) {
           this.setAmount(
-            this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
           );
         }
       }
     },
   },
   methods: {
-    async setSelectedToken(token, isFrom) {
+    async setSelectedToken(token, isTokenA) {
       let swapped;
-      [this.from, this.to, swapped] = calculateSelectedToken(token, this.from, this.to, isFrom);
+      [this.tokenA, this.tokenB, swapped] = calculateSelectedToken(
+        token, this.tokenA, this.tokenB, isTokenA,
+      );
       if (swapped) {
-        const swap = this.amountFrom;
-        this.amountFrom = this.amountTo;
-        this.amountTo = swap;
-        this.isLastAmountFrom = !this.isLastAmountFrom;
+        const swap = this.amountTokenA;
+        this.amountTokenA = this.amountTokenB;
+        this.amountTokenB = swap;
+        this.isLastInputTokenA = !this.isLastInputTokenA;
 
-        const swapReserve = this.reserveFrom;
-        this.reserveFrom = this.reserveTo;
-        this.reserveTo = swapReserve;
+        const swapReserve = this.reserveTokenA;
+        this.reserveTokenA = this.reserveTokenB;
+        this.reserveTokenB = swapReserve;
       }
-      if (this.from && !this.from.is_ae && (isFrom || swapped)) {
-        await this.fetchAllowanceIfNone(this.from.contract_id, this.fetchAllowance);
+      if (this.tokenA && !this.tokenA.is_ae && (isTokenA || swapped)) {
+        await this.fetchAllowanceIfNone(this.tokenA.contract_id, this.fetchAllowance);
       }
 
-      this.saveTokenSelection(this.from, this.to);
+      this.saveTokenSelection(this.tokenA, this.tokenB);
 
       if (!swapped) {
         await this.setPairInfo();
       }
       this.setAmount(
-        this.isLastAmountFrom ? this.amountFrom : this.amountTo, this.isLastAmountFrom,
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
       );
     },
     async setPairInfo() {
       try {
         [
           this.totalSupply,
-          this.reserveFrom,
-          this.reserveTo,
+          this.reserveTokenA,
+          this.reserveTokenB,
         ] = await this.$store.dispatch('aeternity/getPairInfo', {
-          tokenA: this.from,
-          tokenB: this.to,
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
         });
       } catch (e) {
         handleUnknownError(e);
       }
     },
-    setAmount(amount, isFrom) {
-      this.isLastAmountFrom = isFrom;
-      if (isFrom) {
-        this.amountFrom = amount;
-        this.amountTo = this.ratio && amount ? amount / this.ratio : '';
+    setAmount(amount, isLastInputTokenA) {
+      this.isLastInputTokenA = isLastInputTokenA;
+      if (isLastInputTokenA) {
+        this.amountTokenA = amount;
+        this.amountTokenB = this.ratio && amount ? amount / this.ratio : '';
       } else {
-        this.amountTo = amount;
-        this.amountFrom = this.ratio && amount ? amount * this.ratio : '';
+        this.amountTokenB = amount;
+        this.amountTokenA = this.ratio && amount ? amount * this.ratio : '';
       }
-      this.saveAmountSelection(amount, isFrom);
+      this.saveAmountSelection(amount, isLastInputTokenA);
     },
     async approve() {
       try {
         this.approving = true;
-        const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
+        const aePair = getAePair(this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB);
         if (!aePair || aePair.isTokenFrom) {
-          this.createAndRefreshAllowance(this.from, this.amountFrom);
+          this.createAndRefreshAllowance(this.tokenA, this.amountTokenA);
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
@@ -262,21 +266,21 @@ export default {
     },
     async swapProcess() {
       let result = null;
-      const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
+      const aePair = getAePair(this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB);
       // if none of the selected tokens are WAE
       if (!aePair) {
-        if (this.isLastAmountFrom) {
+        if (this.isLastInputTokenA) {
           result = await this.callSwapAction('swapExactTokensForTokens');
         } else {
           result = await this.callSwapAction('swapTokensForExactTokens');
         }
       } else if (aePair.isTokenFrom) {
-        if (this.isLastAmountFrom) {
+        if (this.isLastInputTokenA) {
           result = await this.callSwapAction('swapExactTokensForAe');
         } else {
           result = await this.callSwapAction('swapTokensForExactAe');
         }
-      } else if (this.isLastAmountFrom) {
+      } else if (this.isLastInputTokenA) {
         result = await this.callSwapAction('swapExactAeForTokens');
       } else {
         result = await this.callSwapAction('swapAeForExactTokens');
@@ -288,10 +292,10 @@ export default {
     },
     async swapAeVsWaeProcess() {
       let result = null;
-      if (this.from.is_ae) {
-        result = await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountFromExpanded);
+      if (this.tokenA.is_ae) {
+        result = await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountTokenAExpanded);
       } else {
-        result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountFromExpanded);
+        result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountTokenAExpanded);
       }
 
       await this.reset();
@@ -300,17 +304,17 @@ export default {
     },
     async reset() {
       await this.setPairInfo();
-      await this.refreshAllowance(this.from?.contract_id, this.fetchAllowance);
-      this.amountFrom = '';
-      this.amountTo = '';
-      this.isLastAmountFrom = true;
+      await this.refreshAllowance(this.tokenA?.contract_id, this.fetchAllowance);
+      this.amountTokenA = '';
+      this.amountTokenB = '';
+      this.isLastInputTokenA = true;
       this.$store.commit('navigation/setSwap', null);
     },
     async callSwapAction(action) {
       const result = await this.$store.dispatch(`aeternity/${action}`, {
-        amountIn: this.amountFromExpanded,
-        amountOut: this.amountToExpanded,
-        path: [this.from.contract_id, this.to.contract_id],
+        amountIn: this.amountTokenAExpanded,
+        amountOut: this.amountTokenBExpanded,
+        path: [this.tokenA.contract_id, this.tokenB.contract_id],
       });
       return result;
     },
@@ -319,24 +323,24 @@ export default {
         const priceImpact = this.isAeVsWae
           ? 0
           : await this.$store.dispatch('aeternity/getPriceImpact', {
-            tokenA: this.from.contract_id,
-            tokenB: this.to.contract_id,
-            amountA: expandDecimals(this.amountFrom, this.from.decimals),
+            tokenA: this.tokenA.contract_id,
+            tokenB: this.tokenB.contract_id,
+            amountA: expandDecimals(this.amountTokenA, this.tokenA.decimals),
           });
         await this.$store.dispatch('modals/open', {
           name: 'confirm-swap',
-          from: this.from,
-          to: this.to,
-          amountFrom: this.amountFrom,
-          amountTo: this.amountTo,
+          from: this.tokenA,
+          to: this.tokenB,
+          amountFrom: this.amountTokenA,
+          amountTo: this.amountTokenB,
           ratio: this.ratio,
           priceImpact,
-          isLastAmountFrom: this.isLastAmountFrom,
+          isLastAmountFrom: this.isLastInputTokenA,
           isAeVsWae: this.isAeVsWae,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `Swapping ${this.amountFrom} ${this.from.symbol} for ${this.amountTo} ${this.to.symbol}`,
+          submitMessage: `Swapping ${this.amountTokenA} ${this.tokenA.symbol} for ${this.amountTokenB} ${this.tokenB.symbol}`,
           work: this.isAeVsWae ? this.swapAeVsWaeProcess : this.swapProcess,
         });
       } catch (e) {
