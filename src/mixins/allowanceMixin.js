@@ -1,5 +1,5 @@
 import { mapState } from 'vuex';
-import { handleUnknownError, addSlippage, expandDecimals } from './utils';
+import { handleUnknownError, addSlippage, expandDecimals } from '../lib/utils';
 
 export default {
   computed: {

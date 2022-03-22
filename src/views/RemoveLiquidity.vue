@@ -199,7 +199,7 @@ import {
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import PlusIcon from '../assets/plus.svg?vue-component';
-import approvalMixin from '../lib/allowance-mixin';
+import approvalMixin from '../mixins/allowanceMixin';
 
 export default {
   components: {

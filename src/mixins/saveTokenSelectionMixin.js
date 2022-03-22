@@ -1,6 +1,6 @@
 import { getTokenList } from '../lib/utils';
 
-const saveTokenSelection = {
+export default {
   mounted() {
     this.restoreCurrentSelection();
   },
@@ -63,5 +63,3 @@ const saveTokenSelection = {
     },
   },
 };
-
-export default saveTokenSelection;

@@ -103,12 +103,12 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import { reduceDecimals, expandDecimals, getAePair } from '../lib/utils';
-import saveTokenSelection from '../mixins/saveTokenSelection';
+import saveTokenSelectionMixin from '../mixins/saveTokenSelectionMixin';
 import setTokenPairInfoMixin from '../mixins/setTokenPairInfoMixin';
 import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
 import PlusIcon from '../assets/plus.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import approvalMixin from '../lib/allowance-mixin';
+import approvalMixin from '../mixins/allowanceMixin';
 
 export default {
   components: {
@@ -119,7 +119,7 @@ export default {
     PlusIcon,
     AnimatedSpinner,
   },
-  mixins: [saveTokenSelection, approvalMixin, setTokenPairInfoMixin],
+  mixins: [saveTokenSelectionMixin, approvalMixin, setTokenPairInfoMixin],
   data: () => ({
     tokenB: null,
     tokenA: null,
