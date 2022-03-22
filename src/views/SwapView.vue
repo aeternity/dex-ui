@@ -77,14 +77,12 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import {
-  expandDecimals, reduceDecimals, calculateSelectedToken, getAePair,
-  handleUnknownError,
-} from '../lib/utils';
+import { expandDecimals, reduceDecimals, getAePair } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import saveTokenSelection from '../mixins/saveTokenSelection';
+import setTokenPairInfoMixin from '../mixins/setTokenPairInfoMixin';
 import approvalMixin from '../lib/allowance-mixin';
 
 export default {
@@ -98,7 +96,7 @@ export default {
     QuestionCircle,
     AnimatedSpinner,
   },
-  mixins: [approvalMixin, saveTokenSelection],
+  mixins: [approvalMixin, saveTokenSelection, setTokenPairInfoMixin],
   data: () => ({
     tokenB: null,
     tokenA: null,
@@ -114,11 +112,7 @@ export default {
   }),
   computed: {
     ...mapState(['connectingToWallet']),
-    ...mapState('aeternity', ['slippage']),
-    ...mapState({
-      factory: (state) => state.aeternity.factory?.deployInfo.address,
-      fetchingPairInfo: (state) => state.aeternity.fetchingPairInfo,
-    }),
+    ...mapState('aeternity', ['slippage', 'fetchingPairInfo']),
     isAeVsWae() {
       return this.tokenA?.contract_id === this.WAE && this.tokenB?.contract_id === this.WAE;
     },
@@ -178,72 +172,8 @@ export default {
         await this.refreshAllowance(this.tokenA.contract_id, this.fetchAllowance);
       }
     },
-    async factory(newVal) {
-      // we have factory , we can pull data
-      if (newVal && this.tokenB && this.tokenA) {
-        await this.setPairInfo();
-        if (this.amountTokenA || this.amountTokenB) {
-          this.setAmount(
-            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
-          );
-        }
-      }
-    },
   },
   methods: {
-    async setSelectedToken(token, isTokenA) {
-      let swapped;
-      [this.tokenA, this.tokenB, swapped] = calculateSelectedToken(
-        token, this.tokenA, this.tokenB, isTokenA,
-      );
-      if (swapped) {
-        const swap = this.amountTokenA;
-        this.amountTokenA = this.amountTokenB;
-        this.amountTokenB = swap;
-        this.isLastInputTokenA = !this.isLastInputTokenA;
-
-        const swapReserve = this.reserveTokenA;
-        this.reserveTokenA = this.reserveTokenB;
-        this.reserveTokenB = swapReserve;
-      }
-      if (this.tokenA && !this.tokenA.is_ae && (isTokenA || swapped)) {
-        await this.fetchAllowanceIfNone(this.tokenA.contract_id, this.fetchAllowance);
-      }
-
-      this.saveTokenSelection(this.tokenA, this.tokenB);
-
-      if (!swapped) {
-        await this.setPairInfo();
-      }
-      this.setAmount(
-        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
-      );
-    },
-    async setPairInfo() {
-      try {
-        [
-          this.totalSupply,
-          this.reserveTokenA,
-          this.reserveTokenB,
-        ] = await this.$store.dispatch('aeternity/getPairInfo', {
-          tokenA: this.tokenA,
-          tokenB: this.tokenB,
-        });
-      } catch (e) {
-        handleUnknownError(e);
-      }
-    },
-    setAmount(amount, isLastInputTokenA) {
-      this.isLastInputTokenA = isLastInputTokenA;
-      if (isLastInputTokenA) {
-        this.amountTokenA = amount;
-        this.amountTokenB = this.ratio && amount ? amount / this.ratio : '';
-      } else {
-        this.amountTokenB = amount;
-        this.amountTokenA = this.ratio && amount ? amount * this.ratio : '';
-      }
-      this.saveAmountSelection(amount, isLastInputTokenA);
-    },
     async approve() {
       try {
         this.approving = true;
