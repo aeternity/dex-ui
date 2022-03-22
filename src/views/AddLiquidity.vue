@@ -110,8 +110,6 @@ import PlusIcon from '../assets/plus.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import approvalMixin from '../lib/allowance-mixin';
 
-const WAE = process.env.VUE_APP_WAE_ADDRESS;
-
 export default {
   components: {
     Tip,
@@ -193,12 +191,10 @@ export default {
         .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
     },
     enoughBalanceTokenA() {
-      return (this.tokenA && this.tokenA.contract_id === WAE)
-        || (this.balanceTokenA && this.balanceTokenA.isGreaterThanOrEqualTo(this.amountTokenA));
+      return this.balanceTokenA?.isGreaterThanOrEqualTo(this.amountTokenA);
     },
     enoughBalanceTokenB() {
-      return (this.tokenB && this.tokenB.contract_id === WAE)
-       || (this.balanceTokenB && this.balanceTokenB.isGreaterThanOrEqualTo(this.amountTokenB));
+      return this.balanceTokenB?.isGreaterThanOrEqualTo(this.amountTokenB);
     },
     isDisabled() {
       return this.address && (!this.tokenB || !this.tokenA || +this.amountTokenA <= 0
