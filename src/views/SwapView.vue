@@ -111,7 +111,7 @@ export default {
     WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
-    ...mapState(['connectingToWallet']),
+    ...mapState(['address', 'connectingToWallet']),
     ...mapState('aeternity', ['slippage', 'fetchingPairInfo']),
     isAeVsWae() {
       return this.tokenA?.contract_id === this.WAE && this.tokenB?.contract_id === this.WAE;
