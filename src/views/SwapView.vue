@@ -176,7 +176,7 @@ export default {
   watch: {
     async address(newVal) {
       if (newVal && this.from) {
-        await this.refreshAllowance(this.from.contract_id, this.fetchAlowance);
+        await this.refreshAllowance(this.from.contract_id, this.fetchAllowance);
       }
     },
     async factory(newVal) {
@@ -192,11 +192,6 @@ export default {
     },
   },
   methods: {
-    fetchAlowance(tokenId) {
-      return this.$store.dispatch('aeternity/getRouterTokenAllowance', {
-        token: tokenId,
-      });
-    },
     async setSelectedToken(token, isFrom) {
       let swapped;
       [this.from, this.to, swapped] = calculateSelectedToken(token, this.from, this.to, isFrom);
@@ -211,7 +206,7 @@ export default {
         this.reserveTo = swapReserve;
       }
       if (this.from && !this.from.is_ae && (isFrom || swapped)) {
-        await this.fetchAllowanceIfNone(this.from.contract_id, this.fetchAlowance);
+        await this.fetchAllowanceIfNone(this.from.contract_id, this.fetchAllowance);
       }
 
       this.saveTokenSelection(this.from, this.to);
@@ -253,14 +248,7 @@ export default {
         this.approving = true;
         const aePair = getAePair(this.from, this.to, this.amountFrom, this.amountTo);
         if (!aePair || aePair.isTokenFrom) {
-          await this.$store.dispatch('aeternity/createTokenAllowance', {
-            token: this.from.contract_id,
-            amount: expandDecimals(this.amountFrom, this.from.decimals),
-          });
-
-          await this.safeRefreshAllowance(
-            this.from.contract_id, this.amountFrom, this.from.decimals, this.fetchAlowance,
-          );
+          this.createAndRefreshAllowance(this.from, this.amountFrom);
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
@@ -315,7 +303,7 @@ export default {
     },
     async reset() {
       await this.setPairInfo();
-      await this.refreshAllowance(this.from?.contract_id, this.fetchAlowance);
+      await this.refreshAllowance(this.from?.contract_id, this.fetchAllowance);
       this.amountFrom = '';
       this.amountTo = '';
       this.isLastAmountFrom = true;

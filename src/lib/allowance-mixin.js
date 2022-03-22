@@ -32,6 +32,22 @@ export default {
       );
     },
 
+    fetchAllowance(tokenId) {
+      return this.$store.dispatch('aeternity/getRouterTokenAllowance', { token: tokenId });
+    },
+
+    async createAndRefreshAllowance(token, amount) {
+      await this.$store.dispatch('aeternity/createTokenAllowance', {
+        token: token.contract_id,
+        amount: expandDecimals(amount, token.decimals),
+      });
+      if (token && !token.is_ae) {
+        this.safeRefreshAllowance(
+          token.contract_id, amount, token.decimals, this.fetchAllowance,
+        );
+      }
+    },
+
     /**
      * @description refresh the allowance
      * NOTE: Pair tokens can be used as well. see remove-liquidity view
