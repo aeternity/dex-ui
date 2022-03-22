@@ -59,8 +59,8 @@
 
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="connectingToWallet || isDisabled || approving || fetchingPairInfo
-        || !enoughAllowance"
+      :disabled="address && (connectingToWallet || isDisabled || approving || fetchingPairInfo
+        || !enoughAllowance)"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"

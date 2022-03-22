@@ -85,7 +85,7 @@
     </ButtonDefault>
     <ButtonDefault
       :fill="address ? 'blue' : 'transparent-blue'"
-      :disabled="isDisabled || inProgress || !enoughAllowance || fetchingPairInfo"
+      :disabled="address && (isDisabled || inProgress || !enoughAllowance || fetchingPairInfo)"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -197,8 +197,8 @@ export default {
       return this.balanceTokenB?.isGreaterThanOrEqualTo(this.amountTokenB);
     },
     isDisabled() {
-      return this.address && (!this.tokenB || !this.tokenA || +this.amountTokenA <= 0
-          || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA);
+      return !this.tokenB || !this.tokenA || +this.amountTokenA <= 0
+        || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA;
     },
     approveButtonMessage() {
       if (this.approving) return 'Approving...';
