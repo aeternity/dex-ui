@@ -148,9 +148,6 @@ export default {
       if (this.isAeVsWae || this.from.is_ae) return true;
       return this.enoughTokenAllowance(this.from.contract_id, this.amountFrom, this.from.decimals);
     },
-    amountFromWithSlippage() {
-      return this.amountWithSlippage(this.amountFrom, this.from.decimals);
-    },
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
       if (this.factory && this.to && this.from
