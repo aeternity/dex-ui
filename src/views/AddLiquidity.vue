@@ -136,7 +136,7 @@ export default {
     WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
-    ...mapState(['connectingToWallet']),
+    ...mapState(['address', 'connectingToWallet']),
     ...mapState('aeternity', ['slippage', 'fetchingPairInfo']),
     inProgress() {
       return this.approving || this.supplying || this.connectingToWallet;
