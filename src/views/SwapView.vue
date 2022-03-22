@@ -81,9 +81,9 @@ import { expandDecimals, reduceDecimals, getAePair } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import saveTokenSelection from '../mixins/saveTokenSelection';
+import saveTokenSelectionMixin from '../mixins/saveTokenSelectionMixin';
 import setTokenPairInfoMixin from '../mixins/setTokenPairInfoMixin';
-import approvalMixin from '../lib/allowance-mixin';
+import approvalMixin from '../mixins/allowanceMixin';
 
 export default {
   components: {
@@ -96,7 +96,7 @@ export default {
     QuestionCircle,
     AnimatedSpinner,
   },
-  mixins: [approvalMixin, saveTokenSelection, setTokenPairInfoMixin],
+  mixins: [approvalMixin, saveTokenSelectionMixin, setTokenPairInfoMixin],
   data: () => ({
     tokenB: null,
     tokenA: null,
