@@ -253,11 +253,6 @@ export default {
     },
   },
   methods: {
-    fetchAllowance(tokenId) {
-      return this.$store.dispatch('aeternity/getRouterTokenAllowance', {
-        token: tokenId,
-      });
-    },
     async setSelectedToken(token, isTokenA) {
       let swapped;
       [this.tokenA, this.tokenB, swapped] = calculateSelectedToken(
@@ -321,35 +316,17 @@ export default {
       }
       this.saveAmountSelection(amount, isLastInputTokenA);
     },
-    async createAllowance(token, amount) {
-      await this.$store.dispatch('aeternity/createTokenAllowance', {
-        token: token.contract_id,
-        amount: expandDecimals(amount, token.decimals),
-      });
-    },
     async approve() {
       try {
         this.approving = true;
         const aePair = getAePair(
           this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
         );
-        const safeRefresh = (token, amount) => {
-          if (!token || token.is_ae) return null;
-          return this.safeRefreshAllowance(
-            token.contract_id, amount, token.decimals, this.fetchAllowance,
-          );
-        };
         if (!aePair) {
-          await this.createAllowance(this.tokenA, this.amountTokenA);
-          await safeRefresh(this.tokenA, this.amountTokenA);
-          await this.createAllowance(this.tokenB, this.amountTokenB);
-          await safeRefresh(this.tokenB, this.amountTokenB);
+          await this.createAndRefreshAllowance(this.tokenA, this.amountTokenA);
+          await this.createAndRefreshAllowance(this.tokenB, this.amountTokenB);
         } else {
-          await this.createAllowance(aePair.token, aePair.tokenAmount);
-          await safeRefresh(
-            aePair.isTokenFrom ? this.tokenA : this.tokenB,
-            aePair.tokenAmount,
-          );
+          await this.createAndRefreshAllowance(aePair.token, aePair.tokenAmount);
         }
       } catch (e) {
         await this.$store.dispatch('showUnknownError', e);
