@@ -13,7 +13,8 @@
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
-      :include-wae="false"
+      exclude-wae
+      :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balanceTokenA = $event"
@@ -22,7 +23,8 @@
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
-      :include-wae="false"
+      exclude-wae
+      :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
       @update:balance="balanceTokenB = $event"
@@ -136,7 +138,6 @@ export default {
     reserveTokenB: null,
     approving: false,
     supplying: false,
-
   }),
   computed: {
     ...mapState(['connectingToWallet']),

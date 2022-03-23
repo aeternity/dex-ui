@@ -16,7 +16,12 @@
       <ButtonPlain
         v-for="token in filteredResults"
         :key="token.contract_id"
+        :disabled="chosenTokens && (chosenTokens[0]?.contract_id === token.contract_id
+          && chosenTokens[0]?.symbol === token.symbol)"
         class="toke-list-item"
+        :class="{ selected: chosenTokens && !!chosenTokens.find(
+          (t) => token.symbol === t?.symbol && token.contract_id === t?.contract_id,
+        )}"
         @click="resolve(token)"
       >
         <img :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`">
@@ -50,8 +55,8 @@ export default {
   },
   props: {
     resolve: { type: Function, required: true },
-    close: { type: Function, default: null },
-    includeWae: { type: Boolean, default: true },
+    excludeWae: { type: Boolean },
+    chosenTokens: { type: Array, default: null },
   },
   data: () => ({
     tokenList: [],
@@ -68,7 +73,7 @@ export default {
             || token.symbol.toLowerCase().includes(searchTerm)
             || token.name.toLowerCase().includes(searchTerm)
             || token.contract_id.toLowerCase().includes(searchTerm)
-          ) && (token.symbol !== 'WAE' || this.includeWae),
+          ) && (token.symbol !== 'WAE' || !this.excludeWae),
         );
     },
   },
@@ -124,6 +129,14 @@ export default {
       display: flex;
       align-items: center;
       padding: 4px 20px;
+
+      &.selected {
+        opacity: 0.5;
+      }
+
+      &:disabled {
+        pointer-events: none;
+      }
 
       &:hover {
         background-color: variables.$color-black;

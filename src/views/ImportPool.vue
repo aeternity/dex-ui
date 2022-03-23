@@ -8,7 +8,8 @@
       <ButtonToken
         fill="transparent"
         :token="tokenA"
-        :include-wae="false"
+        exclude-wae
+        :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
         arrow
         @update:token="setSelectedToken($event, true)"
       />
@@ -16,7 +17,8 @@
       <ButtonToken
         fill="transparent"
         :token="tokenB"
-        :include-wae="false"
+        exclude-wae
+        :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
         arrow
         @update:token="setSelectedToken($event, false)"
       />
