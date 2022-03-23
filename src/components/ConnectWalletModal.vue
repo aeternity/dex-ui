@@ -62,7 +62,6 @@ export default {
   props: {
     resolve: { type: Function, required: true },
     close: { type: Function, default: null },
-    includeWae: { type: Boolean, default: true },
   },
   data() {
     return {
