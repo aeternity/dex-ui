@@ -30,12 +30,11 @@ export default {
   props: {
     token: { type: Object, default: null },
     arrow: { type: Boolean },
-    includeWae: { type: Boolean, default: true },
   },
   emits: ['update:token'],
   methods: {
     async selectToken() {
-      const token = await this.$store.dispatch('modals/open', { name: 'select-token', includeWae: this.includeWae });
+      const token = await this.$store.dispatch('modals/open', { name: 'select-token', ...this.$attrs });
       if (token) this.$emit('update:token', token);
     },
   },
