@@ -55,6 +55,7 @@ export default {
   },
   props: {
     resolve: { type: Function, required: true },
+    aeVsWae: { type: Boolean },
     excludeWae: { type: Boolean },
     chosenTokens: { type: Array, default: null },
   },
@@ -73,7 +74,15 @@ export default {
             || token.symbol.toLowerCase().includes(searchTerm)
             || token.name.toLowerCase().includes(searchTerm)
             || token.contract_id.toLowerCase().includes(searchTerm)
-          ) && (token.symbol !== 'WAE' || !this.excludeWae),
+          ) && ((!(
+            (this.chosenTokens
+              && this.chosenTokens.find((t) => t?.symbol === 'AE' && t.contract_id === this.WAE)
+              && token.symbol === 'WAE' && token.contract_id === this.WAE)
+            || (this.chosenTokens
+                && this.chosenTokens.find((t) => t?.symbol === 'WAE' && t.contract_id === this.WAE)
+                && token.symbol === 'AE' && token.contract_id === this.WAE)
+          ) || !this.aeVsWae)
+          && (token.symbol !== 'WAE' || !this.excludeWae)),
         );
     },
   },
