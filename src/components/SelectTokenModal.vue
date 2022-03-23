@@ -15,7 +15,7 @@
     <div class="token-list">
       <ButtonPlain
         v-for="token in filteredResults"
-        :key="token.contract_id"
+        :key="`${token.contract_id}|${token.symbol}`"
         :disabled="chosenTokens && (chosenTokens[0]?.contract_id === token.contract_id
           && chosenTokens[0]?.symbol === token.symbol)"
         class="toke-list-item"
