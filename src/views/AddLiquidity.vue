@@ -13,7 +13,7 @@
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
-      exclude-wae
+      :ae-vs-wae="tokenA?.contract_id === WAE || tokenB?.contract_id === WAE"
       :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
@@ -23,7 +23,7 @@
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
-      exclude-wae
+      :ae-vs-wae="tokenA?.contract_id === WAE || tokenB?.contract_id === WAE"
       :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
@@ -138,6 +138,7 @@ export default {
     reserveTokenB: null,
     approving: false,
     supplying: false,
+    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['connectingToWallet']),
