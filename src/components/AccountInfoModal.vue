@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import ClipboardCopy from './ClipboardCopy.vue';
 import ExternalLinkIcon from '../assets/external-link.svg?vue-component';
@@ -60,7 +60,12 @@ export default {
     ...mapState(['address', 'walletName']),
     ...mapGetters(['activeNetwork']),
   },
-  methods: mapActions(['disconnectWallet']),
+  methods: {
+    disconnectWallet() {
+      this.$store.dispatch('disconnectWallet');
+      this.resolve();
+    },
+  },
 };
 </script>
 
