@@ -92,7 +92,7 @@ export default {
   methods: {
     async setSelectedToken(token, isFrom) {
       [this.tokenA, this.tokenB] = calculateSelectedToken(token, this.tokenA, this.tokenB, isFrom);
-      if (this.tokenA && this.tokenB) {
+      if (this.address && this.tokenA && this.tokenB) {
         // to refresh liquidity list
         try {
           this.importing = true;
