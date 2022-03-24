@@ -42,7 +42,7 @@ export default (store) => {
   });
 
   store.watch(
-    ({ route }) => route,
+    ({ route }) => (route && route.name),
     () => store.state.modals.opened
       .filter(({ name, allowRedirect }) => !modals[name].allowRedirect && !allowRedirect)
       .filter(({ name, props: { resolve } }) => {
