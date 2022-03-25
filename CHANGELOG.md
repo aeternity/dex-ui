@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.3.1](https://www.github.com/aeternity/dex-ui/compare/v1.3.0...v1.3.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* modal should close on route change [#267](https://www.github.com/aeternity/dex-ui/issues/267) ([21f78ef](https://www.github.com/aeternity/dex-ui/commit/21f78ef8666f47d4090181ae7299a1ec7d7773e7))
+* show to the user if there is no pair ([3152a8a](https://www.github.com/aeternity/dex-ui/commit/3152a8ad04d1b487359dc824a4de1c1366dc124f))
+
 ## [1.3.0](https://www.github.com/aeternity/dex-ui/compare/v1.2.0...v1.3.0) (2022-03-21)
 
 
