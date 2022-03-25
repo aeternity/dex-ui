@@ -15,6 +15,7 @@ import navigation from './modules/navigation';
 import tokensModule from './modules/tokens';
 import modals from './plugins/modals';
 import pendingTransactionHandler from './plugins/pendingTransactionHandler';
+import connectionStatusTracker from './plugins/connectionStatusTracker';
 
 export default createStore({
   state: {
@@ -22,6 +23,7 @@ export default createStore({
     wallet: null,
     address: null,
     sdk: null,
+    onLine: true,
     balance: 0,
     useIframeWallet: false,
     useSdkWallet: false,
@@ -62,6 +64,9 @@ export default createStore({
     },
     setSdk(state, sdk) {
       state.sdk = sdk;
+    },
+    setOnLine(state, onLine) {
+      state.onLine = onLine;
     },
     resetState(state) {
       state.useIframeWallet = false;
@@ -341,5 +346,6 @@ export default createStore({
     }),
     modals,
     pendingTransactionHandler,
+    connectionStatusTracker,
   ],
 });
