@@ -70,19 +70,19 @@ export const getTokenList = () => [
     image: require('../assets/ae.svg'),
   },
   {
-    contract_id: 'ct_NH6qfe8Gu5QdX7fdmdyD5iQ5yHC64FE4ELsMUok4VWDuqBkct',
+    contract_id: 'ct_22SSvaGGtkK9qpEQkm3gdFN9eFHco5HEbnL1PgWG4A6QWHrRDi',
     decimals: 18,
     name: 'First',
     symbol: 'FST',
   },
   {
-    contract_id: 'ct_2Th7msdjUumYbcnjCkSTr7frXssQAcif39o1SzP7KvdaijAhaE',
+    contract_id: 'ct_2VcDvqexxPCbkjg7kB4LQb5aLVwN73VQFfp7K6hRTtB3psoaG9',
     decimals: 18,
     name: 'Second',
     symbol: 'SND',
   },
   {
-    contract_id: 'ct_FgayKuf3U9sAKJa3dVtbxfRLCXh5nznab6ULDqQxfgfmszjRo',
+    contract_id: 'ct_2fc9hkS4cctqhdhuzJmEWySzGBzKQwQsvJ3yzHHwR9iWNa3JZR',
     decimals: 18,
     name: 'Third',
     symbol: 'AE Partner',
