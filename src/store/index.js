@@ -164,11 +164,10 @@ export default createStore({
         await dispatch('modals/open', {
           name: 'show-error',
           message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
-          resolve: async () => {
-            dispatch('modals/close');
-          },
+          resolve: null,
         });
       } else {
+        commit('modals/closeByKey', 'show-error');
         sdk.selectNode(nodeToSelect.name);
         commit('setNetwork', newNetworkId);
       }
