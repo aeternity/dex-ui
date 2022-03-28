@@ -7,7 +7,7 @@
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
-      :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
+      :chosen-tokens="[tokenA, tokenB]"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balance = $event"
@@ -21,7 +21,7 @@
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
-      :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
+      :chosen-tokens="[tokenB, tokenA]"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
     />

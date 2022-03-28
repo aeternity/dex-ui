@@ -9,7 +9,7 @@
         fill="transparent"
         :token="tokenA"
         exclude-wae
-        :chosen-tokens="(tokenB || tokenA) && [tokenA, tokenB]"
+        :chosen-tokens="[tokenA, tokenB]"
         arrow
         @update:token="setSelectedToken($event, true)"
       />
@@ -18,7 +18,7 @@
         fill="transparent"
         :token="tokenB"
         exclude-wae
-        :chosen-tokens="(tokenB || tokenA) && [tokenB, tokenA]"
+        :chosen-tokens="[tokenB, tokenA]"
         arrow
         @update:token="setSelectedToken($event, false)"
       />
