@@ -16,10 +16,10 @@
       <ButtonPlain
         v-for="token in filteredResults"
         :key="`${token.contract_id}|${token.symbol}`"
-        :disabled="chosenTokens && (chosenTokens[0]?.contract_id === token.contract_id
+        :disabled="chosenTokens?.[0] && (chosenTokens[0]?.contract_id === token.contract_id
           && chosenTokens[0]?.symbol === token.symbol)"
         class="toke-list-item"
-        :class="{ selected: chosenTokens && !!chosenTokens.find(
+        :class="{ selected: (chosenTokens?.[0] || chosenTokens?.[1]) && !!chosenTokens.find(
           (t) => token.symbol === t?.symbol && token.contract_id === t?.contract_id,
         )}"
         @click="resolve(token)"
@@ -75,10 +75,10 @@ export default {
             || token.name.toLowerCase().includes(searchTerm)
             || token.contract_id.toLowerCase().includes(searchTerm)
           ) && ((!(
-            (this.chosenTokens
+            (this.chosenTokens?.[0] && this.chosenTokens?.[1]
               && this.chosenTokens.find((t) => t?.symbol === 'AE' && t.contract_id === this.WAE)
               && token.symbol === 'WAE' && token.contract_id === this.WAE)
-            || (this.chosenTokens
+            || (this.chosenTokens?.[0] && this.chosenTokens?.[1]
                 && this.chosenTokens.find((t) => t?.symbol === 'WAE' && t.contract_id === this.WAE)
                 && token.symbol === 'AE' && token.contract_id === this.WAE)
           ) || !this.aeVsWae)
