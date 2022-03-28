@@ -99,14 +99,13 @@ export default {
     watch(() => balanceRef.value, (newVal) => {
       if (storeState.value.networkId === storeState.value.sdk.selectedNode.networkId) {
         balance.value = newVal;
+        emit('update:balance', newVal);
       } else {
         balance.value = new BigNumber(0);
+        emit('update:balance', new BigNumber(0));
       }
     });
 
-    watch(() => balance.value, (newVal) => {
-      emit('update:balance', newVal);
-    });
     return {
       balance,
     };

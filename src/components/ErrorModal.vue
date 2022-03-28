@@ -10,6 +10,7 @@
     </div>
     <ButtonDefault
       fill="transparent-blue"
+      :disabled="!resolve"
       @click="resolve"
     >
       Dismiss
@@ -31,7 +32,7 @@ export default {
   },
   props: {
     message: { type: String, required: true },
-    resolve: { type: Function, required: true },
+    resolve: { type: Function, default: null },
   },
 };
 </script>

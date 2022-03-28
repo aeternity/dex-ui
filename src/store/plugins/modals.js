@@ -33,10 +33,14 @@ export default (store) => {
         modalCounter += 1;
         return new Promise(
           (resolve, reject) => commit('open', {
-            name, key, allowRedirect, props: { ...props, resolve, reject },
+            name, key, allowRedirect, props: { resolve, reject, ...props },
           }),
         )
-          .finally(() => commit('closeByKey', key));
+          .finally(() => {
+            if (!props.resolve) {
+              commit('closeByKey', key);
+            }
+          });
       },
     },
   });
