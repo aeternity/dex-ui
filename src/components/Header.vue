@@ -60,6 +60,30 @@
             Settings
             <Cog />
           </div>
+          <a
+            href="https://discord.com/invite/55f8F2jZq4"
+            target="_blank"
+          >
+            Discord
+          </a>
+          <a
+            href="https://github.com/aeternity/dex-contracts-v2/"
+            target="_blank"
+          >
+            Contracts
+          </a>
+          <a
+            href="https://github.com/aeternity/dex-ui/"
+            target="_blank"
+          >
+            Source
+          </a>
+          <a
+            href="https://github.com/aeternity/dex-ui/issues"
+            target="_blank"
+          >
+            Report a bug
+          </a>
         </div>
 
         <div v-if="activeMenu === 'settings'">
