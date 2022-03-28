@@ -106,6 +106,7 @@ export default createStore({
       commit('setConnectingToWallet', false);
     },
     async scanForWallets({ commit, dispatch, state: { sdk } }) {
+      if (sdk.rpcClient) return null;
       const scannerConnection = await BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
       });
