@@ -30,7 +30,7 @@
       </div>
       <div v-if="!isAeVsWae">
         <span>Liquidity Provider Fee</span>
-        <span>{{ `${(amountFrom*0.03).toFixed(8)} ${from.symbol}` }}</span>
+        <span>{{ `${(amountFrom * 0.003).toFixed(8)} ${from.symbol}` }}</span>
       </div>
       <div v-if="!isAeVsWae">
         <span>Price Impact</span>
