@@ -12,7 +12,7 @@
     "lint": "npm run lint:script && npm run lint:style"
   },
   "dependencies": {
-    "@aeternity/aepp-sdk": "^10.0.0",
+    "@aeternity/aepp-sdk": "^11.0.1",
     "@fontsource/ibm-plex-sans": "^4.5.1",
     "@popperjs/core": "^2.10.2",
     "@sentry/tracing": "^6.18.0",
