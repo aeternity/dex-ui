@@ -32,7 +32,7 @@
         <div v-if="imported">
           <LiquidityDetails
             :pool-id="poolId"
-            :pool-info="providedLiquidity[poolId]"
+            :pool-info="providedLiquidity[address][poolId]"
             :pool-info-importing="poolInfoImporting"
           />
         </div>
