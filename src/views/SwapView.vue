@@ -241,12 +241,11 @@ export default {
       this.$store.commit('navigation/setSwap', null);
     },
     async callSwapAction(action) {
-      const result = await this.$store.dispatch(`aeternity/${action}`, {
+      return this.$store.dispatch(`aeternity/${action}`, {
         amountIn: this.amountTokenAExpanded,
         amountOut: this.amountTokenBExpanded,
         path: [this.tokenA.contract_id, this.tokenB.contract_id],
       });
-      return result;
     },
     async swap() {
       try {
