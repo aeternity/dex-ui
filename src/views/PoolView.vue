@@ -51,9 +51,11 @@ export default {
   computed: {
     ...mapState({
       address: 'address',
-      liquidity: (state) => Object.keys(state.aeternity.providedLiquidity).map((key) => ({
+      liquidity: (state) => Object.keys(
+        state.aeternity.providedLiquidity[state.address] || {},
+      ).map((key) => ({
         id: key,
-        payload: state.aeternity.providedLiquidity[key],
+        payload: state.aeternity.providedLiquidity[state.address][key],
       })).filter((x) => x.payload),
     }),
   },

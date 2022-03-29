@@ -108,21 +108,25 @@ export default {
     addPair(state, { tokenA, tokenB, instance }) {
       state.pairs[getPairId(tokenA, tokenB)] = instance;
     },
-    eraseProvidedLiquidity(state) {
-      state.providedLiquidity = {};
+    eraseProvidedLiquidity(state, { address }) {
+      state.providedLiquidity[address] = {};
     },
     updateProvidedLiquidity(state, {
       tokenA, tokenB,
       tokenASymbol, tokenBSymbol,
       tokenADecimals, tokenBDecimals,
       balance,
+      address,
     }) {
       const [token0, token1] = sortTokens(
         { cid: tokenA, symbol: tokenASymbol, decimals: tokenADecimals },
         { cid: tokenB, symbol: tokenBSymbol, decimals: tokenBDecimals },
         (x) => x.cid,
       );
-      state.providedLiquidity[getPairId(tokenA, tokenB)] = balance ? {
+      if (!state.providedLiquidity[address]) {
+        state.providedLiquidity[address] = {};
+      }
+      state.providedLiquidity[address][getPairId(tokenA, tokenB)] = balance ? {
         token0, token1, balanceStr: balance.toString(),
       } : undefined;
     },
@@ -219,8 +223,11 @@ export default {
     */
     resetProvidedLiquidity({
       commit,
+      rootState: { address },
     }) {
-      commit('eraseProvidedLiquidity');
+      if (address) {
+        commit('eraseProvidedLiquidity', { address });
+      }
     },
     /**
      * @description retrieve the liquidity share from a pool
@@ -233,7 +240,7 @@ export default {
     async pullAccountLiquidity({
       dispatch,
       commit,
-      rootState: { address: owner },
+      rootState: { address },
     }, {
       tokenA, tokenB,
       tokenASymbol, tokenBSymbol,
@@ -241,7 +248,7 @@ export default {
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
 
-      const { decodedResult: balance } = await pair.methods.balance(owner);
+      const { decodedResult: balance } = await pair.methods.balance(address);
       commit('updateProvidedLiquidity', {
         tokenA,
         tokenB,
@@ -250,6 +257,7 @@ export default {
         tokenBSymbol,
         tokenADecimals,
         tokenBDecimals,
+        address,
       });
       return balance;
     },
