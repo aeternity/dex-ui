@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://www.github.com/aeternity/dex-ui/compare/v1.3.0...v1.4.0) (2022-03-30)
+
+
+### Features
+
+* add WAE to the AddLiquidity view ([ce44b15](https://www.github.com/aeternity/dex-ui/commit/ce44b15ece064e039eacc809d239a5c159738a18))
+* **select-token-modals:** add ability to see selected tokens ([aa9f4f3](https://www.github.com/aeternity/dex-ui/commit/aa9f4f3dd4c4f7dbb1f9929191589408d592d1e4))
+
+
+### Bug Fixes
+
+* **confirm-swap-modal:** set correct provider fee ([8b18127](https://www.github.com/aeternity/dex-ui/commit/8b18127b8d5e59f901bb3fac2688f6759b519d33))
+* liquidity is not stored based on owner's address ([b76844d](https://www.github.com/aeternity/dex-ui/commit/b76844d733673e9889ba9055a5b51d2a8d0e6d8b))
+* modal should close on route change [#267](https://www.github.com/aeternity/dex-ui/issues/267) ([21f78ef](https://www.github.com/aeternity/dex-ui/commit/21f78ef8666f47d4090181ae7299a1ec7d7773e7))
+* prevent error modal from close when resolve is null ([c701ba9](https://www.github.com/aeternity/dex-ui/commit/c701ba9b9ea22515f017be055dbabbe819af07d1))
+* **select-token-modal:** set a uniq key ([9c7b808](https://www.github.com/aeternity/dex-ui/commit/9c7b808ba39d5e953a91d51d5e8b6cd3e2cb2852))
+* show to the user if there is no pair ([3152a8a](https://www.github.com/aeternity/dex-ui/commit/3152a8ad04d1b487359dc824a4de1c1366dc124f))
+* show unsupported networks error on network change ([fbbbf80](https://www.github.com/aeternity/dex-ui/commit/fbbbf80b391448297b6a417da7e92268f41f108b))
+
 ## [1.3.0](https://www.github.com/aeternity/dex-ui/compare/v1.2.0...v1.3.0) (2022-03-21)
 
 
