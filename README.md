@@ -5,9 +5,16 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads for development on mainnet
+
 ```
 npm run serve
+```
+
+or on testnet
+
+```
+npm run serve:testnet
 ```
 
 ### Compiles and minifies for production

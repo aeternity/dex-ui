@@ -63,9 +63,10 @@ export default createStore({
   },
   actions: {
     async initUniversal({ commit }) {
+      debugger;
       const instance = await Universal({
         nodes: [
-          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
+          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_NODE_URL }) },
         ],
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
@@ -74,7 +75,7 @@ export default createStore({
     async initSdk({ commit, dispatch, state }) {
       const options = {
         nodes: [
-          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
+          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_NODE_URL }) },
         ],
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       };

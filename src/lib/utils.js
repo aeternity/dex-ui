@@ -70,19 +70,19 @@ export const getTokenList = () => [
     image: require('../assets/ae.svg'),
   },
   {
-    contract_id: 'ct_22SSvaGGtkK9qpEQkm3gdFN9eFHco5HEbnL1PgWG4A6QWHrRDi',
+    contract_id: process.env.VUE_APP_DEBUG_TOKEN_FST_ADDRESS,
     decimals: 18,
     name: 'First',
     symbol: 'FST',
   },
   {
-    contract_id: 'ct_2VcDvqexxPCbkjg7kB4LQb5aLVwN73VQFfp7K6hRTtB3psoaG9',
+    contract_id: process.env.VUE_APP_DEBUG_TOKEN_SND_ADDRESS,
     decimals: 18,
     name: 'Second',
     symbol: 'SND',
   },
   {
-    contract_id: 'ct_2fc9hkS4cctqhdhuzJmEWySzGBzKQwQsvJ3yzHHwR9iWNa3JZR',
+    contract_id: process.env.VUE_APP_DEBUG_TOKEN_AE_PARTNER_ADDRESS,
     decimals: 18,
     name: 'Third',
     symbol: 'AE Partner',
