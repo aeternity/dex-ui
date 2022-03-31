@@ -14,6 +14,7 @@ import aeternityModule from './modules/aeternity';
 import navigation from './modules/navigation';
 import tokensModule from './modules/tokens';
 import modals from './plugins/modals';
+import pendingTransactionHandler from './plugins/pendingTransactionHandler';
 
 export default createStore({
   state: {
@@ -25,6 +26,7 @@ export default createStore({
     useIframeWallet: false,
     useSdkWallet: false,
     networkId: process.env.VUE_APP_DEFAULT_NETWORK,
+    transactions: [],
   },
   getters: {
     networks() {
@@ -69,6 +71,13 @@ export default createStore({
     },
     setNetwork(state, networkId) {
       state.networkId = networkId;
+    },
+    addTransaction(state, transaction) {
+      state.transactions.push(transaction);
+    },
+    removePendingTransactionByHash(state, hash) {
+      state.transactions[state.transactions.indexOf(state.transactions
+        .find((t) => t.hash === hash))].pending = false;
     },
   },
   actions: {
@@ -275,6 +284,7 @@ export default createStore({
     createPersistedState({
       reducer: ({
         address,
+        transactions,
         useIframeWallet,
         networkId,
         wallet,
@@ -282,6 +292,7 @@ export default createStore({
         tokens: { userTokens, providers },
       }) => ({
         address,
+        transactions,
         useIframeWallet,
         networkId,
         wallet,
@@ -290,5 +301,6 @@ export default createStore({
       }),
     }),
     modals,
+    pendingTransactionHandler,
   ],
 });
