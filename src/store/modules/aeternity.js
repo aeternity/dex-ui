@@ -53,17 +53,15 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
     state: { router, wae },
     rootState: { address, useSdkWallet },
   } = context;
-  if (useSdkWallet) {
-    const result = await (isWae ? wae : router).methods[method](...argsMapper(context, args));
-    return result;
-  }
-
   const methodArgs = argsMapper(context, args);
   methodArgs[methodArgs.length - 1] = {
     ...methodArgs[methodArgs.length - 1],
-    onAccount: address,
+    ...(useSdkWallet ? { waitMined: false } : { onAccount: createOnAccountObject(address) }),
   };
-  const result = await router.methods[method].get(...methodArgs);
+  if (useSdkWallet) {
+    return (isWae ? wae : router).methods[method](...methodArgs);
+  }
+  const result = await (isWae ? wae : router).methods[method].get(...methodArgs);
   window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
   return result;
 };
