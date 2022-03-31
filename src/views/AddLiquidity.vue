@@ -264,14 +264,6 @@ export default {
         await this.refreshAllowance(this.tokenB?.contract_id, this.fetchAllowance);
       }
     },
-    async reset() {
-      await this.setPairInfo();
-      this.amountTokenA = null;
-      this.amountTokenB = null;
-      await this.refreshAllowances();
-      this.isLastInputTokenA = true;
-      this.$store.commit('navigation/setPool', null);
-    },
     async supplyProcess() {
       let result;
       const aePair = getAePair(
@@ -314,7 +306,6 @@ export default {
           tokenBDecimals: aePair.wae.decimals,
         });
       }
-      await this.reset();
       return result;
     },
     async supply() {
@@ -339,6 +330,12 @@ export default {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);
       } finally {
+        await this.setPairInfo();
+        this.amountTokenA = null;
+        this.amountTokenB = null;
+        await this.refreshAllowances();
+        this.isLastInputTokenA = true;
+        this.$store.commit('navigation/setPool', null);
         this.supplying = false;
       }
     },

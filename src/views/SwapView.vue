@@ -216,8 +216,6 @@ export default {
         result = await this.callSwapAction('swapAeForExactTokens');
       }
 
-      await this.reset();
-
       return result;
     },
     async swapAeVsWaeProcess() {
@@ -228,17 +226,7 @@ export default {
         result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountTokenAExpanded);
       }
 
-      await this.reset();
-
       return result;
-    },
-    async reset() {
-      await this.setPairInfo();
-      await this.refreshAllowance(this.tokenA?.contract_id, this.fetchAllowance);
-      this.amountTokenA = '';
-      this.amountTokenB = '';
-      this.isLastInputTokenA = true;
-      this.$store.commit('navigation/setSwap', null);
     },
     async callSwapAction(action) {
       return this.$store.dispatch(`aeternity/${action}`, {
@@ -275,6 +263,13 @@ export default {
       } catch (e) {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);
+      } finally {
+        this.amountTokenA = '';
+        this.amountTokenB = '';
+        this.isLastInputTokenA = true;
+        await this.setPairInfo();
+        await this.refreshAllowance(this.tokenA?.contract_id, this.fetchAllowance);
+        this.$store.commit('navigation/setSwap', null);
       }
     },
   },

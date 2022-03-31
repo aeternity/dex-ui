@@ -362,9 +362,6 @@ export default {
             : expandDecimals(this.tokenAInput, this.tokenA.decimals),
         });
       }
-      await this.setPairInfo();
-      await this.refreshAllowance(this.pairId, this.fetchAlowance);
-      this.updatePercent(0);
       return result;
     },
     async handleRemove() {
@@ -389,6 +386,9 @@ export default {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);
       } finally {
+        await this.setPairInfo();
+        await this.refreshAllowance(this.pairId, this.fetchAlowance);
+        this.updatePercent(0);
         this.removing = false;
       }
     },
