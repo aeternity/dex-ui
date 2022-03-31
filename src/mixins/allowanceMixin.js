@@ -38,7 +38,7 @@ export default {
 
     async createAndRefreshAllowance(token, amount) {
       await this.$store.dispatch('aeternity/createTokenAllowance', {
-        token: token.contract_id,
+        token,
         amount: expandDecimals(amount, token.decimals),
       });
       if (token && !token.is_ae) {

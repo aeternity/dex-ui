@@ -30,11 +30,17 @@
       >
         <span><AeBalance :address="address" /> AE</span>
         <div
-          class="address"
+          :class="['address', { pending: pendingTransactions.length }]"
           @click.prevent="openAccountInfo()"
         >
-          <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
-          <img :src="`https://avatars.z52da5wt.xyz/${address}`">
+          <template v-if="pendingTransactions.length">
+            <span>{{ `${pendingTransactions.length} Pending` }}</span>
+            <AnimatedSpinner />
+          </template>
+          <template v-else>
+            <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
+            <img :src="`https://avatars.z52da5wt.xyz/${address}`">
+          </template>
         </div>
       </div>
       <ActionsMenu @click.stop>
@@ -142,7 +148,7 @@ import { mapState, mapGetters } from 'vuex';
 import AeLogo from '../assets/ae.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
 import Cog from '../assets/cog.svg?vue-component';
-
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
@@ -153,6 +159,7 @@ export default {
     AeLogo,
     BackArrow,
     Cog,
+    AnimatedSpinner,
     ActionsMenu,
     NavigationMenu,
     ButtonDefault,
@@ -166,6 +173,11 @@ export default {
   computed: {
     ...mapState(['address', 'useIframeWallet', 'connectingToWallet']),
     ...mapGetters(['activeNetwork']),
+    ...mapState({
+      pendingTransactions({ transactions }) {
+        return transactions.filter((t) => t.pending);
+      },
+    }),
   },
   methods: {
     async connectWallet() {
@@ -264,7 +276,13 @@ export default {
 
         @extend %face-sans-16-regular;
 
-        img {
+        &.pending {
+          background-color: variables.$color-blue;
+          font-weight: 500;
+        }
+
+        img,
+        svg {
           height: 16px;
           width: 16px;
         }

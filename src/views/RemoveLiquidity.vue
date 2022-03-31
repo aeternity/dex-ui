@@ -309,6 +309,10 @@ export default {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
+    generateRemoveLiquidityMessage() {
+      return `Removing around ${this.poolTokenInput.toFixed(5)}
+        ${this.tokenA.symbol}/${this.tokenB.symbol} pool tokens from the provided liquidity`;
+    },
     fetchAlowance() {
       return this.$store.dispatch('aeternity/getRouterPairAllowance', {
         tokenA: this.tokenA.contract_id,
@@ -319,8 +323,8 @@ export default {
       try {
         this.approving = true;
         await this.$store.dispatch('aeternity/createPairAllowance', {
-          tokenA: this.tokenA.contract_id,
-          tokenB: this.tokenB.contract_id,
+          tokenA: this.tokenA,
+          tokenB: this.tokenB,
           amount: expandDecimals(this.poolTokenInput, 18),
         });
         await this.safeRefreshAllowance(this.pairId, this.poolTokenInput, 18, this.fetchAlowance);
@@ -362,6 +366,9 @@ export default {
             : expandDecimals(this.tokenAInput, this.tokenA.decimals),
         });
       }
+      this.$store.commit('addTransaction', {
+        hash: result.hash, info: this.generateRemoveLiquidityMessage(), pending: true,
+      });
       return result;
     },
     async handleRemove() {
@@ -379,7 +386,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `Removing around ${this.poolTokenInput.toFixed(5)} ${this.tokenA.symbol}/${this.tokenB.symbol} pool tokens from the provided liquidity`,
+          submitMessage: this.generateRemoveLiquidityMessage(),
           work: this.removalProcess,
         });
       } catch (e) {
