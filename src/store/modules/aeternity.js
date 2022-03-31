@@ -44,17 +44,17 @@ const extraOpts = {
   omitUnknown: true,
 };
 
-const genRouterMethodAction = (method, argsMapper) => async (
+const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   context,
   args,
 ) => {
   const {
     dispatch,
-    state: { router },
+    state: { router, wae },
     rootState: { address, useSdkWallet },
   } = context;
   if (useSdkWallet) {
-    const result = await router.methods[method](...argsMapper(context, args));
+    const result = await (isWae ? wae : router).methods[method](...argsMapper(context, args));
     return result;
   }
 
@@ -420,7 +420,7 @@ export default {
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for tokenA and tokenB
     */
-    removeLiquidity: genRouterMethodAction(
+    removeLiquidity: genRouterWaeMethodAction(
       'remove_liquidity',
       ({ state, rootState }, {
         tokenA, tokenB, liquidity, amountADesired, amountBDesired,
@@ -443,7 +443,7 @@ export default {
      * @return {Promise<[bigint,bigint]>}
      * amounts removed for token and wae
     */
-    removeLiquidityAe: genRouterMethodAction(
+    removeLiquidityAe: genRouterWaeMethodAction(
       'remove_liquidity_ae',
       ({ state, rootState }, {
         token, liquidity, amountTokenDesired, amountAEDesired,
@@ -641,7 +641,7 @@ export default {
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for tokenA and tokenB and the liquidity
     */
-    addLiquidity: genRouterMethodAction(
+    addLiquidity: genRouterWaeMethodAction(
       'add_liquidity',
       ({ state, rootState }, {
         tokenA, tokenB, amountADesired, amountBDesired, minimumLiquidity,
@@ -665,7 +665,7 @@ export default {
      * @return {Promise<[bigint,bigint,liquidity]>}
      * amounts transfered for token and AE and the liquidity
     */
-    addLiquidityAe: genRouterMethodAction(
+    addLiquidityAe: genRouterWaeMethodAction(
       'add_liquidity_ae',
       ({ state, rootState }, {
         token, amountTokenDesired, amountAeDesired, minimumLiquidity,
@@ -679,33 +679,19 @@ export default {
         }]),
     ),
 
-    async swapExactAeForExactWae({
-      dispatch, state: { wae }, rootState: { useSdkWallet, address },
-    }, amount) {
-      if (useSdkWallet) {
-        return wae.methods.deposit({ amount: amount.toString() });
-      }
-      const onAccount = createOnAccountObject(address);
-      const result = await wae.methods.deposit.get({ amount: amount.toString(), onAccount });
-      window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
-      return result;
-    },
+    swapExactAeForExactWae: genRouterWaeMethodAction(
+      'deposit', (_, amount) => ([{ amount: amount.toString() }]), true,
+    ),
+
     /**
      * @description swaps WAE to AE token bypassing any dex/router entrypoints
      * @param p1 vuex context
      * @param {bigint} p2.amount exact amount WAE to be transformed into AE
     */
-    async swapExactWaeForExactAe({
-      dispatch, state: { wae }, rootState: { useSdkWallet, address },
-    }, amount) {
-      if (useSdkWallet) {
-        return wae.methods.withdraw(amount);
-      }
-      const onAccount = createOnAccountObject(address);
-      const result = await wae.methods.withdraw.get({ amount: amount.toString(), onAccount });
-      window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
-      return result;
-    },
+    swapExactWaeForExactAe: genRouterWaeMethodAction(
+      'withdraw', (_, amount) => ([amount, null]), true,
+    ),
+
     /**
      * @description
      * NOTE: before calling this you should call `path[0].create_allowance`
@@ -715,7 +701,7 @@ export default {
      * @param {bigint} p2.amountOut desired amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    swapExactTokensForTokens: genRouterMethodAction(
+    swapExactTokensForTokens: genRouterWaeMethodAction(
       'swap_exact_tokens_for_tokens',
       ({ state, rootState }, {
         amountIn, amountOut, path,
@@ -732,7 +718,7 @@ export default {
      * @param {bigint} p2.amountIn desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    swapTokensForExactTokens: genRouterMethodAction(
+    swapTokensForExactTokens: genRouterWaeMethodAction(
       'swap_tokens_for_exact_tokens',
       ({ state, rootState }, {
         amountOut, amountIn, path,
@@ -747,7 +733,7 @@ export default {
      * amount out for the token found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    swapExactAeForTokens: genRouterMethodAction(
+    swapExactAeForTokens: genRouterWaeMethodAction(
       'swap_exact_ae_for_tokens',
       ({ state, rootState }, {
         amountIn, amountOut, path,
@@ -765,7 +751,7 @@ export default {
      * @param {bigint} p2.amountIn desired amount in for the token found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    swapTokensForExactAe: genRouterMethodAction(
+    swapTokensForExactAe: genRouterWaeMethodAction(
       'swap_tokens_for_exact_ae',
       ({ state, rootState }, {
         amountOut, amountIn, path,
@@ -782,7 +768,7 @@ export default {
      * @param {bigint} p2.amountOut desired amount out for the AE found at path[n-1]
      * @returns {bigint[]} representing amounts out for every token from the path
     */
-    swapExactTokensForAe: genRouterMethodAction(
+    swapExactTokensForAe: genRouterWaeMethodAction(
       'swap_exact_tokens_for_ae',
       ({ state, rootState }, {
         amountIn, amountOut, path,
@@ -796,7 +782,7 @@ export default {
      * @param {bigint} p2.amountIn desired amount in for the AE found at path[0]
      * @returns {bigint[]} representing amounts in for every token from the path
     */
-    swapAeForExactTokens: genRouterMethodAction(
+    swapAeForExactTokens: genRouterWaeMethodAction(
       'swap_ae_for_exact_tokens',
       ({ state, rootState }, {
         amountIn, amountOut, path,
