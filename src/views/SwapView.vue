@@ -174,6 +174,10 @@ export default {
     },
   },
   methods: {
+    generateSwapMessage() {
+      return `Swapping ${this.isLastInputTokenA ? 'exact' : ''} ${this.amountTokenA}
+        ${this.tokenA.symbol} for ${this.isLastInputTokenA ? '' : 'exact'} ${this.amountTokenB} ${this.tokenB.symbol}`;
+    },
     async approve() {
       try {
         this.approving = true;
@@ -215,6 +219,9 @@ export default {
       } else {
         result = await this.callSwapAction('swapAeForExactTokens');
       }
+      this.$store.commit('addTransaction', {
+        hash: result.hash, info: this.generateSwapMessage(), pending: true,
+      });
 
       return result;
     },
@@ -225,6 +232,7 @@ export default {
       } else {
         result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountTokenAExpanded);
       }
+      this.$store.commit('addTransaction', { hash: result.hash, info: this.generateSwapMessage() });
 
       return result;
     },
@@ -257,7 +265,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `Swapping ${this.amountTokenA} ${this.tokenA.symbol} for ${this.amountTokenB} ${this.tokenB.symbol}`,
+          submitMessage: this.generateSwapMessage(),
           work: this.isAeVsWae ? this.swapAeVsWaeProcess : this.swapProcess,
         });
       } catch (e) {

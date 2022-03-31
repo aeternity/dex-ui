@@ -37,31 +37,63 @@
         </a>
       </div>
     </div>
+    <div class="recent-transactions">
+      <template v-if="transactions.length">
+        <div class="header">
+          <span>Recent Transactions</span>
+          <ButtonPlain @click="removeAllTransactions">
+            (clear all)
+          </ButtonPlain>
+        </div>
+        <a
+          v-for="transaction in transactions.slice().reverse()"
+          :key="transaction.hash"
+          :href="`${activeNetwork.explorerUrl}/transactions/${transaction.hash}`"
+          target="_blank"
+          class="transaction"
+        >
+          <span>{{ transaction.info }}</span>
+          <AnimatedSpinner v-if="transaction.pending" />
+          <Alert v-else-if="transaction.error" />
+          <Check v-else />
+        </a>
+      </template>
+      <span v-else>Your transactions will appear here...</span>
+    </div>
   </ModalDefault>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import ClipboardCopy from './ClipboardCopy.vue';
+import ButtonPlain from './ButtonPlain.vue';
 import ExternalLinkIcon from '../assets/external-link.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
+import Alert from '../assets/alert.svg?vue-component';
+import Check from '../assets/check.svg?vue-component';
 
 export default {
   components: {
     ModalDefault,
     ClipboardCopy,
+    ButtonPlain,
     ExternalLinkIcon,
+    AnimatedSpinner,
+    Alert,
+    Check,
   },
   props: {
     resolve: { type: Function, required: true },
     close: { type: Function, default: null },
   },
   computed: {
-    ...mapState(['address', 'wallet']),
+    ...mapState(['address', 'wallet', 'transactions']),
     ...mapGetters(['activeNetwork']),
   },
   methods: {
-    async disconnectWallet() {
+    ...mapMutations(['removeAllTransactions']),
+    disconnectWallet() {
       this.resolve();
       this.$store.dispatch('disconnectWallet');
     },
@@ -75,8 +107,15 @@ export default {
 
 .account-info-modal {
   :deep(.container) {
+    max-height: 90vh;
+    display: flex;
+    overflow: hidden auto;
+    flex-direction: column;
+
     .body {
-      margin-bottom: 40px;
+      overflow: hidden auto;
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -84,7 +123,7 @@ export default {
 
   .box {
     max-width: 350px;
-    margin: 16px;
+    margin: 0 16px 16px 16px;
     padding: 16px;
     border: 1px solid variables.$color-black;
     border-radius: 12px;
@@ -147,6 +186,58 @@ export default {
           cursor: pointer;
         }
       }
+    }
+  }
+
+  .recent-transactions {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background-color: variables.$color-black;
+    overflow: hidden auto;
+    text-align: left;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      .button-plain {
+        color: variables.$color-blue;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: variables.$color-blue;
+
+      > span {
+        max-width: 350px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      svg {
+        margin-left: 5px;
+        width: 24px;
+        height: 24px;
+        color: variables.$color-green;
+      }
+    }
+
+    > span {
+      text-align: left;
+
+      @extend %face-sans-18-regular;
     }
   }
 }

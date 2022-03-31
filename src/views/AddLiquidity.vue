@@ -231,6 +231,10 @@ export default {
     },
   },
   methods: {
+    generateAddLiquidityMessage() {
+      return `Providing liquidity of ${this.amountTokenA} ${this.tokenA.symbol}
+        and ${this.amountTokenB} ${this.tokenB.symbol}`;
+    },
     async approve() {
       try {
         this.approving = true;
@@ -306,6 +310,9 @@ export default {
           tokenBDecimals: aePair.wae.decimals,
         });
       }
+      this.$store.commit('addTransaction', {
+        hash: result.hash, info: this.generateAddLiquidityMessage(), pending: true,
+      });
       return result;
     },
     async supply() {
@@ -323,7 +330,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `Providing liquidity of ${this.amountTokenA} ${this.tokenA.symbol} and ${this.amountTokenB} ${this.tokenB.symbol}`,
+          submitMessage: this.generateAddLiquidityMessage(),
           work: this.supplyProcess,
         });
       } catch (e) {

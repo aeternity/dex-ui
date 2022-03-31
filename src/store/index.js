@@ -68,6 +68,7 @@ export default createStore({
       state.wallet = null;
       state.address = null;
       state.networkId = process.env.VUE_APP_DEFAULT_NETWORK;
+      state.transactions = [];
     },
     setNetwork(state, networkId) {
       state.networkId = networkId;
@@ -78,6 +79,9 @@ export default createStore({
     removePendingTransactionByHash(state, hash) {
       state.transactions[state.transactions.indexOf(state.transactions
         .find((t) => t.hash === hash))].pending = false;
+    },
+    removeAllTransactions(state) {
+      state.transactions = [];
     },
   },
   actions: {

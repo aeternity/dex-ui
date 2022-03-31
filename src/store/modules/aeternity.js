@@ -546,38 +546,37 @@ export default {
       if (currentAllowance == null) {
         // we don't have any allowance entry, let's create one
         if (useSdkWallet) {
-          await instance.methods.create_allowance(
+          return instance.methods.create_allowance(
             toAccount,
             amountWithSlippage,
           );
-        } else {
-          const onAccount = createOnAccountObject(address);
-          const { tx } = await instance.methods.create_allowance.get(
-            toAccount,
-            amount,
-            { onAccount },
-          );
-          window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
         }
+        const onAccount = createOnAccountObject(address);
+        const { tx } = await instance.methods.create_allowance.get(
+          toAccount,
+          amount,
+          { onAccount },
+        );
+        window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
       } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
         // what we need, let's increase it
         if (useSdkWallet) {
-          await instance.methods.change_allowance(
+          return instance.methods.change_allowance(
             toAccount,
             amountWithSlippage - currentAllowance,
           );
-        } else {
-          const onAccount = createOnAccountObject(address);
-          const { tx } = await instance.methods.change_allowance.get(
-            toAccount,
-            amountWithSlippage - currentAllowance,
-            { onAccount },
-          );
-          window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
         }
+        const onAccount = createOnAccountObject(address);
+        const { tx } = await instance.methods.change_allowance.get(
+          toAccount,
+          amountWithSlippage - currentAllowance,
+          { onAccount },
+        );
+        window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
       }
       // at this point we are good, we have enough allowance
+      return null;
     },
 
     /**
@@ -589,39 +588,52 @@ export default {
     */
     async createTokenAllowance({
       dispatch,
+      commit,
       state: { router },
     }, {
-      token: tokenAddress,
+      token,
       amount,
     }) {
-      await dispatch('createAllowance', {
-        instance: await dispatch('getTokenInstance', tokenAddress),
+      const result = await dispatch('createAllowance', {
+        instance: await dispatch('getTokenInstance', token.contract_id),
         toAccount: getCtAddress(router),
         amount,
       });
+      if (result) {
+        commit('addTransaction',
+          { hash: result.hash, info: `Approve ${token.symbol}`, pending: true },
+          { root: true });
+      }
     },
 
     /**
      * @description create allowance for tokens owned in a Pair
      * @async
      * @param p1 vuex context
-     * @param {string} p2.tokenA tokenA address
-     * @param {string} p2.tokenB tokenA address
+     * @param {string} p2.tokenA tokenA
+     * @param {string} p2.tokenB tokenB
      * @param {bigint} p2.amount
     */
     async createPairAllowance({
       dispatch,
+      commit,
       state: { router },
     }, {
       tokenA,
       tokenB,
       amount,
     }) {
-      await dispatch('createAllowance', {
-        instance: await dispatch('getPairByTokens', { tokenA, tokenB }),
+      const result = await dispatch('createAllowance', {
+        instance: await dispatch('getPairByTokens',
+          { tokenA: tokenA.contract_id, tokenB: tokenB.contract_id }),
         toAccount: getCtAddress(router),
         amount,
       });
+      if (result) {
+        commit('addTransaction',
+          { hash: result.hash, info: `Approve ${tokenA.symbol}/${tokenB.symbol}`, pending: true },
+          { root: true });
+      }
     },
 
     /**
