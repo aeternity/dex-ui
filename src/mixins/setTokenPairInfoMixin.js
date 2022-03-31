@@ -70,10 +70,14 @@ export default {
       this.isLastInputTokenA = isLastInputTokenA;
       if (isLastInputTokenA) {
         this.amountTokenA = amount;
-        this.amountTokenB = this.ratio && amount ? BigNumber(amount).div(this.ratio).toString() : '';
+        if (this.ratio) {
+          this.amountTokenB = amount ? BigNumber(amount).div(this.ratio).toString() : '';
+        }
       } else {
         this.amountTokenB = amount;
-        this.amountTokenA = this.ratio && amount ? BigNumber(amount).times(this.ratio).toString() : '';
+        if (this.ratio) {
+          this.amountTokenA = amount ? BigNumber(amount).times(this.ratio).toString() : '';
+        }
       }
       this.saveAmountSelection(amount, isLastInputTokenA);
     },
