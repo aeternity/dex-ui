@@ -54,7 +54,10 @@
         >
           <span>{{ transaction.info }}</span>
           <AnimatedSpinner v-if="transaction.pending" />
-          <Alert v-else-if="transaction.error" />
+          <Alert
+            v-else-if="transaction.error"
+            class="error"
+          />
           <Check v-else />
         </a>
       </template>
@@ -231,6 +234,10 @@ export default {
         width: 24px;
         height: 24px;
         color: variables.$color-green;
+
+        &.error {
+          color: variables.$color-red;
+        }
       }
     }
 

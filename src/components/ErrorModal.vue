@@ -39,6 +39,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
+
 .error-modal {
   .error-details {
     padding: 20px 30px;
@@ -46,6 +48,7 @@ export default {
 
     svg {
       width: 50px;
+      color: variables.$color-orange;
     }
 
     h4 {

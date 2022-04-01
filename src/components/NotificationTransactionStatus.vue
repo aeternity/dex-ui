@@ -4,7 +4,10 @@
     close
     class="notification-transaction-status"
   >
-    <Alert v-if="error" />
+    <Alert
+      v-if="error"
+      class="error"
+    />
     <Check v-else />
     <div class="info">
       <span>{{ info }}</span>
@@ -49,6 +52,10 @@ export default {
       margin-right: 10px;
       color: variables.$color-green;
       min-width: 32px;
+
+      &.error {
+        color: variables.$color-red;
+      }
     }
   }
 
