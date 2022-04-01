@@ -76,9 +76,11 @@ export default createStore({
     addTransaction(state, transaction) {
       state.transactions.push(transaction);
     },
-    removePendingTransactionByHash(state, hash) {
-      state.transactions[state.transactions.indexOf(state.transactions
-        .find((t) => t.hash === hash))].pending = false;
+    removePendingTransactionByHash(state, { hash, error }) {
+      const index = state.transactions.indexOf(state.transactions
+        .find((t) => t.hash === hash));
+      state.transactions[index].pending = false;
+      if (error) state.transactions[index].error = error;
     },
     removeAllTransactions(state) {
       state.transactions = [];

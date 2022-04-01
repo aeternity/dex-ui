@@ -7,6 +7,7 @@ import ConfirmSwapModal from '../components/ConfirmSwapModal.vue';
 import ConfirmLiquidityModal from '../components/ConfirmLiquidityModal.vue';
 import SubmitTransactionModal from '../components/SubmitTransactionModal.vue';
 import ConnectWalletModal from '../components/ConnectWalletModal.vue';
+import NotificationTransactionStatus from '../components/NotificationTransactionStatus.vue';
 
 export default () => {
   registerModal({ name: 'show-tooltip', component: TooltipModal });
@@ -17,4 +18,5 @@ export default () => {
   registerModal({ name: 'show-error', component: ErrorModal });
   registerModal({ name: 'connect-wallet', component: ConnectWalletModal });
   registerModal({ name: 'account-info', component: AccountInfoModal });
+  registerModal({ name: 'transaction-status', component: NotificationTransactionStatus, allowRedirect: true });
 };

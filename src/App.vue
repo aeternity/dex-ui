@@ -1,12 +1,20 @@
 <template>
   <Header />
+  <div id="notification-container">
+    <Component
+      :is="component"
+      v-for="{ component, key, props } in opened.filter((m) => m.allowRedirect)"
+      :key="key"
+      v-bind="props"
+    />
+  </div>
   <router-view />
   <div class="footer">
     <NavigationMenu />
   </div>
   <Component
     :is="component"
-    v-for="{ component, key, props } in opened"
+    v-for="{ component, key, props } in opened.filter((m) => !m.allowRedirect)"
     :key="key"
     v-bind="props"
   />
@@ -73,6 +81,21 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+#notification-container {
+  position: fixed;
+  top: 10%;
+  right: 1%;
+  z-index: 1;
+
+  @include mixins.phone {
+    position: unset;
+
+    > .notification-default {
+      width: unset;
+    }
+  }
 }
 
 .footer {
