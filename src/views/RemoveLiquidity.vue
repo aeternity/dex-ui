@@ -194,7 +194,6 @@ import {
   handleUnknownError,
   reduceDecimals,
   expandDecimals,
-  getTokenList,
   getAePair,
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
@@ -296,7 +295,9 @@ export default {
   async mounted() {
     const [tokenAContract, tokenBContract] = this.$route.params.id.split('|');
     await this.$watchUntilTruly(() => this.$store.state.aeternity.factory);
-    const tokenList = getTokenList();
+    const tokenList = (
+      this.$store.getters.activeNetwork && this.$store.getters.activeNetwork.tokens)
+      ? this.$store.getters.activeNetwork.tokens : [];
     this.tokenA = tokenList.find((t) => t.contract_id === tokenAContract);
     this.tokenB = tokenList.find((t) => t.contract_id === tokenBContract);
     await this.setPairInfo();

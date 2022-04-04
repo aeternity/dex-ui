@@ -14,7 +14,6 @@ import {
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
-const WAE = process.env.VUE_APP_WAE_ADDRESS;
 export const getPriceImpact = (reserveA, reserveB, amountA) => {
   const k = BigNumber(reserveA).times(reserveB);
   const newReserveA = BigNumber(reserveA).plus(amountA);
@@ -150,14 +149,16 @@ export default {
       await dispatch('initFactory');
       await dispatch('initWae');
     },
-    async initRouter({ commit, rootState: { sdk } }) {
-      const contract = await sdk.getContractInstance(
-        {
-          source: routerInterface,
-          contractAddress: process.env.VUE_APP_ROUTER_ADDRESS,
-        },
-      );
-      commit('setRouterInstance', contract);
+    async initRouter({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
+      if (activeNetwork) {
+        const contract = await sdk.getContractInstance(
+          {
+            source: routerInterface,
+            contractAddress: activeNetwork.routerAddress,
+          },
+        );
+        commit('setRouterInstance', contract);
+      }
     },
     async initFactory({ commit, state: { router }, rootState: { sdk } }) {
       const { decodedResult: factoryAddress } = await router.methods.factory();
@@ -169,14 +170,16 @@ export default {
       );
       commit('setFactoryInstance', contract);
     },
-    async initWae({ commit, rootState: { sdk } }) {
-      const contract = await sdk.getContractInstance(
-        {
-          source: waeInterface,
-          contractAddress: WAE,
-        },
-      );
-      commit('setWaeInstance', contract);
+    async initWae({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
+      if (activeNetwork) {
+        const contract = await sdk.getContractInstance(
+          {
+            source: waeInterface,
+            contractAddress: activeNetwork.waeAddress,
+          },
+        );
+        commit('setWaeInstance', contract);
+      }
     },
 
     /**
@@ -363,13 +366,18 @@ export default {
      * @return {object} returns [totalSupply,reserveA,reserveB] or []
      * when no pair
     */
-    async getPairInfo({ dispatch, commit, state: { factory } }, { tokenA, tokenB }) {
+    async getPairInfo({
+      dispatch, commit, state: { factory }, rootGetters: { activeNetwork },
+    }, { tokenA, tokenB }) {
       try {
-        if (!tokenA || !tokenB || !factory) {
+        if (!tokenA || !tokenB || !factory || !activeNetwork) {
           return [];
         }
 
-        if (tokenA.contract_id === WAE && tokenB.contract_id === WAE) {
+        if (
+          tokenA.contract_id === activeNetwork.waeAddress
+          && tokenB.contract_id === activeNetwork.waeAddress
+        ) {
           return [0, 1, 1];
         }
         commit('setFetchingPairInfo', true);

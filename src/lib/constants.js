@@ -13,20 +13,104 @@ export const MAX_DEADLINE = 1000;
 export const DEFAULT_NETWORKS = [
   {
     url: 'https://testnet.aeternity.io',
-    networkId: 'ae_uat',
     middlewareUrl: 'https://testnet.aeternity.io/mdw',
     explorerUrl: 'https://explorer.testnet.aeternity.io',
     compilerUrl: 'https://latest.compiler.aepps.com',
     backendUrl: 'https://testnet.superhero.aeternity.art',
     name: 'Testnet',
+    networkId: 'ae_uat',
+    networkName: 'testnet',
+    factoryAddress: 'ct_NhbxN8wg8NLkGuzwRNDQhMDKSKBwDAQgxQawK7tkigi2aC7i9',
+    routerAddress: 'ct_MLXQEP12MBn99HL6WDaiTqDbG4bJQ3Q9Bzr57oLfvEkghvpFb',
+    waeAddress: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
+    tokens: [
+      {
+        contract_id: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
+        decimals: MAGNITUDE,
+        name: 'AE',
+        symbol: 'AE',
+        is_ae: true,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+      {
+        contract_id: 'ct_7tTzPfvv3Vx8pCEcuk1kmgtn4sFsYCQDzLi1LvFs8T5PJqgsC',
+        decimals: 18,
+        name: 'First',
+        symbol: 'FST',
+      },
+      {
+        contract_id: 'ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC',
+        decimals: 18,
+        name: 'Second',
+        symbol: 'SND',
+      },
+      {
+        contract_id: 'ct_28w7VyXS6UDNbyWZxZLtxpDKJorfpYyBQM4f9quseFEByUeDpb',
+        decimals: 18,
+        name: 'Third',
+        symbol: 'AE Partner',
+      },
+      {
+        contract_id: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
+        decimals: MAGNITUDE,
+        name: 'WAE',
+        symbol: 'WAE',
+        is_ae: false,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+    ],
   },
   {
     url: 'https://mainnet.aeternity.io',
-    networkId: 'ae_mainnet',
     middlewareUrl: 'https://mainnet.aeternity.io/mdw',
     explorerUrl: 'https://explorer.aeternity.io',
     compilerUrl: 'https://compiler.aepps.com',
     backendUrl: 'https://raendom-backend.z52da5wt.xyz',
     name: 'Mainnet',
+    networkId: 'ae_mainnet',
+    networkName: 'mainnet',
+    factoryAddress: 'ct_2mfj3FoZxnhkSw5RZMcP8BfPoB1QR4QiYGNCdkAvLZ1zfF6paW',
+    routerAddress: 'ct_azbNZ1XrPjXfqBqbAh1ffLNTQ1sbnuUDFvJrXjYz7JQA1saQ3',
+    waeAddress: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+    tokens: [
+      {
+        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        decimals: MAGNITUDE,
+        name: 'AE',
+        symbol: 'AE',
+        is_ae: true,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+      {
+        contract_id: 'ct_2dE7Xd7XCg3cwpKWP18VPDwfhz5Miji9FoKMTZN7TYvGt64Kc',
+        decimals: 18,
+        name: 'First',
+        symbol: 'FST',
+      },
+      {
+        contract_id: 'ct_7ur9ypT3a4tjxxv5iG6zEQDQhysNtCKr6tyc7PkqhtRmEw6yY',
+        decimals: 18,
+        name: 'Second',
+        symbol: 'SND',
+      },
+      {
+        contract_id: 'ct_2VTvzHWiCfk2kg7tBeBoQ2vBC226CRfwWbiemTU7BmnUqS9TtU',
+        decimals: 18,
+        name: 'Third',
+        symbol: 'AE Partner',
+      },
+      {
+        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        decimals: MAGNITUDE,
+        name: 'WAE',
+        symbol: 'WAE',
+        is_ae: false,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+    ],
   },
 ];

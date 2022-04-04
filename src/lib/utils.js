@@ -1,7 +1,6 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexErrorMessages from 'dex-contracts-v2/build/errors';
-import { MAGNITUDE } from './constants';
 
 export const fetchJson = async (...args) => {
   const response = await fetch(...args);
@@ -56,47 +55,6 @@ export const findErrorExplanation = (message, { networkId } = {}) => {
 
 export const isNotFoundError = (error) => error.statusCode === 404;
 
-// TODO: in the end this should be replaced by
-// a tokenlist fetched from the backend
-//
-export const getTokenList = () => [
-  {
-    contract_id: process.env.VUE_APP_WAE_ADDRESS,
-    decimals: MAGNITUDE,
-    name: 'AE',
-    symbol: 'AE',
-    is_ae: true,
-    // eslint-disable-next-line global-require
-    image: require('../assets/ae.svg'),
-  },
-  {
-    contract_id: 'ct_22SSvaGGtkK9qpEQkm3gdFN9eFHco5HEbnL1PgWG4A6QWHrRDi',
-    decimals: 18,
-    name: 'First',
-    symbol: 'FST',
-  },
-  {
-    contract_id: 'ct_2VcDvqexxPCbkjg7kB4LQb5aLVwN73VQFfp7K6hRTtB3psoaG9',
-    decimals: 18,
-    name: 'Second',
-    symbol: 'SND',
-  },
-  {
-    contract_id: 'ct_2fc9hkS4cctqhdhuzJmEWySzGBzKQwQsvJ3yzHHwR9iWNa3JZR',
-    decimals: 18,
-    name: 'Third',
-    symbol: 'AE Partner',
-  },
-  {
-    contract_id: process.env.VUE_APP_WAE_ADDRESS,
-    decimals: MAGNITUDE,
-    name: 'WAE',
-    symbol: 'WAE',
-    is_ae: false,
-    // eslint-disable-next-line global-require
-    image: require('../assets/ae.svg'),
-  },
-];
 export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
   const url = new URL(`${process.env.VUE_APP_WALLET_URL}/${type}`);
   if (callbackUrl) {

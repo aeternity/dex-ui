@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
@@ -108,11 +108,11 @@ export default {
     reserveTokenA: null,
     reserveTokenB: null,
     approving: false,
-    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['address', 'connectingToWallet']),
     ...mapState('aeternity', ['slippage', 'fetchingPairInfo']),
+    ...mapGetters(['WAE']),
     isAeVsWae() {
       return this.tokenA?.contract_id === this.WAE && this.tokenB?.contract_id === this.WAE;
     },
