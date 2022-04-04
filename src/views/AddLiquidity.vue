@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Tip from '@/components/Tip.vue';
 import MainWrapper from '@/components/MainWrapper.vue';
@@ -133,11 +133,11 @@ export default {
     reserveTokenB: null,
     approving: false,
     supplying: false,
-    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['address', 'connectingToWallet']),
     ...mapState('aeternity', ['slippage', 'fetchingPairInfo']),
+    ...mapGetters(['WAE']),
     inProgress() {
       return this.approving || this.supplying || this.connectingToWallet;
     },

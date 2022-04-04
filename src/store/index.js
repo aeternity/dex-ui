@@ -22,7 +22,7 @@ export default createStore({
     balance: 0,
     useIframeWallet: false,
     useSdkWallet: false,
-    networkId: null,
+    networkId: process.env.VUE_APP_DEFAULT_NETWORK,
   },
   getters: {
     networks() {
@@ -32,6 +32,9 @@ export default createStore({
     },
     activeNetwork({ networkId }, { networks }) {
       return networks[networkId];
+    },
+    WAE({ networkId }, { activeNetwork }) {
+      return (networkId && activeNetwork) ? activeNetwork.waeAddress : null;
     },
   },
   mutations: {
@@ -55,27 +58,45 @@ export default createStore({
     },
     resetState(state) {
       state.address = null;
-      state.networkId = null;
+      state.networkId = process.env.VUE_APP_DEFAULT_NETWORK;
     },
     setNetwork(state, networkId) {
       state.networkId = networkId;
     },
   },
   actions: {
-    async initUniversal({ commit }) {
+    async initUniversal({ commit, getters: { networks } }) {
+      const nodes = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const network of Object.values(networks)) {
+        nodes.push({
+          name: network.networkName,
+          // eslint-disable-next-line no-await-in-loop
+          instance: await Node({ url: network.url }),
+        });
+      }
+
       const instance = await Universal({
-        nodes: [
-          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
-        ],
+        nodes,
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
       commit('setSdk', instance);
     },
-    async initSdk({ commit, dispatch, state }) {
+    async initSdk({
+      commit, dispatch, state, getters: { networks },
+    }) {
+      const nodes = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const network of Object.values(networks)) {
+        nodes.push({
+          name: network.networkName,
+          // eslint-disable-next-line no-await-in-loop
+          instance: await Node({ url: network.url }),
+        });
+      }
+
       const options = {
-        nodes: [
-          { name: 'testnet', instance: await Node({ url: process.env.VUE_APP_TESTNET_NODE_URL }) },
-        ],
+        nodes,
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       };
       const instance = await RpcAepp({
@@ -154,11 +175,9 @@ export default createStore({
       commit('setAddress', address);
       return address;
     },
-    async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
+    async selectNetwork({ commit, dispatch, state: { sdk } }, newNetworkId) {
       const nodeToSelect = sdk.getNodesInPool()
         .find((node) => node.nodeNetworkId === newNetworkId);
-
-      if (nodeToSelect && networkId === newNetworkId) return;
 
       if (!nodeToSelect) {
         commit('setNetwork', newNetworkId);
@@ -170,7 +189,8 @@ export default createStore({
       } else {
         commit('modals/closeByKey', 'show-error');
         sdk.selectNode(nodeToSelect.name);
-        commit('setNetwork', newNetworkId);
+        await commit('setNetwork', newNetworkId);
+        await dispatch('aeternity/init');
       }
     },
     sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {

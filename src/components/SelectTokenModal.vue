@@ -41,11 +41,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import ModalDefault from './ModalDefault.vue';
 import InputField from './InputField.vue';
 import ButtonPlain from './ButtonPlain.vue';
-import { getTokenList } from '../lib/utils';
 
 export default {
   components: {
@@ -60,12 +59,14 @@ export default {
     chosenTokens: { type: Array, default: null },
   },
   data: () => ({
-    tokenList: [],
     searchTerm: '',
-    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['networkId']),
+    ...mapGetters(['activeNetwork', 'WAE']),
+    tokenList() {
+      return (this.activeNetwork && this.activeNetwork.tokens) ? this.activeNetwork.tokens : [];
+    },
     filteredResults() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       return this.tokenList
@@ -85,9 +86,6 @@ export default {
           && (token.symbol !== 'WAE' || !this.excludeWae)),
         );
     },
-  },
-  mounted() {
-    this.tokenList = getTokenList();
   },
 };
 </script>

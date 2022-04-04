@@ -1,9 +1,34 @@
-import { getTokenList } from '../lib/utils';
-
 export default {
-  mounted() {
+  async mounted() {
+    await this.$watchUntilTruly(() => this.$store.state.sdk);
+    await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
     this.restoreCurrentSelection();
+
+    this.$store.watch(
+      (state) => state.networkId,
+      (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+          const query = {
+            ...this.$route.query,
+          };
+
+          delete query.from;
+          delete query.to;
+
+          this.$router.replace({
+            query,
+          });
+
+          this.$store.commit('navigation/setPool', null);
+          this.$store.commit('navigation/setSwap', null);
+        }
+      },
+      {
+        deep: true,
+      },
+    );
   },
+
   methods: {
     getTokenIdentifier(token) {
       if (!token) return null;
@@ -42,7 +67,9 @@ export default {
         amount, isFrom,
       } = this.$route.query;
 
-      const tokenList = getTokenList();
+      const tokenList = (
+        this.$store.getters.activeNetwork && this.$store.getters.activeNetwork.tokens)
+        ? this.$store.getters.activeNetwork.tokens : [];
       const getToken = (token) => tokenList.find(
         (_token) => (
           _token.is_ae && _token.symbol === token)
