@@ -3,7 +3,7 @@
     title="Pool"
     class="pool-view"
   >
-    <ButtonDefault :to="{ name: 'add-pool' }">
+    <ButtonDefault :to="{ name: 'add-pool', query: $store.state.navigation.pool }">
       Add liquidity
     </ButtonDefault>
     <div class="title">
@@ -58,9 +58,6 @@ export default {
         payload: state.aeternity.providedLiquidity[state.address][key],
       })).filter((x) => x.payload),
     }),
-  },
-  mounted() {
-    this.$store.commit('navigation/setPool', null);
   },
 };
 </script>
