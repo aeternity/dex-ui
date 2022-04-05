@@ -1,8 +1,8 @@
 <template>
   <ModalDefault
-    close
+    :close="isConfirmed"
     class="submit-transaction-modal"
-    @close="resolve"
+    @close="isConfirmed ? resolve() : null"
   >
     <AnimatedSpinner
       v-if="!isConfirmed"
