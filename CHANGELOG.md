@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.5.1](https://www.github.com/aeternity/dex-ui/compare/v1.5.0...v1.5.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **select-token-modal:** properly remove ae/wae on corresponding flag ([073730b](https://www.github.com/aeternity/dex-ui/commit/073730b145f943ae35f8e0125cddea10560f85d4))
+* **submit-transactiom-modal:** disable closing the modal if not confirmed ([6205377](https://www.github.com/aeternity/dex-ui/commit/62053776385f386f77f09514d5af97a1c95a15dd))
+
 ## [1.5.0](https://www.github.com/aeternity/dex-ui/compare/v1.4.0...v1.5.0) (2022-04-05)
 
 
