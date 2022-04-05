@@ -179,7 +179,7 @@ export default createStore({
       commit('setAddress', address);
       return address;
     },
-    async selectNetwork({ commit, dispatch, state: { sdk } }, newNetworkId) {
+    async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
       const nodeToSelect = sdk.getNodesInPool()
         .find((node) => node.nodeNetworkId === newNetworkId);
 
@@ -191,7 +191,10 @@ export default createStore({
           resolve: null,
         });
       } else {
-        commit('modals/closeByKey', 'show-error');
+        if (networkId !== newNetworkId) {
+          commit('modals/closeByKey', 'show-error');
+        }
+
         sdk.selectNode(nodeToSelect.name);
         await commit('setNetwork', newNetworkId);
         await dispatch('aeternity/init');

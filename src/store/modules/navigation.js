@@ -7,16 +7,24 @@ export default {
   },
   mutations: {
     setPool(state, query) {
-      state.pool = {
-        ...state.pool,
-        ...query,
-      };
+      if (!query) {
+        state.pool = null;
+      } else {
+        state.pool = {
+          ...state.pool,
+          ...query,
+        };
+      }
     },
     setSwap(state, query) {
-      state.swap = {
-        ...state.swap,
-        ...query,
-      };
+      if (!query) {
+        state.swap = null;
+      } else {
+        state.swap = {
+          ...state.swap,
+          ...query,
+        };
+      }
     },
   },
 };
