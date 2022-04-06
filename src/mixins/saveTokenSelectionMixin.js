@@ -1,7 +1,10 @@
 export default {
+  data() {
+    return {
+      restoringTokenSelection: false,
+    };
+  },
   async mounted() {
-    await this.$watchUntilTruly(() => this.$store.state.sdk);
-    await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
     this.restoreCurrentSelection();
 
     this.$store.watch(
@@ -35,10 +38,12 @@ export default {
       return token.is_ae ? token.symbol : token.contract_id;
     },
     saveTokenSelection(_from, _to) {
-      const from = this.getTokenIdentifier(_from);
-      const to = this.getTokenIdentifier(_to);
+      if (!this.restoringTokenSelection) {
+        const from = this.getTokenIdentifier(_from);
+        const to = this.getTokenIdentifier(_to);
 
-      this.saveCurrentSelection({ from, to });
+        this.saveCurrentSelection({ from, to });
+      }
     },
     saveAmountSelection(amount, isFrom) {
       if (amount) {
@@ -61,7 +66,8 @@ export default {
       }
     },
 
-    async restoreCurrentSelection() {
+    restoreCurrentSelection() {
+      this.restoringTokenSelection = true;
       const {
         from, to,
         amount, isFrom,
@@ -77,16 +83,17 @@ export default {
       );
 
       if (from) {
-        await this.setSelectedToken(getToken(from), true);
+        this.setSelectedToken(getToken(from), true);
       }
 
       if (to) {
-        await this.setSelectedToken(getToken(to), false);
+        this.setSelectedToken(getToken(to), false);
       }
 
       if (amount) {
         this.setAmount(amount, isFrom);
       }
+      this.restoringTokenSelection = false;
     },
   },
 };

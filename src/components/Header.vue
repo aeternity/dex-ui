@@ -7,6 +7,13 @@
     </div>
     <NavigationMenu />
     <div class="right">
+      <div
+        v-if="activeNetwork"
+        class="active-network"
+      >
+        <span class="circle" />
+        <span>{{ activeNetwork.name }}</span>
+      </div>
       <ButtonDefault
         v-if="!address"
         :spinner="connectingToWallet"
@@ -131,7 +138,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import AeLogo from '../assets/ae.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
 import Cog from '../assets/cog.svg?vue-component';
@@ -156,7 +163,10 @@ export default {
     activeMenu: 'main',
     UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
   }),
-  computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
+  computed: {
+    ...mapState(['address', 'useIframeWallet', 'connectingToWallet']),
+    ...mapGetters(['activeNetwork']),
+  },
   methods: {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
@@ -208,6 +218,27 @@ export default {
 
   .right {
     justify-content: end;
+
+    .active-network {
+      display: flex;
+      align-items: center;
+      background-color: variables.$color-black3;
+      border: 1px solid variables.$color-black3;
+      border-radius: 12px;
+      margin-right: 10px;
+      padding: 0 15px;
+      color: white;
+
+      @extend %face-sans-16-regular;
+
+      .circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 51%;
+        margin-right: 5px;
+        background-color: variables.$color-green;
+      }
+    }
 
     .account-info {
       display: flex;

@@ -148,6 +148,9 @@ export default {
       await dispatch('initRouter');
       await dispatch('initFactory');
       await dispatch('initWae');
+      console.info('========================');
+      console.info('ae loaded ::');
+      console.info('========================');
     },
     async initRouter({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
       if (activeNetwork) {

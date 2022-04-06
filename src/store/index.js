@@ -111,6 +111,7 @@ export default createStore({
       });
       commit('setSdk', instance);
       commit('setNetwork', state.networkId);
+      dispatch('aeternity/init');
     },
     async connectWallet({ dispatch, commit }) {
       commit('setConnectingToWallet', true);
