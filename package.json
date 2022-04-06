@@ -23,6 +23,7 @@
     "dex-contracts-v2": "github:aeternity/dex-contracts-v2",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "vue": "^3.2.13",
+    "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
     "vuex-persistedstate": "^4.1.0",

@@ -1,14 +1,12 @@
 <template>
   <MainWrapper
-    title="Add Liquidity"
+    :title="$t('addLiquidity.title')"
     back-button
     settings
     class="add-liquidity"
   >
     <Tip
-      :tip="`When you add liquidity, you will receive pool tokens representing your position.
-      These tokens automatically earn fees proportional
-      to your share of the pool, and can be redeemed at any time.`"
+      :tip="$t('liquidityTip')"
     />
     <InputToken
       :value="amountTokenA"
@@ -35,14 +33,14 @@
       class="pool-info"
     >
       <div class="header">
-        Prices and pool share
+        {{ $t('addLiquidity.pricePoolShare') }}
       </div>
       <div
         v-if="fetchingPairInfo"
         class="body fetching-pair-info"
       >
         <AnimatedSpinner />
-        <span>Fetching best price...</span>
+        <span>{{ $t('fetchPrice') }}</span>
       </div>
       <div
         v-else
@@ -71,7 +69,7 @@
             {{ share ? share.toFixed(8) : '0.00000000' }} %
           </span>
           <span class="second">
-            Share of Pool
+            {{ $t('shareOfPool') }}
           </span>
         </div>
       </div>
@@ -201,18 +199,18 @@ export default {
         || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA;
     },
     approveButtonMessage() {
-      if (this.approving) return 'Approving...';
-      if (this.fetchingAllowance) return 'Verifying approval...';
-      if (this.enoughAllowance) return 'Approved';
+      if (this.approving) return `${this.$t('approving')}...`;
+      if (this.fetchingAllowance) return `${this.$t('verifyingApproval')}...`;
+      if (this.enoughAllowance) return this.$t('approved');
       return 'Approve';
     },
     buttonMessage() {
-      if (!this.address) return 'Connect Wallet';
-      if (this.supplying) return 'Supplying...';
-      if (+this.amountTokenA <= 0 || !this.amountTokenB || !this.tokenA || !this.tokenB) return 'Enter amount';
-      if (!this.enoughBalanceTokenA) return `Insufficient ${this.tokenA.symbol} balance`;
-      if (!this.enoughBalanceTokenB) return `Insufficient ${this.tokenB.symbol} balance`;
-      return 'Supply';
+      if (!this.address) return this.$t('connectWallet');
+      if (this.supplying) return `${this.$t('supplying')}...`;
+      if (+this.amountTokenA <= 0 || !this.amountTokenB || !this.tokenA || !this.tokenB) return this.$t('enterAmount');
+      if (!this.enoughBalanceTokenA) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
+      if (!this.enoughBalanceTokenB) return this.$t('insufficientBalance', { msg: this.tokenB.symbol });
+      return this.$t('supply');
     },
     enoughAllowance() {
       if (!this.tokenA || !this.tokenB) return false;

@@ -15,7 +15,7 @@
         fill="transparent-blue"
         @click="connectWallet"
       >
-        <span>Connect Wallet</span>
+        <span>{{ $t('connectWallet') }}</span>
       </ButtonDefault>
       <div
         v-else
@@ -41,7 +41,7 @@
             href="https://aeternity.com/"
             target="_blank"
           >
-            About us
+            {{ $t('nav.aboutUs') }}
             <AeLogo />
           </a>
           <a
@@ -49,7 +49,7 @@
             href="https://aeternity.com/"
             target="_blank"
           >
-            Terms & Condition
+            {{ $t('nav.termsCondition') }}
             <AeLogo />
           </a>
           <div
@@ -57,32 +57,32 @@
             class="link"
             @click.prevent="activeMenu = 'settings'"
           >
-            Settings
+            {{ $t('nav.settings.title') }}
             <Cog />
           </div>
           <a
             href="https://discord.com/invite/55f8F2jZq4"
             target="_blank"
           >
-            Discord
+            {{ $t('nav.discord') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-contracts-v2/"
             target="_blank"
           >
-            Contracts
+            {{ $t('nav.contracts') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/"
             target="_blank"
           >
-            Source
+            {{ $t('nav.source') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/issues"
             target="_blank"
           >
-            Report a bug
+            {{ $t('nav.reportBug') }}
           </a>
         </div>
 
@@ -97,11 +97,11 @@
             class="link"
             @click.prevent="activeMenu = 'languages'"
           >
-            Languages
+            {{ $t('nav.settings.languages') }}
           </div>
 
           <div class="link">
-            Light Theme
+            {{ $t('nav.settings.theme') }}
           </div>
         </div>
 
@@ -113,11 +113,17 @@
             <BackArrow />
           </div>
 
-          <div class="link">
+          <div
+            class="link"
+            @click.prevent="setLocale('en')"
+          >
             English
           </div>
 
-          <div class="link">
+          <div
+            class="link"
+            @click.prevent="setLocale('fr')"
+          >
             French
           </div>
         </div>
@@ -157,12 +163,27 @@ export default {
     UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
   }),
   computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
+  created() {
+    const { availableLocales } = this.$i18n;
+    if (!availableLocales.includes(this.$route.params.lang)) {
+      this.setLocale('en');
+    } else {
+      setTimeout(() => this.setLocale(this.$route.params.lang), 100);
+    }
+  },
   methods: {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
     openAccountInfo() {
       this.$store.dispatch('modals/open', { name: 'account-info' });
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale;
+      this.$router.push({
+        params: { lang: locale },
+        query: { ...this.$route.query },
+      });
     },
   },
 };

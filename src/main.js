@@ -6,6 +6,7 @@ import { BrowserTracing } from '@sentry/tracing';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import i18n from './i18n';
 import registerModals from './router/modals';
 
 const app = createApp(App);
@@ -47,4 +48,19 @@ if (!window.location.host.includes('localhost')) {
   });
 }
 
-app.use(store).use(router).mount('#app');
+// use beforeEach route guard to set the language
+router.beforeEach((to, from, next) => {
+  // use the language from the routing param or default language
+  let language = to.params.lang;
+  const { global } = i18n;
+
+  if (!language || !global.availableLocales.includes(language)) {
+    language = 'en';
+  }
+
+  // set the current language for i18n.
+  i18n.locale = language;
+  next();
+});
+
+app.use(i18n).use(store).use(router).mount('#app');

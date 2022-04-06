@@ -1,6 +1,6 @@
 <template>
   <MainWrapper
-    title="Swap"
+    :title="$t('swap.title')"
     settings
     class="swap-view"
   >
@@ -30,7 +30,7 @@
       class="fetching-pair-info"
     >
       <AnimatedSpinner />
-      <span>Fetching best price...</span>
+      <span>{{ $t('fetchPrice') }}</span>
     </div>
     <div
       v-else-if="tokenB && tokenA && ratio"
@@ -50,8 +50,7 @@
         {{ approveBtnMessage }}
       </div>
       <ButtonTooltip
-        :tooltip="`You must give the DEX smart contracts permission to use your ${tokenA.symbol}.
-          You only have to do this once per token.`"
+        :tooltip="$t('permissionToolTip', { msg: tokenA.symbol })"
       >
         <QuestionCircle />
       </ButtonTooltip>
@@ -120,9 +119,9 @@ export default {
       return this.balance?.isGreaterThanOrEqualTo(this.amountTokenA);
     },
     approveBtnMessage() {
-      if (this.fetchingAllowance) return 'Verifying approval...';
-      if (this.approving) return 'Approving...';
-      return `Allow the DEX Protocol to use your ${this.tokenA.symbol}`;
+      if (this.fetchingAllowance) return `${this.$t('verifyingApproval')}...`;
+      if (this.approving) return `${this.$t('approving')}...`;
+      return `${this.$t('swap.allowDEX')} ${this.tokenA.symbol}`;
     },
     isValidAmount() {
       return !(
@@ -144,12 +143,12 @@ export default {
         this.amountTokenA, this.tokenA.decimals);
     },
     buttonMessage() {
-      if (!this.address) return 'Connect Wallet';
+      if (!this.address) return this.$t('connectWallet');
       if (this.factory && this.tokenB && this.tokenA
-        && !this.fetchingPairInfo && !this.hasPair) return 'No liquidity pool found';
-      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return 'Enter amount';
-      if (!this.enoughBalance) return `Insufficient ${this.tokenA.symbol} balance`;
-      return 'Swap';
+        && !this.fetchingPairInfo && !this.hasPair) return this.$t('NoLiquidityFound');
+      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return this.$t('enterAmount');
+      if (!this.enoughBalance) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
+      return this.$t('swap.title');
     },
     ratio() {
       if (this.isAeVsWae) return 1;
