@@ -33,6 +33,13 @@ export default {
       await this.$store.dispatch('initSdk');
     }
     await this.$watchUntilTruly(() => this.$store.state.sdk);
+
+    try {
+      await this.$store.dispatch('aeternity/init');
+    } catch (error) {
+      // TODO
+    }
+
     if (this.$isMobile) {
       await this.$store.dispatch('addMobileWallet');
     } else if (this.address) {
