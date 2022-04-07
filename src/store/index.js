@@ -20,6 +20,7 @@ import connectionStatusTracker from './plugins/connectionStatusTracker';
 export default createStore({
   state: {
     connectingToWallet: false,
+    isSdkInitializing: false,
     wallet: null,
     address: null,
     sdk: null,
@@ -49,6 +50,9 @@ export default createStore({
   mutations: {
     useSdkWallet(state) {
       state.useSdkWallet = true;
+    },
+    setIsSdkInitializing(state, status) {
+      state.isSdkInitializing = status;
     },
     setConnectingToWallet(state, payload) {
       state.connectingToWallet = payload;

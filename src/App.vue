@@ -18,17 +18,20 @@
     :key="key"
     v-bind="props"
   />
+  <ConnectionStatus />
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex';
 import Header from '@/components/Header.vue';
 import NavigationMenu from '@/components/NavigationMenu.vue';
+import ConnectionStatus from '@/components/ConnectionStatus.vue';
 
 export default {
   components: {
     Header,
     NavigationMenu,
+    ConnectionStatus,
   },
   computed: {
     ...mapGetters('modals', ['opened']),
@@ -46,12 +49,18 @@ export default {
     if (query.address) {
       this.$store.commit('setConnectingToWallet', true);
     }
-
-    if (this.$isMobile) {
-      await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
-      this.$store.dispatch('parseAndSendTransactionFromQuery');
-    } else {
-      await this.$store.dispatch('initSdk');
+    this.$store.commit('setIsSdkInitializing', true);
+    try {
+      if (this.$isMobile) {
+        await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
+        this.$store.dispatch('parseAndSendTransactionFromQuery');
+      } else {
+        await this.$store.dispatch('initSdk');
+      }
+    } catch (e) {
+      this.$store.dispatch('showUnknownError', e);
+    } finally {
+      this.$store.commit('setIsSdkInitializing', false);
     }
 
     await this.$watchUntilTruly(() => this.$store.state.sdk);
@@ -103,7 +112,7 @@ export default {
   position: fixed;
   bottom: 0;
   right: 50%;
-  transform: translate(50%, -50%);
+  transform: translate(50%, -80%);
   margin: 0 auto;
   display: none;
   justify-content: center;
@@ -111,6 +120,12 @@ export default {
   @include mixins.laptop {
     display: flex;
   }
+}
+
+.connection-status {
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 </style>
 
