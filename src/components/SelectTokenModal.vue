@@ -1,14 +1,14 @@
 <template>
   <ModalDefault
     class="select-token-modal"
-    title="Select Token"
+    :title="$t('selectToken')"
     close
     @close="resolve"
   >
     <div class="input-wrapper">
       <InputField
         v-model:value="searchTerm"
-        placeholder="Search name or paste address"
+        :placeholder="$t('searchTokenInput')"
         class="search-bar"
       />
     </div>
@@ -34,7 +34,7 @@
         v-if="searchTerm && !filteredResults.length"
         class="empty"
       >
-        No results found.
+        {{ $t('selectTokenPopup.notFound') }}.
       </div>
     </div>
   </ModalDefault>

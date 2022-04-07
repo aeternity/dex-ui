@@ -10,7 +10,7 @@
         v-if="token"
         :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`"
       >
-      <span>{{ token && token.symbol || 'Select token' }}</span>
+      <span>{{ token && token.symbol || $t('selectToken') }}</span>
     </div>
     <DownChevron
       v-if="arrow"

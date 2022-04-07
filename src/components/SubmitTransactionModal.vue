@@ -20,14 +20,14 @@
         >
           {{ submitMessage }}
         </span>
-        <span class="guide">Confirm this transaction in your wallet</span>
+        <span class="guide">{{ $t('submitTransactPopup.confirmTransact') }}</span>
       </template>
       <template v-else>
         <ButtonDefault
           v-if="hash"
           @click="clickHandler"
         >
-          View on Explorer
+          {{ $t('viewExplorer') }}
         </ButtonDefault>
       </template>
     </div>

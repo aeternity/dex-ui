@@ -1,25 +1,22 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <ModalDefault
     class="connect-wallet-modal"
-    title="Connect a wallet"
+    :title="$t('connectWalletPopup.title')"
     close
     @close="resolve"
   >
     <div
       v-if="UNFINISHED_FEATURES"
       class="box"
-    >
-      By connecting a wallet, you agree to DEX
-      <a href="#">Terms of Service</a>  and acknowledge that you have read and understand
-      the DEX <a href="#">Protocol Disclaimer</a>.
-    </div>
-
+      v-html="$t('connectWalletPopup.disclaimer')"
+    />
     <div
       v-if="connecting"
       class="box loading"
     >
       <AnimatedSpinner />
-      <span>Initializing...</span>
+      <span>{{ $t('connectWalletPopup.initializing') }}...</span>
     </div>
     <template
       v-for="wallet of wallets"
@@ -71,7 +68,7 @@ export default {
         {
           id: 'superhero',
           title: 'Superhero',
-          description: 'Easy-to-use browser extension.',
+          description: `${this.$t('connectWalletPopup.superheroDesc')}`,
           // eslint-disable-next-line global-require
           icon: require('../assets/wallets/superhero.png'),
         },

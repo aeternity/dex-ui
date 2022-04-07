@@ -1,10 +1,10 @@
 <template>
   <nav class="navigation-menu">
     <router-link :to="getSwapPath">
-      Swap
+      {{ $t('nav.swap') }}
     </router-link>
     <router-link :to="getPoolPath">
-      Pool
+      {{ $t('nav.pool') }}
     </router-link>
   </nav>
 </template>
@@ -14,16 +14,16 @@ export default {
     getSwapPath() {
       const query = this.$store.state.navigation.swap;
       if (!query || this.$route.name === 'swap') {
-        return '/swap';
+        return `/${this.$i18n.locale}/swap`;
       }
-      return { path: '/swap', query };
+      return { path: `/${this.$i18n.locale}/swap`, query };
     },
     getPoolPath() {
       const query = this.$store.state.navigation.pool;
       if (!query || this.$route.name === 'add-pool') {
-        return '/pool';
+        return `/${this.$i18n.locale}/pool`;
       }
-      return { path: '/pool/add', query };
+      return { path: `/${this.$i18n.locale}/pool/add`, query };
     },
   },
 };

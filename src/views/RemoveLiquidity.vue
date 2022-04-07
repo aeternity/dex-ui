@@ -1,24 +1,22 @@
 <template>
   <div class="remove-liquidity">
     <MainWrapper
-      title="Remove Liquidity"
+      :title="$t('removeLiquidity.title')"
       back-button
       settings
     >
       <Tip
-        :tip="`When you add liquidity, you will receive pool tokens representing your position.
-      These tokens automatically earn fees proportional
-      to your share of the pool, and can be redeemed at any time.`"
+        :tip="$t('liquidityTip')"
       />
 
       <div class="remove-container">
         <div class="remove-subheader">
-          <div>Remove amount</div>
+          <div>{{ $t('removeLiquidity.removeAmount') }}</div>
           <ButtonPlain
             v-if="UNFINISHED_FEATURES"
             @click="detailed = !detailed"
           >
-            {{ detailed ? 'Simple' : 'Detailed' }}
+            {{ detailed ? $t('removeLiquidity.simple') : $t('removeLiquidity.detailed') }}
           </ButtonPlain>
         </div>
         <div class="percentage">
@@ -52,7 +50,7 @@
               :fill="'transparent-blue'"
               @click="updatePercent(100)"
             >
-              Max
+              {{ $t('max') }}
             </ButtonDefault>
           </div>
         </template>
@@ -121,7 +119,7 @@
           :class="{ loading: connectingToWallet }"
           @click="connectWallet"
         >
-          Connect Wallet
+          {{ $t('connectWallet') }}
         </ButtonDefault>
         <ButtonDefault
           v-if="address"
@@ -162,7 +160,7 @@
           </div>
         </div>
         <div class="space-between">
-          <span>Your pool share</span>
+          <span>{{ $t('poolShare') }}</span>
           <span>{{ (share*100).toFixed(5) }}%</span>
         </div>
         <div class="space-between">
@@ -279,9 +277,9 @@ export default {
       return this.enoughAllowance && !this.approving && !this.removing && this.poolTokenInput.gt(0);
     },
     approveButtonMessage() {
-      if (this.approving) return 'Approving...';
-      if (this.fetchingAllowance) return 'Verifying approval...';
-      if (this.enoughAllowance) return 'Approved';
+      if (this.approving) return `${this.$t('approving')}...`;
+      if (this.fetchingAllowance) return `${this.$t('verifyingApproval')}...`;
+      if (this.enoughAllowance) return this.$t('approved');
       return 'Approve';
     },
   },
@@ -382,7 +380,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `Removing around ${this.poolTokenInput.toFixed(5)} ${this.tokenA.symbol}/${this.tokenB.symbol} pool tokens from the provided liquidity`,
+          submitMessage: `${this.t$('removeLiquidity.removingAround')} ${this.poolTokenInput.toFixed(5)} ${this.tokenA.symbol}/${this.tokenB.symbol} ${this.t$('removeLiquidity.poolTokensLiquidity')}`,
           work: this.removalProcess,
         });
       } catch (e) {
