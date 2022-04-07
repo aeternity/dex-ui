@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.2](https://www.github.com/aeternity/dex-ui/compare/v1.5.1...v1.5.2) (2022-04-07)
+
+
+### Bug Fixes
+
+* init contracts if wallet is not connected ([a661872](https://www.github.com/aeternity/dex-ui/commit/a66187296e2f1fb5a0c663cbb0227d38867d1e00))
+
 ### [1.5.1](https://www.github.com/aeternity/dex-ui/compare/v1.5.0...v1.5.1) (2022-04-05)
 
 
