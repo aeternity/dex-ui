@@ -1,5 +1,57 @@
 # Changelog
 
+### [1.5.2](https://www.github.com/aeternity/dex-ui/compare/v1.5.1...v1.5.2) (2022-04-07)
+
+
+### Bug Fixes
+
+* init contracts if wallet is not connected ([a661872](https://www.github.com/aeternity/dex-ui/commit/a66187296e2f1fb5a0c663cbb0227d38867d1e00))
+
+### [1.5.1](https://www.github.com/aeternity/dex-ui/compare/v1.5.0...v1.5.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **select-token-modal:** properly remove ae/wae on corresponding flag ([073730b](https://www.github.com/aeternity/dex-ui/commit/073730b145f943ae35f8e0125cddea10560f85d4))
+* **submit-transactiom-modal:** disable closing the modal if not confirmed ([6205377](https://www.github.com/aeternity/dex-ui/commit/62053776385f386f77f09514d5af97a1c95a15dd))
+
+## [1.5.0](https://www.github.com/aeternity/dex-ui/compare/v1.4.0...v1.5.0) (2022-04-05)
+
+
+### Features
+
+* added header dropdown options [#275](https://www.github.com/aeternity/dex-ui/issues/275) ([932d7ed](https://www.github.com/aeternity/dex-ui/commit/932d7edea1ba8b3fc2b3f94a5be11ab11811be8d))
+* switch network on runtime [#294](https://www.github.com/aeternity/dex-ui/issues/294) ([fc41e01](https://www.github.com/aeternity/dex-ui/commit/fc41e0133c861e922145f2c938caac98150c92c2))
+
+
+### Bug Fixes
+
+* **account-modal:** close modal after disconnecting ([e6a3387](https://www.github.com/aeternity/dex-ui/commit/e6a3387860498f02dff648cd4fe9c1329879be98))
+* add missing address state ([5d100a0](https://www.github.com/aeternity/dex-ui/commit/5d100a028760577544be1a30031b51bae32629cb))
+* **add-liquidity:** properly check if enough balance ([cfc9b96](https://www.github.com/aeternity/dex-ui/commit/cfc9b96001b1a46878b9ad2e9fb5b061048dcf38))
+* adding liquidity to new pair is broken ([53f9f4d](https://www.github.com/aeternity/dex-ui/commit/53f9f4d3f166a75c70d2e3a1be1079073df91f85))
+* enable connect wallet button ([5925b62](https://www.github.com/aeternity/dex-ui/commit/5925b62ad1598efda5a9cc0426fad3e13fa6bdc5))
+* **import-pool:** avoid pulling liquidity without address ([39ed3f9](https://www.github.com/aeternity/dex-ui/commit/39ed3f9ddb008759cc3c65998ab0cdc01721e2a6))
+* **index:** do not scan for wallets if already connected ([93cee33](https://www.github.com/aeternity/dex-ui/commit/93cee33d16eb71a177071adadef89ff8860f15c5))
+* **set-token-pair-info-mixin:** set amount more precisely ([d05e7c5](https://www.github.com/aeternity/dex-ui/commit/d05e7c5984b219718e630b7dca9e6fd4026a5655))
+* **swap-view:** handle errors from the swap actions correctly ([f1442f2](https://www.github.com/aeternity/dex-ui/commit/f1442f276b8284745d0472203b2367b167d7f200))
+
+
+### Refactorings
+
+* check chosenTokens for null on side of SelecteTokenModal ([8af6c6f](https://www.github.com/aeternity/dex-ui/commit/8af6c6f376219745a73a4f5174b2cc649917da41))
+* **connect-wallet-modal:** remove unused prop ([a1abf76](https://www.github.com/aeternity/dex-ui/commit/a1abf768d7448ee3dad61f0bf3f40e8dfaee43ee))
+* extract more function into allowance mixin ([9a59dea](https://www.github.com/aeternity/dex-ui/commit/9a59deacb40c1d1182a843b83559b15c6864cb21))
+* extract setTokenPairInfoMixin ([37bb972](https://www.github.com/aeternity/dex-ui/commit/37bb972f317b41f5e2256082ab2b5a726dd3184d))
+* **swap-view:** remove unused function ([f8cc4a4](https://www.github.com/aeternity/dex-ui/commit/f8cc4a424427dc0240d32ab466c62db713effe3a))
+* **swap-view:** rename token related variables ([8615c49](https://www.github.com/aeternity/dex-ui/commit/8615c49b3d666e77bfcf906a451449caff3b073a))
+
+
+### Miscellaneous
+
+* latest contract versions on testnet ([86d9242](https://www.github.com/aeternity/dex-ui/commit/86d92421fe77844e6ac451efd90c7d0a1cff9c9e))
+* rearrange mixins ([c22b821](https://www.github.com/aeternity/dex-ui/commit/c22b821390b9f457f61db56d4a6cf2223523c864))
+
 ## [1.4.0](https://www.github.com/aeternity/dex-ui/compare/v1.3.0...v1.4.0) (2022-03-30)
 
 

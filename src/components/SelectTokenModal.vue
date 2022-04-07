@@ -76,10 +76,10 @@ export default {
             || token.name.toLowerCase().includes(searchTerm)
             || token.contract_id.toLowerCase().includes(searchTerm)
           ) && ((!(
-            (this.chosenTokens?.[0] && this.chosenTokens?.[1]
+            ((this.chosenTokens?.[0] || this.chosenTokens?.[1])
               && this.chosenTokens.find((t) => t?.symbol === 'AE' && t.contract_id === this.WAE)
               && token.symbol === 'WAE' && token.contract_id === this.WAE)
-            || (this.chosenTokens?.[0] && this.chosenTokens?.[1]
+            || ((this.chosenTokens?.[0] || this.chosenTokens?.[1])
                 && this.chosenTokens.find((t) => t?.symbol === 'WAE' && t.contract_id === this.WAE)
                 && token.symbol === 'AE' && token.contract_id === this.WAE)
           ) || !this.aeVsWae)
