@@ -1,0 +1,111 @@
+@use '../../styles/variables.scss';
+@use '../../styles/typography.scss';
+
+.token {
+  padding: 4px 20px;
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &.clickable:hover {
+    background-color: variables.$color-black;
+  }
+
+  &.selected {
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    @extend %face-sans-18-regular;
+
+    .symbol {
+      color: white;
+      font-weight: 500;
+    }
+
+    .name {
+      color: variables.$color-gray2;
+      font-size: 12px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    margin-right: -15px;
+
+    .delete {
+      color: white;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+    }
+
+    a {
+      color: variables.$color-blue;
+    }
+  }
+
+  .active-token {
+    color: variables.$color-green;
+
+    @extend %face-sans-14-medium;
+  }
+
+  .import-button {
+    padding: 5px 10px;
+    border-radius: 20px;
+
+    @extend %face-sans-14-medium;
+  }
+
+  img,
+  svg {
+    width: 32px;
+    height: 32px;
+    border-radius: 24px;
+    margin-right: 16px;
+  }
+}
+
+.input-wrapper {
+  margin: 0 20px 16px;
+
+  .search-bar {
+    font-size: 18px;
+    text-align: left;
+    padding: 16px;
+    border-radius: 20px;
+    color: white;
+    border: 1px solid variables.$color-gray;
+    transition: border 100ms ease 0s;
+
+    &:focus {
+      border: 1px solid variables.$color-blue;
+    }
+  }
+}
+
+.empty {
+  padding: 20px 0;
+  color: variables.$color-gray2;
+}

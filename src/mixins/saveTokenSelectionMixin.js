@@ -67,9 +67,14 @@ export default {
         amount, isFrom,
       } = this.$route.query;
 
-      const tokenList = (
-        this.$store.getters.activeNetwork && this.$store.getters.activeNetwork.tokens)
-        ? this.$store.getters.activeNetwork.tokens : [];
+      const tokenList = [];
+      this.$store.state.tokens.providers
+        .filter((provider) => provider.active)
+        .forEach((provider) => {
+          tokenList.push(...provider.tokens);
+        });
+      tokenList.push(...this.$store.state.tokens.userTokens);
+
       const getToken = (token) => tokenList.find(
         (_token) => (
           _token.is_ae && _token.symbol === token)

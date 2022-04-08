@@ -221,6 +221,11 @@ export default {
         contractAddress,
       });
     },
+    async getTokenInstanceMetaInfo({ dispatch }, contractAddress) {
+      const contractInstance = await dispatch('getTokenInstance', contractAddress);
+      const metaInfo = await contractInstance.methods.meta_info();
+      return metaInfo;
+    },
     /**
      * @description reset provided liquidity
     */

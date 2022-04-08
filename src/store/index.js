@@ -11,6 +11,7 @@ import {
 } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import navigation from './modules/navigation';
+import tokensModule from './modules/tokens';
 import modals from './plugins/modals';
 
 export default createStore({
@@ -30,8 +31,11 @@ export default createStore({
         ...DEFAULT_NETWORKS,
       ].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
     },
-    activeNetwork({ networkId }, { networks }) {
-      return networks[networkId];
+    activeNetwork({ sdk }, { networks }) {
+      if (!sdk || !sdk.selectedNode) {
+        return null;
+      }
+      return networks[sdk.selectedNode.networkId];
     },
     WAE({ networkId }, { activeNetwork }) {
       return (networkId && activeNetwork) ? activeNetwork.waeAddress : null;
@@ -81,6 +85,7 @@ export default createStore({
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
       commit('setSdk', instance);
+      commit('tokens/initDefaultTokens');
     },
     async initSdk({
       commit, dispatch, state, getters: { networks },
@@ -111,6 +116,7 @@ export default createStore({
       });
       commit('setSdk', instance);
       commit('setNetwork', state.networkId);
+      commit('tokens/initDefaultTokens');
     },
     async connectWallet({ dispatch, commit }) {
       commit('setConnectingToWallet', true);
@@ -219,16 +225,19 @@ export default createStore({
 
   modules: {
     aeternity: aeternityModule,
+    tokens: tokensModule,
     navigation,
   },
   plugins: [
     createPersistedState({
       reducer: ({
         address, networkId, aeternity: { providedLiquidity, slippage, deadline },
+        tokens: { userTokens },
       }) => ({
         address,
         networkId,
         aeternity: { providedLiquidity, slippage, deadline },
+        tokens: { userTokens },
       }),
     }),
     modals,

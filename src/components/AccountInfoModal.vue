@@ -11,7 +11,7 @@
           Connected with {{ walletName }}
         </div>
         <div
-          class="change-btn"
+          class="change-button"
           @click.prevent="disconnectWallet"
         >
           Disconnect
@@ -137,7 +137,7 @@ export default {
       align-items: center;
       color: variables.$color-gray2;
 
-      .change-btn {
+      .change-button {
         color: #2172e5;
         padding: 5px 10px;
         border: 1px solid variables.$color-black;
