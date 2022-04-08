@@ -36,6 +36,7 @@ export default {
         this.reserveTokenA = this.reserveTokenB;
         this.reserveTokenB = swapReserve;
       }
+      await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
       if (!switched) {
         const tokenA = isTokenA ? this.tokenA : this.tokenB;
         if (tokenA && !tokenA.is_ae) {

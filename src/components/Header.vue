@@ -7,6 +7,13 @@
     </div>
     <NavigationMenu />
     <div class="right">
+      <div
+        v-if="activeNetwork"
+        class="active-network"
+      >
+        <span class="circle" />
+        <span>{{ activeNetwork.name }}</span>
+      </div>
       <ButtonDefault
         v-if="!address"
         :spinner="connectingToWallet"
@@ -131,7 +138,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import AeLogo from '../assets/ae.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
 import Cog from '../assets/cog.svg?vue-component';
@@ -156,7 +163,10 @@ export default {
     activeMenu: 'main',
     UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
   }),
-  computed: mapState(['address', 'useIframeWallet', 'connectingToWallet']),
+  computed: {
+    ...mapState(['address', 'useIframeWallet', 'connectingToWallet']),
+    ...mapGetters(['activeNetwork']),
+  },
   methods: {
     async connectWallet() {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
@@ -202,12 +212,33 @@ export default {
     svg {
       width: 24px;
       height: 24px;
-      fill: white;
+      fill: variables.$color-white;
     }
   }
 
   .right {
     justify-content: end;
+
+    .active-network {
+      display: flex;
+      align-items: center;
+      background-color: variables.$color-black3;
+      border: 1px solid variables.$color-black3;
+      border-radius: 12px;
+      margin-right: 10px;
+      padding: 0 15px;
+      color: variables.$color-white;
+
+      @extend %face-sans-16-regular;
+
+      .circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 51%;
+        margin-right: 5px;
+        background-color: variables.$color-green;
+      }
+    }
 
     .account-info {
       display: flex;
@@ -215,7 +246,7 @@ export default {
       background-color: variables.$color-black2;
       border-radius: 12px;
       margin-right: 10px;
-      color: white;
+      color: variables.$color-white;
 
       span {
         padding: 0 8px 0 12px;
@@ -225,7 +256,7 @@ export default {
       .address {
         display: flex;
         align-items: center;
-        color: white;
+        color: variables.$color-white;
         padding: 12px 10px;
         background-color: variables.$color-black3;
         border-radius: 12px;
@@ -254,7 +285,7 @@ export default {
 
     .actions-menu {
       .more {
-        color: white;
+        color: variables.$color-white;
         padding: 10px 12px;
         cursor: pointer;
         border: 1px solid variables.$color-black3;
@@ -276,7 +307,7 @@ export default {
         padding: 8px;
 
         &:hover {
-          color: white;
+          color: variables.$color-white;
         }
 
         svg {
