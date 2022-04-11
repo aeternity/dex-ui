@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import {
-  Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection, Universal,
+  Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection, Universal, TxBuilder,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
@@ -76,11 +76,13 @@ export default createStore({
     addTransaction(state, transaction) {
       state.transactions.push(transaction);
     },
-    removePendingTransactionByHash(state, { hash, error }) {
-      const index = state.transactions.indexOf(state.transactions
-        .find((t) => t.hash === hash));
-      state.transactions[index].pending = false;
-      if (error) state.transactions[index].error = error;
+    changeTransactionById(state, { hash, index: _index, transaction }) {
+      let index = _index;
+      if (hash) {
+        index = state.transactions.indexOf(state.transactions
+          .find((t) => t.hash === hash));
+      }
+      state.transactions[index] = { ...state.transactions[index], ...transaction };
     },
     removeAllTransactions(state) {
       state.transactions = [];
@@ -236,6 +238,38 @@ export default createStore({
       }
       commit('resetState');
     },
+    async parseAndSendTransactionFromQuery(
+      { commit, dispatch, state: { route, transactions, sdk } },
+    ) {
+      const { transaction } = route.query;
+      if (transactions?.length && transaction) {
+        try {
+          const { tx } = TxBuilder.unpackTx(transaction);
+          const index = transactions.indexOf(transactions
+            .find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx.tx)));
+
+          if (index !== -1 && transactions[index].pending && transactions[index].unfinished) {
+            const { hash } = await sdk.sendTransaction(transaction, { waitMined: false });
+            commit('changeTransactionById', { index, transaction: { unfinished: false, hash } });
+          }
+        } catch (e) {
+          handleUnknownError(e);
+          dispatch('modals/open', {
+            name: 'show-error',
+            message: 'We were unable to send the signed transaction parsed from URL.',
+          });
+        }
+      }
+    },
+    async addMobileWallet({
+      commit,
+      state: { address: currentAddress, route },
+    }) {
+      const { address: newAddress } = route.query;
+      const address = newAddress || currentAddress;
+      commit('setAddress', address);
+      return address;
+    },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
       const nodeToSelect = sdk.getNodesInPool()
         .find((node) => node.nodeNetworkId === newNetworkId);
@@ -257,13 +291,12 @@ export default createStore({
         await dispatch('aeternity/init');
       }
     },
-    sendTxDeepLinkUrl({ state: { networkId, wallet } }, encodedTx) {
+    sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {
       return createDeepLinkUrl({
         type: 'sign-transaction',
         transaction: encodedTx,
         networkId,
-        broadcast: !wallet || wallet.type === 'extention',
-        'x-success': `${window.location.href.split('?')[0]}?transaction-hash={transaction-hash}`,
+        'x-success': `${window.location.href.split('?')[0]}?transaction={transaction}`,
         'x-cancel': `${window.location.href.split('?')[0]}?transaction-status=cancelled`,
       });
     },

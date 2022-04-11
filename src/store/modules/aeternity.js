@@ -46,10 +46,11 @@ const extraOpts = {
 
 const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   context,
-  args,
+  { transactionInfo = null, ...args },
 ) => {
   const {
     dispatch,
+    commit,
     state: { router, wae },
     rootState: { address, useSdkWallet },
   } = context;
@@ -59,9 +60,15 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
     ...(useSdkWallet ? { waitMined: false } : { onAccount: createOnAccountObject(address) }),
   };
   if (useSdkWallet) {
-    return (isWae ? wae : router).methods[method](...methodArgs);
+    const result = await (isWae ? wae : router).methods[method](...methodArgs);
+    commit('addTransaction',
+      { hash: result.hash, info: transactionInfo, pending: true }, { root: true });
+    return result;
   }
   const result = await (isWae ? wae : router).methods[method].get(...methodArgs);
+  commit('addTransaction', {
+    txParams: result.tx.params, info: transactionInfo, pending: true, unfinished: true,
+  }, { root: true });
   window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
   return result;
 };
@@ -529,12 +536,14 @@ export default {
     */
     async createAllowance({
       dispatch,
+      commit,
       state: { slippage },
       rootState: { address, useSdkWallet },
     }, {
       instance,
       toAccount,
       amount,
+      transactionInfo,
     }) {
       // see first if we have any allowance
       const { decodedResult: currentAllowance } = await instance.methods.allowance({
@@ -557,6 +566,9 @@ export default {
           amount,
           { onAccount },
         );
+        commit('addTransaction', {
+          txParams: tx.params, info: transactionInfo, pending: true, unfinished: true,
+        }, { root: true });
         window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
       } else if (currentAllowance < amountWithSlippage) {
         // we have something there but is less then
@@ -573,6 +585,9 @@ export default {
           amountWithSlippage - currentAllowance,
           { onAccount },
         );
+        commit('addTransaction', {
+          txParams: tx.params, info: transactionInfo, pending: true, unfinished: true,
+        }, { root: true });
         window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
       }
       // at this point we are good, we have enough allowance
@@ -598,6 +613,7 @@ export default {
         instance: await dispatch('getTokenInstance', token.contract_id),
         toAccount: getCtAddress(router),
         amount,
+        transactionInfo: `Approve ${token.symbol}`,
       });
       if (result) {
         commit('addTransaction',
@@ -628,6 +644,7 @@ export default {
           { tokenA: tokenA.contract_id, tokenB: tokenB.contract_id }),
         toAccount: getCtAddress(router),
         amount,
+        transactionInfo: `Approve ${tokenA.symbol}/${tokenB.symbol}`,
       });
       if (result) {
         commit('addTransaction',
@@ -690,7 +707,7 @@ export default {
     ),
 
     swapExactAeForExactWae: genRouterWaeMethodAction(
-      'deposit', (_, amount) => ([{ amount: amount.toString() }]), true,
+      'deposit', (_, { amount }) => ([{ amount: amount.toString() }]), true,
     ),
 
     /**
@@ -699,7 +716,7 @@ export default {
      * @param {bigint} p2.amount exact amount WAE to be transformed into AE
     */
     swapExactWaeForExactAe: genRouterWaeMethodAction(
-      'withdraw', (_, amount) => ([amount, null]), true,
+      'withdraw', (_, { amount }) => ([amount, null]), true,
     ),
 
     /**

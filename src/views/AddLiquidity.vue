@@ -231,8 +231,8 @@ export default {
     },
   },
   methods: {
-    generateAddLiquidityMessage() {
-      return `Providing liquidity of ${this.amountTokenA} ${this.tokenA.symbol}
+    generateAddLiquidityMessage(isFinished) {
+      return `Provid${isFinished ? 'e' : 'ing'} liquidity of ${this.amountTokenA} ${this.tokenA.symbol}
         and ${this.amountTokenB} ${this.tokenB.symbol}`;
     },
     async approve() {
@@ -282,6 +282,7 @@ export default {
           amountADesired: expandDecimals(this.amountTokenA, this.tokenA.decimals),
           amountBDesired: expandDecimals(this.amountTokenB, this.tokenB.decimals),
           minimumLiquidity: MINIMUM_LIQUIDITY,
+          transactionInfo: this.generateAddLiquidityMessage(true),
         });
         // to refresh liquidity list
         await this.$store.dispatch('aeternity/pullAccountLiquidity', {
@@ -298,6 +299,7 @@ export default {
           amountTokenDesired: expandDecimals(aePair.tokenAmount, aePair.token.decimals),
           amountAeDesired: expandDecimals(aePair.aeAmount, aePair.wae.decimals),
           minimumLiquidity: MINIMUM_LIQUIDITY,
+          transactionInfo: this.generateAddLiquidityMessage(true),
         });
 
         // to refresh liquidity list
@@ -310,9 +312,6 @@ export default {
           tokenBDecimals: aePair.wae.decimals,
         });
       }
-      this.$store.commit('addTransaction', {
-        hash: result.hash, info: this.generateAddLiquidityMessage(), pending: true,
-      });
       return result;
     },
     async supply() {

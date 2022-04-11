@@ -174,8 +174,8 @@ export default {
     },
   },
   methods: {
-    generateSwapMessage() {
-      return `Swapping ${this.isLastInputTokenA ? 'exact' : ''} ${this.amountTokenA}
+    generateSwapMessage(isFinished) {
+      return `Swap${isFinished ? '' : 'ping'} ${this.isLastInputTokenA ? 'exact' : ''} ${this.amountTokenA}
         ${this.tokenA.symbol} for ${this.isLastInputTokenA ? '' : 'exact'} ${this.amountTokenB} ${this.tokenB.symbol}`;
     },
     async approve() {
@@ -199,48 +199,32 @@ export default {
       }
     },
     async swapProcess() {
-      let result = null;
       const aePair = getAePair(this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB);
       // if none of the selected tokens are WAE
       if (!aePair) {
-        if (this.isLastInputTokenA) {
-          result = await this.callSwapAction('swapExactTokensForTokens');
-        } else {
-          result = await this.callSwapAction('swapTokensForExactTokens');
-        }
-      } else if (aePair.isTokenFrom) {
-        if (this.isLastInputTokenA) {
-          result = await this.callSwapAction('swapExactTokensForAe');
-        } else {
-          result = await this.callSwapAction('swapTokensForExactAe');
-        }
-      } else if (this.isLastInputTokenA) {
-        result = await this.callSwapAction('swapExactAeForTokens');
-      } else {
-        result = await this.callSwapAction('swapAeForExactTokens');
+        return this.callSwapAction(
+          this.isLastInputTokenA ? 'swapExactTokensForTokens' : 'swapTokensForExactTokens',
+        );
       }
-      this.$store.commit('addTransaction', {
-        hash: result.hash, info: this.generateSwapMessage(), pending: true,
-      });
-
-      return result;
+      if (aePair.isTokenFrom) {
+        return this.callSwapAction(this.isLastInputTokenA ? 'swapExactTokensForAe' : 'swapTokensForExactAe');
+      }
+      return this.callSwapAction(this.isLastInputTokenA ? 'swapExactAeForTokens' : 'swapAeForExactTokens');
     },
     async swapAeVsWaeProcess() {
-      let result = null;
-      if (this.tokenA.is_ae) {
-        result = await this.$store.dispatch('aeternity/swapExactAeForExactWae', this.amountTokenAExpanded);
-      } else {
-        result = await this.$store.dispatch('aeternity/swapExactWaeForExactAe', this.amountTokenAExpanded);
-      }
-      this.$store.commit('addTransaction', { hash: result.hash, info: this.generateSwapMessage() });
-
-      return result;
+      return this.$store.dispatch(
+        `aeternity/${this.tokenA.is_ae ? 'swapExactAeForExactWae' : 'swapExactWaeForExactAe'}`, {
+          amount: this.amountTokenAExpanded,
+          transactionInfo: this.generateSwapMessage(true),
+        },
+      );
     },
     async callSwapAction(action) {
       return this.$store.dispatch(`aeternity/${action}`, {
         amountIn: this.amountTokenAExpanded,
         amountOut: this.amountTokenBExpanded,
         path: [this.tokenA.contract_id, this.tokenB.contract_id],
+        transactionInfo: this.generateSwapMessage(true),
       });
     },
     async swap() {

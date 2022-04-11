@@ -175,7 +175,7 @@ export default {
     ...mapGetters(['activeNetwork']),
     ...mapState({
       pendingTransactions({ transactions }) {
-        return transactions.filter((t) => t.pending);
+        return transactions.filter((t) => t.pending && !t.unfinished);
       },
     }),
   },
