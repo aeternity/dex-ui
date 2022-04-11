@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="recent-transactions">
-      <template v-if="transactions.length">
+      <template v-if="filteredTransactions.length">
         <div class="header">
           <span>Recent Transactions</span>
           <ButtonPlain @click="removeAllTransactions">
@@ -46,7 +46,7 @@
           </ButtonPlain>
         </div>
         <a
-          v-for="transaction in transactions.slice().reverse()"
+          v-for="transaction in filteredTransactions"
           :key="transaction.hash"
           :href="`${activeNetwork.explorerUrl}/transactions/${transaction.hash}`"
           target="_blank"
@@ -93,6 +93,9 @@ export default {
   computed: {
     ...mapState(['address', 'wallet', 'transactions']),
     ...mapGetters(['activeNetwork']),
+    filteredTransactions() {
+      return this.transactions.filter((t) => !t.unfinished).reverse();
+    },
   },
   methods: {
     ...mapMutations(['removeAllTransactions']),

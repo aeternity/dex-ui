@@ -49,6 +49,7 @@ export default {
 
     if (this.$isMobile) {
       await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
+      this.$store.dispatch('parseAndSendTransactionFromQuery');
     } else {
       await this.$store.dispatch('initSdk');
     }
