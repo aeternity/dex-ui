@@ -4,37 +4,43 @@
       <div
         v-for="(provider, index) of providers"
         :key="`provider-${index}`"
-        :class="['provider', { active: provider.active }]"
-        @click.prevent="$store.commit('tokens/toggleProvider', provider)"
       >
-        <div class="content">
-          <div class="icon">
-            <QuestionCircleIcon />
-          </div>
-          <div class="info">
-            <div class="title">
-              {{ provider.name }}
+        <div
+          v-if="activeNetwork
+            && provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length"
+          :class="['provider', { active: provider.active }]"
+          @click.prevent="$store.commit('tokens/toggleProvider', provider)"
+        >
+          <div class="content">
+            <div class="icon">
+              <QuestionCircleIcon />
             </div>
-            <div class="total-tokens">
-              {{ provider.tokens.length }} tokens
+            <div class="info">
+              <div class="title">
+                {{ provider.name }}
+              </div>
+              <div class="total-tokens">
+                {{ provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length }}
+                tokens
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="actions">
-          <div class="switch">
-            <div
-              v-if="provider.active"
-              class="text"
-            >
-              ON
-            </div>
-            <div class="circle" />
-            <div
-              v-if="!provider.active"
-              class="text"
-            >
-              OFF
+          <div class="actions">
+            <div class="switch">
+              <div
+                v-if="provider.active"
+                class="text"
+              >
+                ON
+              </div>
+              <div class="circle" />
+              <div
+                v-if="!provider.active"
+                class="text"
+              >
+                OFF
+              </div>
             </div>
           </div>
         </div>
@@ -44,14 +50,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import QuestionCircleIcon from '../../assets/question-circle.svg?vue-component';
 
 export default {
   components: {
     QuestionCircleIcon,
   },
-  computed: mapState('tokens', ['providers']),
+  computed: {
+    ...mapGetters(['activeNetwork']),
+    ...mapState('tokens', ['providers']),
+  },
 };
 </script>
 

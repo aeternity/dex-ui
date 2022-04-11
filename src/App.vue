@@ -27,6 +27,8 @@ export default {
     ...mapState(['address']),
   },
   async mounted() {
+    this.$store.commit('tokens/initDefaultTokens');
+
     if (this.$isMobile) {
       await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
     } else {

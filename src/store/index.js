@@ -85,7 +85,6 @@ export default createStore({
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
       commit('setSdk', instance);
-      commit('tokens/initDefaultTokens');
     },
     async initSdk({
       commit, dispatch, state, getters: { networks },
@@ -116,7 +115,6 @@ export default createStore({
       });
       commit('setSdk', instance);
       commit('setNetwork', state.networkId);
-      commit('tokens/initDefaultTokens');
     },
     async connectWallet({ dispatch, commit }) {
       commit('setConnectingToWallet', true);
@@ -232,12 +230,12 @@ export default createStore({
     createPersistedState({
       reducer: ({
         address, networkId, aeternity: { providedLiquidity, slippage, deadline },
-        tokens: { userTokens },
+        tokens: { userTokens, providers },
       }) => ({
         address,
         networkId,
         aeternity: { providedLiquidity, slippage, deadline },
-        tokens: { userTokens },
+        tokens: { userTokens, providers },
       }),
     }),
     modals,
