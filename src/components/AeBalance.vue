@@ -54,6 +54,7 @@ async function poll() {
             ));
           }
         } catch (e) {
+          state.lastValue = BigNumber(0);
           handleUnknownError(e);
         }
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -97,7 +98,8 @@ export default {
     const balance = ref(0);
 
     watch(() => balanceRef.value, (newVal) => {
-      if (storeState.value.networkId === storeState.value.sdk.selectedNode.networkId) {
+      if (storeState.value.sdk
+        && storeState.value.networkId === storeState.value.sdk.selectedNode.networkId) {
         balance.value = newVal;
         emit('update:balance', newVal);
       } else {
