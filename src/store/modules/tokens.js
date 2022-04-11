@@ -51,6 +51,7 @@ export default {
           active: true,
           tokens,
         },
+        ...state.providers.filter((p) => p.name !== 'DEX'),
       ];
     },
     addProvider(state, provider) {
@@ -62,21 +63,22 @@ export default {
   },
   actions: {
     async fetchAllTokens({
-      state: { providers },
       commit,
       rootGetters: { activeNetwork },
+      state: { providers },
     }) {
-      if (!providers.find((provider) => (provider.name === 'AE MDW' && activeNetwork && provider.networkId === activeNetwork.networkId))) {
+      if (activeNetwork) {
         const tokens = await fetchJson(`${activeNetwork.middlewareUrl}/aex9/by_name`);
         if (Array.isArray(tokens)) {
           commit('addProvider', {
             name: 'AE MDW',
             icon: null,
             active: false,
-            networkId: activeNetwork.networkId,
+            ...providers.find((provider) => provider.name === 'AE MDW'),
             tokens: tokens.map((token) => ({
               ...token,
               provider: 'AE MDW',
+              networkId: activeNetwork.networkId,
             })),
           });
         }
