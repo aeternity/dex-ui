@@ -51,14 +51,12 @@
             About us
             <AeLogo />
           </a>
-          <a
-            v-if="UNFINISHED_FEATURES"
-            href="https://aeternity.com/"
-            target="_blank"
+          <div
+            class="link"
+            @click.prevent="$store.dispatch('modals/open', { name: 'term-and-condition' })"
           >
             Terms & Condition
-            <AeLogo />
-          </a>
+          </div>
           <div
             v-if="UNFINISHED_FEATURES"
             class="link"
