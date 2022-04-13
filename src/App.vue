@@ -24,16 +24,27 @@ export default {
   },
   computed: {
     ...mapGetters('modals', ['opened']),
-    ...mapState(['address']),
+    ...mapState(['wallet', 'address']),
   },
   async mounted() {
     this.$store.commit('tokens/initDefaultTokens');
+
+    const query = {
+      // safari vue-router issue
+      address: (new URLSearchParams(window.location.search)).get('address'),
+      ...this.$route.query,
+    };
+
+    if (query.address) {
+      this.$store.commit('setConnectingToWallet', true);
+    }
 
     if (this.$isMobile) {
       await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
     } else {
       await this.$store.dispatch('initSdk');
     }
+
     await this.$watchUntilTruly(() => this.$store.state.sdk);
 
     try {
@@ -42,10 +53,13 @@ export default {
       // TODO
     }
 
-    if (this.$isMobile) {
-      await this.$store.dispatch('addMobileWallet');
-    } else if (this.address) {
-      await this.$store.dispatch('scanForWallets');
+    if (query.address) {
+      await this.$store.dispatch('connectDefaultWallet', query);
+      delete query.address;
+      delete query.networkId;
+      this.$router.replace({ query });
+    } else if (this.wallet && this.address) {
+      await this.$store.dispatch('connectWallet', this.wallet);
     }
   },
 };

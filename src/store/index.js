@@ -5,6 +5,7 @@ import {
 import createPersistedState from 'vuex-persistedstate';
 import {
   handleUnknownError, findErrorExplanation, createDeepLinkUrl,
+  resolveWithTimeout, isSafariBrowser,
 } from '@/lib/utils';
 import {
   DEFAULT_NETWORKS,
@@ -17,7 +18,7 @@ import modals from './plugins/modals';
 export default createStore({
   state: {
     connectingToWallet: false,
-    walletName: null,
+    wallet: null,
     address: null,
     sdk: null,
     balance: 0,
@@ -54,13 +55,15 @@ export default createStore({
     setAddress(state, address) {
       state.address = address;
     },
-    setWalletName(state, walletName) {
-      state.walletName = walletName;
+    setWallet(state, wallet) {
+      state.wallet = wallet;
     },
     setSdk(state, sdk) {
       state.sdk = sdk;
     },
     resetState(state) {
+      state.useIframeWallet = false;
+      state.wallet = null;
       state.address = null;
       state.networkId = process.env.VUE_APP_DEFAULT_NETWORK;
     },
@@ -116,68 +119,107 @@ export default createStore({
       commit('setSdk', instance);
       commit('setNetwork', state.networkId);
     },
-    async connectWallet({ dispatch, commit }) {
+    async connectWallet({ dispatch, commit, state: { sdk, address } }, wallet = {}) {
       commit('setConnectingToWallet', true);
-      if (window.navigator.userAgent.includes('Mobi')) {
+      commit('setWallet', wallet);
+
+      if (window.navigator.userAgent.includes('Mobi') || isSafariBrowser()) {
+        if (address) {
+          commit('setConnectingToWallet', false);
+          return;
+        }
         const addressDeepLink = createDeepLinkUrl({
           type: 'address',
-          'x-success': `${window.location}?address={address}`,
-          'x-cancel': window.location,
+          'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
+          'x-cancel': window.location.href.split('?')[0],
         });
         window.location = addressDeepLink;
       } else {
-        await dispatch('scanForWallets');
+        try {
+          await resolveWithTimeout(10000, async () => {
+            commit('useSdkWallet');
+            commit('enableIframeWallet');
+
+            const scannerConnection = await BrowserWindowMessageConnection({
+              connectionInfo: { id: 'spy' },
+            });
+            const detector = await WalletDetector({ connection: scannerConnection });
+
+            await new Promise((resolve, rejected) => {
+              detector.scan(async ({ wallets }) => {
+                const detectedWallet = Object.values(wallets).find((w) => w.name === wallet.name);
+                if (!detectedWallet) return;
+
+                try {
+                  await sdk.connectToWallet(await detectedWallet.getConnection());
+                  await sdk.subscribeAddress('subscribe', 'current');
+                } catch (e) {
+                  if (e.message !== 'Operation rejected by user') {
+                    dispatch('showUnknownError', e);
+                    dispatch('disconnectWallet');
+                  }
+                  rejected(e);
+                  return;
+                }
+
+                const currentAccountAddress = sdk.rpcClient.getCurrentAccount();
+                if (!currentAccountAddress) return;
+                detector.stopScan();
+                const { networkId: walletNetworkId } = sdk.rpcClient.info;
+                commit('setAddress', currentAccountAddress);
+                dispatch('selectNetwork', walletNetworkId);
+                resolve(currentAccountAddress);
+              });
+            });
+          });
+        } catch (error) {
+          if (wallet.name === 'Superhero') {
+            dispatch('modals/open', {
+              name: 'show-error',
+              message: 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
+              dismissText: 'Open My Wallet',
+              resolve: () => {
+                const addressDeepLink = createDeepLinkUrl({
+                  type: 'address',
+                  'x-success': window.location.href.split('?')[0],
+                  'x-cancel': window.location.href.split('?')[0],
+                });
+                window.location = addressDeepLink;
+              },
+            });
+          } else {
+            dispatch('modals/open', {
+              name: 'show-error',
+              message: `Connection to ${wallet.name} has been timeout, please try again later.`,
+            });
+          }
+        }
       }
+
       commit('setConnectingToWallet', false);
     },
-    async scanForWallets({ commit, dispatch, state: { sdk } }) {
-      if (sdk.rpcClient) return null;
-      const scannerConnection = await BrowserWindowMessageConnection({
-        connectionInfo: { id: 'spy' },
-      });
-      const detector = await WalletDetector({ connection: scannerConnection });
-      // eslint-disable-next-line no-underscore-dangle
-      const webWalletTimeout = window.navigator.userAgent.includes('Mobi') ? 0
-        : setTimeout(() => commit('enableIframeWallet'), 10000);
-      commit('useSdkWallet');
-      return new Promise((resolve) => {
-        detector.scan(async ({ newWallet }) => {
-          if (!newWallet) return;
-          clearInterval(webWalletTimeout);
-          try {
-            await sdk.connectToWallet(await newWallet.getConnection());
-            await sdk.subscribeAddress('subscribe', 'current');
-          } catch (e) {
-            if (e.message !== 'Operation rejected by user') {
-              dispatch('showUnknownError', e);
-            }
-            dispatch('disconnectWallet');
-            resolve(null);
-            return;
-          }
-          const address = sdk.rpcClient.getCurrentAccount();
-          if (!address) return;
-          detector.stopScan();
-          const { networkId: walletNetworkId, name } = sdk.rpcClient.info;
-          commit('setAddress', address);
-          commit('setWalletName', name);
-          dispatch('selectNetwork', walletNetworkId);
-          resolve(address);
-        });
-      });
+    async connectDefaultWallet(
+      { commit, dispatch },
+      { address, networkId },
+    ) {
+      let walletNetworkId = networkId;
+      if (!networkId || networkId.includes('networkId')) {
+        walletNetworkId = 'ae_uat';
+      }
+
+      await dispatch('selectNetwork', walletNetworkId);
+
+      commit('enableIframeWallet');
+      commit('setAddress', address);
+      commit('setConnectingToWallet', false);
     },
     async disconnectWallet({ commit, state: { sdk } }) {
-      await sdk.disconnectWallet(false);
+      try {
+        await sdk.disconnectWallet(false);
+      } catch (error) {
+        //
+      }
       commit('resetState');
-    },
-    async addMobileWallet({
-      commit,
-      state: { address: currentAddress, route },
-    }) {
-      const { address: newAddress } = route.query;
-      const address = newAddress || currentAddress;
-      commit('setAddress', address);
-      return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
       const nodeToSelect = sdk.getNodesInPool()
@@ -200,14 +242,14 @@ export default createStore({
         await dispatch('aeternity/init');
       }
     },
-    sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {
+    sendTxDeepLinkUrl({ state: { networkId, wallet } }, encodedTx) {
       return createDeepLinkUrl({
         type: 'sign-transaction',
         transaction: encodedTx,
         networkId,
-        broadcast: true,
-        'x-success': window.location.href.split('?')[0],
-        'x-cancel': window.location.href.split('?')[0],
+        broadcast: !wallet || wallet.type === 'extention',
+        'x-success': `${window.location.href.split('?')[0]}?transaction-hash={transaction-hash}`,
+        'x-cancel': `${window.location.href.split('?')[0]}?transaction-status=cancelled`,
       });
     },
     /**
@@ -232,11 +274,17 @@ export default createStore({
   plugins: [
     createPersistedState({
       reducer: ({
-        address, networkId, aeternity: { providedLiquidity, slippage, deadline },
+        address,
+        useIframeWallet,
+        networkId,
+        wallet,
+        aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
       }) => ({
         address,
+        useIframeWallet,
         networkId,
+        wallet,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
       }),

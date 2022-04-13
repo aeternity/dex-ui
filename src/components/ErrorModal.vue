@@ -13,7 +13,7 @@
       :disabled="!resolve"
       @click="resolve"
     >
-      Dismiss
+      {{ dismissText }}
     </ButtonDefault>
   </ModalDefault>
 </template>
@@ -33,6 +33,7 @@ export default {
   props: {
     message: { type: String, required: true },
     resolve: { type: Function, default: null },
+    dismissText: { type: String, default: 'Dismiss' },
   },
 };
 </script>

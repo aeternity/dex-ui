@@ -57,9 +57,12 @@ const genRouterMethodAction = (method, argsMapper) => async (
     const result = await router.methods[method](...argsMapper(context, args));
     return result;
   }
-  const onAccount = createOnAccountObject(address);
+
   const methodArgs = argsMapper(context, args);
-  methodArgs[methodArgs.length - 1] = { ...methodArgs[methodArgs.length - 1], onAccount };
+  methodArgs[methodArgs.length - 1] = {
+    ...methodArgs[methodArgs.length - 1],
+    onAccount: address,
+  };
   const result = await router.methods[method].get(...methodArgs);
   window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
   return result;
