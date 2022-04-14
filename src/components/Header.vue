@@ -20,6 +20,7 @@
         :disabled="connectingToWallet"
         class="connect-wallet"
         fill="transparent-blue"
+        data-cy="connect-wallet"
         @click="connectWallet"
       >
         <span>Connect Wallet</span>
@@ -31,6 +32,7 @@
         <span><AeBalance :address="address" /> AE</span>
         <div
           class="address"
+          data-cy="wallet-address"
           @click.prevent="openAccountInfo()"
         >
           <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
