@@ -8,7 +8,7 @@
     <div class="box">
       <div class="wallet">
         <div>
-          Connected with {{ walletName }}
+          Connected with {{ wallet ? wallet.name : '' }}
         </div>
         <div
           class="change-button"
@@ -57,13 +57,13 @@ export default {
     close: { type: Function, default: null },
   },
   computed: {
-    ...mapState(['address', 'walletName']),
+    ...mapState(['address', 'wallet']),
     ...mapGetters(['activeNetwork']),
   },
   methods: {
-    disconnectWallet() {
-      this.$store.dispatch('disconnectWallet');
+    async disconnectWallet() {
       this.resolve();
+      this.$store.dispatch('disconnectWallet');
     },
   },
 };

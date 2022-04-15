@@ -1,4 +1,5 @@
 @use './variables.scss';
+@use './mixins.scss';
 
 * {
   font-family: variables.$font-sans;
@@ -14,4 +15,10 @@ body {
   margin: 0;
   padding: 8px;
   background-color: variables.$color-black2;
+}
+
+@include mixins.laptop {
+  #app {
+    padding-bottom: 80px;
+  }
 }

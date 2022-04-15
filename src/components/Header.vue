@@ -217,7 +217,7 @@ export default {
   }
 
   .right {
-    justify-content: end;
+    justify-content: flex-end;
 
     .active-network {
       display: flex;

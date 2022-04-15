@@ -47,7 +47,7 @@ async function poll() {
             state.lastValue = new BigNumber(
               (await state.instance.methods.balance(storeState.value.address)).decodedResult || 0,
             ).shiftedBy(state.decimals.times(-1).toNumber());
-          } else if (address.startsWith('ak_')) {
+          } else if (address.startsWith('ak_') && storeState.value.sdk) {
             state.lastValue = new BigNumber(aettosToAe(
               (await storeState.value.sdk.balance(address)
                 .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e)))),
