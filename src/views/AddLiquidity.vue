@@ -349,6 +349,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .add-liquidity {
   .input-token {
@@ -438,6 +439,17 @@ export default {
         .second {
           padding-top: 4px;
           color: variables.$color-white2;
+        }
+      }
+    }
+
+    @include mixins.phone {
+      .body {
+        display: block;
+        text-align: left;
+
+        div {
+          padding-bottom: 10px;
         }
       }
     }

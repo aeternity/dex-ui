@@ -21,6 +21,13 @@
       <AnimatedSpinner />
       <span>Initializing...</span>
     </div>
+    <div
+      v-if="scanningForWallets"
+      class="box loading"
+    >
+      <AnimatedSpinner />
+      <span>Scanning for wallets...</span>
+    </div>
     <template
       v-for="wallet of wallets"
       :key="wallet.id"
@@ -28,11 +35,11 @@
       <div
         v-if="!connecting || wallet.id === connectingTo"
         class="box wallet"
-        @click.prevent="onWalletConnect(wallet.id)"
+        @click.prevent="onWalletConnect(wallet)"
       >
         <div class="info">
           <div class="title">
-            {{ wallet.title }}
+            {{ wallet.name }}
           </div>
           <div
             v-if="wallet.id === connectingTo"
@@ -42,8 +49,9 @@
           </div>
         </div>
         <img
-          :src="wallet.icon"
-          :alt="wallet.title"
+          v-if="icons[wallet.name]"
+          :src="icons[wallet.name]"
+          :alt="wallet.name"
         >
       </div>
     </template>
@@ -51,6 +59,10 @@
 </template>
 
 <script>
+import {
+  WalletDetector, BrowserWindowMessageConnection,
+} from '@aeternity/aepp-sdk';
+import { resolveWithTimeout } from '../lib/utils';
 import ModalDefault from './ModalDefault.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
@@ -67,31 +79,81 @@ export default {
     return {
       connecting: false,
       connectingTo: null,
-      wallets: [
-        {
-          id: 'superhero',
-          title: 'Superhero',
-          description: 'Easy-to-use browser extension.',
-          // eslint-disable-next-line global-require
-          icon: require('../assets/wallets/superhero.png'),
-        },
-      ],
+      scanningForWallets: false,
+      icons: {
+        // eslint-disable-next-line global-require
+        Superhero: require('../assets/wallets/superhero.png'),
+      },
+      wallets: [],
       UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
     };
   },
+  async mounted() {
+    if (this.$isMobile) {
+      this.addDefaultWallet();
+    } else {
+      this.scanningForWallets = true;
+      const scannerConnection = await BrowserWindowMessageConnection({
+        connectionInfo: { id: 'spy' },
+      });
+
+      const detector = await WalletDetector({ connection: scannerConnection });
+
+      const walletScanningTimeout = setTimeout(() => {
+        detector.stopScan();
+        this.addDefaultWallet();
+        this.scanningForWallets = false;
+      }, 5000);
+
+      detector.scan(async ({ wallets }) => {
+        this.wallets = [
+          ...Object.values(wallets).map((wallet) => ({
+            ...wallet,
+            description: 'Easy-to-use browser extension.',
+          })),
+        ];
+        clearTimeout(walletScanningTimeout);
+        detector.stopScan();
+        this.scanningForWallets = false;
+      });
+    }
+  },
   methods: {
-    async onWalletConnect(id) {
+    async onWalletConnect(wallet) {
       if (this.connecting) return;
       this.connecting = true;
-      this.connectingTo = id;
-      if (id === 'superhero') {
-        await this.$watchUntilTruly(() => this.$store.state.sdk);
-        await this.$store.dispatch('connectWallet');
+      this.connectingTo = wallet.id;
+
+      try {
+        await resolveWithTimeout(5000, async () => {
+          await this.$watchUntilTruly(() => this.$store.state.sdk);
+        });
+      } catch (error) {
+        this.$store.dispatch('modals/open', {
+          name: 'show-error',
+          message: 'Connection to SDK has been timeout, please try again later.',
+        });
+        this.connecting = false;
+        this.connectingTo = null;
+        return;
       }
+
+      await this.$store.dispatch('connectWallet', wallet);
 
       this.connecting = false;
       this.connectingTo = null;
       this.resolve();
+    },
+    addDefaultWallet() {
+      this.wallets = [
+        {
+          id: 'wallet.superhero.com',
+          name: 'Superhero',
+          networkId: 'ae_uat',
+          type: 'website',
+          description: 'Easy-to-use wallet.',
+        },
+      ];
     },
   },
 };

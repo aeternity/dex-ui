@@ -115,3 +115,22 @@ export const addSlippage = (value, slippage) => value + (value * BigInt(slippage
  * @return biging representing final value
 */
 export const subSlippage = (value, slippage) => value - (value * BigInt(slippage * 10)) / 1000n;
+
+/**
+ * Resolve promise with timeout
+ * @param {number} timeout
+ * @param {fn} callback
+ * @returns Promise
+ */
+export const resolveWithTimeout = (timeout, callback) => Promise.race([
+  callback(),
+  new Promise((resolve, reject) => setTimeout(() => {
+    reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
+  }, timeout)),
+]);
+
+/**
+ * Detect if Safari browser
+ * @returns boolean
+ */
+export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
