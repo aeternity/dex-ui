@@ -9,7 +9,7 @@
       <div class="input-wrapper">
         <InputField
           v-model:value="searchTerm"
-          placeholder="Search name or paste address"
+          :placeholder="$t('searchTokenInput')"
           class="search-bar"
         />
       </div>
@@ -45,7 +45,7 @@
             !extraTokens.length"
           class="empty"
         >
-          No results found.
+          {{ $t('selectTokenPopup.notFound') }}.
         </div>
       </div>
 
@@ -54,7 +54,7 @@
         @click.prevent="tab = 'manage-token-list'"
       >
         <EditIcon />
-        Manage Token Lists
+        {{ $t('selectTokenPopup.manageTokens') }}
       </div>
     </div>
 
@@ -171,12 +171,12 @@ export default {
     },
     modalTitle() {
       if (this.tab === 'manage-token-list') {
-        return 'Manage';
+        return `${this.$t('selectTokenPopup.manage')}`;
       }
       if (this.tab === 'import-token') {
-        return 'Import token';
+        return `${this.$t('selectTokenPopup.importToken')}`;
       }
-      return 'Select Token';
+      return `${this.$t('selectToken')}`;
     },
   },
   watch: {

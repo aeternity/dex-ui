@@ -1,6 +1,6 @@
 <template>
   <MainWrapper
-    title="Swap"
+    :title="$t('swap.title')"
     settings
     class="swap-view"
   >
@@ -144,12 +144,12 @@ export default {
         this.amountTokenA, this.tokenA.decimals);
     },
     buttonMessage() {
-      if (!this.address) return 'Connect Wallet';
+      if (!this.address) return this.$t('connectWallet');
       if (this.factory && this.tokenB && this.tokenA
-        && !this.fetchingPairInfo && !this.hasPair) return 'No liquidity pool found';
-      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return 'Enter amount';
-      if (!this.enoughBalance) return `Insufficient ${this.tokenA.symbol} balance`;
-      return 'Swap';
+        && !this.fetchingPairInfo && !this.hasPair) return this.$t('NoLiquidityFound');
+      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return this.$t('enterAmount');
+      if (!this.enoughBalance) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
+      return this.$t('swap.title');
     },
     ratio() {
       if (this.isAeVsWae) return 1;

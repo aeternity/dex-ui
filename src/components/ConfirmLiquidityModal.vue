@@ -1,7 +1,7 @@
 <template>
   <ModalDefault
     class="confirm-add-modal"
-    :title="isAdding ? 'You will receive' : 'Tokens to be removed'"
+    :title="isAdding ? $t('confirmLiquidity.willReceive') : $t('confirmLiquidity.beRemoved')"
     close
     @close="denyHandler"
   >
@@ -12,36 +12,45 @@
         <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
       </div>
       <div class="tokens">
-        {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
+        {{ `${tokenA.symbol}/${tokenB.symbol} ${$t('poolTokens')}` }}
       </div>
       <span class="estimation">
-        Output is estimated. If the price changes by more than {{ slippage }}%
-        your transaction will revert.
+        {{ $t('confirmLiquidity.beRemoved', { msg: slippage }) }}
       </span>
       <div class="transaction-details">
         <div>
-          <span>{{ tokenA.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
+          <span>{{ tokenA.symbol }}
+            {{
+              isAdding ? $t("confirmLiquidity.deposited") : $t("confirmLiquidity.estimated")
+            }}
+          </span>
           <div>
             <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
             {{ amountA ? amountA.toFixed(5) : '-' }}
           </div>
         </div>
         <div>
-          <span>{{ tokenB.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
+          <span>{{ tokenB.symbol }}
+            {{
+              isAdding
+                ? $t("confirmLiquidity.deposited")
+                : $t("confirmLiquidity.estimated")
+            }}
+          </span>
           <div>
             <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
             {{ amountB ? amountB.toFixed(5) : '-' }}
           </div>
         </div>
         <div class="rates">
-          <span>Rates</span>
+          <span>{{ $t("confirmLiquidity.rates") }}</span>
           <div>
             <span>{{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }}</span>
             {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
           </div>
         </div>
         <div v-if="isAdding">
-          <span>Share of Pool:</span>
+          <span>{{ $t('shareOfPool') }}:</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
@@ -49,13 +58,14 @@
         v-if="!isAdding"
         class="estimation"
       >
-        You will receive at least
+        {{ $t("receiveAtLeast") }}
         <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
-        and at least <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
-        or the transaction will revert.
+        {{ $t("confirmLiquidity.addAtLeast") }}
+        <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
+        {{ $t("transactionWillRevert") }}.
       </div>
       <ButtonDefault @click="allowHandler">
-        Confirm {{ isAdding ? 'Supply' : 'Removal' }}
+        {{ $t("confirmLiquidity.confirm") }} {{ isAdding ? $t('supply') : $t('removal') }}
       </ButtonDefault>
     </div>
   </ModalDefault>

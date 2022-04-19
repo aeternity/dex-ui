@@ -1,20 +1,20 @@
 <template>
   <ModalDefault
     class="account-info-modal"
-    title="Account"
+    :title="$t('accountPopup.title')"
     close
     @close="resolve"
   >
     <div class="box">
       <div class="wallet">
         <div>
-          Connected with {{ wallet ? wallet.name : '' }}
+          {{ $t('accountPopup.connectSuperhero') }} {{ wallet ? wallet.name : '' }}
         </div>
         <div
           class="change-button"
           @click.prevent="disconnectWallet"
         >
-          Disconnect
+          {{ $t('accountPopup.discon') }}
         </div>
       </div>
       <div class="address">
@@ -24,7 +24,7 @@
       <div class="links">
         <ClipboardCopy
           class="copy-address"
-          title="Copy Address"
+          :title="$t('accountPopup.copyAddress')"
           :content="address"
         />
         <a
@@ -32,7 +32,7 @@
           :href="`${activeNetwork.explorerUrl}/account/${address}`"
           target="_blank"
         >
-          View in explorer
+          {{ $t('viewExplorer') }}
           <ExternalLinkIcon />
         </a>
       </div>

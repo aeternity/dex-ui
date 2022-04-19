@@ -1,32 +1,29 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <ModalDefault
     class="connect-wallet-modal"
-    title="Connect a wallet"
+    :title="$t('connectWalletPopup.title')"
     close
     @close="resolve"
   >
     <div
       v-if="UNFINISHED_FEATURES"
       class="box"
-    >
-      By connecting a wallet, you agree to DEX
-      <a href="#">Terms of Service</a>  and acknowledge that you have read and understand
-      the DEX <a href="#">Protocol Disclaimer</a>.
-    </div>
-
+      v-html="$t('connectWalletPopup.disclaimer')"
+    />
     <div
       v-if="connecting"
       class="box loading"
     >
       <AnimatedSpinner />
-      <span>Initializing...</span>
+      <span>{{ $t('connectWalletPopup.initializing') }}...</span>
     </div>
     <div
       v-if="scanningForWallets"
       class="box loading"
     >
       <AnimatedSpinner />
-      <span>Scanning for wallets...</span>
+      <span>{{ $t('connectWalletPopup.scanningWallet') }}...</span>
     </div>
     <template
       v-for="wallet of wallets"
@@ -109,7 +106,7 @@ export default {
         this.wallets = [
           ...Object.values(wallets).map((wallet) => ({
             ...wallet,
-            description: 'Easy-to-use browser extension.',
+            description: `${this.$t('connectWalletPopup.superheroDesc')}`,
           })),
         ];
         clearTimeout(walletScanningTimeout);
@@ -151,7 +148,7 @@ export default {
           name: 'Superhero',
           networkId: 'ae_uat',
           type: 'website',
-          description: 'Easy-to-use wallet.',
+          description: `${this.$t('connectWalletPopup.easyUseWallet')}`,
         },
       ];
     },

@@ -1,12 +1,12 @@
 <template>
   <ModalDefault
     class="confirm-swap-modal"
-    title="Confrim Swap"
+    :title="$t('confirmSwap.title')"
     close
     @close="denyHandler"
   >
     <TokenAmountDetails
-      label="From"
+      :label="$t('confirmSwap.from')"
       :symbol="from.symbol"
       :contract="from.contract_id"
       :amount="amountFrom"
@@ -15,44 +15,52 @@
       <DownArrow />
     </div>
     <TokenAmountDetails
-      label="To"
+      :label="$t('confirmSwap.to')"
       :symbol="to.symbol"
       :contract="to.contract_id"
       :amount="amountTo"
     />
     <div class="price">
-      Price
+      {{ $t('price') }}
       <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
     </div>
     <div class="transaction-details">
       <div class="title">
-        Transaction Details
+        {{ $t('confirmSwap.transactionDetails') }}
       </div>
       <div v-if="!isAeVsWae">
-        <span>Liquidity Provider Fee</span>
+        <span>{{ $t('confirmSwap.liquidityProviderFee') }}</span>
         <span>{{ `${(amountFrom * 0.003).toFixed(8)} ${from.symbol}` }}</span>
       </div>
       <div v-if="!isAeVsWae">
-        <span>Price Impact</span>
+        <span>{{ $t('confirmSwap.priceImpact') }}</span>
         <span>{{ priceImpact.toFixed(8) }}%</span>
       </div>
       <div v-if="!isAeVsWae">
-        <span>Allowed Slippage</span>
+        <span>{{ $t('confirmSwap.allowedSlippage') }}</span>
         <span>{{ slippage }}%</span>
       </div>
       <div>
-        <span>{{ isLastAmountFrom? 'Minimum received' : 'Maximum spent' }}</span>
+        <span>{{
+          isLastAmountFrom
+            ? $t("confirmSwap.minReceived")
+            : $t("confirmSwap.maxSpent")
+        }}
+        </span>
         <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
     </div>
     <div class="estimation">
-      {{ isLastAmountFrom ? 'Output' : 'Input' }} is estimated.
-      {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
+      {{
+        isLastAmountFrom ? $t("confirmSwap.output") : $t("confirmSwap.input")
+      }}
+      {{ $t("confirmSwap.isEstimated") }}.
+      {{ isLastAmountFrom? $t("receiveAtLeast") : $t("confirmSwap.spendNoMore") }}
       <b>{{ receivedOrSpentValueMsg }}</b>
-      or the transaction will revert.
+      {{ $t("transactionWillRevert") }}.
     </div>
     <ButtonDefault @click="allowHandler">
-      Confirm Swap
+      {{ $t("confirmSwap.title") }}
     </ButtonDefault>
   </ModalDefault>
 </template>

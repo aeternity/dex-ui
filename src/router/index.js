@@ -5,40 +5,47 @@ import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
+import i18n from '../i18n';
 
 const routes = [
   {
-    path: '/swap',
-    name: 'swap',
-    component: SwapView,
-  },
-  {
     path: '/',
-    redirect: '/swap',
+    redirect: `/${i18n.locale || 'en'}/swap`,
   },
   {
-    path: '/pool',
+    path: '/:lang',
     component: { render: () => h(RouterView) },
-    children: [{
-      path: '',
-      name: 'pool',
-      component: PoolView,
-    },
-    {
-      path: 'import',
-      name: 'import-pool',
-      component: ImportPool,
-    },
-    {
-      path: 'add',
-      name: 'add-pool',
-      component: AddLiquidity,
-    },
-    {
-      path: 'remove/:id',
-      name: 'remove-pool',
-      component: RemoveLiquidity,
-    }],
+    children: [
+      {
+        path: 'swap',
+        name: 'swap',
+        component: SwapView,
+      },
+      {
+        path: 'pool',
+        component: { render: () => h(RouterView) },
+        children: [{
+          path: '',
+          name: 'pool',
+          component: PoolView,
+        },
+        {
+          path: 'import',
+          name: 'import-pool',
+          component: ImportPool,
+        },
+        {
+          path: 'add',
+          name: 'add-pool',
+          component: AddLiquidity,
+        },
+        {
+          path: 'remove/:id',
+          name: 'remove-pool',
+          component: RemoveLiquidity,
+        }],
+      },
+    ],
   },
 ];
 

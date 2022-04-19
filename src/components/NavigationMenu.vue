@@ -1,16 +1,16 @@
 <template>
   <nav class="navigation-menu">
     <router-link
-      to="/swap"
+      :to="`/${$i18n.locale}/swap`"
       @click.prevent="navigateSwap"
     >
-      Swap
+      {{ $t('nav.swap') }}
     </router-link>
     <router-link
-      to="/pool"
+      :to="`/${$i18n.locale}/pool`"
       @click.prevent="navigatePool"
     >
-      Pool
+      {{ $t('nav.pool') }}
     </router-link>
   </nav>
 </template>
@@ -21,7 +21,7 @@ export default {
       const query = this.$store.state.navigation.swap;
 
       if (query && this.$route.name !== 'swap') {
-        this.$router.push({ path: '/swap', query });
+        this.$router.push({ path: `/${this.$i18n.locale}/swap`, query });
       } else if (this.$route.name === 'swap') {
         this.$store.commit('navigation/setSwap', null);
       }

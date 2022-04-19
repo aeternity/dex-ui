@@ -1,0 +1,142 @@
+{
+  "nav": {
+    "swap": "Swap",
+    "pool": "Pool",
+    "aboutUs": "About us",
+    "termsCondition": "Terms & Condition",
+    "settings": {
+      "title": "Settings",
+      "languages": "Language",
+      "theme": "Light Theme"
+    },
+    "discord": "Discord",
+    "contracts": "Contracts",
+    "source": "Source",
+    "reportBug": "Report a bug"
+  },
+  "swap": {
+    "title": "Swap",
+    "transactSettings": "Transaction settings",
+    "transactSettingsPopup": "Your transaction will revert if the price changes unfavorably by more than this percentage.",
+    "slipTolerance": "Slippage tolerance",
+    "auto": "Auto",
+    "transactDeadline": "Transaction deadline",
+    "transactDeadlinePopup": "Your transaction will revert if it is pending for more than this period of time.",
+    "transactionFrontrun": "Your transaction may be frontrun",
+    "enterSlipPercentage": "Enter a valid slippage percentage",
+    "minutes": "minutes",
+    "balance": "Balance",
+    "permissionToolTip": "You must give the DEX smart contracts permission to use your {msg}. You only have to do this once per token.",
+    "allowDEX": "Allow the DEX"
+  },
+  "confirmSwap": {
+    "title": "Confirm Swap",
+    "from": "From",
+    "to": "To",
+    "transactionDetails": "Transaction Details",
+    "liquidityProviderFee": "Liquidity Provider Fee",
+    "priceImpact": "Price Impact",
+    "allowedSlippage": "Allowed Slippage",
+    "minReceived": "Minimum received",
+    "maxSpent": "Maximum spent",
+    "output": "Output",
+    "input": "Input",
+    "isEstimated": "is estimated",
+    "spendNoMore": "You will spend no more than"
+  },
+  "pool": {
+    "title": "Pool",
+    "yourLiquidity": "Your Liquidity",
+    "liquidityPopup": "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.",
+    "dontSeePool": "Don't see a pool you've joined?",
+    "importIt": "Import it."
+    
+  },
+  "addLiquidity": {
+    "title": "Add Liquidity",
+    "pricePoolShare": "Prices and pool share"
+  },
+  "confirmLiquidity": {
+    "willReceive": "You will receive",
+    "beRemoved": "Tokens to be removed",
+    "outputEstimated": "Output is estimated. If the price changes by more than {msg}% your transaction will revert",
+    "deposited": "Deposited",
+    "estimated": "Estimated",
+    "addAtLeast": "and at least",
+    "rates": "Rates",
+    "confirm": "Confirm",
+    "removingAround": "Removing around",
+    "poolTokensLiquidity": "pool tokens from the provided liquidity"
+  },
+  "removeLiquidity": {
+    "title": "Remove Liquidity",
+    "removeAmount": "Remove amount",
+    "simple": "Simple",
+    "detailed": "Detailed",
+    "yourPosition": "Your position"
+  },
+  "import": {
+    "title": "Import V2 Pool",
+    "importTip": "Use this tool to find v2 pools that don't automatically appear in the interface.",
+    "fetchingData": "Fetching data",
+    "selectBothTokens": "Select both tokens to find your provided liquidity.",
+    "poolFound": "Pool found!",
+    "imported": "The liquidity is imported, you can go back to see your provided liquidity in the main pool screen",
+    "footerText": "You have no provided liquidity for the selected tokens"
+  },
+  "connectWalletPopup": {
+    "title": "Connect a wallet",
+    "disclaimer": "By connecting a wallet, you agree to DEX <a href='#'>Terms of Service</a>  and acknowledge that you have read and understand the DEX <a href='#'>Protocol Disclaimer</a>.",
+    "superhero": "Superhero",
+    "superheroDesc": "Easy-to-use browser extension.",
+    "easyUseWallet": "Easy-to-use wallet.",
+    "initializing": "Initializing",
+    "scanningWallet": "Scanning for wallets"
+  },
+  "accountPopup": {
+    "title": "Account",
+    "connectSuperhero": "Connected with",
+    "discon": "Disconnect",
+    "copyAddress": "Copy Address"
+  },
+  "submitTransactPopup": {
+    "confirmTransact": "Confirm this transaction in your wallet"
+  },
+  "selectTokenPopup": {
+    "notFound": "No results found",
+    "manage": "Manage",
+    "importToken": "Import token",
+    "manageTokens": "Manage Token Lists"
+  },
+  "liquidityDetails": {
+    "pooled": "Pooled",
+    "loadingFailed": "Loading Failed",
+    "poolInformation": "View pool information",
+    "add": "Add",
+    "remove": "Remove"
+  },
+  "connectWallet": "Connect Wallet",
+  "insufficientBalance": "Insufficient {msg} balance",
+  "selectToken": "Select token",
+  "searchTokenInput": "Search name or paste address",
+  "fetchPrice": "Fetching best price",
+  "NoLiquidityFound": "No liquidity pool found",
+  "enterAmount": "Enter amount",
+  "supplying": "Supplying",
+  "supply": "Supply",
+  "removal": "Removal",
+  "shareOfPool": "Share of Pool",
+  "connectWalletFindPool": "Connect to a wallet to find pools",
+  "liquidityTip": "When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.",
+  "receiveAtLeast": "You will receive at least",
+  "transactionWillRevert": "or the transaction will revert",
+  "max": "Max",
+  "approving": "Approving",
+  "verifyingApproval": "Verifying approval",
+  "approved": "Approved",
+  "tip": "Tip",
+  "viewExplorer": "View in explorer",
+  "poolShare": "Your pool share",
+  "poolTokens": "Pool Tokens",
+  "price": "Price"
+}
