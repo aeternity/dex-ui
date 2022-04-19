@@ -17,6 +17,10 @@ body {
   background-color: variables.$color-black2;
 }
 
+#app {
+  height: 100%;
+}
+
 @include mixins.laptop {
   #app {
     padding-bottom: 80px;

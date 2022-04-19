@@ -12,6 +12,11 @@
     >
       Pool
     </router-link>
+    <router-link
+      to="/overview"
+    >
+      Charts
+    </router-link>
   </nav>
 </template>
 <script>
