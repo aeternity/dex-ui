@@ -1,50 +1,51 @@
 <template>
-  <div class="token-table">
+  <div class="pair-table">
     <table>
       <thead>
         <tr>
           <th>#</th>
           <th>
-            Name
+            Pool
           </th>
           <th />
-          <th>Price</th>
-          <th>Price Change</th>
-          <th>Volume 24H</th>
           <th>TVL</th>
+          <th>Volume 24H</th>
+          <th>Volume 7d</th>
         </tr>
       </thead>
 
       <tbody>
         <tr
-          v-for="(token, index) of tokens"
-          :key="`token-${index}`"
+          v-for="(pair, index) of pairs"
+          :key="`pair-${index}`"
           @click.prevent="$router.push({
-            name: 'overview-token-details', params: {
-              address: token.address
+            name: 'overview-pair-details', params: {
+              address: pair.address
             }
           })"
         >
-          <td>{{ token.id }}</td>
+          <td>{{ index + 1 }}</td>
           <td colspan="2">
-            <div class="token">
+            <div class="pair">
               <img
-                :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.address}`"
+                :src="pair.image ?? `https://avatars.z52da5wt.xyz/${pair.token0}`"
               >
-              <div>
-                <div class="name">
-                  {{ token.name }}
-                </div>
-                <div class="symbol">
-                  ({{ token.symbol }})
-                </div>
+              <img
+                :src="pair.image ?? `https://avatars.z52da5wt.xyz/${pair.token1}`"
+              >
+              <div class="name">
+                <span>
+                  {{ tokens[pair.token0].name }} /
+                </span>
+                <span>
+                  {{ tokens[pair.token1].name }}
+                </span>
               </div>
             </div>
           </td>
           <td>$2.22k</td>
           <td>1.22%</td>
           <td>$4.22b</td>
-          <td>$2.18b</td>
         </tr>
       </tbody>
     </table>
@@ -54,18 +55,45 @@
 import { fetchJson } from '../../lib/utils';
 
 export default {
-  name: 'TokenTable',
+  name: 'PairTable',
+  props: {
+    token: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
-      tokens: [],
+      pairs: [],
+      tokens: {},
     };
   },
   async mounted() {
     try {
-      const tokens = await fetchJson('http://localhost:3000/tokens');
-      this.tokens = tokens;
+      const [
+        tokens,
+        pairs,
+      ] = await Promise.all([
+        fetchJson('http://localhost:3000/tokens'),
+        fetchJson('http://localhost:3000/pairs'),
+      ]);
+
+      const localTokens = {};
+      tokens.forEach((token) => {
+        localTokens[token.address] = token;
+      });
+      this.tokens = localTokens;
+
+      if (this.token) {
+        this.pairs = [
+          ...pairs.filter((pair) => pair.token0 === this.token.address),
+        ];
+      } else {
+        this.pairs = pairs;
+      }
+
       console.info('========================');
-      console.info('tokens ::', tokens);
+      console.info('tokens ::', localTokens);
       console.info('========================');
     } catch (error) {
       //
@@ -77,7 +105,7 @@ export default {
   @use '../../styles/variables.scss';
   @use '../../styles/typography.scss';
 
-  .token-table{
+  .pair-table{
     background-color: variables.$color-black2;
     border-radius: 12px;
     padding: 12px;
@@ -92,14 +120,14 @@ export default {
         padding: 10px;
       }
 
-      .token {
+      .pair {
         display: inline-flex;
         align-items: center;
 
         .name {
           @extend %face-sans-16-regular;
 
-          padding-bottom: 6px;
+          padding-right: 6px;
         }
 
         .symbol {
@@ -118,7 +146,6 @@ export default {
 
       tbody tr:hover {
         background-color: variables.$color-black;
-        cursor: pointer;
       }
     }
 

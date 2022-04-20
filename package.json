@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aeternity/aepp-sdk": "^11.0.1",
+    "@coingecko/cryptoformat": "^0.4.4",
     "@fontsource/ibm-plex-sans": "^4.5.1",
     "@popperjs/core": "^2.10.2",
     "@sentry/tracing": "^6.18.0",
@@ -23,6 +24,7 @@
     "core-js": "^3.8.3",
     "dex-contracts-v2": "github:aeternity/dex-contracts-v2",
     "echarts": "^5.3.2",
+    "moment": "^2.29.3",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

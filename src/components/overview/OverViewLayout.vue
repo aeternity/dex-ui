@@ -59,11 +59,11 @@ export default {
     background-color: variables.$color-black;
     border: 1px solid variables.$color-gray;
     border-radius: 12px;
-    overflow: hidden;
     margin-top: 16px;
     min-height: 80%;
     max-width: 1200px;
     margin: 16px auto;
+    margin-bottom: 100px;
     min-height: 80%;
     color: variables.$color-white;
 

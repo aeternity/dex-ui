@@ -42,7 +42,7 @@
     <div class="block">
       <div class="heading">
         <div>
-          Top Pools
+          Top Pairs
         </div>
 
         <router-link
@@ -51,19 +51,21 @@
           Explore
         </router-link>
       </div>
-      <TokenTable />
+      <PairTable />
     </div>
   </div>
 </template>
 
 <script>
 import TokenTable from '../../components/overview/TokenTable.vue';
+import PairTable from '../../components/overview/PairTable.vue';
 import LineChart from '../../components/charts/LineChart.vue';
 
 export default {
   name: 'ChartsOverview',
   components: {
     TokenTable,
+    PairTable,
     LineChart,
   },
 };

@@ -6,18 +6,18 @@
           All Pools
         </div>
       </div>
-      <TokenTable />
+      <PairTable />
     </div>
   </div>
 </template>
 
 <script>
-import TokenTable from '../../components/overview/TokenTable.vue';
+import PairTable from '../../components/overview/PairTable.vue';
 
 export default {
   name: 'PoolOverview',
   components: {
-    TokenTable,
+    PairTable,
   },
 };
 </script>
