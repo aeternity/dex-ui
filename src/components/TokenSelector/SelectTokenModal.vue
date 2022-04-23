@@ -117,12 +117,11 @@ export default {
     loadingExtraTokens: false,
     extraTokens: [],
     tab: 'list-tokens',
-    WAE: process.env.VUE_APP_WAE_ADDRESS,
   }),
   computed: {
     ...mapState(['networkId']),
     ...mapState('tokens', ['providers', 'userTokens']),
-    ...mapGetters(['activeNetwork']),
+    ...mapGetters(['activeNetwork', 'WAE']),
     filteredActiveProvidersTokens() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
 
