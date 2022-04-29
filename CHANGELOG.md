@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.6.0](https://www.github.com/aeternity/dex-ui/compare/v1.5.2...v1.6.0) (2022-04-29)
+
+
+### Features
+
+* **token-selector:** allow swapping arbitrary tokens [#245](https://www.github.com/aeternity/dex-ui/issues/245) ([04e5d14](https://www.github.com/aeternity/dex-ui/commit/04e5d148d9f793a0a44db85dbc4b5229da367a31))
+
+
+### Bug Fixes
+
+* fetch mdw aex9 tokens ([cdf6d10](https://www.github.com/aeternity/dex-ui/commit/cdf6d10dafba6759920ae7d8e42a2b811c05df89))
+* pool view navigation [#255](https://www.github.com/aeternity/dex-ui/issues/255) ([93dbe8d](https://www.github.com/aeternity/dex-ui/commit/93dbe8d3591d4e5ae8579ecaecb8fbabc398aff7))
+* should fetch allowance & pair info when sdk is ready [#289](https://www.github.com/aeternity/dex-ui/issues/289) ([79d503e](https://www.github.com/aeternity/dex-ui/commit/79d503eb177aa7e33afaae4669b68499ce2a6ffc))
+* wallet connect behavior [#237](https://www.github.com/aeternity/dex-ui/issues/237) ([f808516](https://www.github.com/aeternity/dex-ui/commit/f808516ad6db1f4b1a65501dfc04ae725cacf5bc))
+* when polling balance fails return balance as 0 ([75fd494](https://www.github.com/aeternity/dex-ui/commit/75fd494a3220d4be973d60116f70000a1a546f27))
+
+
+### Miscellaneous
+
+* update SDK to 11.0.1 ([dec7531](https://www.github.com/aeternity/dex-ui/commit/dec7531a1c94274fa1f392f2ad13c79043137d2e))
+
 ### [1.5.2](https://www.github.com/aeternity/dex-ui/compare/v1.5.1...v1.5.2) (2022-04-07)
 
 
