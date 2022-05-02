@@ -1,28 +1,28 @@
 <template>
-  <div class="token-overview">
+  <div class="pool-analytics">
     <div class="block">
       <div class="heading">
         <div>
-          All Tokens
+          All Pools
         </div>
       </div>
-      <TokenTable />
+      <PairTable />
     </div>
   </div>
 </template>
 
 <script>
-import TokenTable from '../../components/overview/TokenTable.vue';
+import PairTable from '../../components/analytics/PairTable.vue';
 
 export default {
-  name: 'TokenOverview',
+  name: 'PoolOverview',
   components: {
-    TokenTable,
+    PairTable,
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  @use '../../styles/overview.scss';
+  @use '../../styles/analytics.scss';
 
 </style>

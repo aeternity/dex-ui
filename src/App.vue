@@ -36,6 +36,7 @@ export default {
   },
   async mounted() {
     this.$store.commit('tokens/initDefaultTokens');
+    this.$store.dispatch('analytics/init');
 
     const query = {
       // safari vue-router issue

@@ -5,11 +5,11 @@ import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
-import OverViewLayout from '../components/overview/OverViewLayout.vue';
-import Overview from '../views/overview/Overview.vue';
-import TokenOverview from '../views/overview/TokenOverview.vue';
-import TokenDetailView from '../views/overview/TokenDetailView.vue';
-import PoolOverview from '../views/overview/PoolOverview.vue';
+import AnalyticsLayout from '../components/analytics/AnalyticsLayout.vue';
+import Overview from '../views/analytics/Overview.vue';
+import TokenOverview from '../views/analytics/TokenOverview.vue';
+import TokenDetailView from '../views/analytics/TokenDetailView.vue';
+import PoolOverview from '../views/analytics/PoolOverview.vue';
 
 const routes = [
   {
@@ -46,22 +46,22 @@ const routes = [
     }],
   },
   {
-    path: '/overview',
-    component: { render: () => h(OverViewLayout) },
+    path: '/analytics',
+    component: { render: () => h(AnalyticsLayout) },
     children: [
       {
         path: '',
-        name: 'overview',
+        name: 'analytics',
         component: Overview,
       },
       {
         path: 'pools',
-        name: 'overview-pools',
+        name: 'analytics-pools',
         component: PoolOverview,
       },
       {
         path: 'tokens',
-        name: 'overview-tokens',
+        name: 'analytics-tokens',
         component: TokenOverview,
       },
       {

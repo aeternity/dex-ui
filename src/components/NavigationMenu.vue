@@ -13,7 +13,7 @@
       Pool
     </router-link>
     <router-link
-      to="/overview"
+      to="/analytics"
     >
       Charts
     </router-link>

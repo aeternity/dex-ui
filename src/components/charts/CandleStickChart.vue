@@ -10,20 +10,40 @@
 <script>
 import moment from 'moment';
 import * as echarts from 'echarts';
+import BigNumber from 'bignumber.js';
 import { fetchJson } from '../../lib/utils';
 
 export default {
   name: 'CandleStickChart',
+  props: {
+    ratio: {
+      type: Number,
+      default: 1,
+    },
+  },
   async mounted() {
     this.$charts = echarts.init(this.$refs.chart);
-    console.info('========================');
-    console.info('echarts ::', echarts);
-    console.info('========================');
-    this.initChart(1);
+    // console.info('========================');
+    // console.info('echarts ::', echarts);
+    // console.info('========================');
+    this.$watch('ratio', (ratio) => {
+      console.info('========================');
+      console.info('ratio ::', ratio);
+      console.info('========================');
+      if (this.ratio) {
+        this.initChart(this.ratio);
+      }
+    });
+
+    if (this.ratio) {
+      console.info('========================');
+      console.info('ratio ::', this.ratio);
+      console.info('========================');
+      this.initChart(this.ratio);
+    }
   },
   methods: {
-    async initChart(days = 1) {
-      this.activeRangeType = days;
+    async initChart(ratio) {
       // this.$charts.showLoading();
       function calculateMA(dayCount, data) {
         const result = [];
@@ -50,9 +70,18 @@ export default {
         console.info('========================');
 
         const dates = rawData.map((item) => moment(item[0]).format('lll'));
-        const data = rawData.map((item) => [item[1], item[4], item[2], item[3]]);
-        // const data = rawData.map((item) => [+item[1], +item[2], +item[3], +item[4]]);
-        // const data = rawData.map((item) => [+item[1], +item[2], +item[5], +item[6]]);
+        const data = rawData.map((item) => [
+          BigNumber(item[1]).div(ratio).toNumber(),
+          BigNumber(item[4]).div(ratio).toNumber(),
+          BigNumber(item[2]).div(ratio).toNumber(),
+          BigNumber(item[3]).div(ratio).toNumber(),
+        ]);
+
+        console.info('========================');
+        console.info('data ::', data);
+        console.info('========================');
+
+        // const data = rawData.map((item) => [item[1], item[4], item[2], item[3]]);
 
         this.$charts.setOption({
           title: {

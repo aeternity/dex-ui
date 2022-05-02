@@ -1,5 +1,5 @@
 <template>
-  <div class="overview">
+  <div class="analytics">
     <div class="charts">
       <div class="box">
         <LineChart />
@@ -31,7 +31,7 @@
         </div>
 
         <router-link
-          to="/overview/tokens"
+          to="/analytics/tokens"
         >
           Explore
         </router-link>
@@ -46,7 +46,7 @@
         </div>
 
         <router-link
-          to="/overview/pools"
+          to="/analytics/pools"
         >
           Explore
         </router-link>
@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import TokenTable from '../../components/overview/TokenTable.vue';
-import PairTable from '../../components/overview/PairTable.vue';
+import TokenTable from '../../components/analytics/TokenTable.vue';
+import PairTable from '../../components/analytics/PairTable.vue';
 import LineChart from '../../components/charts/LineChart.vue';
 
 export default {
@@ -74,9 +74,9 @@ export default {
 <style lang="scss" scoped>
   @use '../../styles/variables.scss';
   @use '../../styles/typography.scss';
-  @use '../../styles/overview.scss';
+  @use '../../styles/analytics.scss';
 
-  .overview {
+  .analytics {
     text-align: left;
     .charts {
       display: inline-flex;

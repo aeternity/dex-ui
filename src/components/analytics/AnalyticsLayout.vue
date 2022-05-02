@@ -1,21 +1,21 @@
 <template>
-  <div class="overview-layout">
+  <div class="analytics-layout">
     <div class="container">
       <div class="sidebar">
         <router-link
-          to="/overview"
+          to="/analytics"
         >
           Overview
         </router-link>
 
         <router-link
-          to="/overview/pools"
+          to="/analytics/pools"
         >
           Pools
         </router-link>
 
         <router-link
-          to="/overview/tokens"
+          to="/analytics/tokens"
         >
           Tokens
         </router-link>
@@ -55,7 +55,7 @@ export default {
   @use '../../styles/typography.scss';
   @use '../../styles/mixins.scss';
 
-  .overview-layout {
+  .analytics-layout {
     background-color: variables.$color-black;
     border: 1px solid variables.$color-gray;
     border-radius: 12px;

@@ -21,18 +21,19 @@
         </div>
         <br>
         <div
-          v-if="tokenHistory.current_price"
+          v-if="tokenInfo.current_price"
           class="token-price"
         >
           <h3>
-            {{ tokenPriceFormat(tokenHistory.current_price) }}
+            {{ tokenPriceFormat(tokenInfo.current_price) }}
           </h3>
-          ( <span :class="['percentage', {red: tokenHistory.price_change_percentage_24h < 0}]">
-            {{ Number(tokenHistory.price_change_percentage_24h).toFixed(2) }}%
+          ( <span :class="['percentage', 'px', {red: aeCoin.price_change_percentage_24h < 0}]">
+            {{ Number(aeCoin.price_change_percentage_24h).toFixed(2) }}%
           </span> )
 
-          <span :class="['percentage', {red: tokenHistory.price_change_percentage_24h < 0}]">
-            . + {{ tokenPriceFormat(tokenHistory.price_change_24h) }}
+          <span :class="['percentage', 'px', {red: aeCoin.price_change_percentage_24h < 0}]">
+            {{ tokenInfo.price_change_24h < 0 ? ' ' : ' -' }}
+            {{ tokenPriceFormat(tokenInfo.price_change_24h) }}
           </span>
         </div>
       </div>
@@ -40,12 +41,24 @@
       <div>
         <ButtonDefault
           class="header-button"
+          @click.prevent="$router.push({
+            name: 'add-pool',
+            query: {
+              from: $route.params.address
+            }
+          })"
         >
           Add Liquidity
         </ButtonDefault>
 
         <ButtonDefault
           class="header-button"
+          @click.prevent="$router.push({
+            name: 'swap',
+            query: {
+              from: $route.params.address
+            }
+          })"
         >
           Trade
         </ButtonDefault>
@@ -55,50 +68,50 @@
     <div class="charts">
       <div class="block">
         <div
-          v-if="tokenHistory.market_cap"
+          v-if="tokenInfo.market_cap"
           class="item"
         >
           <div class="title">
             Market Cap
           </div>
           <div class="price">
-            {{ tokenPriceFormat(tokenHistory.market_cap) }}
+            {{ tokenPriceFormat(tokenInfo.market_cap) }}
           </div>
         </div>
 
         <div
-          v-if="tokenHistory.total_volume"
+          v-if="tokenInfo.total_volume"
           class="item"
         >
           <div class="title">
             Total Volume
           </div>
           <div class="price">
-            {{ tokenPriceFormat(tokenHistory.total_volume) }}
+            {{ tokenPriceFormat(tokenInfo.total_volume) }}
           </div>
         </div>
 
         <div
-          v-if="tokenHistory.high_24h"
+          v-if="tokenInfo.high_24h"
           class="item"
         >
           <div class="title">
             High 24h
           </div>
           <div class="price">
-            {{ tokenPriceFormat(tokenHistory.high_24h) }}
+            {{ tokenPriceFormat(tokenInfo.high_24h) }}
           </div>
         </div>
 
         <div
-          v-if="tokenHistory.low_24h"
+          v-if="tokenInfo.low_24h"
           class="item"
         >
           <div class="title">
             Low 24h
           </div>
           <div class="price">
-            {{ tokenPriceFormat(tokenHistory.low_24h) }}
+            {{ tokenPriceFormat(tokenInfo.low_24h) }}
           </div>
         </div>
 
@@ -107,15 +120,15 @@
             24h Trading Vol
           </div>
           <div class="price">
-            {{ tokenPriceFormat(tokenHistory.market_cap_change_24h) }}
+            {{ tokenPriceFormat(tokenInfo.market_cap_change_24h) }}
           </div>
-          <div :class="['percentage', {red: tokenHistory.market_cap_change_percentage_24h < 0}]">
-            {{ Number(tokenHistory.market_cap_change_percentage_24h).toFixed(2) }}%
+          <div :class="['percentage', {red: aeCoin.market_cap_change_percentage_24h < 0}]">
+            {{ Number(aeCoin.market_cap_change_percentage_24h).toFixed(2) }}%
           </div>
         </div>
       </div>
       <div class="chart-finance">
-        <CandleStickChart />
+        <CandleStickChart :ratio="ratio" />
       </div>
     </div>
 
@@ -133,11 +146,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
 import { formatCurrency } from '@coingecko/cryptoformat';
-import { fetchJson } from '../../lib/utils';
+import { fetchJson, reduceDecimals } from '../../lib/utils';
 import ButtonDefault from '../../components/ButtonDefault.vue';
 import CandleStickChart from '../../components/charts/CandleStickChart.vue';
-import PairTable from '../../components/overview/PairTable.vue';
+import PairTable from '../../components/analytics/PairTable.vue';
 
 export default {
   name: 'TokenDetailView',
@@ -149,23 +164,55 @@ export default {
   data() {
     return {
       token: null,
-      tokenHistory: {},
+      pairs: null,
     };
+  },
+  computed: {
+    ...mapState('analytics', ['aeCoin']),
+    ratio() {
+      if (!this.token || !this.pairs || !this.pairs.pairs0) {
+        return null;
+      }
+      const WAE_ADDRESS = 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF';
+
+      let WAE = this.pairs.pairs0.find((pair) => pair.oppositeToken.address === WAE_ADDRESS);
+
+      if (!WAE) {
+        WAE = this.pairs.pairs1.find((pair) => pair.oppositeToken.address === WAE_ADDRESS);
+      }
+
+      if (!WAE) {
+        return null;
+      }
+
+      return reduceDecimals(WAE.liquidityInfo.reserve0, this.token.decimals)
+        .div(reduceDecimals(WAE.liquidityInfo.reserve1, WAE.oppositeToken.decimals)).toNumber();
+    },
+    tokenInfo() {
+      if (!this.ratio || !this.aeCoin) return {};
+      return {
+        // market_cap_change_24h
+        current_price: BigNumber(this.aeCoin.current_price).div(this.ratio),
+        price_change_24h: BigNumber(this.aeCoin.price_change_24h).div(this.ratio),
+        market_cap: BigNumber(this.aeCoin.market_cap).div(this.ratio),
+        total_volume: BigNumber(this.aeCoin.total_volume).div(this.ratio),
+        high_24h: BigNumber(this.aeCoin.high_24h).div(this.ratio),
+        low_24h: BigNumber(this.aeCoin.low_24h).div(this.ratio),
+        market_cap_change_24h: BigNumber(this.aeCoin.market_cap_change_24h).div(this.ratio),
+      };
+    },
   },
   async mounted() {
     const [
       token,
-      markets,
+      pairs,
     ] = await Promise.all([
       fetchJson(`http://localhost:3000/tokens/${this.$route.params.address}`),
-      fetchJson('https://api.coingecko.com/api/v3/coins/markets?ids=aeternity&vs_currency=usd'),
+      fetchJson(`http://localhost:3000/tokens/${this.$route.params.address}/pairs`),
     ]);
 
-    if (markets.length) {
-      // eslint-disable-next-line prefer-destructuring
-      this.tokenHistory = markets[0];
-    }
     this.token = token;
+    this.pairs = pairs;
   },
   methods: {
     tokenPriceFormat(price) {
@@ -176,7 +223,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @use '../../styles/overview.scss';
+  @use '../../styles/analytics.scss';
   @use '../../styles/typography.scss';
   @use '../../styles/variables.scss';
 
@@ -190,6 +237,10 @@ export default {
 
       &.red {
         color: variables.$color-red;
+      }
+
+      &.px {
+        padding: 0 5px;
       }
     }
 

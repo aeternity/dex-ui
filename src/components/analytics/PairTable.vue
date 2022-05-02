@@ -1,5 +1,5 @@
 <template>
-  <div class="pair-table">
+  <div class="data-table">
     <table>
       <thead>
         <tr>
@@ -8,7 +8,7 @@
             Pool
           </th>
           <th />
-          <th>TVL</th>
+          <th>Total Supply</th>
           <th>Volume 24H</th>
           <th>Volume 7d</th>
         </tr>
@@ -19,14 +19,15 @@
           v-for="(pair, index) of pairs"
           :key="`pair-${index}`"
           @click.prevent="$router.push({
-            name: 'overview-pair-details', params: {
+            name: 'overview-pair-details',
+            params: {
               address: pair.address
             }
           })"
         >
           <td>{{ index + 1 }}</td>
           <td colspan="2">
-            <div class="pair">
+            <div class="token">
               <img
                 :src="pair.image ?? `https://avatars.z52da5wt.xyz/${pair.token0}`"
               >
@@ -43,12 +44,34 @@
               </div>
             </div>
           </td>
-          <td>$2.22k</td>
-          <td>1.22%</td>
-          <td>$4.22b</td>
+          <td>
+            <div v-if="pair.pairToken && pair.pairToken.liquidityInfo">
+              {{
+                Number(
+                  pair.pairToken.liquidityInfo.totalSupply / pair.pairToken.liquidityInfo.reserve0
+                ).toFixed(5)
+              }} %
+            </div>
+          </td>
+          <td>
+            <div v-if="pair.pairToken && pair.pairToken.liquidityInfo">
+              {{
+                Number(
+                  pair.pairToken.liquidityInfo.totalSupply / pair.pairToken.liquidityInfo.reserve1
+                ).toFixed(5)
+              }} %
+            </div>
+          </td>
+          <td>
+            <!-- TODO -->
+          </td>
         </tr>
       </tbody>
     </table>
+
+    <pre>
+      {{ pairs }}
+    </pre>
   </div>
 </template>
 <script>
@@ -86,8 +109,34 @@ export default {
 
       if (this.token) {
         this.pairs = [
-          ...pairs.filter((pair) => pair.token0 === this.token.address),
+          ...pairs.filter((pair) => (
+            pair.token0 === this.token.address || pair.token1 === this.token.address
+          )),
         ];
+
+        const tokenPairs = await fetchJson(`http://localhost:3000/tokens/${this.token.address}/pairs`);
+
+        this.pairs = this.pairs.map((pair) => {
+          if (pair.token0 === this.token.address && tokenPairs.pairs0) {
+            return {
+              ...pair,
+              pairToken: {
+                ...tokenPairs.pairs0.find(
+                  (p) => p.oppositeToken.address === pair.token1,
+                ),
+                token: this.token,
+              },
+            };
+          }
+          return pair;
+        });
+
+        // const liquidityTokenA = (amountTokenA * this.totalSupply) / this.reserveTokenA;
+
+        console.info('========================');
+        console.info('pairs ::', this.pairs);
+        console.info('tokenPairs ::', tokenPairs);
+        console.info('========================');
       } else {
         this.pairs = pairs;
       }
@@ -102,102 +151,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-  @use '../../styles/variables.scss';
-  @use '../../styles/typography.scss';
-
-  .pair-table{
-    background-color: variables.$color-black2;
-    border-radius: 12px;
-    padding: 12px;
-
-    table {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      table-layout: fixed;
-
-      th, td {
-        padding: 10px;
-      }
-
-      .pair {
-        display: inline-flex;
-        align-items: center;
-
-        .name {
-          @extend %face-sans-16-regular;
-
-          padding-right: 6px;
-        }
-
-        .symbol {
-          @extend %face-sans-14-regular;
-
-          color: variables.$color-gray2;
-        }
-
-        img {
-          width: 28px;
-          height: 28px;
-          border-radius: 14px;
-          margin-right: 8px;
-        }
-      }
-
-      tbody tr:hover {
-        background-color: variables.$color-black;
-      }
-    }
-
-  @media screen and (max-width: 600px) {
-    table {
-      border: 0;
-    }
-
-    table caption {
-      font-size: 1.3em;
-    }
-
-    table thead {
-      border: none;
-      clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      padding: 0;
-      position: absolute;
-      width: 1px;
-    }
-
-    table tr {
-      border-bottom: 3px solid #ddd;
-      display: block;
-      margin-bottom: .625em;
-    }
-
-    table td {
-      border-bottom: 1px solid #ddd;
-      display: block;
-      font-size: .8em;
-      text-align: right;
-    }
-
-    table td::before {
-      /*
-      * aria-label has no advantage, it won't be read inside a table
-      content: attr(aria-label);
-      */
-      content: attr(data-label);
-      float: left;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-
-    table td:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  }
-
+  @use '../../styles/analytics.scss';
 </style>
