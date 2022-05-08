@@ -58,7 +58,7 @@
     </ButtonDefault>
 
     <ButtonDefault
-      :fill="address ? 'blue' : 'transparent-blue'"
+      fill="primary"
       :disabled="address && (connectingToWallet || isDisabled || approving || fetchingPairInfo
         || !enoughAllowance)"
       :spinner="connectingToWallet"
@@ -326,9 +326,8 @@ export default {
   .button-default {
     width: 100%;
     padding: 16px;
-    margin-top: 8px;
-
-    @extend %face-sans-20-medium;
+    margin-top: 12px;
+    border-radius: 16px;
 
     &.loading {
       padding: 0;

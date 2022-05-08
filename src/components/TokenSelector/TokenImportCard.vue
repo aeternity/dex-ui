@@ -97,7 +97,7 @@ export default {
     }
 
     a {
-      color: variables.$color-blue;
+      color: variables.$color-primary;
       text-decoration: none;
 
       @extend %face-sans-12-regular;

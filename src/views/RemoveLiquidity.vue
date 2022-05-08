@@ -448,10 +448,10 @@ export default {
 
       .button-plain {
         font-size: 16px;
-        color: variables.$color-blue;
+        color: variables.$color-primary;
 
         &:hover {
-          color: variables.$color-blue-hover;
+          color: variables.$color-primary-light;
         }
       }
     }

@@ -33,21 +33,21 @@ input[type=range] {
   &::-ms-fill-upper,
   &:focus::-ms-fill-lower,
   &:focus::-ms-fill-upper {
-    background: variables.$color-blue;
+    background: variables.$color-primary;
   }
 
   &::-moz-range-track {
     width: 100%;
     height: 2px;
     cursor: pointer;
-    background: variables.$color-blue;
+    background: variables.$color-primary;
   }
 
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 2px;
     cursor: pointer;
-    background: variables.$color-blue;
+    background: variables.$color-primary;
   }
 
   &::-ms-track {
@@ -63,7 +63,7 @@ input[type=range] {
     height: 30px;
     width: 30px;
     border-radius: 15px;
-    background: variables.$color-blue;
+    background: variables.$color-primary;
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -14px;
@@ -73,7 +73,7 @@ input[type=range] {
     height: 30px;
     width: 30px;
     border-radius: 15px;
-    background: variables.$color-blue;
+    background: variables.$color-primary;
     cursor: pointer;
   }
 
@@ -82,7 +82,7 @@ input[type=range] {
     height: 30px;
     width: 30px;
     border-radius: 15px;
-    background: variables.$color-blue;
+    background: variables.$color-primary;
     cursor: pointer;
   }
 }

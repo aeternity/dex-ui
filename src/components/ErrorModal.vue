@@ -9,7 +9,7 @@
       <h4>{{ message }}</h4>
     </div>
     <ButtonDefault
-      fill="transparent-blue"
+      fill="primary"
       :disabled="!resolve"
       @click="resolve"
     >
@@ -58,7 +58,7 @@ export default {
   }
 
   .button-default {
-    padding: 8px 12px;
+    padding: 8px 16px;
     margin-bottom: 20px;
     font-size: 18px;
   }
