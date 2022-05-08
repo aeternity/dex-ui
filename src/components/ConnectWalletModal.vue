@@ -188,8 +188,12 @@ export default {
     font-size: 14px;
 
     a {
-      color: variables.$color-blue;
+      color: variables.$color-primary;
       text-decoration: none;
+
+      &:hover {
+        color: variables.$color-primary-light;
+      }
     }
 
     &.wallet {
@@ -218,7 +222,7 @@ export default {
 
       &:hover {
         cursor: pointer;
-        border-color: variables.$color-blue;
+        border-color: variables.$color-primary;
       }
     }
 

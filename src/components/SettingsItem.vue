@@ -32,9 +32,9 @@ export default {
 .settings-item {
   .title {
     margin: 12px 0;
-    color: variables.$color-white2;
+    color: variables.$color-white;
 
-    @extend %face-sans-14-medium;
+    @extend %face-sans-16-medium;
 
     .button-tooltip {
       color: white;

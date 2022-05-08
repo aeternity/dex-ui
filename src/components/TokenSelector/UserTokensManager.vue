@@ -171,7 +171,7 @@ export default {
       @extend %face-sans-16-medium;
 
       .clear-all {
-        color: variables.$color-blue;
+        color: variables.$color-primary;
 
         @extend %face-sans-16-medium;
       }

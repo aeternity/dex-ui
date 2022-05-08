@@ -30,9 +30,10 @@ export default {
         'second-dark',
         'transparent',
         'plain',
+        'primary',
       ].includes(value),
       default() {
-        return 'blue';
+        return 'primary';
       },
     },
     spinner: Boolean,
@@ -42,6 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .button-default {
   border-radius: 12px;
@@ -88,6 +90,27 @@ export default {
 
     &:active {
       background-color: variables.$color-black3;
+    }
+  }
+
+  &.primary {
+    background: variables.$color-primary;
+    color: variables.$text-dark;
+
+    @extend %face-sans-16-medium;
+
+    &:hover {
+      background-color: variables.$color-primary;
+      opacity: 0.8;
+    }
+
+    &:focus {
+      background-color: variables.$color-primary;
+      opacity: 0.4;
+    }
+
+    &:active {
+      background-color: variables.$color-primary;
     }
   }
 

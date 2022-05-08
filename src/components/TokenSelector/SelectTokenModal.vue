@@ -254,7 +254,7 @@ export default {
   .manage-token-list {
     background-color: variables.$color-black;
     border-top: 1px solid variables.$color-gray;
-    color: variables.$color-blue;
+    color: variables.$color-primary;
     padding: 20px 0;
     display: flex;
     align-items: center;

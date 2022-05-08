@@ -51,7 +51,7 @@
     </a>
     <div>
       <ButtonDefault
-        fill="transparent-blue"
+        class="liquidity-button"
         :to="{
           name: 'add-pool',
           query: {
@@ -63,7 +63,7 @@
         Add
       </ButtonDefault>
       <ButtonDefault
-        fill="transparent-blue"
+        class="liquidity-button"
         :to="`/pool/remove/${poolId}`"
       >
         Remove
@@ -188,10 +188,20 @@ export default {
   a {
     text-align: center;
     text-decoration: none;
-    color: variables.$color-blue;
+    color: variables.$color-primary;
 
     &:hover {
-      color: variables.$color-blue-hover;
+      color: variables.$color-primary-light;
+    }
+  }
+
+  .liquidity-button {
+    color: variables.$color-white;
+    background-color: variables.$color-gray;
+
+    &:hover {
+      background-color: variables.$color-gray-hover;
+      color: variables.$color-white;
     }
   }
 

@@ -35,7 +35,7 @@
             >
               <div>
                 <ButtonDefault
-                  :fill="showedSlippage ? 'second-dark' : 'blue'"
+                  :fill="showedSlippage ? 'second-dark' : 'primary'"
                   @click="updateSlippage()"
                 >
                   Auto
@@ -164,6 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .main-wrapper {
   display: flex;
@@ -196,7 +197,8 @@ export default {
     }
 
     .title {
-      font-size: 20px;
+      @extend %face-sans-18-semi-bold;
+
       color: white;
       white-space: nowrap;
     }
@@ -216,7 +218,9 @@ export default {
         }
 
         .settings {
-          min-width: 270px;
+          min-width: 350px;
+          width: 440px;
+          max-width: 90%;
           cursor: auto;
           padding: 16px;
           color: white;

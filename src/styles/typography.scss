@@ -38,6 +38,13 @@
   line-height: 20px;
 }
 
+%face-sans-18-semi-bold {
+  font-family: $font-sans;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 23px;
+}
+
 %face-sans-18-medium {
   font-family: $font-sans;
   font-weight: 500;
@@ -56,7 +63,7 @@
   font-family: $font-sans;
   font-weight: 500;
   font-size: 16px;
-  line-height: 16px;
+  line-height: 20.8px;
 }
 
 %face-sans-16-regular {
@@ -66,11 +73,18 @@
   line-height: 16px;
 }
 
+%face-sans-15-normal {
+  font-family: $font-sans;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 20px;
+}
+
 %face-sans-14-medium {
   font-family: $font-sans;
   font-weight: 500;
   font-size: 14px;
-  line-height: 14px;
+  line-height: 18.2px;
 }
 
 %face-sans-14-regular {

@@ -94,7 +94,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 12px;
 
     .button-token {
       width: initial;
@@ -110,6 +109,7 @@ export default {
     color: variables.$color-white2;
     padding: 0 16px;
     text-align: left;
+    padding-top: 12px;
 
     > span {
       @extend %face-sans-14-regular;
@@ -118,7 +118,7 @@ export default {
     .button-plain {
       margin-left: 4px;
       font-weight: 500;
-      color: variables.$color-blue;
+      color: variables.$color-primary;
     }
   }
 }
