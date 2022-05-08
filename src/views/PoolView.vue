@@ -63,6 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
 @use '../styles/typography.scss';
 
 .pool-view {
@@ -92,10 +93,10 @@ export default {
 
     a {
       text-decoration: none;
-      color: #2172e5;
+      color: variables.$color-primary;
 
       &:hover {
-        color: #35b6ff;
+        color: variables.$color-primary-light;
       }
     }
   }

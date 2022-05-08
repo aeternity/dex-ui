@@ -2,7 +2,6 @@
 <template>
   <div class="header">
     <div class="left">
-      <span>DEX</span>
       <AeLogo />
     </div>
     <NavigationMenu />
@@ -19,7 +18,7 @@
         :spinner="connectingToWallet"
         :disabled="connectingToWallet"
         class="connect-wallet"
-        fill="transparent-blue"
+        fill="primary"
         @click="connectWallet"
       >
         <span>Connect Wallet</span>
@@ -49,7 +48,6 @@
             target="_blank"
           >
             About us
-            <AeLogo />
           </a>
           <a
             v-if="UNFINISHED_FEATURES"
@@ -57,7 +55,6 @@
             target="_blank"
           >
             Terms & Condition
-            <AeLogo />
           </a>
           <div
             v-if="UNFINISHED_FEATURES"
@@ -139,7 +136,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import AeLogo from '../assets/ae.svg?vue-component';
+import AeLogo from '../assets/logo.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
 import Cog from '../assets/cog.svg?vue-component';
 
@@ -202,17 +199,8 @@ export default {
     justify-content: start;
     align-items: center;
 
-    @extend %face-sans-24-bold;
-
-    span {
-      margin-right: 4px;
-      color: white;
-    }
-
     svg {
-      width: 24px;
-      height: 24px;
-      fill: variables.$color-white;
+      height: 22px;
     }
   }
 
@@ -222,21 +210,18 @@ export default {
     .active-network {
       display: flex;
       align-items: center;
-      background-color: variables.$color-black3;
-      border: 1px solid variables.$color-black3;
-      border-radius: 12px;
       margin-right: 10px;
-      padding: 0 15px;
+      padding: 0 16px;
       color: variables.$color-white;
 
-      @extend %face-sans-16-regular;
+      @extend %face-sans-15-normal;
 
       .circle {
-        width: 15px;
-        height: 15px;
+        width: 6px;
+        height: 6px;
         border-radius: 51%;
         margin-right: 5px;
-        background-color: variables.$color-green;
+        background-color: variables.$color-primary;
       }
     }
 
@@ -276,11 +261,12 @@ export default {
     }
 
     .connect-wallet {
-      padding: 8px;
+      padding: 0 16px;
       margin-right: 10px;
       white-space: nowrap;
+      border-radius: 66px;
 
-      @extend %face-sans-16-regular;
+      @extend %face-sans-14-medium;
     }
 
     .actions-menu {

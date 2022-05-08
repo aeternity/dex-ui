@@ -1,8 +1,8 @@
 <template>
   <ButtonDefault
     v-bind="$attrs"
-    :fill="token ? 'dark' : 'blue'"
     class="button-token"
+    :fill="null"
     @click="selectToken"
   >
     <div class="token">
@@ -42,6 +42,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables.scss';
 @use '../styles/typography.scss';
 
 .button-token {
@@ -51,6 +52,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   border-radius: 20px;
+  background: rgba(142, 152, 186, 0.15);
 
   .token {
     display: flex;

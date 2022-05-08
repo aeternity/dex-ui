@@ -37,6 +37,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .navigation-menu {
   display: flex;
@@ -49,6 +50,8 @@ export default {
     color: variables.$color-white2;
     padding: 8px 12px;
     text-decoration: none;
+
+    @extend %face-sans-16-medium;
 
     &:not(:last-of-type) {
       margin-right: 10px;

@@ -61,7 +61,7 @@
     }
 
     a {
-      color: variables.$color-blue;
+      color: variables.$color-primary;
     }
   }
 
@@ -100,7 +100,7 @@
     transition: border 100ms ease 0s;
 
     &:focus {
-      border: 1px solid variables.$color-blue;
+      border: 1px solid variables.$color-primary;
     }
   }
 }

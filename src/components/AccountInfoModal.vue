@@ -138,13 +138,14 @@ export default {
       color: variables.$color-gray2;
 
       .change-button {
-        color: #2172e5;
+        color: variables.$color-primary;
         padding: 5px 10px;
         border: 1px solid variables.$color-black;
         border-radius: 12px;
 
         &:hover {
           cursor: pointer;
+          color: variables.$color-primary-light;
         }
       }
     }

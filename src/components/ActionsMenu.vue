@@ -42,7 +42,7 @@ export default {
   :deep(.small-modal > .content) {
     padding: 8px;
     border-radius: 12px;
-    background-color: variables.$color-black;
+    background-color: variables.$color-black3;
     top: 50px;
     right: 0;
     white-space: nowrap;

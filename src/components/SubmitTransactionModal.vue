@@ -120,7 +120,7 @@ export default {
 
     > a {
       font-size: 14px;
-      color: variables.$color-blue;
+      color: variables.$color-primary;
       text-decoration: none;
     }
 

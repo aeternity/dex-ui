@@ -121,6 +121,7 @@ export default {
         display: flex;
         align-items: center;
         background-color: variables.$color-black2;
+        border: 2px solid variables.$color-black2;
         padding: 6px;
         border-radius: 12px;
 
@@ -139,10 +140,8 @@ export default {
       }
 
       &.active {
-        background-color: variables.$color-blue;
-
         .switch .circle {
-          background-color: variables.$color-blue;
+          background-color: variables.$color-primary;
         }
       }
 

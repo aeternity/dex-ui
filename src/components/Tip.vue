@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="tip">
-    <b>Tip:</b>{{ ` ${tip}` }}
+    {{ ` ${tip}` }}
   </div>
 </template>
 
@@ -17,9 +17,7 @@ export default {
 @use '../styles/variables.scss';
 
 .tip {
-  color: variables.$color-blue;
-  background-color: variables.$color-blue2;
-  border-radius: 12px;
+  color: variables.$color-gray2;
   padding: 16px;
   text-align: left;
 }
