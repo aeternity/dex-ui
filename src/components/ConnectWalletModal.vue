@@ -7,20 +7,13 @@
   >
     <div
       v-if="UNFINISHED_FEATURES"
-      class="box"
+      class="description"
     >
-      By connecting a wallet, you agree to DEX
-      <a href="#">Terms of Service</a>  and acknowledge that you have read and understand
-      the DEX <a href="#">Protocol Disclaimer</a>.
+      By connecting a wallet, you acknowledge that you
+      have read and understand the Superhero DEX's
+      <a href="#">Terms and Conditions.</a>
     </div>
 
-    <div
-      v-if="connecting"
-      class="box loading"
-    >
-      <AnimatedSpinner />
-      <span>Initializing...</span>
-    </div>
     <div
       v-if="scanningForWallets"
       class="box loading"
@@ -34,25 +27,68 @@
     >
       <div
         v-if="!connecting || wallet.id === connectingTo"
-        class="box wallet"
-        @click.prevent="onWalletConnect(wallet)"
+        class="box"
       >
-        <div class="info">
-          <div class="title">
-            {{ wallet.name }}
+        <div class="wallet">
+          <div class="info">
+            <img
+              v-if="icons[wallet.name]"
+              :src="icons[wallet.name]"
+              :alt="wallet.name"
+            >
+            <div class="title">
+              {{ wallet.name }}
+              {{ wallet.name.includes('Wallet') ? '' : ' Wallet' }}
+            </div>
           </div>
-          <div
-            v-if="wallet.id === connectingTo"
-            class="description"
+
+          <ButtonDefault
+            v-if="!connecting"
+            class="connect-wallet"
+            fill="primary"
+            @click.prevent="onWalletConnect(wallet)"
           >
-            {{ wallet.description }}
+            <span>Connect Wallet</span>
+          </ButtonDefault>
+        </div>
+        <div
+          v-if="connecting || wallet.type === 'website'"
+          class="wallet-extentions"
+        >
+          <div
+            v-if="connecting"
+            class="loading"
+          >
+            Initializing...
+          </div>
+          <div v-if="wallet.type === 'website'">
+            <div class="title">
+              Get the browser extension
+            </div>
+            <div class="extentions">
+              <a
+                href="https://addons.mozilla.org/en-US/firefox/addon/superhero-wallet/"
+                target="_blank"
+                class="extention"
+              >
+                <FirefoxLogo />
+                <div class="description">
+                  Install for Firefox Browser
+                </div>
+              </a>
+              <a
+                href="https://chrome.google.com/webstore/detail/superhero/mnhmmkepfddpifjkamaligfeemcbhdne"
+                target="_blank"
+                class="extention"
+              >
+                <ChromeLogo />
+                <div class="description">
+                  Install for Chrome Browser
+                </div>
+              </a>
+            </div>
           </div>
         </div>
-        <img
-          v-if="icons[wallet.name]"
-          :src="icons[wallet.name]"
-          :alt="wallet.name"
-        >
       </div>
     </template>
   </ModalDefault>
@@ -64,12 +100,18 @@ import {
 } from '@aeternity/aepp-sdk';
 import { resolveWithTimeout } from '../lib/utils';
 import ModalDefault from './ModalDefault.vue';
+import ButtonDefault from './ButtonDefault.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
+import ChromeLogo from '../assets/chrome-logo.svg?skip-optimize';
+import FirefoxLogo from '../assets/firefox-logo.svg?skip-optimize';
 
 export default {
   components: {
+    ButtonDefault,
     ModalDefault,
     AnimatedSpinner,
+    ChromeLogo,
+    FirefoxLogo,
   },
   props: {
     resolve: { type: Function, required: true },
@@ -107,10 +149,7 @@ export default {
 
       detector.scan(async ({ wallets }) => {
         this.wallets = [
-          ...Object.values(wallets).map((wallet) => ({
-            ...wallet,
-            description: 'Easy-to-use browser extension.',
-          })),
+          ...Object.values(wallets),
         ];
         clearTimeout(walletScanningTimeout);
         detector.stopScan();
@@ -151,7 +190,6 @@ export default {
           name: 'Superhero',
           networkId: 'ae_uat',
           type: 'website',
-          description: 'Easy-to-use wallet.',
         },
       ];
     },
@@ -161,10 +199,12 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
 
 .connect-wallet-modal {
   :deep(.container) {
-    max-width: 400px;
+    max-width: 440px;
+    width: 440px;
     padding: 0 16px;
 
     .body {
@@ -176,16 +216,34 @@ export default {
     }
   }
 
+  .description {
+    color: variables.$color-gray2;
+    text-align: left;
+    padding: 4px;
+
+    @extend %face-sans-14-medium;
+
+    a {
+      color: variables.$color-primary;
+      text-decoration: none;
+
+      &:hover {
+        color: variables.$color-primary-light;
+      }
+    }
+  }
+
   .box {
-    width: 350px;
+    width: 100%;
     margin: 16px auto;
-    padding: 16px;
+    padding: 2px;
     border: 1px solid variables.$color-black;
-    border-radius: 12px;
+    border-radius: 16px;
     text-align: left;
     background-color: variables.$color-black2;
-    color: white;
-    font-size: 14px;
+    color: variables.$color-white;
+
+    @extend %face-sans-16-medium;
 
     a {
       color: variables.$color-primary;
@@ -196,33 +254,69 @@ export default {
       }
     }
 
-    &.wallet {
-      margin-bottom: 4px;
+    .wallet {
+      padding: 6px 14px;
+      width: 100%;
       display: inline-flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 16px;
 
       .info {
-        display: block;
+        display: inline-flex;
+        align-items: center;
 
         .title {
-          font-size: 16px;
-          font-weight: bold;
-        }
+          padding-left: 12px;
 
-        .description {
-          font-size: 14px;
+          @extend %face-sans-18-medium;
         }
+      }
+
+      .connect-wallet {
+        padding: 6px 12px;
+        white-space: nowrap;
+        border-radius: 30px;
+
+        @extend %face-sans-14-medium;
       }
 
       img {
         width: 40px;
       }
+    }
 
-      &:hover {
-        cursor: pointer;
-        border-color: variables.$color-primary;
+    .wallet-extentions {
+      background-color: variables.$color-modal-bg;
+      padding: 6px 14px;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+
+      .title {
+        padding: 12px 0;
+
+        @extend %face-sans-16-medium;
+      }
+
+      .extentions {
+        display: inline-flex;
+
+        .extention {
+          display: inline-flex;
+
+          @extend %face-sans-13-medium;
+
+          svg {
+            width: 30px;
+            margin-right: 8px;
+          }
+        }
+      }
+
+      .loading {
+        text-align: center;
+        padding: 24px;
+
+        @extend %face-sans-16-medium;
       }
     }
 
