@@ -3,8 +3,8 @@
     class="clipboard"
     @click.prevent="copy()"
   >
-    <span>{{ copied ? 'Copied!' : title }}</span>
     <CopyIcon />
+    <span>{{ copied ? 'Copied!' : title }}</span>
   </span>
 </template>
 
@@ -55,7 +55,7 @@ export default {
   }
 
   svg {
-    margin-left: 6px;
+    margin-right: 6px;
     width: 16px;
   }
 }
