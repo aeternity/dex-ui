@@ -171,7 +171,7 @@ export default {
     },
     modalTitle() {
       if (this.tab === 'manage-token-list') {
-        return 'Manage';
+        return 'Manage tokens';
       }
       if (this.tab === 'import-token') {
         return 'Import token';
@@ -247,14 +247,12 @@ export default {
     max-height: 50vh;
     min-height: 40vh;
     overflow-y: auto;
-    border-top: 1px solid variables.$color-black;
     padding: 10px 0;
   }
 
   .manage-token-list {
-    background-color: variables.$color-black;
-    border-top: 1px solid variables.$color-gray;
-    color: variables.$color-primary;
+    background-color: variables.$color-black2;
+    color: variables.$color-gray2;
     padding: 20px 0;
     display: flex;
     align-items: center;

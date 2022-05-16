@@ -75,7 +75,7 @@ export default {
   }
 
   .token-info {
-    background-color: variables.$color-black;
+    background-color: variables.$color-black2;
     border-radius: 20px;
     padding: 18px;
     margin-bottom: 10px;

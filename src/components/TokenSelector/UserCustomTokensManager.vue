@@ -1,5 +1,5 @@
 <template>
-  <div class="user-tokens-manager">
+  <div class="user-custom-tokens-manager">
     <div class="input-wrapper">
       <InputField
         v-model:value="searchTerm"
@@ -66,7 +66,7 @@
     </div>
 
     <div class="token-list-footer">
-      Tip: Custom tokens are stored locally in your browser
+      Custom tokens are stored locally in your browser
     </div>
   </div>
 </template>
@@ -151,8 +151,9 @@ export default {
 @use '../../styles/typography.scss';
 @use './style.scss';
 
-.user-tokens-manager {
+.user-custom-tokens-manager {
   width: 100%;
+  padding-top: 16px;
 
   .token-list-wrapper {
     display: flex;
@@ -163,7 +164,6 @@ export default {
     color: variables.$color-white;
 
     .filters {
-      border-top: 1px solid variables.$color-gray;
       display: flex;
       justify-content: space-between;
       padding: 15px 20px;
@@ -179,12 +179,14 @@ export default {
   }
 
   .token-list-footer {
-    border-top: 1px solid variables.$color-gray;
+    background-color: variables.$color-black2;
     color: variables.$color-gray2;
     padding: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @extend %face-sans-14-medium;
   }
 }
 </style>

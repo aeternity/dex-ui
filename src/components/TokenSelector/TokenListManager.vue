@@ -8,13 +8,10 @@
         <div
           v-if="activeNetwork
             && provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length"
-          :class="['provider', { active: provider.active }]"
+          class="provider"
           @click.prevent="$store.commit('tokens/toggleProvider', provider)"
         >
           <div class="content">
-            <div class="icon">
-              <QuestionCircleIcon />
-            </div>
             <div class="info">
               <div class="title">
                 {{ provider.name }}
@@ -27,20 +24,8 @@
           </div>
 
           <div class="actions">
-            <div class="switch">
-              <div
-                v-if="provider.active"
-                class="text"
-              >
-                ON
-              </div>
+            <div :class="['switch', {active: provider.active}]">
               <div class="circle" />
-              <div
-                v-if="!provider.active"
-                class="text"
-              >
-                OFF
-              </div>
             </div>
           </div>
         </div>
@@ -51,12 +36,8 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import QuestionCircleIcon from '../../assets/question-circle.svg?vue-component';
 
 export default {
-  components: {
-    QuestionCircleIcon,
-  },
   computed: {
     ...mapGetters(['activeNetwork']),
     ...mapState('tokens', ['providers']),
@@ -78,26 +59,19 @@ export default {
     max-height: 50vh;
     min-height: 40vh;
     overflow-y: auto;
-    border-top: 1px solid variables.$color-gray;
-    padding: 20px;
+    padding: 16px 0;
 
     .provider {
-      margin-bottom: 10px;
       border-radius: 8px;
-      padding: 12px;
+      padding: 6px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: variables.$color-white;
-      background-color: variables.$color-black;
 
       .content {
         display: flex;
         align-items: center;
-
-        .icon {
-          width: 28px;
-        }
 
         .info {
           padding-left: 10px;
@@ -106,11 +80,12 @@ export default {
           .title {
             line-height: 22px;
 
-            @extend %face-sans-16-medium;
+            @extend %face-sans-18-medium;
           }
 
           .total-tokens {
-            line-height: 22px;
+            line-height: 18.2px;
+            color: variables.$color-gray2;
 
             @extend %face-sans-14-regular;
           }
@@ -120,28 +95,22 @@ export default {
       .switch {
         display: flex;
         align-items: center;
-        background-color: variables.$color-black2;
-        border: 2px solid variables.$color-black2;
-        padding: 6px;
-        border-radius: 12px;
+        background-color: variables.$color-gray3;
+        width: 47px;
+        height: 26px;
+        border-radius: 16px;
+        padding: 3px;
 
         .circle {
           border-radius: 50%;
-          width: 15px;
-          height: 15px;
-          background-color: variables.$color-gray-hover;
+          width: 20px;
+          height: 20px;
+          background-color: variables.$color-white;
         }
 
-        .text {
-          padding: 0 4px;
-
-          @extend %face-sans-14-medium;
-        }
-      }
-
-      &.active {
-        .switch .circle {
-          background-color: variables.$color-primary;
+        &.active {
+          background-color: variables.$color-green;
+          justify-content: end;
         }
       }
 
