@@ -1,14 +1,14 @@
 <template>
   <ModalDefault
     class="account-info-modal"
-    title="Account"
+    title="Connected account"
     close
     @close="resolve"
   >
     <div class="box">
       <div class="wallet">
-        <div>
-          Connected with {{ wallet ? wallet.name : '' }}
+        <div class="title">
+          Connected with {{ wallet ? wallet.name : '' }} Wallet
         </div>
         <div
           class="change-button"
@@ -17,24 +17,26 @@
           Disconnect
         </div>
       </div>
-      <div class="address">
-        <img :src="`https://avatars.z52da5wt.xyz/${address}`">
-        <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
-      </div>
-      <div class="links">
-        <ClipboardCopy
-          class="copy-address"
-          title="Copy Address"
-          :content="address"
-        />
-        <a
-          v-if="activeNetwork"
-          :href="`${activeNetwork.explorerUrl}/account/${address}`"
-          target="_blank"
-        >
-          View in explorer
-          <ExternalLinkIcon />
-        </a>
+      <div class="content">
+        <div class="address">
+          <img :src="`https://avatars.z52da5wt.xyz/${address}`">
+          <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
+        </div>
+        <div class="links">
+          <ClipboardCopy
+            class="copy-address"
+            title="Copy Address"
+            :content="address"
+          />
+          <a
+            v-if="activeNetwork"
+            :href="`${activeNetwork.explorerUrl}/account/${address}`"
+            target="_blank"
+          >
+            <ExternalLinkIcon />
+            View in explorer
+          </a>
+        </div>
       </div>
     </div>
     <div class="recent-transactions">
@@ -122,75 +124,93 @@ export default {
       overflow: hidden auto;
       display: flex;
       flex-direction: column;
+      margin-bottom: 8px;
     }
   }
 
   color: variables.$color-white;
 
   .box {
-    max-width: 350px;
-    margin: 0 16px 16px 16px;
-    padding: 16px;
-    border: 1px solid variables.$color-black;
-    border-radius: 12px;
+    max-width: 100%;
+    width: 400px;
+    margin: 16px;
+    padding: 2px;
+    background-color: variables.$color-black2;
+    border-radius: 16px;
     text-align: left;
 
     @extend %face-sans-14-regular;
 
-    .links {
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
-      color: variables.$color-gray2;
-
-      .copy-address {
-        margin-right: 16px;
-      }
-
-      a {
-        display: flex;
-        align-items: center;
-        color: variables.$color-gray2;
-        text-decoration: none;
-
-        svg {
-          margin-left: 6px;
-          width: 16px;
-        }
-      }
-    }
-
-    .address {
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 0 12px;
-
-      @extend %face-sans-18-medium;
-
-      img {
-        height: 16px;
-        width: 16px;
-        margin-right: 8px;
-      }
-    }
-
     .wallet {
       width: 100%;
+      padding: 18px 14px;
       display: inline-flex;
       justify-content: space-between;
       align-items: center;
       color: variables.$color-gray2;
 
+      .title {
+        @extend %face-sans-15-medium;
+
+        color: variables.$color-white;
+      }
+
       .change-button {
-        color: variables.$color-primary;
-        padding: 5px 10px;
-        border: 1px solid variables.$color-black;
-        border-radius: 12px;
+        background-color: variables.$color-red2;
+        color: variables.$color-white;
+        padding: 6px 12px;
+        border-radius: 30px;
+
+        @extend %face-sans-14-medium;
 
         &:hover {
           cursor: pointer;
-          color: variables.$color-primary-light;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .content {
+      background-color: variables.$color-black3;
+      padding: 18px 14px;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+
+      .links {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        color: variables.$color-gray2;
+
+        .copy-address {
+          margin-right: 16px;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+          color: variables.$color-gray2;
+          text-decoration: none;
+
+          svg {
+            margin-right: 6px;
+            width: 16px;
+          }
+        }
+      }
+
+      .address {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 0 12px;
+
+        @extend %face-sans-18-medium;
+
+        img {
+          height: 16px;
+          width: 16px;
+          margin-right: 8px;
         }
       }
     }
