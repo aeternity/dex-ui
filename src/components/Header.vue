@@ -27,7 +27,6 @@
         v-else
         class="account-info"
       >
-        <span><AeBalance :address="address" /> AE</span>
         <div
           :class="['address', { pending: pendingTransactions.length }]"
           @click.prevent="openAccountInfo()"
@@ -37,10 +36,11 @@
             <AnimatedSpinner />
           </template>
           <template v-else>
-            <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
             <img :src="`https://avatars.z52da5wt.xyz/${address}`">
+            <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
           </template>
         </div>
+        <span><AeBalance :address="address" /> AE</span>
       </div>
       <ActionsMenu @click.stop>
         <template #display>
@@ -241,8 +241,9 @@ export default {
     .account-info {
       display: flex;
       align-items: center;
-      background-color: variables.$color-black2;
-      border-radius: 12px;
+      background-color: variables.$color-black3;
+      padding: 4px;
+      border-radius: 16px;
       margin-right: 10px;
       color: variables.$color-white;
 
@@ -255,12 +256,12 @@ export default {
         display: flex;
         align-items: center;
         color: variables.$color-white;
-        padding: 12px 10px;
-        background-color: variables.$color-black3;
+        padding: 8px 10px;
+        background-color: variables.$color-black2;
         border-radius: 12px;
-        border: 1px solid variables.$color-black3;
+        border: 1px solid variables.$color-black;
 
-        @extend %face-sans-16-regular;
+        @extend %face-sans-15-medium;
 
         &.pending {
           background-color: variables.$color-blue;
