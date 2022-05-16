@@ -29,7 +29,7 @@
             </div>
             <SettingsItem
               title="Slippage tolerance"
-              tooltip="Your transaction will revert if the price
+              description="Your transaction will revert if the price
                 changes unfavorably by more than this percentage."
               class="slippage"
             >
@@ -68,7 +68,7 @@
             </SettingsItem>
             <SettingsItem
               title="Transaction deadline"
-              tooltip="Your transaction will revert if
+              description="Your transaction will revert if
                 it is pending for more than this period of time."
               class="deadline"
             >
@@ -218,9 +218,8 @@ export default {
         }
 
         .settings {
-          min-width: 350px;
           width: 440px;
-          max-width: 90%;
+          max-width: 100%;
           cursor: auto;
           padding: 16px;
           color: white;
@@ -287,9 +286,10 @@ export default {
           }
 
           .input-amount {
-            height: 32px;
-            padding: 0 12px;
-            border-radius: 36px;
+            max-width: 100px;
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 16px;
 
             :deep(.input-field) {
               font-size: 16px;

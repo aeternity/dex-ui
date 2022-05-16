@@ -1,26 +1,30 @@
 <template>
   <div class="settings-item">
-    <div class="title">
-      <span>{{ title }}</span>
-      <ButtonTooltip v-bind="$attrs">
-        ?
-      </ButtonTooltip>
+    <div class="row">
+      <div class="title">
+        <span>{{ title }}</span>
+      </div>
+      <div class="content">
+        <slot />
+      </div>
     </div>
-    <div class="content">
-      <slot />
+    <div>
+      <div
+        v-if="description"
+        class="description"
+      >
+        {{ description }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import ButtonTooltip from './ButtonTooltip.vue';
 
 export default {
-  components: {
-    ButtonTooltip,
-  },
   props: {
     title: { type: String, required: true },
+    description: { type: String, default: null },
   },
 };
 </script>
@@ -30,6 +34,15 @@ export default {
 @use '../styles/typography.scss';
 
 .settings-item {
+  width: 100%;
+  margin-top: 14px;
+
+  .row {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+  }
+
   .title {
     margin: 12px 0;
     color: variables.$color-white;
@@ -40,6 +53,14 @@ export default {
       color: white;
       margin-left: 8px;
     }
+  }
+
+  .description {
+    color: variables.$color-gray2;
+    padding: 8px 0;
+    white-space: initial;
+
+    @extend %face-sans-14-regular;
   }
 
   .content {
