@@ -7,7 +7,7 @@ export default {
     userTokens: [],
     providers: [
       {
-        name: 'DEX',
+        name: 'Superhero DEX Selection',
         icon: null,
         active: true,
         tokens: [],
@@ -68,12 +68,12 @@ export default {
 
       state.providers = [
         {
-          name: 'DEX',
+          name: 'Superhero DEX Selection',
           icon: null,
           active: true,
           tokens,
         },
-        ...state.providers.filter((p) => p.name !== 'DEX'),
+        ...state.providers.filter((p) => p.name !== 'Superhero DEX Selection'),
       ];
     },
     addProvider(state, provider) {
@@ -93,13 +93,13 @@ export default {
         const tokens = await fetchJson(`${activeNetwork.middlewareUrl}/aex9/by_name`);
         if (Array.isArray(tokens)) {
           commit('addProvider', {
-            name: 'AE MDW',
+            name: 'AE Middleware List',
             icon: null,
             active: false,
-            ...providers.find((provider) => provider.name === 'AE MDW'),
+            ...providers.find((provider) => provider.name === 'AE Middleware List'),
             tokens: tokens.map((token) => ({
               ...token,
-              provider: 'AE MDW',
+              provider: 'AE Middleware List',
               networkId: activeNetwork.networkId,
             })),
           });

@@ -91,16 +91,17 @@
   margin: 0 20px 16px;
 
   .search-bar {
-    font-size: 18px;
     text-align: left;
-    padding: 16px;
-    border-radius: 20px;
+    padding: 13px 16px 14px;
+    border-radius: 16px;
     color: white;
-    border: 1px solid variables.$color-gray;
+    background-color: variables.$color-black2;
     transition: border 100ms ease 0s;
 
-    &:focus {
-      border: 1px solid variables.$color-primary;
+    @extend %face-sans-16-regular;
+
+    &::placeholder {
+      color: variables.$color-gray2;
     }
   }
 }

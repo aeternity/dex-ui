@@ -114,7 +114,7 @@ export default {
 
     .wrapper {
       padding: 10px 15px;
-      background-color: variables.$color-black;
+      background-color: variables.$color-black2;
       border-radius: 12px;
     }
   }

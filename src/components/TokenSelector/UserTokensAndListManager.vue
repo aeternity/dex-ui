@@ -8,10 +8,10 @@
         Lists
       </div>
       <div
-        :class="['option', { active: tab === 'tokens' }]"
-        @click.prevent="tab = 'tokens'"
+        :class="['option', { active: tab === 'custom' }]"
+        @click.prevent="tab = 'custom'"
       >
-        Tokens
+        Custom
       </div>
     </div>
 
@@ -19,8 +19,8 @@
       v-if="tab === 'lists'"
       v-bind="$attrs"
     />
-    <UserTokensManager
-      v-if="tab === 'tokens'"
+    <UserCustomTokensManager
+      v-if="tab === 'custom'"
       v-bind="$attrs"
     />
   </div>
@@ -28,12 +28,12 @@
 
 <script>
 import TokenListManager from './TokenListManager.vue';
-import UserTokensManager from './UserTokensManager.vue';
+import UserCustomTokensManager from './UserCustomTokensManager.vue';
 
 export default {
   components: {
     TokenListManager,
-    UserTokensManager,
+    UserCustomTokensManager,
   },
   data: () => ({
     tab: 'lists',
@@ -46,18 +46,19 @@ export default {
 @use '../../styles/typography.scss';
 
 .toggle {
-  margin: 12px 20px;
-  border-radius: 8px;
-  background-color: variables.$color-gray;
+  max-width: 160px;
+  margin: 0 auto;
+  padding: 4px;
+  border-radius: 16px;
+  background-color: variables.$color-black2;
   flex: 1;
   display: flex;
   justify-content: space-around;
 
   .option {
     flex: 1;
-    margin: 6px;
-    border-radius: 8px;
-    padding: 10px 0;
+    border-radius: 12px;
+    padding: 7px 8px;
     color: variables.$color-white;
 
     @extend %face-sans-16-medium;
@@ -67,7 +68,7 @@ export default {
     }
 
     &.active {
-      background-color: variables.$color-black;
+      background-color: variables.$color-gray3;
     }
   }
 }
