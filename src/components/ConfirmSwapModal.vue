@@ -1,7 +1,7 @@
 <template>
   <ModalDefault
     class="confirm-swap-modal"
-    title="Confrim Swap"
+    title="Confirm Swap"
     close
     @close="denyHandler"
   >
@@ -20,36 +20,36 @@
       :contract="to.contract_id"
       :amount="amountTo"
     />
-    <div class="price">
-      Price
-      <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
+    <div class="estimation">
+      {{ isLastAmountFrom ? 'Output' : 'Input' }} is estimated.
+      {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
+      <strong>{{ receivedOrSpentValueMsg }}</strong>
+      or the transaction will revert.
     </div>
     <div class="transaction-details">
-      <div class="title">
+      <div class="title no-border">
         Transaction Details
       </div>
-      <div v-if="!isAeVsWae">
+      <div>
+        <span>Price</span>
+        <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
+      </div>
+      <!-- <div v-if="!isAeVsWae">
         <span>Liquidity Provider Fee</span>
         <span>{{ `${(amountFrom * 0.003).toFixed(8)} ${from.symbol}` }}</span>
-      </div>
-      <div v-if="!isAeVsWae">
+      </div> -->
+      <!-- <div v-if="!isAeVsWae">
         <span>Price Impact</span>
         <span>{{ priceImpact.toFixed(8) }}%</span>
-      </div>
+      </div> -->
       <div v-if="!isAeVsWae">
         <span>Allowed Slippage</span>
         <span>{{ slippage }}%</span>
       </div>
-      <div>
+      <div class="no-border">
         <span>{{ isLastAmountFrom? 'Minimum received' : 'Maximum spent' }}</span>
         <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
-    </div>
-    <div class="estimation">
-      {{ isLastAmountFrom ? 'Output' : 'Input' }} is estimated.
-      {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
-      <b>{{ receivedOrSpentValueMsg }}</b>
-      or the transaction will revert.
     </div>
     <ButtonDefault @click="allowHandler">
       Confirm Swap
@@ -128,6 +128,11 @@ export default {
     padding: 0 16px 16px 16px;
   }
 
+  :deep(.container) {
+    width: 440px;
+    max-width: 90%;
+  }
+
   .arrow {
     display: inline-block;
     padding: 4px;
@@ -141,6 +146,14 @@ export default {
     border: 4px solid variables.$color-black3;
   }
 
+  .token-amount-details:first-of-type {
+    margin-bottom: -8px;
+  }
+
+  .arrow + .token-amount-details {
+    margin-top: -8px;
+  }
+
   .test-component:first-of-type {
     margin-bottom: -8px;
   }
@@ -149,54 +162,48 @@ export default {
     margin-top: -8px;
   }
 
-  .price {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    padding: 0 16px;
-    font-size: 14px;
-    color: variables.$color-white2;
-
-    > span {
-      color: white;
-    }
-  }
-
   .transaction-details {
     display: flex;
     flex-direction: column;
     margin-top: 8px;
-    padding: 12px;
-    border: 1px solid variables.$color-black;
-    background-color: variables.$color-black2;
-    border-radius: 16px;
 
-    @extend %face-sans-14-regular;
+    @extend %face-sans-15-medium;
 
     > div {
       display: flex;
       justify-content: space-between;
-      margin-top: 8px;
+      margin-top: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid variables.$color-black2;
 
       span:first-of-type {
         margin-right: 4px;
+        color: variables.$color-gray2;
       }
     }
 
     .title {
       margin-top: 0;
-      border-bottom: 1px solid variables.$color-black;
+      color: variables.$color-white;
       padding-bottom: 8px;
+    }
+
+    .no-border {
+      border-bottom: none;
     }
   }
 
   .estimation {
-    max-width: 380px;
-    padding: 12px 16px;
+    color: variables.$color-gray2;
+    padding: 12px 0;
     text-align: left;
-    color: variables.$color-white2;
 
-    @extend %face-sans-12-regular;
+    @extend %face-sans-14-medium;
+
+    strong {
+      color: variables.$color-white;
+      font-weight: bold;
+    }
   }
 
   .button-default {

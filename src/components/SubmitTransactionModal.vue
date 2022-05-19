@@ -23,12 +23,21 @@
         <span class="guide">Confirm this transaction in your wallet</span>
       </template>
       <template v-else>
-        <ButtonDefault
-          v-if="hash"
-          @click="clickHandler"
-        >
-          View on Explorer
-        </ButtonDefault>
+        <div>
+          <div class="open-explorer">
+            <a
+              v-if="activeNetwork && hash"
+              :href="`${activeNetwork.explorerUrl}/transactions/${hash}`"
+              target="_blank"
+            >
+              <ExternalLink />
+              Open transaction in explorer
+            </a>
+          </div>
+          <ButtonDefault @click="resolve">
+            Close
+          </ButtonDefault>
+        </div>
       </template>
     </div>
   </ModalDefault>
@@ -40,6 +49,7 @@ import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
+import ExternalLink from '../assets/external-link.svg?vue-component';
 
 export default {
   components: {
@@ -47,6 +57,7 @@ export default {
     ButtonDefault,
     AnimatedSpinner,
     DownArrow,
+    ExternalLink,
   },
   props: {
     submitMessage: { type: String, default: '' },
@@ -69,12 +80,6 @@ export default {
       this.reject(e);
     }
   },
-  methods: {
-    clickHandler() {
-      window.open(`${this.activeNetwork.explorerUrl}/transactions/${this.hash}`, '_blank').focus();
-      this.resolve();
-    },
-  },
 };
 </script>
 
@@ -83,6 +88,11 @@ export default {
 @use '../styles/typography.scss';
 
 .submit-transaction-modal {
+  :deep(.container) {
+    width: 440px;
+    max-width: 90%;
+  }
+
   svg {
     height: 100px;
     width: 100px;
@@ -104,6 +114,8 @@ export default {
       margin-bottom: 12px;
 
       &.status {
+        padding: 14px 0;
+
         @extend %face-sans-20-medium;
       }
 
@@ -114,20 +126,37 @@ export default {
       &.guide {
         font-size: 14px;
         color: variables.$color-gray;
-        margin-bottom: 12px;
+        margin: 12px 0;
       }
     }
 
-    > a {
+    a {
       font-size: 14px;
       color: variables.$color-primary;
       text-decoration: none;
+    }
+
+    .open-explorer {
+      width: 100%;
+      padding-bottom: 6px;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+
+        svg {
+          height: 12px;
+          width: 12px;
+          margin-right: 6px;
+        }
+      }
     }
 
     .button-default {
       margin-top: 12px;
       padding: 12px;
       font-size: 20px;
+      width: 100%;
     }
   }
 }
