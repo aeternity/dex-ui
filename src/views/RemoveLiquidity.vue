@@ -188,13 +188,11 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
 import {
-  getPairId,
-} from '../store/modules/aeternity';
-import {
   handleUnknownError,
   reduceDecimals,
   expandDecimals,
   getAePair,
+  getPairId,
 } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import PlusIcon from '../assets/plus.svg?vue-component';

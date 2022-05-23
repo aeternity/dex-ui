@@ -134,3 +134,27 @@ export const resolveWithTimeout = (timeout, callback) => Promise.race([
  * @returns boolean
  */
 export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+
+/**
+ * Sort two tokens in ascending order
+ * @param {any} tokenA
+ * @param {any} tokenB
+ * @param {fn | null} transform a function applied to both inputs before comparing.
+ * if `transform` is not provided the inputs value will be compared
+ * @returns [token0,token1]
+ */
+export const sortTokens = (tokenA, tokenB, transform) => {
+  const f = transform || ((x) => x);
+  return (f(tokenA) < f(tokenB)) ? [tokenA, tokenB] : [tokenB, tokenA];
+};
+
+/**
+ * Gets a pair unique string based on tokenA and tokenB.
+ * @param {string} tokenA
+ * @param {string} tokenB
+ * @returns string
+ */
+export const getPairId = (tokenA, tokenB) => {
+  const [token0, token1] = sortTokens(tokenA, tokenB);
+  return `${token0}|${token1}`;
+};

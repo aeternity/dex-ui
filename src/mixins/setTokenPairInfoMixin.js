@@ -27,6 +27,9 @@ export default {
       [this.tokenA, this.tokenB, switched] = calculateSelectedToken(
         token, this.tokenA, this.tokenB, isTokenA,
       );
+      if (!switched) {
+        await this.setPairInfo();
+      }
       if (switched) {
         const swap = this.amountTokenA;
         this.amountTokenA = this.amountTokenB;
@@ -36,6 +39,9 @@ export default {
         this.reserveTokenA = this.reserveTokenB;
         this.reserveTokenB = swapReserve;
       }
+      this.setAmount(
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+      );
       await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
       if (!switched) {
         const tokenA = isTokenA ? this.tokenA : this.tokenB;
@@ -45,13 +51,6 @@ export default {
       }
 
       this.saveTokenSelection(this.tokenA, this.tokenB);
-
-      if (!switched) {
-        await this.setPairInfo();
-      }
-      this.setAmount(
-        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
-      );
     },
     async setPairInfo() {
       try {

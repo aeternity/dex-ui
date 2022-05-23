@@ -6,6 +6,7 @@ import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
+  getPairId, sortTokens,
 } from '../../lib/utils';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
@@ -26,14 +27,11 @@ export const getPriceImpact = (reserveA, reserveB, amountA) => {
 };
 const getAddress = (x) => x.deployInfo.address;
 const getCtAddress = (contract) => cttoak(getAddress(contract));
-
-const sortTokens = (tokenA, tokenB, transform) => {
-  const f = transform || ((x) => x);
-  return (f(tokenA) < f(tokenB)) ? [tokenA, tokenB] : [tokenB, tokenA];
-};
-export const getPairId = (tokenA, tokenB) => {
-  const [token0, token1] = sortTokens(tokenA, tokenB);
-  return `${token0}|${token1}`;
+const logDryRunAlternative = async (actionName, args) => {
+  const logDryRun = process.env.VUE_APP_DEBUG_LOG_DRY_RUN_ALTERNATIVE;
+  if (parseInt(logDryRun || '0', 10)) {
+    console.warn(`Going with dry-run alternative for: ${actionName}(${JSON.stringify(args)})`);
+  }
 };
 
 const extraOpts = {
@@ -202,15 +200,26 @@ export default {
       commit,
       state: { factory, pairs },
       rootState: { sdk },
+      rootGetters,
     }, {
       tokenA,
       tokenB,
     }) {
       const pair = pairs[getPairId(tokenA, tokenB)];
-      if (pair) {
-        return pair;
+      if (pair) return pair;
+
+      const getter = 'backend/getPairInfo';
+      const args = { tokenA, tokenB };
+      // get faster pair address from backend module
+      let contractAddress = rootGetters[getter](args)?.address;
+      if (!contractAddress) {
+        logDryRunAlternative(getter, args);
+        // if backend module isn't successfully initialized or pair
+        // wasn't found for any reason let's try also getting it through
+        // a dry-run sdk call
+        contractAddress = (await factory.methods.get_pair(tokenA, tokenB)).decodedResult;
       }
-      const { decodedResult: contractAddress } = await factory.methods.get_pair(tokenA, tokenB);
+
       if (contractAddress == null) {
         throw new Error('PAIR NOT FOUND');
       }
@@ -348,13 +357,34 @@ export default {
     }, {
       tokenA, tokenB,
     }) {
-      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
-      const { decodedResult: token0 } = await pair.methods.token0();
-      const [reserveA, reserveB] = token0 === tokenA
-        ? [reserve0, reserve1]
-        : [reserve1, reserve0];
-      const { decodedResult: totalSupply } = await pair.methods.total_supply();
+      // get faster pair address from backend module
+      const action = 'backend/fetchPairDetails';
+      const args = { tokenA, tokenB };
+      const resp = await dispatch(action, args, { root: true });
+
+      let [totalSupply, reserveA, reserveB] = [];
+
+      const assignReserves = ({ reserve0, reserve1, token0 }) => {
+        ([reserveA, reserveB] = token0 === tokenA
+          ? [reserve0, reserve1]
+          : [reserve1, reserve0]);
+      };
+
+      if (resp && resp.synchronized && resp.liquidityInfo) {
+        totalSupply = resp.liquidityInfo.totalSupply;
+        assignReserves({ ...resp.liquidityInfo, token0: resp.token0 });
+      } else {
+        // if for any reason backend module isn't successfully
+        // returning synchronized values or no values at all
+        // let's try a dry-run as well
+        logDryRunAlternative(action, args);
+        const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
+        assignReserves({
+          ...(await pair.methods.get_reserves().decodedResult),
+          token0: (await pair.methods.token0()).decodedResult,
+        });
+        totalSupply = (await pair.methods.total_supply()).decodedResult;
+      }
 
       commit('updatePoolInfo', {
         tokenA,
@@ -380,10 +410,10 @@ export default {
      * when no pair
     */
     async getPairInfo({
-      dispatch, commit, state: { factory }, rootGetters: { activeNetwork },
+      dispatch, commit, rootGetters: { activeNetwork },
     }, { tokenA, tokenB }) {
       try {
-        if (!tokenA || !tokenB || !factory || !activeNetwork) {
+        if (!tokenA || !tokenB || !activeNetwork) {
           return [];
         }
 
@@ -394,20 +424,18 @@ export default {
           return [0, 1, 1];
         }
         commit('setFetchingPairInfo', true);
-
         const { totalSupply, reserveA, reserveB } = await dispatch('fetchPoolInfo', {
           tokenA: tokenA.contract_id,
           tokenB: tokenB.contract_id,
         });
-        commit('setFetchingPairInfo', false);
-
         return [totalSupply, reserveA, reserveB];
       } catch (e) {
-        commit('setFetchingPairInfo', false);
         if (e.message !== 'PAIR NOT FOUND') {
           throw e;
         }
         return [];
+      } finally {
+        commit('setFetchingPairInfo', false);
       }
     },
     /**
