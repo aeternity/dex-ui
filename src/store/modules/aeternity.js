@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
-import aex9Inteface from 'aeternity-fungible-token/FungibleTokenFull.aes';
+import aex9Interface from 'aeternity-fungible-token/FungibleTokenFull.aes';
 import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
-import factoryInteface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
-import pairInteface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
+import factoryInterface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
+import pairInterface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
   getPairId, sortTokens,
@@ -170,7 +170,7 @@ export default {
       const { decodedResult: factoryAddress } = await router.methods.factory();
       const contract = await sdk.getContractInstance(
         {
-          source: factoryInteface,
+          source: factoryInterface,
           contractAddress: factoryAddress,
         },
       );
@@ -225,7 +225,7 @@ export default {
       }
       const instance = await sdk.getContractInstance(
         {
-          source: pairInteface,
+          source: pairInterface,
           contractAddress,
         },
       );
@@ -234,7 +234,7 @@ export default {
     },
     getTokenInstance({ rootState: { sdk } }, contractAddress) {
       return sdk.getContractInstance({
-        source: aex9Inteface,
+        source: aex9Interface,
         contractAddress,
       });
     },
