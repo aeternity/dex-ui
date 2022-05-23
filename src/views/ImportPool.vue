@@ -52,8 +52,7 @@ import { mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
-import { calculateSelectedToken } from '../lib/utils';
-import { getPairId } from '../store/modules/aeternity';
+import { getPairId, calculateSelectedToken } from '../lib/utils';
 import LiquidityDetails from '../components/LiquidityDetails.vue';
 import PlusIcon from '../assets/plus.svg?vue-component';
 

@@ -62,6 +62,7 @@ export default {
     } finally {
       this.$store.commit('setIsSdkInitializing', false);
     }
+    await this.$store.dispatch('backend/init');
 
     await this.$watchUntilTruly(() => this.$store.state.sdk);
 

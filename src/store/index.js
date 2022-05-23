@@ -11,6 +11,7 @@ import {
   DEFAULT_NETWORKS,
 } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
+import dexBackendModule from './modules/dexBackend';
 import navigation from './modules/navigation';
 import tokensModule from './modules/tokens';
 import modals from './plugins/modals';
@@ -298,6 +299,7 @@ export default createStore({
 
         sdk.selectNode(nodeToSelect.name);
         await commit('setNetwork', newNetworkId);
+        await dispatch('backend/init');
         await dispatch('aeternity/init');
       }
     },
@@ -327,6 +329,7 @@ export default createStore({
   modules: {
     aeternity: aeternityModule,
     tokens: tokensModule,
+    backend: dexBackendModule,
     navigation,
   },
   plugins: [
