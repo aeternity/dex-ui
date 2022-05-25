@@ -5,31 +5,34 @@
     close
     @close="denyHandler"
   >
-    <div class="container">
-      <div class="receive">
-        {{ pairAmount ? pairAmount.toFixed(5) : '-' }}
-        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
-        <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
-      </div>
-      <div class="tokens">
-        {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
+    <div class="wrapper">
+      <div class="tokens-box">
+        <div class="receive">
+          {{ pairAmount ? pairAmount.toFixed(5) : '-' }}
+        </div>
+        <div class="tokens">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
+        </div>
       </div>
       <span class="estimation">
         Output is estimated. If the price changes by more than {{ slippage }}%
         your transaction will revert.
       </span>
       <div class="transaction-details">
+        <div class="title no-border">
+          Supply details
+        </div>
         <div>
           <span>{{ tokenA.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
           <div>
-            <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
             {{ amountA ? amountA.toFixed(5) : '-' }}
           </div>
         </div>
         <div>
           <span>{{ tokenB.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
           <div>
-            <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
             {{ amountB ? amountB.toFixed(5) : '-' }}
           </div>
         </div>
@@ -40,7 +43,10 @@
             {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
           </div>
         </div>
-        <div v-if="isAdding">
+        <div
+          v-if="isAdding"
+          class="no-border"
+        >
           <span>Share of Pool:</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
@@ -119,75 +125,102 @@ export default {
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
 
-.confirm-add-modal .container {
-  padding: 16px;
-  color: white;
-  text-align: left;
-
-  img {
-    width: 20px;
-    height: 20px;
+.confirm-add-modal {
+  :deep(.container) {
+    width: 440px;
+    max-width: 90%;
   }
 
-  .receive {
-    display: flex;
-    align-items: center;
-    font-size: 34px;
+  .wrapper {
+    width: 100%;
+    padding: 16px;
+    color: white;
+    text-align: left;
 
-    img:nth-of-type(1) {
-      margin-left: 4px;
-      z-index: 1;
+    img {
+      width: 20px;
+      height: 20px;
     }
 
-    img:nth-of-type(2) {
-      margin-left: -10px;
-    }
-  }
+    .tokens-box {
+      background-color: variables.$color-black2;
+      padding: 12px 16px;
+      border-radius: 16px;
 
-  .tokens {
-    font-size: 24px;
-    margin: 12px 0;
-  }
-
-  .estimation {
-    margin: 12px 0;
-    display: block;
-    max-width: 380px;
-    color: variables.$color-white2;
-
-    @extend %face-sans-12-regular;
-  }
-
-  .transaction-details {
-    display: flex;
-    flex-direction: column;
-    margin-top: 8px;
-
-    > div {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 12px;
-
-      > div {
+      .receive {
         display: flex;
         align-items: center;
 
-        img {
+        @extend %face-sans-22-medium;
+      }
+
+      .tokens {
+        margin-top: 12px;
+        align-items: center;
+        display: inline-flex;
+        justify-content: end;
+        width: 100%;
+
+        @extend %face-sans-18-medium;
+      }
+
+      img:nth-of-type(1) {
+        margin-left: 4px;
+        z-index: 1;
+      }
+
+      img:nth-of-type(2) {
+        margin-left: -5px;
+        margin-right: 10px;
+      }
+    }
+
+    .estimation {
+      margin: 12px 0;
+      display: block;
+      color: variables.$color-gray2;
+
+      @extend %face-sans-14-medium;
+    }
+
+    .transaction-details {
+      display: flex;
+      flex-direction: column;
+      margin-top: 18px;
+
+      @extend %face-sans-15-medium;
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid variables.$color-black2;
+
+        span:first-of-type {
           margin-right: 4px;
+          color: variables.$color-gray2;
         }
       }
 
-      &.rates > div {
-        flex-direction: column;
+      .title {
+        margin-top: 0;
+        color: variables.$color-white;
+        padding-bottom: 8px;
+      }
+
+      .no-border {
+        border-bottom: none;
       }
     }
-  }
 
-  .button-default {
-    margin-top: 20px;
-    padding: 16px;
-    font-size: 20px;
-    width: 100%;
+    .button-default {
+      margin-top: 20px;
+      padding: 16px;
+      font-size: 20px;
+      width: 100%;
+    }
   }
 }
 </style>

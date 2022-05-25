@@ -3,9 +3,6 @@
     title="Pool"
     class="pool-view"
   >
-    <ButtonDefault :to="{ name: 'add-pool', query: $store.state.navigation.pool }">
-      Add liquidity
-    </ButtonDefault>
     <div class="title">
       <span>Your liquidity</span>
       <ButtonTooltip
@@ -29,6 +26,10 @@
       Don't see a pool you've joined?
       <RouterLink :to="{ name: 'import-pool' }">Import it.</RouterLink>
     </span>
+
+    <ButtonDefault @click="clickHandler">
+      {{ address ? 'Add liquidity' : 'Connect Wallet' }}
+    </ButtonDefault>
   </MainWrapper>
 </template>
 
@@ -59,6 +60,18 @@ export default {
       })).filter((x) => x.payload),
     }),
   },
+  methods: {
+    async clickHandler() {
+      if (this.address) {
+        this.$router.push({
+          name: 'add-pool',
+          query: this.$store.state.navigation.pool,
+        });
+      } else {
+        this.$store.dispatch('modals/open', { name: 'connect-wallet' });
+      }
+    },
+  },
 };
 </script>
 
@@ -71,7 +84,7 @@ export default {
     display: block;
     width: 100%;
     padding: 16px;
-    margin-top: 8px;
+    margin-top: 22px;
 
     @extend %face-sans-16-medium;
   }
@@ -80,7 +93,9 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 8px 0;
-    color: white;
+    color: variables.$color-white;
+
+    @extend %face-sans-15-medium;
 
     .button-tooltip svg {
       height: 20px;
@@ -89,7 +104,9 @@ export default {
   }
 
   .import {
-    color: white;
+    color: variables.$color-gray2;
+
+    @extend %face-sans-15-medium;
 
     a {
       text-decoration: none;
