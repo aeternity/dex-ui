@@ -55,7 +55,7 @@ export const DEFAULT_NETWORKS = [
       {
         contract_id: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
         decimals: MAGNITUDE,
-        name: 'WAE',
+        name: 'Wrapped AE',
         symbol: 'WAE',
         is_ae: false,
         // eslint-disable-next-line global-require
@@ -107,7 +107,7 @@ export const DEFAULT_NETWORKS = [
       {
         contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
         decimals: MAGNITUDE,
-        name: 'WAE',
+        name: 'Wrapped AE',
         symbol: 'WAE',
         is_ae: false,
         // eslint-disable-next-line global-require
