@@ -5,11 +5,11 @@
     settings
     class="add-liquidity"
   >
-    <Tip
-      :tip="`When you add liquidity, you will receive pool tokens representing your position.
-      These tokens automatically earn fees proportional
-      to your share of the pool, and can be redeemed at any time.`"
-    />
+    <div class="info">
+      When you add liquidity, you will receive pool tokens representing your position.
+      These tokens automatically earn fees proportional to your share of the pool,
+      and can be redeemed at any time.
+    </div>
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
@@ -19,7 +19,9 @@
       @update:token="setSelectedToken($event, true)"
       @update:balance="balanceTokenA = $event"
     />
-    <PlusIcon />
+    <div class="plus">
+      <PlusIcon />
+    </div>
     <InputToken
       :value="amountTokenB"
       :token="tokenB"
@@ -35,7 +37,7 @@
       class="pool-info"
     >
       <div class="header">
-        Prices and pool share
+        Pool share details
       </div>
       <div
         v-if="fetchingPairInfo"
@@ -50,28 +52,20 @@
       >
         <div>
           <span>
-            <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
-            {{ ratio?.toFixed(8) ?? '-' }}
+            Rates
           </span>
-          <span class="second">
-            {{ `${ tokenA.symbol } per ${ tokenB.symbol }` }}
+          <span>
+            1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
+            <br>
+            1 {{ tokenB.symbol }} = {{ ratio?.toFixed(8) ?? '-' }} {{ tokenA.symbol }}
           </span>
         </div>
         <div>
           <span>
-            <!-- TODO: toFixed(8) is a temporary hack to make big values to fit into UI -->
-            {{ ratio ? (1 / ratio).toFixed(8) : '-' }}
+            Your pool share
           </span>
-          <span class="second">
-            {{ `${ tokenB.symbol } per ${ tokenA.symbol }` }}
-          </span>
-        </div>
-        <div>
           <span>
             {{ share ? share.toFixed(8) : '0.00000000' }} %
-          </span>
-          <span class="second">
-            Share of Pool
           </span>
         </div>
       </div>
@@ -98,7 +92,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
-import Tip from '@/components/Tip.vue';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
@@ -112,7 +105,6 @@ import approvalMixin from '../mixins/allowanceMixin';
 
 export default {
   components: {
-    Tip,
     MainWrapper,
     InputToken,
     ButtonDefault,
@@ -356,7 +348,30 @@ export default {
 
 .add-liquidity {
   .input-token {
-    margin: 20px 0;
+    margin: 12px 0;
+  }
+
+  .info {
+    color: variables.$color-gray2;
+    text-align: left;
+    padding-bottom: 4px;
+
+    @extend %face-sans-14-medium;
+  }
+
+  .plus {
+    width: 30px;
+    height: 30px;
+    border-radius: 24px;
+    background-color: variables.$color-black2;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      height: 28px;
+    }
   }
 
   .button-default {
@@ -417,31 +432,32 @@ export default {
       padding: 16px;
     }
 
-    &,
-    > .body {
-      border: 1px solid variables.$color-black;
-      background-color: variables.$color-black2;
-      border-radius: 20px;
-    }
-
     .body {
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
+      div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid variables.$color-black2;
 
-      &.fetching-pair-info {
-        svg {
-          width: 32px;
+        &:last-child {
+          border: none;
+        }
+
+        span:first-of-type {
+          margin-right: 4px;
+          color: variables.$color-gray2;
         }
       }
 
-      div {
-        display: flex;
-        flex-direction: column;
+      &.fetching-pair-info {
+        display: inline-flex;
+        align-items: center;
+        margin: 0 auto;
 
-        .second {
-          padding-top: 4px;
-          color: variables.$color-white2;
+        svg {
+          width: 32px;
         }
       }
     }

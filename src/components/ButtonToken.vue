@@ -1,7 +1,7 @@
 <template>
   <ButtonDefault
     v-bind="$attrs"
-    class="button-token"
+    :class="['button-token', {active: !!token}]"
     :fill="null"
     @click="selectToken"
   >
@@ -53,6 +53,10 @@ export default {
   align-items: center;
   border-radius: 20px;
   background: rgba(142, 152, 186, 0.15);
+
+  &.active {
+    background: rgba(18, 20, 27, 1);
+  }
 
   .token {
     display: flex;
