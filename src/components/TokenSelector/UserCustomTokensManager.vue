@@ -167,13 +167,12 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 15px 20px;
+      color: variables.$color-gray2;
 
-      @extend %face-sans-16-medium;
+      @extend %face-sans-14-regular;
 
       .clear-all {
         color: variables.$color-primary;
-
-        @extend %face-sans-16-medium;
       }
     }
   }

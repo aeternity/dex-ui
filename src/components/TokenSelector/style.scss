@@ -2,7 +2,7 @@
 @use '../../styles/typography.scss';
 
 .token {
-  padding: 4px 20px;
+  padding: 8px 20px;
 
   .wrapper {
     display: flex;
@@ -11,7 +11,7 @@
   }
 
   &.clickable:hover {
-    background-color: variables.$color-black;
+    background-color: variables.$color-black2;
   }
 
   &.selected {
@@ -96,12 +96,17 @@
     border-radius: 16px;
     color: white;
     background-color: variables.$color-black2;
+    border: 1px solid variables.$color-black2;
     transition: border 100ms ease 0s;
 
     @extend %face-sans-16-regular;
 
     &::placeholder {
       color: variables.$color-gray2;
+    }
+
+    &:focus {
+      border-color: variables.$color-primary;
     }
   }
 }

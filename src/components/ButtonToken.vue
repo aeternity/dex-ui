@@ -42,7 +42,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use '../styles/variables.scss';
 @use '../styles/typography.scss';
 
 .button-token {
@@ -53,9 +52,15 @@ export default {
   align-items: center;
   border-radius: 20px;
   background: rgba(142, 152, 186, 0.15);
+  border: 2px solid transparent;
 
   &.active {
     background: rgba(18, 20, 27, 1);
+    border-color: rgba(18, 20, 27, 1);
+  }
+
+  &:hover {
+    border-color: rgba(142, 152, 186, 0.4);
   }
 
   .token {

@@ -232,8 +232,7 @@ export default {
 
 .select-token-modal {
   :deep(.container) {
-    min-height: 60vh;
-    width: 420px;
+    width: 440px;
     max-width: 90%;
   }
 
