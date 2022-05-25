@@ -62,8 +62,7 @@ export default {
     padding: 16px 0;
 
     .provider {
-      border-radius: 8px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -116,6 +115,7 @@ export default {
 
       &:hover {
         cursor: pointer;
+        background-color: variables.$color-black2;
       }
     }
   }

@@ -58,7 +58,6 @@
     </ButtonDefault>
 
     <ButtonDefault
-      fill="primary"
       :disabled="address && (connectingToWallet || isDisabled || approving || fetchingPairInfo
         || !enoughAllowance)"
       :spinner="connectingToWallet"

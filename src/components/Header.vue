@@ -259,7 +259,6 @@ export default {
         padding: 8px 10px;
         background-color: variables.$color-black2;
         border-radius: 12px;
-        border: 1px solid variables.$color-black;
 
         @extend %face-sans-15-medium;
 

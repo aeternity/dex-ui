@@ -78,7 +78,6 @@
       {{ approveButtonMessage }}
     </ButtonDefault>
     <ButtonDefault
-      fill="primary"
       :disabled="address && (isDisabled || inProgress || !enoughAllowance || fetchingPairInfo)"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"

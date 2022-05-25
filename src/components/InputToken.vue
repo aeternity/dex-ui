@@ -87,8 +87,12 @@ export default {
   flex-direction: column;
   background: variables.$color-black2;
   border-radius: 20px;
-  border: 1px solid variables.$color-black;
+  border: 2px solid variables.$color-black2;
   padding: 16px;
+
+  &:hover {
+    border-color: variables.$color-gray-hover;
+  }
 
   .token-amount {
     display: flex;
