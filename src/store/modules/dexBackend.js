@@ -9,6 +9,7 @@ export default {
   state: {
     failed: false,
     pairs: null,
+    tokensUpdatedFor: {},
   },
   getters: {
     getPairInfo: ({ pairs }) => ({ tokenA, tokenB }) => pairs && pairs[getPairId(tokenA, tokenB)],
@@ -20,11 +21,38 @@ export default {
     failed(state, didFailed) {
       state.failed = !!didFailed;
     },
+    markTokensAsUpdatedFor(state, { networkId, updated }) {
+      state.tokensUpdatedFor[networkId] = updated;
+    },
   },
   actions: {
     async init({ dispatch, commit }) {
       commit('setPairs', null);
       await dispatch('fetchPairs');
+      await dispatch('ensureTokensList');
+    },
+
+    async ensureTokensList({
+      state: { failed, tokensUpdatedFor },
+      dispatch, commit, rootGetters: { activeNetwork: { networkId } },
+    }) {
+      // check if tokens list was already updated
+      if (tokensUpdatedFor[networkId]) return;
+      const tokens = await dispatch('getListedTokens');
+      // abort if it failed in the meantime
+      // or no tokens were provided during the tokens list fetching
+      if (failed || !tokens) {
+        commit('markTokensAsUpdatedFor', { networkId, updated: false });
+        return;
+      }
+      commit('markTokensAsUpdatedFor', { networkId, updated: true });
+      // and finally if everything gone well replace the tokens with
+      // the dex-backend official list of tokens
+      commit('tokens/updateTokens', {
+        providerName: 'DEX',
+        networkId,
+        tokens,
+      }, { root: true });
     },
     async safeFetch({
       dispatch, commit, state: { failed }, rootGetters: { activeNetwork },
@@ -69,18 +97,22 @@ export default {
       }
       return null;
     },
+
     async checkStatus({ dispatch, commit, state: { pairs } }) {
       const resp = await dispatch(
         'safeFetch',
         { url: 'global-state', dontSetFailingStatus: true },
       );
       const up = !!resp && resp.pairsSyncedPercent >= 100;
-      if (!pairs && up) {
-        await dispatch('fetchPairs');
-      }
       commit('failed', !up);
+      if (up) {
+        // fetch pairs only if weren't already fetched
+        if (!pairs) await dispatch('fetchPairs');
+        await dispatch('ensureTokensList');
+      }
       return up;
     },
+
     async fetchPairDetails({ state: { pairs }, dispatch }, { tokenA, tokenB }) {
       const pairId = getPairId(tokenA, tokenB);
       const pair = pairs[pairId];
@@ -95,6 +127,15 @@ export default {
           totalSupply: BigInt(resp.liquidityInfo.totalSupply),
         },
       };
+    },
+
+    async getListedTokens({ dispatch }) {
+      const tokens = await dispatch('safeFetch', { url: 'tokens/listed' });
+      if (!tokens) return null;
+      return tokens.map(({ address, ...tail }) => ({
+        ...tail,
+        contract_id: address,
+      }));
     },
 
     async fetchPairs({ dispatch, commit }, onlyListed) {
