@@ -36,6 +36,28 @@ export default {
         return _provider;
       });
     },
+    updateTokens(state, { providerName, networkId, tokens }) {
+      state.providers = state.providers.map((provider) => {
+        if (providerName !== provider.name) {
+          return provider;
+        }
+        const { waeAddress } = DEFAULT_NETWORKS.find((network) => network.networkId === networkId);
+        const restOfTheTokens = provider.tokens.filter(
+          (token) => token.networkId !== networkId || token.contract_id === waeAddress,
+        );
+        const newTokens = restOfTheTokens.concat(tokens
+          .filter((token) => token.contract_id !== waeAddress)
+          .map((token) => ({
+            ...token,
+            networkId,
+          })));
+
+        return {
+          ...provider,
+          tokens: newTokens,
+        };
+      });
+    },
     initDefaultTokens(state) {
       const tokens = [];
 
