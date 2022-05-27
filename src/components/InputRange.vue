@@ -33,21 +33,21 @@ input[type=range] {
   &::-ms-fill-upper,
   &:focus::-ms-fill-lower,
   &:focus::-ms-fill-upper {
-    background: variables.$color-primary;
+    background: variables.$color-gray2;
   }
 
   &::-moz-range-track {
     width: 100%;
     height: 2px;
     cursor: pointer;
-    background: variables.$color-primary;
+    background: variables.$color-gray2;
   }
 
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: 2px;
     cursor: pointer;
-    background: variables.$color-primary;
+    background: variables.$color-gray2;
   }
 
   &::-ms-track {
@@ -60,28 +60,30 @@ input[type=range] {
   }
 
   &::-webkit-slider-thumb {
-    height: 30px;
-    width: 30px;
-    border-radius: 15px;
+    height: 22px;
+    width: 22px;
+    border-radius: 12px;
+    border: none;
     background: variables.$color-primary;
     cursor: pointer;
     -webkit-appearance: none;
-    margin-top: -14px;
   }
 
   &::-moz-range-thumb {
-    height: 30px;
-    width: 30px;
-    border-radius: 15px;
+    height: 22px;
+    width: 22px;
+    border-radius: 12px;
+    border: none;
     background: variables.$color-primary;
     cursor: pointer;
   }
 
   &::-ms-thumb {
     margin-top: 1px;
-    height: 30px;
-    width: 30px;
-    border-radius: 15px;
+    height: 22px;
+    width: 22px;
+    border-radius: 12px;
+    border: none;
     background: variables.$color-primary;
     cursor: pointer;
   }

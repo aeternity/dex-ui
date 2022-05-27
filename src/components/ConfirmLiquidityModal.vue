@@ -16,41 +16,6 @@
           {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
         </div>
       </div>
-      <span class="estimation">
-        Output is estimated. If the price changes by more than {{ slippage }}%
-        your transaction will revert.
-      </span>
-      <div class="transaction-details">
-        <div class="title no-border">
-          Supply details
-        </div>
-        <div>
-          <span>{{ tokenA.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
-          <div>
-            {{ amountA ? amountA.toFixed(5) : '-' }}
-          </div>
-        </div>
-        <div>
-          <span>{{ tokenB.symbol }} {{ isAdding ? 'Deposited' : 'Estimated' }}</span>
-          <div>
-            {{ amountB ? amountB.toFixed(5) : '-' }}
-          </div>
-        </div>
-        <div class="rates">
-          <span>Rates</span>
-          <div>
-            <span>{{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }}</span>
-            {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
-          </div>
-        </div>
-        <div
-          v-if="isAdding"
-          class="no-border"
-        >
-          <span>Share of Pool:</span>
-          <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
-        </div>
-      </div>
       <div
         v-if="!isAdding"
         class="estimation"
@@ -59,6 +24,48 @@
         <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
         and at least <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
         or the transaction will revert.
+      </div>
+      <span
+        v-else
+        class="estimation"
+      >
+        Output is estimated. If the price changes by more than {{ slippage }}%
+        your transaction will revert.
+      </span>
+      <div class="transaction-details">
+        <div class="title">
+          {{ isAdding ? 'Supply details' : 'Removal details' }}
+        </div>
+        <div>
+          <span>{{ tokenA.symbol }} {{ isAdding ? 'deposited' : 'estimated' }}</span>
+          <div>
+            {{ amountA ? amountA.toFixed(5) : '-' }}
+          </div>
+        </div>
+        <div>
+          <span>{{ tokenB.symbol }} {{ isAdding ? 'deposited' : 'estimated' }}</span>
+          <div>
+            {{ amountB ? amountB.toFixed(5) : '-' }}
+          </div>
+        </div>
+        <div v-if="!isAdding">
+          <span>Allowed slippage</span>
+          <div>
+            {{ slippage }}%
+          </div>
+        </div>
+        <div class="rates">
+          <span>Rates</span>
+          <span>
+            1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
+            <br>
+            1 {{ tokenB.symbol }} = {{ ratio?.toFixed(8) ?? '-' }} {{ tokenA.symbol }}
+          </span>
+        </div>
+        <div v-if="isAdding">
+          <span>Your pool share</span>
+          <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
+        </div>
       </div>
       <ButtonDefault @click="allowHandler">
         Confirm {{ isAdding ? 'Supply' : 'Removal' }}
@@ -181,6 +188,10 @@ export default {
       color: variables.$color-gray2;
 
       @extend %face-sans-14-medium;
+
+      b {
+        color: variables.$color-white;
+      }
     }
 
     .transaction-details {
@@ -210,7 +221,8 @@ export default {
         padding-bottom: 8px;
       }
 
-      .no-border {
+      > div:first-child,
+      > div:last-child {
         border-bottom: none;
       }
     }

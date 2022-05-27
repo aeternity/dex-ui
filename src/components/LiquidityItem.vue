@@ -5,8 +5,14 @@
       @click="onShow"
     >
       <div>
-        <img :src="`https://avatars.z52da5wt.xyz/${token0.cid}`">
-        <img :src="`https://avatars.z52da5wt.xyz/${token1.cid}`">
+        <img
+          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
+          :src="`https://avatars.z52da5wt.xyz/${token0.cid}`"
+        >
+        <img
+          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
+          :src="`https://avatars.z52da5wt.xyz/${token1.cid}`"
+        >
         <span>{{ token0.symbol + '/' + token1.symbol }}</span>
       </div>
       <DownChevron :class="{ rotated: show }" />
@@ -79,6 +85,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/animations.scss';
 
 .liquidity-item {
   display: flex;
@@ -98,8 +105,8 @@ export default {
 
   svg,
   img {
-    height: 20px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
   }
 
   .header {
