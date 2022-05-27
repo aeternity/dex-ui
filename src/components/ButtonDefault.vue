@@ -27,6 +27,7 @@ export default {
         'transparent-blue',
         'blue',
         'dark',
+        'light',
         'second-dark',
         'transparent',
         'plain',
@@ -90,6 +91,18 @@ export default {
 
     &:active {
       background-color: variables.$color-black3;
+    }
+  }
+
+  &.light {
+    background: variables.$color-gray3;
+
+    &:hover {
+      background-color: variables.$color-gray;
+    }
+
+    &:active {
+      background-color: variables.$color-gray3;
     }
   }
 

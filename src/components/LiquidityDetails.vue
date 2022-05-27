@@ -16,29 +16,21 @@
           </div>
         </div>
         {{ getAmountText(amount0,token0) }}
-        <img
-          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token0.cid}`"
-        >
       </div>
     </div>
     <div>
       <span>Pooled {{ token1.symbol }}:</span>
       <div>
         {{ getAmountText(amount1,token1) }}
-        <img
-          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token1.cid}`"
-        >
       </div>
     </div>
     <div>
       <span>Your pool tokens:</span>
-      <span>{{ balanceText }}</span>
+      <div>{{ balanceText }}</div>
     </div>
     <div>
       <span>Your pool share:</span>
-      <span>{{ shareText }}%</span>
+      <div>{{ shareText }}%</div>
     </div>
   </div>
   <div class="buttons">
@@ -155,6 +147,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/animations.scss';
+@use '../styles/typography.scss';
 
 .body {
   margin-top: 8px;
@@ -163,22 +156,30 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: white;
-    margin-top: 8px;
+    color: variables.$color-white;
+    padding: 12px 0;
+    border-bottom: 2px solid rgba(143, 150, 172, 0.1);
 
-    img {
-      height: 20px;
-      width: 20px;
+    @extend %face-sans-15-medium;
+
+    span {
+      color: variables.$color-gray2;
     }
 
     div {
       display: flex;
       align-items: center;
 
-      img {
+      svg {
         margin-left: 4px;
+        height: 20px;
+        width: 20px;
       }
     }
+  }
+
+  > div:last-child {
+    border: none;
   }
 }
 

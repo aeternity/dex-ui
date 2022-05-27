@@ -5,21 +5,25 @@
       back-button
       settings
     >
-      <Tip
-        :tip="`When you add liquidity, you will receive pool tokens representing your position.
-      These tokens automatically earn fees proportional
-      to your share of the pool, and can be redeemed at any time.`"
-      />
-
+      <ButtonPlain
+        v-if="tokenA && tokenB"
+        class="header"
+      >
+        <div>
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.cid}`">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.cid}`">
+          <span>{{ tokenA.symbol + '/' + tokenB.symbol }}</span>
+        </div>
+      </ButtonPlain>
       <div class="remove-container">
         <div class="remove-subheader">
           <div>Remove amount</div>
-          <ButtonPlain
+          <!-- <ButtonPlain
             v-if="UNFINISHED_FEATURES"
             @click="detailed = !detailed"
           >
             {{ detailed ? 'Simple' : 'Detailed' }}
-          </ButtonPlain>
+          </ButtonPlain> -->
         </div>
         <div class="percentage">
           <span>{{ percentage }}%</span>
@@ -31,34 +35,38 @@
           />
           <div class="percentage-btns">
             <ButtonDefault
-              :fill="'transparent-blue'"
+              fill="light"
               @click="updatePercent(25)"
             >
               25%
             </ButtonDefault>
             <ButtonDefault
-              :fill="'transparent-blue'"
+              fill="light"
               @click="updatePercent(50)"
             >
               50%
             </ButtonDefault>
             <ButtonDefault
-              :fill="'transparent-blue'"
+              fill="light"
               @click="updatePercent(75)"
             >
               75%
             </ButtonDefault>
             <ButtonDefault
-              :fill="'transparent-blue'"
+              fill="light"
               @click="updatePercent(100)"
             >
-              Max
+              100%
             </ButtonDefault>
           </div>
         </template>
       </div>
       <InputToken v-if="detailed" />
-      <DownArrow class="arrow-down" />
+      <div class="arrow-wrapper">
+        <div class="arrow-down">
+          <DownArrow />
+        </div>
+      </div>
       <template v-if="detailed">
         <InputToken />
         <PlusIcon />
@@ -69,47 +77,74 @@
         class="remove-container"
       >
         <div class="token-row">
-          <div class="amount">
-            {{ poolTokenInput.toFixed(5) }}
-          </div>
           <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
           <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
           <span>
             {{ `${tokenA.symbol}/${tokenB.symbol}` }}
           </span>
+          <div class="amount">
+            {{ poolTokenInput.toFixed(5) }}
+          </div>
         </div>
         <div class="token-row">
-          <div class="amount">
-            {{ tokenAInput.toFixed(5) }}
-          </div>
           <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
           <span>
             {{ tokenA.symbol }}
           </span>
+          <div class="amount">
+            {{ tokenAInput.toFixed(5) }}
+          </div>
         </div>
         <div class="token-row">
-          <div class="amount">
-            {{ tokenBInput.toFixed(5) }}
-          </div>
           <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
           <span>
             {{ tokenB.symbol }}
           </span>
+          <div class="amount">
+            {{ tokenBInput.toFixed(5) }}
+          </div>
         </div>
       </div>
       <div
-        v-if="tokenA && tokenB && ratioA !== null"
-        class="space-between"
+        v-if="position"
+        class="pool-info"
       >
-        <span>Price:</span>
-        <span>{{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }}</span>
-      </div>
-      <div
-        v-if="tokenA && tokenB && ratioB !== null"
-        class="space-between"
-      >
-        <span />
-        <span>{{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}</span>
+        <div class="space-between">
+          Your position
+        </div>
+        <div class="space-between">
+          <span>Price</span>
+          <div>
+            {{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }} <br>
+            {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
+          </div>
+        </div>
+        <div class="space-between">
+          <span>Pooled {{ tokenA.symbol }}</span>
+          <div>
+            {{ (positionBalance(reserveA)*share).toFixed(5) }}
+          </div>
+        </div>
+        <div class="space-between">
+          <span>Pooled {{ tokenB.symbol }}</span>
+          <div>
+            {{ (positionBalance(reserveB)*share).toFixed(5) }}
+          </div>
+        </div>
+        <div class="space-between">
+          <span>
+            Your pool tokens
+          </span>
+          <div>
+            {{ positionBalance(position).toFixed(5) }}
+          </div>
+        </div>
+        <div class="space-between">
+          <span>Your pool share</span>
+          <div>
+            {{ (share*100).toFixed(5) }}%
+          </div>
+        </div>
       </div>
       <div class="btns-row">
         <ButtonDefault
@@ -143,45 +178,12 @@
         </ButtonDefault>
       </div>
     </MainWrapper>
-    <div
-      v-if="position"
-      class="pool-info"
-    >
-      <div>
-        <div class="space-between">
-          <span>Your position</span>
-        </div>
-        <div class="space-between pool-token">
-          <span>
-            {{ `${tokenA.symbol}/${tokenB.symbol}` }}
-          </span>
-          <div>
-            <span>{{ positionBalance(position).toFixed(5) }}</span>
-            <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
-            <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
-          </div>
-        </div>
-        <div class="space-between">
-          <span>Your pool share</span>
-          <span>{{ (share*100).toFixed(5) }}%</span>
-        </div>
-        <div class="space-between">
-          <span>{{ tokenA.symbol }}:</span>
-          <span>{{ (positionBalance(reserveA)*share).toFixed(5) }}</span>
-        </div>
-        <div class="space-between">
-          <span>{{ tokenB.symbol }}:</span>
-          <span>{{ (positionBalance(reserveB)*share).toFixed(5) }}</span>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
-import Tip from '@/components/Tip.vue';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
@@ -200,7 +202,6 @@ import approvalMixin from '../mixins/allowanceMixin';
 
 export default {
   components: {
-    Tip,
     MainWrapper,
     ButtonPlain,
     ButtonDefault,
@@ -308,8 +309,8 @@ export default {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
     generateRemoveLiquidityMessage() {
-      return `Removing around ${this.poolTokenInput.toFixed(5)}
-        ${this.tokenA.symbol}/${this.tokenB.symbol} pool tokens from the provided liquidity`;
+      return `Removing liquidity of ${this.tokenAInput.toFixed(5)}
+        ${this.tokenA.symbol} and ${this.tokenBInput.toFixed(5)} ${this.tokenB.symbol}`;
     },
     fetchAlowance() {
       return this.$store.dispatch('aeternity/getRouterPairAllowance', {
@@ -430,6 +431,43 @@ export default {
 
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
+@use '../styles/typography.scss';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px;
+  border-radius: 20px;
+  background-color: variables.$color-black2;
+  margin-bottom: 12px;
+
+  img {
+    height: 24px;
+    width: 24px;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    img:nth-of-type(1) {
+      z-index: 1;
+    }
+
+    img:nth-of-type(2) {
+      margin-left: -10px;
+    }
+
+    span {
+      color: white;
+      margin-left: 15px;
+
+      @extend %face-sans-18-medium;
+    }
+  }
+}
 
 .remove-liquidity {
   margin-bottom: 80px;
@@ -437,14 +475,14 @@ export default {
   .remove-container {
     border-radius: 20px;
     padding: 16px;
-    margin: 20px 0;
+    margin: 6px 0;
     color: variables.$color-white;
-    border: 1px solid variables.$color-black;
     background: variables.$color-black2;
 
     .remove-subheader {
       display: flex;
       justify-content: space-between;
+      color: variables.$color-gray2;
 
       .button-plain {
         font-size: 16px;
@@ -457,9 +495,10 @@ export default {
     }
 
     .percentage {
-      font-size: 64px;
-      text-align: left;
-      font-weight: 500;
+      text-align: right;
+      color: variables.$color-white;
+
+      @extend %face-sans-24-bold;
     }
 
     .percentage-btns {
@@ -469,8 +508,8 @@ export default {
 
       .button-default {
         padding: 8px 16px;
-        margin: 4px;
-        border-radius: 8px;
+        margin: 4px 0;
+        border-radius: 16px;
         font-size: 16px;
       }
     }
@@ -478,12 +517,13 @@ export default {
     .token-row {
       display: flex;
       align-items: center;
-      font-size: 20px;
-      font-weight: 500;
+      padding: 6px 0;
+
+      @extend %face-sans-22-medium;
 
       .amount {
         flex-grow: 1;
-        text-align: left;
+        text-align: right;
       }
 
       img {
@@ -504,8 +544,26 @@ export default {
     }
   }
 
-  .arrow-down {
-    width: 16px;
+  .arrow-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    .arrow-down {
+      height: 34px;
+      width: 34px;
+      border-radius: 24px;
+      border: 4px solid variables.$color-modal-bg;
+      background: variables.$color-black2;
+      margin: -20px auto;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      svg {
+        width: 16px;
+      }
+    }
   }
 
   .space-between {
@@ -515,17 +573,9 @@ export default {
   }
 
   .btns-row {
-    display: flex;
-    justify-content: space-between;
     margin-top: 10px;
 
     .connect-btn {
-      width: 100%;
-      padding: 16px;
-      margin-top: 8px;
-      font-size: 20px;
-      font-weight: 500;
-
       &.loading {
         padding: 0;
       }
@@ -536,12 +586,12 @@ export default {
       }
     }
 
-    .remove-btn {
-      width: 48%;
+    .button-default {
+      width: 100%;
       padding: 16px;
       margin-top: 8px;
-      font-size: 20px;
-      font-weight: 500;
+
+      @extend %face-sans-16-medium;
     }
   }
 
@@ -550,30 +600,20 @@ export default {
   }
 
   .pool-info {
-    max-width: 400px;
-    background-color: variables.$color-black;
-    color: variables.$color-white;
-    margin: 1rem auto 0 auto;
-    padding: 1rem;
-    border-radius: 16px;
+    @extend %face-sans-15-medium;
 
-    .pool-token {
-      font-weight: 500;
-      font-size: 20px;
+    .space-between {
+      padding: 12px 0;
+      border-bottom: 2px solid rgba(143, 150, 172, 0.1);
+    }
 
-      img {
-        width: 20px;
-        height: 20px;
-      }
+    .space-between:last-child,
+    .space-between:first-child {
+      border: none;
+    }
 
-      img:nth-of-type(1) {
-        margin-left: 4px;
-        z-index: 1;
-      }
-
-      img:nth-of-type(2) {
-        margin-left: -10px;
-      }
+    span {
+      color: variables.$color-gray2;
     }
   }
 }

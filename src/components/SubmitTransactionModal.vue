@@ -5,15 +5,17 @@
     @close="isConfirmed ? resolve() : null"
   >
     <AnimatedSpinner
-      v-if="!isConfirmed"
+      v-if="loading"
       class="spinner"
     />
-    <DownArrow v-else />
+    <SuccessIcon v-if="isConfirmed && !loading" />
+    <ErrorIcon v-if="!isConfirmed && !loading" />
     <div class="transaction-status">
       <span class="status">
-        {{ isConfirmed ? 'Transaction Submitted' : 'Waiting For Confirmation' }}
+        {{ loading ? 'Waiting For Confirmation' :
+          isConfirmed ? 'Transaction Submitted' : 'Confirmation Error' }}
       </span>
-      <template v-if="!isConfirmed">
+      <template v-if="loading">
         <span
           v-if="submitMessage"
           class="swap-info"
@@ -23,7 +25,7 @@
         <span class="guide">Confirm this transaction in your wallet</span>
       </template>
       <template v-else>
-        <div>
+        <div v-if="isConfirmed">
           <div class="open-explorer">
             <a
               v-if="activeNetwork && hash"
@@ -38,6 +40,15 @@
             Close
           </ButtonDefault>
         </div>
+        <div v-else>
+          <span class="guide">Operation rejected by user</span>
+          <ButtonDefault
+            fill="light"
+            @click="resolve"
+          >
+            Dismiss
+          </ButtonDefault>
+        </div>
       </template>
     </div>
   </ModalDefault>
@@ -48,7 +59,8 @@ import { mapGetters } from 'vuex';
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import DownArrow from '../assets/arrow-down.svg?vue-component';
+import SuccessIcon from '../assets/check.svg?vue-component';
+import ErrorIcon from '../assets/error.svg?vue-component';
 import ExternalLink from '../assets/external-link.svg?vue-component';
 
 export default {
@@ -56,7 +68,8 @@ export default {
     ModalDefault,
     ButtonDefault,
     AnimatedSpinner,
-    DownArrow,
+    SuccessIcon,
+    ErrorIcon,
     ExternalLink,
   },
   props: {
@@ -66,18 +79,23 @@ export default {
     work: { type: Function, required: true },
   },
   data: () => ({
+    loading: false,
     isConfirmed: false,
     hash: null,
   }),
   computed: mapGetters(['activeNetwork']),
   async created() {
     try {
+      this.loading = true;
       this.hash = null;
       const result = await this.work();
       this.hash = result.hash;
       this.isConfirmed = true;
     } catch (e) {
       this.reject(e);
+      this.isConfirmed = false;
+    } finally {
+      this.loading = false;
     }
   },
 };
@@ -108,7 +126,7 @@ export default {
     display: flex;
     flex-direction: column;
     color: white;
-    padding: 16px;
+    padding: 0 16px 16px;
 
     span {
       margin-bottom: 12px;
@@ -122,12 +140,13 @@ export default {
       &.swap-info {
         font-size: 16px;
       }
+    }
 
-      &.guide {
-        font-size: 14px;
-        color: variables.$color-gray;
-        margin: 12px 0;
-      }
+    .guide {
+      color: variables.$color-gray2;
+      margin: 16px 0;
+
+      @extend %face-sans-15-medium;
     }
 
     a {
@@ -143,6 +162,8 @@ export default {
       a {
         display: inline-flex;
         align-items: center;
+
+        @extend %face-sans-15-medium;
 
         svg {
           height: 12px;

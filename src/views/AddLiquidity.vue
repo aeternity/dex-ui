@@ -354,6 +354,7 @@ export default {
     color: variables.$color-gray2;
     text-align: left;
     padding-bottom: 4px;
+    line-height: 20px;
 
     @extend %face-sans-14-medium;
   }
@@ -428,7 +429,7 @@ export default {
 
     .header,
     .body {
-      padding: 16px;
+      padding: 16px 16px 0;
     }
 
     .body {
