@@ -231,11 +231,6 @@ export default {
 @use './style.scss';
 
 .select-token-modal {
-  :deep(.container) {
-    width: 440px;
-    max-width: 90%;
-  }
-
   .input-wrapper {
     margin: 0 20px 20px 20px;
   }

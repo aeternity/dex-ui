@@ -44,7 +44,7 @@ export default {
 .error-modal {
   .error-details {
     padding: 20px 30px;
-    max-width: 480px;
+    max-width: 440px;
 
     svg {
       width: 50px;

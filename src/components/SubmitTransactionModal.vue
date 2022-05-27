@@ -106,11 +106,6 @@ export default {
 @use '../styles/typography.scss';
 
 .submit-transaction-modal {
-  :deep(.container) {
-    width: 440px;
-    max-width: 90%;
-  }
-
   svg {
     height: 100px;
     width: 100px;

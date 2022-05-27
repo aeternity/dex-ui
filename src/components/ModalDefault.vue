@@ -72,8 +72,9 @@ export default {
   .container {
     overflow: hidden;
     position: relative;
-    min-width: 20vw;
-    margin: auto;
+    width: 440px;
+    max-width: 90%;
+    margin: 70px auto auto;
     background-color: variables.$color-black3;
     border: 1px solid variables.$color-black2;
     box-shadow: rgb(0 0 0 / 5%) 0 4px 8px 0;
