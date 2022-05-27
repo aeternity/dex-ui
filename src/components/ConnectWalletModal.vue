@@ -203,8 +203,6 @@ export default {
 
 .connect-wallet-modal {
   :deep(.container) {
-    max-width: 440px;
-    width: 440px;
     padding: 0 16px;
 
     .body {

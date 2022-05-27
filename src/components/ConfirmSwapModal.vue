@@ -128,11 +128,6 @@ export default {
     padding: 0 16px 16px 16px;
   }
 
-  :deep(.container) {
-    width: 440px;
-    max-width: 90%;
-  }
-
   .arrow {
     display: inline-block;
     padding: 4px;

@@ -133,11 +133,6 @@ export default {
 @use '../styles/typography.scss';
 
 .confirm-add-modal {
-  :deep(.container) {
-    width: 440px;
-    max-width: 90%;
-  }
-
   .wrapper {
     width: 100%;
     padding: 16px;
