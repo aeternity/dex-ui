@@ -1,0 +1,46 @@
+$displays: block, inline-block, flex, inline-flex !default;
+
+// Breakpoint values for various devices to use in media queries
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+// Function to return breakpoint values
+@function breakpoint($key) {
+  @return map-get($breakpoints, $key);
+}
+
+// Classes to hide elements in certain screen sizes
+.h-xs {
+  @media (max-width: breakpoint(sm)) {
+    display: none !important;
+  }
+}
+
+.h-sm {
+  @media (max-width: breakpoint(md)) and (min-width: breakpoint(sm)) {
+    display: none !important;
+  }
+}
+
+.h-md {
+  @media (max-width: breakpoint(lg)) and (min-width: breakpoint(md)) {
+    display: none !important;
+  }
+}
+
+.h-lg {
+  @media (max-width: breakpoint(xl)) and (min-width: breakpoint(lg)) {
+    display: none !important;
+  }
+}
+
+.h-xl {
+  @media (min-width: breakpoint(xl)) {
+    display: none !important;
+  }
+}

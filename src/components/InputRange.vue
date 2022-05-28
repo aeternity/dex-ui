@@ -67,6 +67,7 @@ input[type=range] {
     background: variables.$color-primary;
     cursor: pointer;
     -webkit-appearance: none;
+    margin-top: -10px;
   }
 
   &::-moz-range-thumb {

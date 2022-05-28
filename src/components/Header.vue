@@ -2,12 +2,13 @@
 <template>
   <div class="header">
     <div class="left">
-      <AeLogo />
+      <AeLogo class="h-xs" />
+      <AeLogoSmall class="h-xl h-lg h-md h-sm" />
     </div>
     <NavigationMenu />
     <div class="right">
       <div
-        v-if="activeNetwork"
+        v-if="activeNetwork && address"
         class="active-network"
       >
         <span class="circle" />
@@ -37,7 +38,7 @@
           </template>
           <template v-else>
             <img :src="`https://avatars.z52da5wt.xyz/${address}`">
-            <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
+            <span class="h-xs">{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
           </template>
         </div>
         <span><AeBalance :address="address" /> AE</span>
@@ -142,6 +143,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import AeLogo from '../assets/logo.svg?vue-component';
+import AeLogoSmall from '../assets/logo-small.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
 import Cog from '../assets/cog.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
@@ -154,6 +156,7 @@ import ButtonPlain from './ButtonPlain.vue';
 export default {
   components: {
     AeLogo,
+    AeLogoSmall,
     BackArrow,
     Cog,
     AnimatedSpinner,
@@ -192,6 +195,7 @@ export default {
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
 @use '../styles/mixins.scss';
+@use '../styles/display-utilities.scss';
 
 .header {
   display: flex;

@@ -1,5 +1,6 @@
 @use './variables.scss';
 @use './mixins.scss';
+@use './display-utilities.scss';
 
 * {
   font-family: variables.$font-sans;

@@ -165,6 +165,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .main-wrapper {
   display: flex;
@@ -224,6 +225,10 @@ export default {
           padding: 16px;
           color: white;
           text-align: left;
+
+          @include mixins.phone {
+            width: 90%;
+          }
 
           .slippage :deep(.content) {
             display: flex;

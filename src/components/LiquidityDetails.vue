@@ -148,6 +148,7 @@ export default {
 @use '../styles/variables.scss';
 @use '../styles/animations.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .body {
   margin-top: 8px;
@@ -180,6 +181,14 @@ export default {
 
   > div:last-child {
     border: none;
+  }
+
+  @include mixins.phone {
+    > div,
+    span {
+      display: block;
+      text-align: left;
+    }
   }
 }
 

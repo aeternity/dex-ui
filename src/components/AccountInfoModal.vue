@@ -14,7 +14,8 @@
           class="change-button"
           @click.prevent="disconnectWallet"
         >
-          Disconnect
+          <span class="h-xs">Disconnect</span>
+          <LogoutIcon class="h-xl h-lg h-md h-sm" />
         </ButtonPlain>
       </div>
       <div class="content">
@@ -41,13 +42,16 @@
     </div>
     <div class="box">
       <div class="header">
-        <div class="title">Recent Transactions</div>
+        <div class="title">
+          Recent Transactions
+        </div>
         <ButtonPlain
-          v-if="filteredTransactions.length"
+          v-if="filteredTransactions.length || true"
           class="change-button"
           @click="removeAllTransactions"
         >
-          Clear all
+          <span class="h-xs">Clear all</span>
+          <DeleteIcon class="h-xl h-lg h-md h-sm" />
         </ButtonPlain>
       </div>
       <div class="content transactions">
@@ -85,6 +89,8 @@ import ModalDefault from './ModalDefault.vue';
 import ClipboardCopy from './ClipboardCopy.vue';
 import ButtonPlain from './ButtonPlain.vue';
 import ExternalLinkIcon from '../assets/external-link.svg?vue-component';
+import LogoutIcon from '../assets/logout.svg?vue-component';
+import DeleteIcon from '../assets/delete.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import Alert from '../assets/alert.svg?vue-component';
 import Check from '../assets/check.svg?vue-component';
@@ -95,6 +101,8 @@ export default {
     ClipboardCopy,
     ButtonPlain,
     ExternalLinkIcon,
+    LogoutIcon,
+    DeleteIcon,
     AnimatedSpinner,
     Alert,
     Check,
@@ -142,8 +150,7 @@ export default {
   color: variables.$color-white;
 
   .box {
-    max-width: 100%;
-    width: 400px;
+    flex: 1;
     margin: 16px;
     padding: 2px;
     background-color: variables.$color-black2;
@@ -177,6 +184,12 @@ export default {
         &:hover {
           cursor: pointer;
           opacity: 0.8;
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
+          margin-top: 3px;
         }
       }
     }
