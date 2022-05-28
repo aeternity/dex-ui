@@ -113,17 +113,11 @@ export default {
     @extend %face-sans-16-medium;
 
     &:hover {
-      background-color: variables.$color-primary;
-      opacity: 0.8;
+      background-color: variables.$color-primary-light;
     }
 
     &:focus {
-      background-color: variables.$color-primary;
-      opacity: 0.4;
-    }
-
-    &:active {
-      background-color: variables.$color-primary;
+      background-color: variables.$color-primary-dark;
     }
   }
 

@@ -173,6 +173,10 @@ export default {
 
       .clear-all {
         color: variables.$color-primary;
+
+        &:hover {
+          color: variables.$color-primary-light;
+        }
       }
     }
   }

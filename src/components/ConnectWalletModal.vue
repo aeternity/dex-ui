@@ -11,7 +11,17 @@
     >
       By connecting a wallet, you acknowledge that you
       have read and understand the Superhero DEX's
-      <a href="#">Terms and Conditions.</a>
+      <ButtonPlain @click.prevent="showTerms = !showTerms">
+        Terms and Conditions.
+      </ButtonPlain>
+    </div>
+
+    <div
+      v-if="showTerms"
+      class="terms"
+    >
+      By connecting a wallet, you agree to Superhero Swap's Terms
+      of Service and acknowledge that you have read and understand the Protocol Disclaimer.
     </div>
 
     <div
@@ -101,6 +111,7 @@ import {
 import { resolveWithTimeout } from '../lib/utils';
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
+import ButtonPlain from './ButtonPlain.vue';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import ChromeLogo from '../assets/chrome-logo.svg?skip-optimize';
 import FirefoxLogo from '../assets/firefox-logo.svg?skip-optimize';
@@ -108,6 +119,7 @@ import FirefoxLogo from '../assets/firefox-logo.svg?skip-optimize';
 export default {
   components: {
     ButtonDefault,
+    ButtonPlain,
     ModalDefault,
     AnimatedSpinner,
     ChromeLogo,
@@ -122,6 +134,7 @@ export default {
       connecting: false,
       connectingTo: null,
       scanningForWallets: false,
+      showTerms: false,
       icons: {
         // eslint-disable-next-line global-require
         Superhero: require('../assets/wallets/superhero.png'),
@@ -221,14 +234,22 @@ export default {
 
     @extend %face-sans-14-medium;
 
-    a {
+    .button-plain {
       color: variables.$color-primary;
-      text-decoration: none;
 
       &:hover {
         color: variables.$color-primary-light;
       }
     }
+  }
+
+  .terms {
+    background-color: variables.$color-primary-dark2;
+    color: variables.$color-primary;
+    text-align: left;
+    padding: 8px 16px;
+    border-radius: 16px;
+    margin-top: 20px;
   }
 
   .box {

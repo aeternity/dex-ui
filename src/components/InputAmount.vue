@@ -28,11 +28,11 @@ export default {
   display: flex;
   align-items: center;
   background: variables.$color-black2;
-  border: 1px solid variables.$color-gray;
+  border: 1px solid variables.$color-black2;
   min-width: 56px;
 
-  &:hover {
-    border: 1px solid variables.$color-gray-hover;
+  &:focus-within {
+    border: 1px solid variables.$color-primary;
   }
 }
 </style>
