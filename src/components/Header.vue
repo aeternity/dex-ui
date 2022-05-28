@@ -258,6 +258,7 @@ export default {
         color: variables.$color-white;
         padding: 8px 10px;
         background-color: variables.$color-black2;
+        border: 2px solid variables.$color-black2;
         border-radius: 12px;
 
         @extend %face-sans-15-medium;
@@ -275,6 +276,7 @@ export default {
 
         &:hover {
           cursor: pointer;
+          border-color: variables.$color-gray-hover;
         }
       }
     }
@@ -293,12 +295,12 @@ export default {
         color: variables.$color-white;
         padding: 10px 12px;
         cursor: pointer;
-        border: 1px solid variables.$color-black3;
+        border: 2px solid variables.$color-black3;
         border-radius: 12px;
         background-color: variables.$color-black3;
 
         &:hover {
-          border-color: variables.$color-gray;
+          border-color: variables.$color-gray-hover;
         }
       }
 

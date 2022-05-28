@@ -254,7 +254,10 @@ export default {
 
     @extend %face-sans-14-medium;
 
-    &:hover { cursor: pointer; }
+    &:hover {
+      cursor: pointer;
+      color: variables.$color-white;
+    }
 
     svg {
       width: 14px;

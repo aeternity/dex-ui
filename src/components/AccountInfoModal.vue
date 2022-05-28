@@ -6,16 +6,16 @@
     @close="resolve"
   >
     <div class="box">
-      <div class="wallet">
+      <div class="header">
         <div class="title">
           Connected with {{ wallet ? wallet.name : '' }} Wallet
         </div>
-        <div
+        <ButtonPlain
           class="change-button"
           @click.prevent="disconnectWallet"
         >
           Disconnect
-        </div>
+        </ButtonPlain>
       </div>
       <div class="content">
         <div class="address">
@@ -39,31 +39,42 @@
         </div>
       </div>
     </div>
-    <div class="recent-transactions">
-      <template v-if="filteredTransactions.length">
-        <div class="header">
-          <span>Recent Transactions</span>
-          <ButtonPlain @click="removeAllTransactions">
-            (clear all)
-          </ButtonPlain>
-        </div>
-        <a
-          v-for="transaction in filteredTransactions"
-          :key="transaction.hash"
-          :href="`${activeNetwork.explorerUrl}/transactions/${transaction.hash}`"
-          target="_blank"
-          class="transaction"
+    <div class="box">
+      <div class="header">
+        <div class="title">Recent Transactions</div>
+        <ButtonPlain
+          v-if="filteredTransactions.length"
+          class="change-button"
+          @click="removeAllTransactions"
         >
-          <span>{{ transaction.info }}</span>
-          <AnimatedSpinner v-if="transaction.pending" />
-          <Alert
-            v-else-if="transaction.error"
-            class="error"
-          />
-          <Check v-else />
-        </a>
-      </template>
-      <span v-else>Your transactions will appear here...</span>
+          Clear all
+        </ButtonPlain>
+      </div>
+      <div class="content transactions">
+        <template v-if="filteredTransactions.length">
+          <a
+            v-for="transaction in filteredTransactions"
+            :key="transaction.hash"
+            :href="`${activeNetwork.explorerUrl}/transactions/${transaction.hash}`"
+            target="_blank"
+            class="transaction"
+          >
+            <AnimatedSpinner v-if="transaction.pending" />
+            <Alert
+              v-else-if="transaction.error"
+              class="error"
+            />
+            <Check v-else />
+            <span>{{ transaction.info }}</span>
+          </a>
+        </template>
+        <div
+          v-else
+          class="no-data"
+        >
+          Your transactions will appear here...
+        </div>
+      </div>
     </div>
   </ModalDefault>
 </template>
@@ -141,7 +152,7 @@ export default {
 
     @extend %face-sans-14-regular;
 
-    .wallet {
+    .header {
       width: 100%;
       padding: 18px 14px;
       display: inline-flex;
@@ -213,62 +224,41 @@ export default {
           margin-right: 8px;
         }
       }
-    }
-  }
 
-  .recent-transactions {
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    background-color: variables.$color-black;
-    overflow: hidden auto;
-    text-align: left;
+      &.transactions {
+        padding: 6px 0;
+        max-height: 30vh;
+        overflow-y: auto;
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 16px;
+        .no-data {
+          padding: 18px 14px;
 
-      .button-plain {
-        color: variables.$color-blue;
+          @extend %face-sans-14-regular;
+        }
 
-        &:hover {
-          text-decoration: underline;
+        .transaction {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          color: variables.$color-gray2;
+          padding: 8px 14px;
+
+          &:hover {
+            background-color: variables.$color-black2;
+          }
+
+          svg {
+            margin-right: 5px;
+            width: 34px;
+            height: 34px;
+            color: variables.$color-green;
+
+            &.error {
+              color: variables.$color-red;
+            }
+          }
         }
       }
-    }
-
-    .transaction {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-decoration: none;
-      color: variables.$color-blue;
-
-      > span {
-        max-width: 350px;
-      }
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      svg {
-        margin-left: 5px;
-        width: 24px;
-        height: 24px;
-        color: variables.$color-green;
-
-        &.error {
-          color: variables.$color-red;
-        }
-      }
-    }
-
-    > span {
-      text-align: left;
-
-      @extend %face-sans-18-regular;
     }
   }
 }
