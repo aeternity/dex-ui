@@ -46,6 +46,7 @@ export default {
     top: 50px;
     right: 0;
     white-space: nowrap;
+    z-index: 1;
   }
 }
 </style>

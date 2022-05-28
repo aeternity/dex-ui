@@ -32,6 +32,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .settings-item {
   width: 100%;
@@ -41,6 +42,12 @@ export default {
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
+  }
+
+  @include mixins.phone {
+    .row {
+      display: block;
+    }
   }
 
   .title {

@@ -432,6 +432,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .header {
   display: flex;
@@ -511,6 +512,14 @@ export default {
         margin: 4px 0;
         border-radius: 16px;
         font-size: 16px;
+      }
+
+      @include mixins.phone {
+        display: block;
+
+        .button-default {
+          margin: 4px;
+        }
       }
     }
 

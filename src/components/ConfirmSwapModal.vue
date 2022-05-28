@@ -120,6 +120,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 @use '../styles/typography.scss';
+@use '../styles/mixins.scss';
 
 .confirm-swap-modal {
   color: white;
@@ -174,6 +175,14 @@ export default {
       span:first-of-type {
         margin-right: 4px;
         color: variables.$color-gray2;
+      }
+    }
+
+    @include mixins.phone {
+      > div,
+      span {
+        display: block;
+        text-align: left;
       }
     }
 
