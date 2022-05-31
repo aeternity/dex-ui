@@ -93,7 +93,7 @@ export default {
       ]);
 
       if (amount) {
-        this.setAmount(amount, isFrom);
+        this.setAmount(amount, JSON.parse(isFrom));
       }
 
       this.restoringTokenSelection = false;
