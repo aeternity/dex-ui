@@ -239,13 +239,14 @@ export default createStore({
       commit('setAddress', address);
       commit('setConnectingToWallet', false);
     },
-    async disconnectWallet({ commit, state: { sdk } }) {
+    async disconnectWallet({ state: { sdk } }) {
       try {
         await sdk.disconnectWallet(false);
       } catch (error) {
-        //
+        // TODO
       }
-      commit('resetState');
+      localStorage.clear();
+      window.location.search = '';
     },
     async parseAndSendTransactionFromQuery(
       { commit, dispatch, state: { route, transactions, sdk } },
