@@ -5,6 +5,11 @@ import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
+import AnalyticsLayout from '../components/analytics/AnalyticsLayout.vue';
+import Overview from '../views/analytics/Overview.vue';
+import TokenOverview from '../views/analytics/TokenOverview.vue';
+import TokenDetailView from '../views/analytics/TokenDetailView.vue';
+import PoolOverview from '../views/analytics/PoolOverview.vue';
 
 const routes = [
   {
@@ -39,6 +44,32 @@ const routes = [
       name: 'remove-pool',
       component: RemoveLiquidity,
     }],
+  },
+  {
+    path: '/analytics',
+    component: { render: () => h(AnalyticsLayout) },
+    children: [
+      {
+        path: '',
+        name: 'analytics',
+        component: Overview,
+      },
+      {
+        path: 'pools',
+        name: 'analytics-pools',
+        component: PoolOverview,
+      },
+      {
+        path: 'tokens',
+        name: 'analytics-tokens',
+        component: TokenOverview,
+      },
+      {
+        path: 'tokens/:address',
+        name: 'overview-token-details',
+        component: TokenDetailView,
+      },
+    ],
   },
 ];
 

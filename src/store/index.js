@@ -13,6 +13,7 @@ import {
 import aeternityModule from './modules/aeternity';
 import navigation from './modules/navigation';
 import tokensModule from './modules/tokens';
+import analyticsModule from './modules/analytics';
 import modals from './plugins/modals';
 import pendingTransactionHandler from './plugins/pendingTransactionHandler';
 
@@ -317,6 +318,7 @@ export default createStore({
   modules: {
     aeternity: aeternityModule,
     tokens: tokensModule,
+    analytics: analyticsModule,
     navigation,
   },
   plugins: [

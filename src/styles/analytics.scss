@@ -1,0 +1,69 @@
+@use './variables.scss';
+@use './typography.scss';
+
+.block {
+  padding: 16px 12px;
+  width: 100%;
+
+  .heading {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    @extend %face-sans-14-regular;
+
+    a {
+      color: variables.$color-white;
+      text-decoration: none;
+    }
+  }
+}
+
+.data-table {
+  background-color: variables.$color-black2;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: left;
+
+  table {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    text-align: left;
+
+    th, td {
+      padding: 10px;
+    }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+
+      .name {
+        @extend %face-sans-16-regular;
+
+        padding-right: 6px;
+      }
+
+      .symbol {
+        @extend %face-sans-14-regular;
+
+        color: variables.$color-gray2;
+      }
+
+      img {
+        width: 28px;
+        height: 28px;
+        border-radius: 14px;
+        margin-right: 8px;
+      }
+    }
+
+    tbody tr:hover {
+      background-color: variables.$color-black;
+      cursor: pointer;
+    }
+  }
+}

@@ -154,6 +154,7 @@ export default {
     ratio() {
       if (this.isAeVsWae) return 1;
       if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) return null;
+
       return reduceDecimals(this.reserveTokenA, this.tokenA.decimals)
         .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
     },
