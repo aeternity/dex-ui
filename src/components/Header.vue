@@ -57,14 +57,12 @@
             About us
             <AeLogo />
           </a>
-          <a
-            v-if="UNFINISHED_FEATURES"
-            href="https://aeternity.com/"
-            target="_blank"
+          <ButtonPlain
+            class="link"
+            @click.prevent="$store.dispatch('modals/open', { name: 'term-and-condition' })"
           >
             Terms & Condition
-            <AeLogo />
-          </a>
+          </ButtonPlain>
           <div
             v-if="UNFINISHED_FEATURES"
             class="link"
@@ -153,6 +151,7 @@ import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
 import ButtonDefault from './ButtonDefault.vue';
+import ButtonPlain from './ButtonPlain.vue';
 
 export default {
   components: {
@@ -163,6 +162,7 @@ export default {
     ActionsMenu,
     NavigationMenu,
     ButtonDefault,
+    ButtonPlain,
     AeBalance,
   },
   data: () => ({
@@ -323,6 +323,8 @@ export default {
         justify-content: space-between;
         min-width: 200px;
         padding: 8px;
+
+        @extend %face-sans-16-regular;
 
         &:hover {
           color: variables.$color-white;
