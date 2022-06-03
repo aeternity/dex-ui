@@ -9,6 +9,7 @@ import SubmitTransactionModal from '../components/SubmitTransactionModal.vue';
 import ConnectWalletModal from '../components/ConnectWalletModal.vue';
 import NotificationTransactionStatus from '../components/NotificationTransactionStatus.vue';
 import NotificationConnectionStatus from '../components/NotificationConnectionStatus.vue';
+import TermAndConditionModal from '../components/TermAndConditionModal.vue';
 
 export default () => {
   registerModal({ name: 'show-tooltip', component: TooltipModal });
@@ -21,4 +22,5 @@ export default () => {
   registerModal({ name: 'account-info', component: AccountInfoModal });
   registerModal({ name: 'transaction-status', component: NotificationTransactionStatus, allowRedirect: true });
   registerModal({ name: 'connection-status', component: NotificationConnectionStatus, allowRedirect: true });
+  registerModal({ name: 'term-and-condition', component: TermAndConditionModal });
 };
