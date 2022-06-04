@@ -412,6 +412,7 @@ export default {
     async getPairInfo({
       dispatch, commit, rootGetters: { activeNetwork },
     }, { tokenA, tokenB }) {
+      let timeoutId;
       try {
         if (!tokenA || !tokenB || !activeNetwork) {
           return [];
@@ -423,7 +424,12 @@ export default {
         ) {
           return [0, 1, 1];
         }
-        commit('setFetchingPairInfo', true);
+        // fetching through dex-backend could be so fast
+        // that the visual effect of `fetching pair indicator`
+        // is just an unpleasant flickering. In this case delaying it
+        // with a few hundreds of ms is doing the job
+        // TODO: maybe this should be done in Component/View instead of store
+        timeoutId = setTimeout(() => commit('setFetchingPairInfo', true), 100);
         const { totalSupply, reserveA, reserveB } = await dispatch('fetchPoolInfo', {
           tokenA: tokenA.contract_id,
           tokenB: tokenB.contract_id,
@@ -435,6 +441,7 @@ export default {
         }
         return [];
       } finally {
+        clearTimeout(timeoutId);
         commit('setFetchingPairInfo', false);
       }
     },

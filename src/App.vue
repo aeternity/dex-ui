@@ -33,9 +33,22 @@ export default {
     NavigationMenu,
     ConnectionStatus,
   },
+  data() {
+    return {
+      backendSanityCheckTimeoutId: null,
+    };
+  },
   computed: {
     ...mapGetters('modals', ['opened']),
     ...mapState(['wallet', 'address']),
+    ...mapState('backend', { backendFailed: 'failed' }),
+  },
+  watch: {
+    async backendFailed(newVal) {
+      if (newVal) {
+        await this.checkBackendStatus();
+      }
+    },
   },
   async mounted() {
     this.$store.commit('tokens/initDefaultTokens');
@@ -63,6 +76,7 @@ export default {
       this.$store.commit('setIsSdkInitializing', false);
     }
     await this.$store.dispatch('backend/init');
+    this.checkBackendStatus();
 
     await this.$watchUntilTruly(() => this.$store.state.sdk);
 
@@ -80,6 +94,18 @@ export default {
     } else if (this.wallet && this.address) {
       await this.$store.dispatch('connectWallet', this.wallet);
     }
+  },
+  methods: {
+    async checkBackendStatus() {
+      clearTimeout(this.backendSanityCheckTimeoutId);
+      const up = await this.$store.dispatch('backend/checkStatus');
+      if (!up) {
+        this.backendSanityCheckTimeoutId = setTimeout(
+          this.checkBackendStatus,
+          parseInt(process.env.VUE_APP_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
+        );
+      }
+    },
   },
 };
 </script>

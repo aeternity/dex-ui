@@ -1,12 +1,19 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { handleUnknownError, calculateSelectedToken } from '../lib/utils';
+import { handleUnknownError, calculateSelectedToken, getPairId } from '../lib/utils';
 
 export default {
   computed: {
     ...mapState({
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
+    ...mapState('backend', { backendFailed: 'failed', pairs: 'pairs' }),
+    selectedBackendPair() {
+      if (!this.pairs || !this.tokenA || !this.tokenB) {
+        return null;
+      }
+      return this.pairs[getPairId(this.tokenA.contract_id, this.tokenB.contract_id)];
+    },
   },
   watch: {
     async factory(newVal) {
@@ -20,6 +27,22 @@ export default {
         }
       }
     },
+    async backendFailed(newVal) {
+      if (newVal) {
+        clearTimeout(this.pairInfoTimeoutId);
+        return;
+      }
+      // if dex-backend is up again
+      if (this.tokenA && this.tokenB) {
+        await this.setPairInfo();
+      }
+    },
+  },
+  data: () => ({
+    pairInfoTimeoutId: null,
+  }),
+  unmounted() {
+    clearTimeout(this.pairInfoTimeoutId);
   },
   methods: {
     async setSelectedToken(token, isTokenA) {
@@ -53,6 +76,7 @@ export default {
       this.saveTokenSelection(this.tokenA, this.tokenB);
     },
     async setPairInfo() {
+      clearTimeout(this.pairInfoTimeoutId);
       try {
         [
           this.totalSupply,
@@ -64,6 +88,13 @@ export default {
         });
       } catch (e) {
         handleUnknownError(e);
+      } finally {
+        if (!this.backendFailed && this.selectedBackendPair) {
+          this.pairInfoTimeoutId = setTimeout(
+            this.setPairInfo,
+            parseInt(process.env.VUE_APP_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
+          );
+        }
       }
     },
     setAmount(amount, isLastInputTokenA) {
