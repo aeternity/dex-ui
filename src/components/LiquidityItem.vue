@@ -22,10 +22,10 @@
 </template>
 
 <script>
+import { handleUnknownError } from '@/lib/utils';
 import ButtonPlain from './ButtonPlain.vue';
 import LiquidityDetails from './LiquidityDetails.vue';
 import DownChevron from '../assets/arrow.svg?vue-component';
-import { handleUnknownError } from '@/lib/utils';
 
 export default {
   components: {

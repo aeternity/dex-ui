@@ -11,6 +11,7 @@
     <ButtonDefault
       fill="transparent-blue"
       :disabled="!resolve"
+      data-cy="error-dismiss"
       @click="resolve"
     >
       {{ dismissText }}

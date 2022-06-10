@@ -12,6 +12,7 @@
         </div>
         <div
           class="change-button"
+          data-cy="wallet-disconnect"
           @click.prevent="disconnectWallet"
         >
           Disconnect
