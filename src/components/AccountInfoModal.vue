@@ -14,6 +14,7 @@
         </div>
         <ButtonPlain
           class="change-button"
+          data-cy="wallet-disconnect"
           @click.prevent="disconnectWallet"
         >
           <span class="h-xs">{{ $t('accountInfoModal.disconnect') }}</span>

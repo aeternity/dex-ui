@@ -10,16 +10,53 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This is will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add('login', () => {
+  cy.get('[data-cy=connect-wallet]')
+    .should('contain', 'Connect Wallet')
+    .click()
+    .get('[data-cy=connect-Superhero]', { timeout: 6000 })
+    .click()
+    .get('[data-cy=connect-Superhero]', { timeout: 6000 })
+    .should('not.exist')
+    .get('body')
+    .then((body) => {
+      if (body.find('[data-cy=wallet-address]').length > 0) {
+        cy.get('[data-cy=wallet-address]')
+          .should('contain', 'ak_');
+      } else {
+        cy
+          .get('[data-cy=error-dismiss]', { timeout: 6000 })
+          .should('contain', 'Open My Wallet')
+          .click()
+          .get('[data-cy=checkbox]')
+          .should('contain', 'I agree to the Superhero')
+          .click()
+          .get('[data-cy=import-wallet]')
+          .click()
+          .get('[data-cy=textarea]')
+          .type('grief huge rare weather proof clerk pilot edit speak network denial debris')
+          .get('[data-cy=import]')
+          .click()
+          .get('button')
+          .contains('Confirm')
+          .click()
+          .visit('/')
+          .login();
+      }
+    });
+});
+
+Cypress.Commands.add('logout', () => {
+  cy.get('[data-cy=wallet-address]')
+    .click()
+    .get('[data-cy=wallet-disconnect]')
+    .click()
+    .get('[data-cy=connect-wallet]')
+    .should('contain', 'Connect Wallet');
+  // TODO: check if we gonna disconnect from wallet.superhero.com too
+});
+
+Cypress.Commands.add('switchTestnetNetwork', () => {
+  cy.wait(1000);
+  // TODO
+});

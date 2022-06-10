@@ -29,7 +29,9 @@
     >
       <div
         v-if="!connecting || wallet.id === connectingTo"
-        class="box"
+        class="box wallet"
+        :data-cy="`connect-${wallet.name}`"
+        @click.prevent="onWalletConnect(wallet)"
       >
         <div class="wallet">
           <div class="info">

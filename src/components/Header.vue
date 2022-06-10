@@ -20,6 +20,7 @@
         :disabled="connectingToWallet"
         class="connect-wallet"
         fill="primary"
+        data-cy="connect-wallet"
         @click="connectWallet"
       >
         <span>{{ $t('connectWallet') }}</span>
@@ -30,7 +31,8 @@
       >
         <div
           :class="['address', { pending: pendingTransactions.length }]"
-          @click="openAccountInfo()"
+          data-cy="wallet-address"
+          @click.prevent="openAccountInfo()"
         >
           <template v-if="pendingTransactions.length">
             <span>{{ `${pendingTransactions.length} Pending` }}</span>
