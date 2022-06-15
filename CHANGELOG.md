@@ -1,5 +1,52 @@
 # Changelog
 
+## [1.7.0](https://github.com/aeternity/dex-ui/compare/v1.6.0...v1.7.0) (2022-06-15)
+
+
+### Features
+
+* add connectionStatusTracker plugin ([8653a3c](https://github.com/aeternity/dex-ui/commit/8653a3cfd43af3ea43f55b0fe4cdb10642b36327))
+* **dex-backend:** continuously fetching for pair info and dex backend status ([88e0299](https://github.com/aeternity/dex-ui/commit/88e02993bc5dbe697765abdeb524eaa89a82299b))
+* **dex-backend:** fetch and replace tokens list ([81be3c2](https://github.com/aeternity/dex-ui/commit/81be3c26ba9f5739c2e0f5a127352f687ab4ef41))
+* notify user if connection is lost ([902a588](https://github.com/aeternity/dex-ui/commit/902a58836fc484a699038e414a583017489b62c2))
+* show the connection status ([7afda5d](https://github.com/aeternity/dex-ui/commit/7afda5d4967ce0ebc25d749079e447590b14fb04))
+* **tokens:** rename token.name 'WAE' to 'Wrapped AE' ([5539297](https://github.com/aeternity/dex-ui/commit/553929785767919bc22ab5ca0b7899a642694b7e))
+* **ui:** account info modal ui improvements ([b6eb4de](https://github.com/aeternity/dex-ui/commit/b6eb4de9bc4ab6b2236fab8dc666d00402045e4c))
+* **ui:** add/remove liquidity ([5760a38](https://github.com/aeternity/dex-ui/commit/5760a3834642175e0314c98c0360edddc9f37d25))
+* **ui:** added favicons ([2776df6](https://github.com/aeternity/dex-ui/commit/2776df6f95c26ebb86371791f5d12a677e437f04))
+* **ui:** brand color & font-size [#324](https://github.com/aeternity/dex-ui/issues/324) ([d298e2d](https://github.com/aeternity/dex-ui/commit/d298e2dd59f12961b808c4df93fac11cb27a1b88))
+* **ui:** confirm swap & submit transaction modals ([0f03317](https://github.com/aeternity/dex-ui/commit/0f03317bc09df205839c0429120a7de36bd8c3d7))
+* **ui:** connect wallet modal ui improvement ([510767a](https://github.com/aeternity/dex-ui/commit/510767a443bf293a2c8662ba1921159dc2101d8b))
+* **ui:** header wallet address ([3b615b0](https://github.com/aeternity/dex-ui/commit/3b615b0759ae566d0ac467fcb7393aee88ba9720))
+* **ui:** mobile responsive ([8630830](https://github.com/aeternity/dex-ui/commit/8630830c16c9c3a5d401ebf66ac783fc861e0e3f))
+* **ui:** pool view ([4d90512](https://github.com/aeternity/dex-ui/commit/4d90512e9c9d687fa72ff169d93dc321a009cca8))
+* **ui:** recent transactions & buttons,inputs hover effects ([b163576](https://github.com/aeternity/dex-ui/commit/b163576161ac73df7075208db2603e9655c0d3d1))
+* **ui:** select token modal ui improvements ([a5349ca](https://github.com/aeternity/dex-ui/commit/a5349ca2c73d19b3c7295d32406d61535d3c3349))
+* **ui:** style fixes ([39064a8](https://github.com/aeternity/dex-ui/commit/39064a8ebd64a317d05ce83a3f00a055dc435848))
+* **ui:** token selector & swap view ([3f6e4d3](https://github.com/aeternity/dex-ui/commit/3f6e4d3dadfd4377673508280a4d6562f6d2a908))
+* **ui:** transaction settings ui improvements ([7c050d7](https://github.com/aeternity/dex-ui/commit/7c050d71d1578786aa0580ee64987a80664aad2d))
+* updated app name ([073ae14](https://github.com/aeternity/dex-ui/commit/073ae14caf838b90b5b2f5d60e864795dad01d9f))
+
+
+### Bug Fixes
+
+* clear local storage on disconnect [#280](https://github.com/aeternity/dex-ui/issues/280) ([a70d89d](https://github.com/aeternity/dex-ui/commit/a70d89d8c8ba66663bc68bc06bca02cad09ac06e))
+* correct indent of release listener ([c5c2db6](https://github.com/aeternity/dex-ui/commit/c5c2db6143194f1a4b36c75193f80e1fd03814d6))
+* dependencies [#329](https://github.com/aeternity/dex-ui/issues/329) ([b31bc6e](https://github.com/aeternity/dex-ui/commit/b31bc6e12096b3ac1ffa2e142faa324535dab8b9))
+* **ui:** modals positions and width ([10a84ab](https://github.com/aeternity/dex-ui/commit/10a84ab5df6411f72c42290dd916ef5d28f5cc1c))
+
+
+### Miscellaneous
+
+* bump release please ([f1b4453](https://github.com/aeternity/dex-ui/commit/f1b44537c7ad87ab054e8a8085b3442a201eab66))
+* **dex-backend:** add dex-backend support ([6f60bbc](https://github.com/aeternity/dex-ui/commit/6f60bbc47be8557aed0b849e3e8087a3354d7092))
+* terms and conditions [#73](https://github.com/aeternity/dex-ui/issues/73) ([c09e859](https://github.com/aeternity/dex-ui/commit/c09e8597adf753ce0a54c0a6bcb3d84d0bf88a78))
+
+
+### Refactorings
+
+* spelling fixes ([301f13d](https://github.com/aeternity/dex-ui/commit/301f13d6628b1867285d618bd53c65bed2c370de))
+
 ## [1.6.0](https://www.github.com/aeternity/dex-ui/compare/v1.5.2...v1.6.0) (2022-04-29)
 
 
