@@ -420,21 +420,13 @@ export default {
     line-height: 20px;
     text-align: left;
 
-    &::-webkit-scrollbar {
-      background: variables.$color-black;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: variables.$color-black2;
-    }
-
-    &::-webkit-scrollbar-corner {
-      background: variables.$color-black;
-    }
-
     a {
       text-decoration: none;
-      color: variables.$color-blue;
+      color: variables.$color-primary;
+
+      &:hover {
+        color: variables.$color-primary-light;
+      }
     }
 
     @extend %face-sans-14-regular;

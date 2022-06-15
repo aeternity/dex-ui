@@ -17,30 +17,30 @@ $breakpoints: (
 // Classes to hide elements in certain screen sizes
 .h-xs {
   @media (max-width: breakpoint(sm)) {
-    display: none !important;
+    display: none;
   }
 }
 
 .h-sm {
   @media (max-width: breakpoint(md)) and (min-width: breakpoint(sm)) {
-    display: none !important;
+    display: none;
   }
 }
 
 .h-md {
   @media (max-width: breakpoint(lg)) and (min-width: breakpoint(md)) {
-    display: none !important;
+    display: none;
   }
 }
 
 .h-lg {
   @media (max-width: breakpoint(xl)) and (min-width: breakpoint(lg)) {
-    display: none !important;
+    display: none;
   }
 }
 
 .h-xl {
   @media (min-width: breakpoint(xl)) {
-    display: none !important;
+    display: none;
   }
 }

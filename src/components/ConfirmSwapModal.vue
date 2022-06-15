@@ -34,14 +34,6 @@
         <span>Price</span>
         <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
       </div>
-      <!-- <div v-if="!isAeVsWae">
-        <span>Liquidity Provider Fee</span>
-        <span>{{ `${(amountFrom * 0.003).toFixed(8)} ${from.symbol}` }}</span>
-      </div> -->
-      <!-- <div v-if="!isAeVsWae">
-        <span>Price Impact</span>
-        <span>{{ priceImpact.toFixed(8) }}%</span>
-      </div> -->
       <div v-if="!isAeVsWae">
         <span>Allowed Slippage</span>
         <span>{{ slippage }}%</span>

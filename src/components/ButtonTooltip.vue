@@ -1,7 +1,7 @@
 <template>
   <ButtonPlain
     class="button-tooltip"
-    @mouseenter="mouseEnterHandler"
+    @click.prevent="mouseEnterHandler"
   >
     <slot />
   </ButtonPlain>

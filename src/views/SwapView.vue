@@ -39,7 +39,7 @@
       {{ `1 ${tokenB.symbol} = ${ratio} ${tokenA.symbol}` }}
     </div>
     <ButtonDefault
-      v-if="!isDisabled && address"
+      v-if="!isDisabled && address && !enoughAllowance"
       class="allowance-button"
       :disabled="approving || !tokenA || !amountTokenA || fetchingPairInfo || fetchingAllowance
         || enoughAllowance"

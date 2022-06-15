@@ -36,7 +36,7 @@
               <div>
                 <ButtonDefault
                   :fill="showedSlippage ? 'second-dark' : 'primary'"
-                  @click="updateSlippage()"
+                  @click="resetData()"
                 >
                   Auto
                 </ButtonDefault>
@@ -142,6 +142,10 @@ export default {
     settingsClickHandler() {
       this.showedSlippage = this.slippage === DEFAULT_SLIPPAGE ? '' : this.slippage;
       this.showedDeadline = this.deadline === DEFAULT_DEADLINE ? '' : this.deadline;
+    },
+    resetData() {
+      this.updateSlippage(DEFAULT_SLIPPAGE);
+      this.updateDeadline(DEFAULT_DEADLINE);
     },
     updateSlippage(newSlippage) {
       this.showedSlippage = newSlippage;

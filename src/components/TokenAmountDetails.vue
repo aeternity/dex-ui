@@ -53,6 +53,11 @@ export default {
   .token-amount {
     font-size: 20px;
     justify-content: space-between;
+
+    & > div {
+      word-break: normal;
+      margin-right: 12px;
+    }
   }
 
   img {
