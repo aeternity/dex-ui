@@ -46,7 +46,7 @@
           Recent Transactions
         </div>
         <ButtonPlain
-          v-if="filteredTransactions.length || true"
+          v-if="filteredTransactions.length"
           class="change-button"
           @click="removeAllTransactions"
         >

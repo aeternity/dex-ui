@@ -79,6 +79,20 @@ export default {
     border: 1px solid variables.$color-black2;
     box-shadow: rgb(0 0 0 / 5%) 0 4px 8px 0;
     border-radius: 20px;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      background: variables.$color-black;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: variables.$color-black2;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: variables.$color-black;
+    }
 
     .header {
       padding: 20px 20px 16px 20px;
