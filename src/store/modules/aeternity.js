@@ -366,7 +366,7 @@ export default {
         logDryRunAlternative(action, args);
         const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
         assignReserves({
-          ...(await pair.methods.get_reserves().decodedResult),
+          ...(await pair.methods.get_reserves()).decodedResult,
           token0: (await pair.methods.token0()).decodedResult,
         });
         totalSupply = (await pair.methods.total_supply()).decodedResult;
