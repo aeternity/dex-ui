@@ -41,3 +41,29 @@ export const ratioWithDecimals = (
   ratio,
   { decimalsA, decimalsB },
 ) => BigNumber(ratio).shiftedBy(decimalsA - decimalsB);
+
+/**
+ * @description extracts the token path from a swap-route
+ * @param {array} route the route in the shape received from 'dex-backend'
+ * @param {string} tokenA tokenA address
+ * @return {string[]}
+ * NOTE: doesn't matter if the route starts with tokenA or with tokenB.
+ * the function is capable to figure out the right order
+*/
+export const getPath = (route, tokenA) => {
+  if (!route || !route.length) {
+    return [];
+  }
+  const ordered = route.length < 2
+            || route[0].token0 === tokenA
+            || route[0].token1 === tokenA
+    ? route
+    : [...route].reverse();
+  const [first, last] = ordered
+    .reduce(([acc, prev], pair) => {
+      const next = pair.token0 === prev ? pair.token1 : pair.token0;
+      return [acc.concat(prev), next];
+    },
+    [[], tokenA]);
+  return first.concat(last);
+};

@@ -1,5 +1,44 @@
-import { ratioFromRoute, ratioWithDecimals, ratioFromPair } from '../../src/lib/routeUtils';
+import {
+  ratioFromRoute, ratioWithDecimals, ratioFromPair, getPath,
+} from '../../src/lib/routeUtils';
 
+describe('get path tests', () => {
+  const A = 'a';
+  const B = 'b';
+  const C = 'c';
+  const path = (route, tokenA) => getPath(
+    route.map((x) => ({
+      ...x,
+      token0: x.t0,
+      token1: x.t1,
+    })), tokenA,
+  );
+  it('gets nothing from empty route', () => {
+    expect(getPath([], 'ct_1')).toEqual([]);
+  });
+  const testPath = (input, token, result) => it(
+    `gets ${JSON.stringify(result)} from route ${JSON.stringify(input)}`,
+    () => {
+      expect(path(input, token)).toEqual(result);
+    },
+  );
+  testPath([{ t0: A, t1: B }], A, [A, B]);
+  testPath([{ t0: B, t1: A }], A, [A, B]);
+  testPath([{ t0: A, t1: B }, { t0: B, t1: C }], A, [A, B, C]);
+  testPath([{ t0: B, t1: C }, { t0: A, t1: B }], A, [A, B, C]);
+
+  describe('test longer paths', () => {
+    const range = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const input = range.slice(1).reduce(([acc, prev], x) => [
+      acc.concat({ t0: prev, t1: x }),
+      x,
+    ], [[], range[0]])[0];
+    testPath(input, range[0], range);
+    testPath([...input].reverse(), range[0], range);
+    testPath(input, range[range.length - 1], [...range].reverse());
+    testPath([...input].reverse(), range[range.length - 1], [...range].reverse());
+  });
+});
 describe('ratio from one pair', () => {
   it('simple 1/1 pair', () => {
     expect(

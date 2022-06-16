@@ -7,10 +7,14 @@ import {
   ratioFromRoute, ratioWithDecimals,
 } from '../lib/routeUtils';
 
+// if there is a direct Pair for tokenA/tokenB or tokenB/tokenA,
+// the Dex-Backend will put it at the beginning of the swap-routes list.
+// the other paths will follow that first/unique one
+const DEFAULT_SELECTED_ROUTE_IX = 0;
 export default {
   data: () => ({
     pairInfoTimeoutId: null,
-    selectedRouteIx: 0,
+    selectedRouteIx: DEFAULT_SELECTED_ROUTE_IX,
   }),
   computed: {
     ...mapState({
@@ -28,7 +32,7 @@ export default {
       if (!this.swapRoutes) {
         return null;
       }
-      const routeIx = this.selectedRouteIx;
+      const routeIx = Math.min(this.selectedRouteIx, this.swapRoutes.length - 1);
       const swapRoute = this.swapRoutes[routeIx];
       if (!swapRoute) {
         return null;
@@ -84,7 +88,9 @@ export default {
         token, this.tokenA, this.tokenB, isTokenA,
       );
       if (!switched) {
-        this.selectedRouteIx = 0;
+        // TODO: this is a subject of change after user selection
+        // of paths is implemented
+        this.selectedRouteIx = DEFAULT_SELECTED_ROUTE_IX;
         await this.setSwapRoutes();
       }
       if (switched) {
