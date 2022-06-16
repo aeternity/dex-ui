@@ -113,9 +113,8 @@ export default {
       return up;
     },
 
-    async fetchPairDetails({ state: { pairs }, dispatch }, { tokenA, tokenB }) {
-      const pairId = getPairId(tokenA, tokenB);
-      const pair = pairs[pairId];
+    async fetchPairDetails({ getters: { getPairInfo }, dispatch }, { tokenA, tokenB }) {
+      const pair = getPairInfo({ tokenA, tokenB });
       if (!pair) return null;
       const resp = await dispatch('safeFetch', { url: `pairs/by-address/${pair.address}` });
       return resp && {
