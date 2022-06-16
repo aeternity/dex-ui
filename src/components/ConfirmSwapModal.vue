@@ -32,7 +32,7 @@
       </div>
       <div>
         <span>Price</span>
-        <span>{{ `1 ${to.symbol} = ${ratio} ${from.symbol}` }}</span>
+        <span>{{ `1 ${to.symbol} = ${1/ratio} ${from.symbol}` }}</span>
       </div>
       <div v-if="!isAeVsWae">
         <span>Allowed Slippage</span>
