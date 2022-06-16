@@ -36,7 +36,7 @@
       v-else-if="tokenB && tokenA && ratio"
       class="price"
     >
-      {{ `1 ${tokenB.symbol} = ${ratio} ${tokenA.symbol}` }}
+      {{ `1 ${tokenB.symbol} = ${1/ratio} ${tokenA.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address && !enoughAllowance"
@@ -76,13 +76,13 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { expandDecimals, reduceDecimals, getAePair } from '../lib/utils';
+import { expandDecimals, getAePair } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import saveTokenSelectionMixin from '../mixins/saveTokenSelectionMixin';
-import setTokenPairInfoMixin from '../mixins/setTokenPairInfoMixin';
 import approvalMixin from '../mixins/allowanceMixin';
+import setSwapRoutesMixin from '../mixins/setSwapRoutesMixin';
 
 export default {
   components: {
@@ -95,7 +95,7 @@ export default {
     QuestionCircle,
     AnimatedSpinner,
   },
-  mixins: [approvalMixin, saveTokenSelectionMixin, setTokenPairInfoMixin],
+  mixins: [approvalMixin, saveTokenSelectionMixin, setSwapRoutesMixin],
   data: () => ({
     tokenB: null,
     tokenA: null,
@@ -130,8 +130,8 @@ export default {
         || Number.parseFloat(this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB) <= 0
       );
     },
-    hasPair() {
-      return !!(this.totalSupply || this.reserveTokenA || this.reserveTokenB);
+    hasRoute() {
+      return !!this.selectedRoute;
     },
     isDisabled() {
       return !this.tokenB || !this.tokenA || !this.isValidAmount || !this.enoughBalance;
@@ -145,16 +145,10 @@ export default {
     buttonMessage() {
       if (!this.address) return 'Connect Wallet';
       if (this.factory && this.tokenB && this.tokenA
-        && !this.fetchingPairInfo && !this.hasPair) return 'No liquidity pool found';
+        && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return 'No liquidity pool found';
       if (!this.isValidAmount || !this.tokenB || !this.tokenA) return 'Enter amount';
       if (!this.enoughBalance) return `Insufficient ${this.tokenA.symbol} balance`;
       return 'Swap';
-    },
-    ratio() {
-      if (this.isAeVsWae) return 1;
-      if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) return null;
-      return reduceDecimals(this.reserveTokenA, this.tokenA.decimals)
-        .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
     },
     amountTokenAExpanded() {
       return !this.tokenA || !this.amountTokenA
@@ -258,7 +252,7 @@ export default {
         this.amountTokenA = '';
         this.amountTokenB = '';
         this.isLastInputTokenA = true;
-        await this.setPairInfo();
+        await this.setSwapRoutes();
         await this.refreshAllowance(this.tokenA?.contract_id, this.fetchAllowance);
         this.$store.commit('navigation/setSwap', null);
       }

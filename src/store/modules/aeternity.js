@@ -70,6 +70,20 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
   return result;
 };
+const withFetchingPairInfo = (work) => async (context, args) => {
+  const { commit } = context;
+  // fetching through dex-backend could be so fast
+  // that the visual effect of `fetching pair indicator`
+  // is just an unpleasant flickering. In this case delaying it
+  // with a few hundreds of ms is doing the job
+  const timeoutId = setTimeout(() => commit('setFetchingPairInfo', true), 100);
+  try {
+    return await work(context, args);
+  } finally {
+    clearTimeout(timeoutId);
+    commit('setFetchingPairInfo', false);
+  }
+};
 
 export default {
   namespaced: true,
@@ -81,6 +95,7 @@ export default {
     slippage: DEFAULT_SLIPPAGE, // percentage with 1 digit after separator
     deadline: DEFAULT_DEADLINE, // minutes with 1 digit after separator
     pairs: {},
+    routes: {},
     providedLiquidity: {},
     poolInfo: {},
     fetchingPairInfo: false,
@@ -146,6 +161,11 @@ export default {
       state.poolInfo[getPairId(tokenA, tokenB)] = {
         token0, token1, totalSupply,
       };
+    },
+    updateRoutes(state, {
+      tokenA, tokenB, routes,
+    }) {
+      state.routes[getPairId(tokenA, tokenB)] = routes;
     },
   },
 
@@ -401,6 +421,77 @@ export default {
     },
 
     /**
+     * @description fetches all short swap routes between two tokens
+     * @async
+     * @param p1 vuex context
+     * @param {string} p2.tokenA tokenA address
+     * @param {string} p2.tokenB tokenA address
+     * @return {Array} returns the all the routes
+    */
+    fetchSwapRoutes: withFetchingPairInfo(async ({
+      dispatch,
+      commit,
+    }, {
+      tokenA, tokenB,
+    }) => {
+      const sortedTokens = sortTokens(tokenA, tokenB);
+      const action = 'backend/fetchSwapRoutes';
+      // we ask always for the same order of t0/t1 swap-routes
+      // to remain consistent into `this.routes[getPairId(ta,tb)]`
+      const args = {
+        tokenA: sortedTokens[0],
+        tokenB: sortedTokens[1],
+      };
+      const resp = await dispatch(action, args, { root: true });
+      let routes = resp
+        ?.filter(
+          (pairs) => pairs.every((pair) => pair.synchronized),
+        ).map((pairs) => pairs.map((pair) => ({
+          ...pair,
+          liquidityInfo: {
+            ...pair.liquidityInfo.height,
+            totalSupply: BigInt(pair.liquidityInfo.totalSupply),
+            reserve0: BigInt(pair.liquidityInfo.reserve0),
+            reserve1: BigInt(pair.liquidityInfo.reserve1),
+          },
+        })));
+
+      // if for any reason backend module isn't successfully
+      // returning synchronized values
+      // let's try a dry-run instead
+      if (!routes?.length) {
+        logDryRunAlternative(action, args);
+        const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
+        const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
+        const { decodedResult: token0 } = await pair.methods.token0();
+        const {
+          decodedResult: totalSupply,
+          result: { height },
+        } = await pair.methods.total_supply();
+        const pairAddress = getAddress(pair);
+        routes = [[{
+          address: pairAddress,
+          token0,
+          token1: token0 === tokenA ? tokenB : tokenA,
+          synchronized: 'dry-run',
+          liquidityInfo: {
+            totalSupply,
+            reserve0,
+            reserve1,
+            height,
+          },
+        }]];
+      }
+
+      commit('updateRoutes', {
+        tokenA,
+        tokenB,
+        routes,
+      });
+      return routes;
+    }),
+
+    /**
      * @description get info about the pool
      * @async
      * @param p1 vuex context
@@ -409,10 +500,9 @@ export default {
      * @return {object} returns [totalSupply,reserveA,reserveB] or []
      * when no pair
     */
-    async getPairInfo({
-      dispatch, commit, rootGetters: { activeNetwork },
-    }, { tokenA, tokenB }) {
-      let timeoutId;
+    getPairInfo: withFetchingPairInfo(async ({
+      dispatch, rootGetters: { activeNetwork },
+    }, { tokenA, tokenB }) => {
       try {
         if (!tokenA || !tokenB || !activeNetwork) {
           return [];
@@ -424,12 +514,6 @@ export default {
         ) {
           return [0, 1, 1];
         }
-        // fetching through dex-backend could be so fast
-        // that the visual effect of `fetching pair indicator`
-        // is just an unpleasant flickering. In this case delaying it
-        // with a few hundreds of ms is doing the job
-        // TODO: maybe this should be done in Component/View instead of store
-        timeoutId = setTimeout(() => commit('setFetchingPairInfo', true), 100);
         const { totalSupply, reserveA, reserveB } = await dispatch('fetchPoolInfo', {
           tokenA: tokenA.contract_id,
           tokenB: tokenB.contract_id,
@@ -440,11 +524,8 @@ export default {
           throw e;
         }
         return [];
-      } finally {
-        clearTimeout(timeoutId);
-        commit('setFetchingPairInfo', false);
       }
-    },
+    }),
     /**
      * @description remove the liquidity provided from a pair
      * of p2.tokenA*p2.tokenB

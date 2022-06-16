@@ -129,6 +129,10 @@ export default {
       };
     },
 
+    async fetchSwapRoutes({ dispatch }, { tokenA, tokenB }) {
+      return dispatch('safeFetch', { url: `pairs/swap-routes/${tokenA}/${tokenB}` });
+    },
+
     async getListedTokens({ dispatch }) {
       const tokens = await dispatch('safeFetch', { url: 'tokens/listed' });
       if (!tokens) return null;
