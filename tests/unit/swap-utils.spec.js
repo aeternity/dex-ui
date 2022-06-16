@@ -1,6 +1,8 @@
 import {
-  ratioFromRoute, ratioWithDecimals, ratioFromPair, getPath,
-} from '../../src/lib/routeUtils';
+  ratioFromRoute, ratioWithDecimals, getPath,
+  getRouteReserves, getPriceImpactForRoute,
+  getReceivedTokensForPairReserves,
+} from '../../src/lib/swapUtils';
 
 describe('get path tests', () => {
   const A = 'a';
@@ -39,6 +41,164 @@ describe('get path tests', () => {
     testPath([...input].reverse(), range[range.length - 1], [...range].reverse());
   });
 });
+describe('route price impact', () => {
+  const toPair = ([[token0, reserve0], [token1, reserve1]]) => ({
+    token0,
+    token1,
+    liquidityInfo: {
+      reserve0,
+      reserve1,
+    },
+  });
+  const toPairs = (xs) => xs.map(toPair);
+  const priceImpact = (xs, tokenA, amountA) => getPriceImpactForRoute(
+    toPairs(xs), tokenA, amountA,
+  );
+  it('price impact to be 0.5', () => {
+    expect(priceImpact([
+      [['a', 2000000n], ['b', 1000n]],
+    ], 'a', 10000n)).toBe(0.5);
+  });
+  it('price impact to be 5', () => {
+    expect(priceImpact([
+      [['a', 2000000n], ['b', 1000n]],
+    ], 'a', 100000n)).toBe(5);
+  });
+  it('should receive 1', () => {
+    expect(getReceivedTokensForPairReserves([
+      [2, 2],
+    ], 2).toNumber()).toBe(1);
+  });
+  it('should received 0.6666666666666666', () => {
+    expect(getReceivedTokensForPairReserves([
+      [2, 2],
+      [2, 2],
+    ], 2).toNumber()).toBe(0.6666666666666666);
+  });
+
+  it('swapping reserveA will have priceImpact=100%', () => {
+    expect(priceImpact([
+      [['a', 2], ['b', 2]],
+    ], 'a', 2)).toBe(100);
+  });
+
+  it('swapping reserveA withing two pairs will have priceImpact=200%', () => {
+    expect(priceImpact([
+      [['a', 2], ['b', 2]],
+      [['b', 2], ['c', 2]],
+    ], 'a', 2)).toBe(200);
+  });
+  it('swapping reserveA withing 3 pairs will have priceImpact=300%', () => {
+    expect(priceImpact([
+      [['a', 2], ['b', 2]],
+      [['b', 2], ['c', 2]],
+      [['c', 2], ['d', 2]],
+    ], 'a', 2)).toBe(300);
+  });
+  it('swapping 25 for [[100,50],[25,25]] will have priceImpact=75%', () => {
+    expect(priceImpact([
+      [['a', 100], ['b', 50]],
+      [['a', 25], ['b', 25]],
+    ], 'a', 25)).toBe(75);
+  });
+});
+describe('get route reserves', () => {
+  const toPair = ([[token0, reserve0], [token1, reserve1]]) => ({
+    token0,
+    token1,
+    liquidityInfo: {
+      reserve0,
+      reserve1,
+    },
+  });
+  const toPairs = (xs) => xs.map(toPair);
+  const getReserves = (xs, tokenA) => getRouteReserves(toPairs(xs), tokenA);
+  it('no reserves for no route', () => {
+    expect(
+      getReserves([], 'a'),
+    ).toEqual([]);
+  });
+
+  it('gets for one ordered pair ', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+      ], 'a'),
+    ).toEqual([[1, 2]]);
+  });
+
+  it('gets for one pair in reverse order ', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+      ], 'b'),
+    ).toEqual([[2, 1]]);
+  });
+
+  it('getReserves for a route with two pairs #1', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+        [['c', 3], ['b', 4]],
+      ], 'a'),
+    ).toEqual([[1, 2], [4, 3]]);
+  });
+  it('getReserves for a route with two pairs #2', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+        [['b', 3], ['c', 4]],
+      ], 'a'),
+    ).toEqual([[1, 2], [3, 4]]);
+  });
+  it('getReserves for a route with two pairs #2', () => {
+    expect(
+      getReserves([
+        [['b', 1], ['a', 2]],
+        [['b', 3], ['c', 4]],
+      ], 'a'),
+    ).toEqual([[2, 1], [3, 4]]);
+  });
+  it('getReserves for a route with two pairs in revers order with the end', () => {
+    expect(
+      getReserves([
+        [['b', 3], ['c', 4]],
+        [['b', 1], ['a', 2]],
+      ], 'a'),
+    ).toEqual([[2, 1], [3, 4]]);
+  });
+  it('getReserves for a route with multiple pairs (> 2) #1', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+        [['b', 3], ['c', 4]],
+        [['c', 5], ['d', 6]],
+        [['d', 7], ['e', 8]],
+      ], 'a'),
+    ).toEqual([[1, 2], [3, 4], [5, 6], [7, 8]]);
+  });
+  it('getReserves for a route with multiple pairs (> 2) #2', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+        [['c', 3], ['b', 4]],
+        [['d', 5], ['c', 6]],
+        [['d', 7], ['e', 8]],
+      ], 'a'),
+    ).toEqual([[1, 2], [4, 3], [6, 5], [7, 8]]);
+  });
+  it('getReserves for a route with multiple pairs (> 2) in reverse', () => {
+    expect(
+      getReserves([
+        [['a', 1], ['b', 2]],
+        [['b', 3], ['c', 4]],
+        [['c', 5], ['d', 6]],
+        [['d', 7], ['e', 8]],
+      ], 'e'),
+    ).toEqual([[8, 7], [6, 5], [4, 3], [2, 1]]);
+  });
+});
+const ratioFromPair = (pair, tokenA) => ratioFromRoute([pair], tokenA);
 describe('ratio from one pair', () => {
   it('simple 1/1 pair', () => {
     expect(

@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import aex9Interface from 'aeternity-fungible-token/FungibleTokenFull.aes';
 import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
 import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
@@ -15,16 +14,6 @@ import {
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
-export const getPriceImpact = (reserveA, reserveB, amountA) => {
-  const k = BigNumber(reserveA).times(reserveB);
-  const newReserveA = BigNumber(reserveA).plus(amountA);
-  const newReserveB = k.div(newReserveA);
-  const receivedB = BigNumber(reserveB).minus(newReserveB);
-  const marketPrice = BigNumber(reserveA).div(reserveB);
-  const newPrice = BigNumber(amountA).div(receivedB);
-
-  return newPrice.minus(marketPrice).times(100).div(marketPrice).toNumber();
-};
 const getAddress = (x) => x.deployInfo.address;
 const getCtAddress = (contract) => cttoak(getAddress(contract));
 const logDryRunAlternative = async (actionName, args) => {
@@ -339,29 +328,6 @@ export default {
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
       return reserveA / reserveB;
-    },
-    /**
-     * @description get the price impact after the swap
-     * @async
-     * @param p1 vuex context
-     * @param {string} p2.tokenA tokenA address
-     * @param {string} p2.tokenB tokenA address
-     * @param {bigint} p2.amountA tokenA amount to be swapped
-     * @return {number} returns the (newPrice - oldPrice) * 100 / oldPrice
-    */
-    async getPriceImpact({
-      dispatch,
-    }, {
-      tokenA, tokenB,
-      amountA,
-    }) {
-      const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
-      const { decodedResult: token0 } = await pair.methods.token0();
-      const [reserveA, reserveB] = token0 === tokenA
-        ? [reserve0, reserve1]
-        : [reserve1, reserve0];
-      return getPriceImpact(reserveA, reserveB, amountA);
     },
     /**
      * @description fetches the pool info and updates it into the store
