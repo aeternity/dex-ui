@@ -75,6 +75,7 @@ export default {
     priceImpact: { type: [Object, Number], required: true },
     isLastAmountFrom: { type: Boolean, required: true },
     isAeVsWae: { type: Boolean },
+    numberOfPairs: { type: [Number], required: true },
   },
   computed: {
     ...mapState('aeternity', ['slippage']),

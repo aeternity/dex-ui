@@ -76,7 +76,7 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { expandDecimals, getAePair } from '../lib/utils';
+import { expandDecimals, getAePair, getPath } from '../lib/utils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
@@ -212,11 +212,17 @@ export default {
         },
       );
     },
-    async callSwapAction(action) {
+    getPath() {
+      return getPath(
+        this.selectedRoute,
+        this.tokenA.contract_id,
+      );
+    },
+    callSwapAction(action) {
       return this.$store.dispatch(`aeternity/${action}`, {
         amountIn: this.amountTokenAExpanded,
         amountOut: this.amountTokenBExpanded,
-        path: [this.tokenA.contract_id, this.tokenB.contract_id],
+        path: this.getPath(),
         transactionInfo: this.generateSwapMessage(true),
       });
     },
@@ -239,6 +245,7 @@ export default {
           priceImpact,
           isLastAmountFrom: this.isLastInputTokenA,
           isAeVsWae: this.isAeVsWae,
+          numberOfPairs: this.getPath().length - 1,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
