@@ -76,7 +76,8 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { expandDecimals, getAePair, getPath } from '../lib/utils';
+import { expandDecimals, getAePair } from '../lib/utils';
+import { getPath } from '../lib/swapUtils';
 import DownArrow from '../assets/arrow-down.svg?vue-component';
 import QuestionCircle from '../assets/question-circle.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
@@ -228,13 +229,6 @@ export default {
     },
     async swap() {
       try {
-        const priceImpact = this.isAeVsWae
-          ? 0
-          : await this.$store.dispatch('aeternity/getPriceImpact', {
-            tokenA: this.tokenA.contract_id,
-            tokenB: this.tokenB.contract_id,
-            amountA: expandDecimals(this.amountTokenA, this.tokenA.decimals),
-          });
         await this.$store.dispatch('modals/open', {
           name: 'confirm-swap',
           from: this.tokenA,
@@ -242,7 +236,7 @@ export default {
           amountFrom: this.amountTokenA,
           amountTo: this.amountTokenB,
           ratio: this.ratio,
-          priceImpact,
+          priceImpact: this.priceImpact,
           isLastAmountFrom: this.isLastInputTokenA,
           isAeVsWae: this.isAeVsWae,
           numberOfPairs: this.getPath().length - 1,

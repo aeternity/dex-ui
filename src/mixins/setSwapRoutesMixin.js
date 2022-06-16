@@ -2,10 +2,11 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import {
   handleUnknownError, calculateSelectedToken, getPairId,
+  expandDecimals,
 } from '../lib/utils';
 import {
-  ratioFromRoute, ratioWithDecimals,
-} from '../lib/routeUtils';
+  ratioFromRoute, ratioWithDecimals, getPriceImpactForRoute,
+} from '../lib/swapUtils';
 
 // if there is a direct Pair for tokenA/tokenB or tokenB/tokenA,
 // the Dex-Backend will put it at the beginning of the swap-routes list.
@@ -53,6 +54,15 @@ export default {
           decimalsB: this.tokenB.decimals,
         },
       ).toNumber();
+    },
+    priceImpact() {
+      if (!this.selectedRoute || !this.amountTokenA) {
+        return BigNumber(0);
+      }
+      return getPriceImpactForRoute(
+        this.selectedRoute, this.tokenA.contract_id,
+        expandDecimals(this.amountTokenA, this.tokenA.decimals),
+      );
     },
   },
   watch: {
