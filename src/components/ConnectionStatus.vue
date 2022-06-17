@@ -26,13 +26,14 @@ export default {
         if (!this.middlewareStatus) {
           return {
             text: 'Middleware is not available, some functionality may not work properly.',
-            className: 'connecting',
+            className: 'warning',
           };
         }
-        if (!this.middlewareStatus.loading && !this.middlewareStatus.mdw_synced) {
+        if (!this.middlewareStatus.loading && !this.middlewareStatus.mdw_synced
+          && this.middlewareStatus.node_height - this.middlewareStatus.mdw_height > 15) {
           return {
-            text: `Blocks to sync ${this.middlewareStatus.node_height - this.middlewareStatus.mdw_height}`,
-            className: 'connecting',
+            text: 'The middleware is out of sync, some functionality may not work properly.',
+            className: 'warning',
           };
         }
         return null;
@@ -65,13 +66,20 @@ export default {
   color: #fff;
   text-align: center;
   background-color: variables.$color-red;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 
   @include mixins.phone {
     width: 100%;
+    border-radius: unset;
   }
 
   &.connecting {
-    background-color: variables.$color-blue;
+    background-color: variables.$color-primary-light;
+  }
+
+  &.warning {
+    background-color: variables.$color-orange;
   }
 }
 </style>
