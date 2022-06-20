@@ -49,7 +49,7 @@ export default {
       // and finally if everything gone well replace the tokens with
       // the dex-backend official list of tokens
       commit('tokens/updateTokens', {
-        providerName: 'DEX',
+        providerName: 'Superhero DEX Selection',
         networkId,
         tokens,
       }, { root: true });
