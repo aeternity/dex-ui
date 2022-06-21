@@ -172,7 +172,7 @@ export default {
             contractAddress: activeNetwork.routerAddress,
           },
         );
-        commit('setRouterInstance', contract);
+        commit('setRouterInstance', Object.freeze(contract));
       }
     },
     async initFactory({ commit, state: { router }, rootState: { sdk } }) {
@@ -193,7 +193,7 @@ export default {
             contractAddress: activeNetwork.waeAddress,
           },
         );
-        commit('setWaeInstance', contract);
+        commit('setWaeInstance', Object.freeze(contract));
       }
     },
 

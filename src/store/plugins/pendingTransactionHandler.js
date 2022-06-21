@@ -1,16 +1,25 @@
+import { handleCallError, findErrorExplanation } from '../../lib/utils';
+
 export default async (store) => {
   const waitTransactionMined = async ({
     hash, info,
   }) => {
     let error = false;
+    let errorMessage = '';
     try {
       const returnedTransaction = await store.state.sdk.poll(hash);
-      if (returnedTransaction.returnType !== 'ok') error = true;
+      handleCallError(
+        returnedTransaction,
+        store.state.aeternity.wae.deployInfo.address === returnedTransaction.contractId
+          ? store.state.aeternity.wae
+          : store.state.aeternity.router,
+      );
     } catch (e) {
       error = true;
+      errorMessage = findErrorExplanation(e.message, store.state);
     } finally {
       store.dispatch('modals/open', {
-        name: 'transaction-status', hash, info, error,
+        name: 'transaction-status', hash, info, error, errorMessage,
       });
       store.commit('changeTransactionById', { hash, transaction: { error, pending: false } });
     }
