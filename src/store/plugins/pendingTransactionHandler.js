@@ -4,14 +4,14 @@ export default async (store) => {
   }) => {
     let error = false;
     try {
-      await store.state.sdk.poll(hash);
-      store.dispatch('modals/open', { name: 'transaction-status', hash, info });
+      const returnedTransaction = await store.state.sdk.poll(hash);
+      if (returnedTransaction.returnType !== 'ok') error = true;
     } catch (e) {
       error = true;
+    } finally {
       store.dispatch('modals/open', {
         name: 'transaction-status', hash, info, error,
       });
-    } finally {
       store.commit('changeTransactionById', { hash, transaction: { error, pending: false } });
     }
   };
