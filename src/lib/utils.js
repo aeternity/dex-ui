@@ -1,4 +1,5 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
+import { decode } from '@aeternity/aepp-sdk/es/tx/builder/helpers';
 import BigNumber from 'bignumber.js';
 import dexErrorMessages from 'dex-contracts-v2/build/errors';
 
@@ -157,4 +158,20 @@ export const sortTokens = (tokenA, tokenB, transform) => {
 export const getPairId = (tokenA, tokenB) => {
   const [token0, token1] = sortTokens(tokenA, tokenB);
   return `${token0}|${token1}`;
+};
+
+export const handleCallError = ({ returnType, returnValue }, instance) => {
+  let message;
+  // TODO: ensure that it works correctly https://github.com/aeternity/aepp-calldata-js/issues/88
+  switch (returnType) {
+    case 'ok': return;
+    case 'revert':
+      message = instance.calldata.decodeFateString(returnValue);
+      break;
+    case 'error':
+      message = decode(returnValue).toString();
+      break;
+    default: message = `Unknown returnType: ${returnType}`;
+  }
+  throw new Error(message);
 };

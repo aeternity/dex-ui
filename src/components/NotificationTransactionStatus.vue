@@ -11,6 +11,12 @@
     <Check v-else />
     <div class="info">
       <span>{{ info }}</span>
+      <div
+        v-if="errorMessage"
+        class="error"
+      >
+        {{ errorMessage }}
+      </div>
       <a
         :href="`${activeNetwork.explorerUrl}/transactions/${hash}`"
         target="_blank"
@@ -33,6 +39,7 @@ export default {
     info: { type: String, required: true },
     hash: { type: String, required: true },
     error: { type: Boolean },
+    errorMessage: { type: String, default: null },
   },
   computed: mapGetters(['activeNetwork']),
 };
@@ -65,6 +72,11 @@ export default {
     text-align: left;
     color: white;
     overflow: hidden;
+
+    .error {
+      margin-top: 5px;
+      color: variables.$color-red;
+    }
 
     > a {
       margin-top: 8px;
