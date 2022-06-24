@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/aeternity/dex-ui/compare/v1.7.0...v1.8.0) (2022-06-24)
+
+
+### Features
+
+* **nginx:** change restricted url ([f1f72d8](https://github.com/aeternity/dex-ui/commit/f1f72d8bc3d6c4574c2d172db56f4cebe12f03f5))
+
 ## [1.7.0](https://github.com/aeternity/dex-ui/compare/v1.6.0...v1.7.0) (2022-06-15)
 
 
