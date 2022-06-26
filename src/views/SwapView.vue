@@ -135,7 +135,8 @@ export default {
       return !!this.selectedRoute;
     },
     isDisabled() {
-      return !this.tokenB || !this.tokenA || !this.isValidAmount || !this.enoughBalance;
+      return !this.tokenB || !this.tokenA || !this.isValidAmount
+             || !this.enoughBalance || (!this.hasRoute && !this.isAeVsWae);
     },
     enoughAllowance() {
       if (!this.tokenA) return false;
