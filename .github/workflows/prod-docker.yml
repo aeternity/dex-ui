@@ -51,6 +51,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASS }}
+      
+      - name: Get commit sha on push
+        if: github.event_name == 'push'
+        id: git-sha
+        shell: bash
+        run: |
+          echo "::set-output name=git-sha::$(git rev-parse --short HEAD)"
 
       - name: Extract metadata for docker
         if: |
@@ -62,6 +69,7 @@ jobs:
           images: aeternity/dex-ui
           tags: |
             type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'main') }}
+            type=raw,value=main,enable=${{ endsWith(GitHub.ref, 'main') }}
             type=raw,value=${{ steps.release.outputs.tag_name }},enable=${{ endsWith(GitHub.ref, 'main') }}
             type=ref,event=tag
             type=ref,event=pr
@@ -101,6 +109,15 @@ jobs:
         uses: aeternity/ae-github-actions/argocd-deploy@v4
         with:
           url-prefix: ${{ steps.release.outputs.tag_name }}
+          env: ${{ env.ENV }}
+          app: ${{ env.APP }}
+      
+      - name: Latest Main Deploy on Push
+        if: github.event_name == 'push'
+        uses: aeternity/ae-github-actions/argocd-pr-sync@v4
+        with:
+          git-sha: ${{ steps.git-sha.outputs.git-sha }}
+          url-prefix: main
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
 
