@@ -87,24 +87,6 @@ export const DEFAULT_NETWORKS = [
         image: require('../assets/ae.svg'),
       },
       {
-        contract_id: 'ct_2dE7Xd7XCg3cwpKWP18VPDwfhz5Miji9FoKMTZN7TYvGt64Kc',
-        decimals: 18,
-        name: 'First',
-        symbol: 'FST',
-      },
-      {
-        contract_id: 'ct_7ur9ypT3a4tjxxv5iG6zEQDQhysNtCKr6tyc7PkqhtRmEw6yY',
-        decimals: 18,
-        name: 'Second',
-        symbol: 'SND',
-      },
-      {
-        contract_id: 'ct_2VTvzHWiCfk2kg7tBeBoQ2vBC226CRfwWbiemTU7BmnUqS9TtU',
-        decimals: 18,
-        name: 'Third',
-        symbol: 'AE Partner',
-      },
-      {
         contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
         decimals: MAGNITUDE,
         name: 'Wrapped AE',
