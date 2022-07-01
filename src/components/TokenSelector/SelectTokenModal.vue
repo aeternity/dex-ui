@@ -120,20 +120,12 @@ export default {
   }),
   computed: {
     ...mapState(['networkId']),
-    ...mapState('tokens', ['providers', 'userTokens']),
+    ...mapGetters('tokens', ['getAvailableTokens']),
     ...mapGetters(['activeNetwork', 'WAE']),
     filteredActiveProvidersTokens() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
 
-      const tokens = [];
-      this.providers
-        .filter((provider) => provider.active)
-        .forEach((provider) => {
-          tokens.push(...provider.tokens);
-        });
-      tokens.push(...this.userTokens);
-
-      return tokens
+      return this.getAvailableTokens()
         .filter((token) => token.networkId === this.networkId)
         .filter(
           (token) => (!searchTerm
@@ -154,14 +146,7 @@ export default {
     filteredInActiveProvidersTokens() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
 
-      const tokens = [];
-      this.providers
-        .filter((provider) => !provider.active)
-        .forEach((provider) => {
-          tokens.push(...provider.tokens);
-        });
-
-      return tokens
+      return this.getAvailableTokens(false)
         .filter((token) => token.networkId === this.networkId)
         .filter((token) => (!searchTerm
           || token.symbol.toLowerCase().includes(searchTerm)

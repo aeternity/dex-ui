@@ -183,7 +183,7 @@
 
 <script>
 import BigNumber from 'bignumber.js';
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
@@ -235,6 +235,7 @@ export default {
       factory: (state) => state.aeternity.factory?.deployInfo.address,
     }),
     ...mapState('aeternity', ['slippage']),
+    ...mapGetters('tokens', ['getAvailableTokens']),
     tokenAInput() {
       return this.positionBalance(this.reserveA ?? 0)
         .times(this.share).times(this.percentage / 100);
@@ -294,11 +295,8 @@ export default {
   async mounted() {
     const [tokenAContract, tokenBContract] = this.$route.params.id.split('|');
     await this.$watchUntilTruly(() => this.$store.state.aeternity.factory);
-    const tokenList = (
-      this.$store.getters.activeNetwork && this.$store.getters.activeNetwork.tokens)
-      ? this.$store.getters.activeNetwork.tokens : [];
-    this.tokenA = tokenList.find((t) => t.contract_id === tokenAContract);
-    this.tokenB = tokenList.find((t) => t.contract_id === tokenBContract);
+    this.tokenA = this.getAvailableTokens().find((t) => t.contract_id === tokenAContract);
+    this.tokenB = this.getAvailableTokens().find((t) => t.contract_id === tokenBContract);
     await this.setPairInfo();
     if (this.pairId) {
       await this.refreshAllowance(this.pairId, this.fetchAlowance);
