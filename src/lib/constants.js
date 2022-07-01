@@ -12,6 +12,40 @@ export const MAX_DEADLINE = 1000;
 
 export const DEFAULT_NETWORKS = [
   {
+    url: 'https://mainnet.aeternity.io',
+    middlewareUrl: 'https://mainnet.aeternity.io/mdw',
+    explorerUrl: 'https://explorer.aeternity.io',
+    compilerUrl: 'https://compiler.aepps.com',
+    backendUrl: 'https://raendom-backend.z52da5wt.xyz',
+    name: 'Mainnet',
+    networkId: 'ae_mainnet',
+    networkName: 'mainnet',
+    factoryAddress: 'ct_2mfj3FoZxnhkSw5RZMcP8BfPoB1QR4QiYGNCdkAvLZ1zfF6paW',
+    routerAddress: 'ct_azbNZ1XrPjXfqBqbAh1ffLNTQ1sbnuUDFvJrXjYz7JQA1saQ3',
+    waeAddress: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+    dexBackendUrl: process.env.VUE_APP_MAINNET_DEX_BACKEND_URL,
+    tokens: [
+      {
+        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        decimals: MAGNITUDE,
+        name: 'AE',
+        symbol: 'AE',
+        is_ae: true,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+      {
+        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        decimals: MAGNITUDE,
+        name: 'Wrapped AE',
+        symbol: 'WAE',
+        is_ae: false,
+        // eslint-disable-next-line global-require
+        image: require('../assets/ae.svg'),
+      },
+    ],
+  },
+  {
     url: 'https://testnet.aeternity.io',
     middlewareUrl: 'https://testnet.aeternity.io/mdw',
     explorerUrl: 'https://explorer.testnet.aeternity.io',
@@ -54,40 +88,6 @@ export const DEFAULT_NETWORKS = [
       },
       {
         contract_id: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
-        decimals: MAGNITUDE,
-        name: 'Wrapped AE',
-        symbol: 'WAE',
-        is_ae: false,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
-      },
-    ],
-  },
-  {
-    url: 'https://mainnet.aeternity.io',
-    middlewareUrl: 'https://mainnet.aeternity.io/mdw',
-    explorerUrl: 'https://explorer.aeternity.io',
-    compilerUrl: 'https://compiler.aepps.com',
-    backendUrl: 'https://raendom-backend.z52da5wt.xyz',
-    name: 'Mainnet',
-    networkId: 'ae_mainnet',
-    networkName: 'mainnet',
-    factoryAddress: 'ct_2mfj3FoZxnhkSw5RZMcP8BfPoB1QR4QiYGNCdkAvLZ1zfF6paW',
-    routerAddress: 'ct_azbNZ1XrPjXfqBqbAh1ffLNTQ1sbnuUDFvJrXjYz7JQA1saQ3',
-    waeAddress: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
-    dexBackendUrl: process.env.VUE_APP_MAINNET_DEX_BACKEND_URL,
-    tokens: [
-      {
-        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
-        decimals: MAGNITUDE,
-        name: 'AE',
-        symbol: 'AE',
-        is_ae: true,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
-      },
-      {
-        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
         decimals: MAGNITUDE,
         name: 'Wrapped AE',
         symbol: 'WAE',
