@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.9.0](https://github.com/aeternity/dex-ui/compare/v1.8.0...v1.9.0) (2022-07-01)
+
+
+### Features
+
+* adds issue templates ([50eafcb](https://github.com/aeternity/dex-ui/commit/50eafcb635b0a264ccd89b5749d9d16d4abb08f8))
+* **constants:** removes test token constants ([73d8e39](https://github.com/aeternity/dex-ui/commit/73d8e39fba39fa883a1182b73095d1823b74a2ad))
+* **env:** mainnet is now first in the node list ([2e332d5](https://github.com/aeternity/dex-ui/commit/2e332d5b954f86599c9c8a518705fe85c5d78831))
+* **env:** switches default network to mainnet ([1316772](https://github.com/aeternity/dex-ui/commit/1316772670f703a8a2bf77ca2a267bd0b7600497))
+* show error message in the transcation status notification ([3f07152](https://github.com/aeternity/dex-ui/commit/3f071522ac22111720b92b5cb31c618aa9bd7b87))
+* **swap-view:** change swap from pair to route ([fd8a18a](https://github.com/aeternity/dex-ui/commit/fd8a18af55eb4757e0d5acf58cb1f78fca4af8ee))
+* **wallet:** updates two hardcoded testnet instances to default ([7e7f44d](https://github.com/aeternity/dex-ui/commit/7e7f44d5e40a1a9eb00d624bb2986e896073fad8))
+
+
+### Bug Fixes
+
+* **dex-backend:** error when dispatching backend/fetchingPairDetails ([b9654ce](https://github.com/aeternity/dex-ui/commit/b9654ce33c265fb10b882ba8ca707a6e9c92efcf))
+* **dex-backend:** update token list by the new DEX provider name ([3e1b3ce](https://github.com/aeternity/dex-ui/commit/3e1b3ceaad423e69ddb4f9d5ee804ca1b748ee4a))
+* increased wallet connection timeout ([2b552c0](https://github.com/aeternity/dex-ui/commit/2b552c03368a5190cbfe93599dd5525d2ec24452))
+* no reserves when dex-backend is off ([3a535d0](https://github.com/aeternity/dex-ui/commit/3a535d0b3af97e29966545e3a41698f4b32572c7))
+* **pending-transaction-handler:** set transaction status properly ([605c727](https://github.com/aeternity/dex-ui/commit/605c72723d0128f66dd9d6fd7f45715b5e801e17))
+* **remove-liquidity:** show token symbols properly ([71038fc](https://github.com/aeternity/dex-ui/commit/71038fc5ee1ba476298798750dee2befbb8428f9))
+* **saveTokenSelectionMixin:** isLastAmountFrom query param as boolean ([acc4d84](https://github.com/aeternity/dex-ui/commit/acc4d84585bab9c7a5557d5ccbda03e130d53837))
+
+
+### Refactorings
+
+* **connection-status:** adjust status style ([b622155](https://github.com/aeternity/dex-ui/commit/b622155d163ef5f8eec5ba4b61a20060d2addc8f))
+
+
+### CI / CD
+
+* **build:** deploy lastet main on prod ([1fcdebd](https://github.com/aeternity/dex-ui/commit/1fcdebdc6e3ad142a5473820292dff6276b4b646))
+
+
+### Miscellaneous
+
+* adjusts issue template extensions ([64a926e](https://github.com/aeternity/dex-ui/commit/64a926e05f55489d3a84cb33e3eeeb5840fd8d06))
+* **dex-backend:** remove ensureTokenList from production ([f5a210a](https://github.com/aeternity/dex-ui/commit/f5a210ad81e5d8c5d4936585f40662d7bd0afe9e))
+* fixes issues with templates ([b0004db](https://github.com/aeternity/dex-ui/commit/b0004dbf6a5cb8e8c010287f9fa40078b729b56d))
+* price impact for swap-routes ([4fcdeb3](https://github.com/aeternity/dex-ui/commit/4fcdeb3670acd121437cd383ee07e456d8a00974))
+* **swap-view:** use swap-route mixin ([b0bfae2](https://github.com/aeternity/dex-ui/commit/b0bfae235e8d53f35f36a5cf662b6ecd0b7d2e60))
+
 ## [1.8.0](https://github.com/aeternity/dex-ui/compare/v1.7.0...v1.8.0) (2022-06-24)
 
 
