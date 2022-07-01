@@ -14,6 +14,10 @@ export default {
       },
     ],
   },
+  getters: {
+    getAvailableTokens: ({ providers, userTokens }) => (isActive = true) => providers
+      .reduce((a, b) => a.concat(b.active === isActive ? b.tokens : []), []).concat(userTokens),
+  },
   mutations: {
     addToken(state, token) {
       state.userTokens.push(token);

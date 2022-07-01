@@ -94,8 +94,9 @@ export default {
     extraTokens: [],
   }),
   computed: {
-    ...mapState('tokens', ['providers', 'userTokens']),
+    ...mapState('tokens', ['userTokens']),
     ...mapState(['networkId']),
+    ...mapGetters('tokens', ['getAvailableTokens']),
     ...mapGetters(['activeNetwork']),
     tokens() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
@@ -108,14 +109,7 @@ export default {
         ));
     },
     activeTokens() {
-      const tokens = [];
-      this.providers
-        .filter((provider) => provider.active)
-        .forEach((provider) => {
-          tokens.push(...provider.tokens);
-        });
-      tokens.push(...this.userTokens);
-      return tokens.filter((token) => token.networkId === this.networkId);
+      return this.getAvailableTokens().filter((token) => token.networkId === this.networkId);
     },
   },
   watch: {
