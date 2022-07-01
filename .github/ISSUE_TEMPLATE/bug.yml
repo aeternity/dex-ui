@@ -1,6 +1,5 @@
 name: Bug Report
 description: File a bug report
-title: ""
 labels: ["bug", "triage"]
 
 body:
@@ -48,13 +47,13 @@ body:
     attributes:
       label: What browsers are you seeing the problem on?
       multiple: true
-      validations:
-        required: true
       options:
         - Firefox
         - Chrome
         - Safari
         - Microsoft Edge
+    validations:
+      required: true
   - type: textarea
     id: additional
     attributes:
