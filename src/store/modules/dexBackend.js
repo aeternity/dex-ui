@@ -29,7 +29,7 @@ export default {
     async init({ dispatch, commit }) {
       commit('setPairs', null);
       await dispatch('fetchPairs');
-      await dispatch('ensureTokensList');
+      if (process.env.UNFINISHED_FEATURES) await dispatch('ensureTokensList');
     },
 
     async ensureTokensList({
@@ -108,7 +108,7 @@ export default {
       if (up) {
         // fetch pairs only if weren't already fetched
         if (!pairs) await dispatch('fetchPairs');
-        await dispatch('ensureTokensList');
+        if (process.env.UNFINISHED_FEATURES) await dispatch('ensureTokensList');
       }
       return up;
     },
