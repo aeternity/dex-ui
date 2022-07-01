@@ -231,7 +231,7 @@ export default createStore({
     ) {
       let walletNetworkId = networkId;
       if (!networkId || networkId.includes('networkId')) {
-        walletNetworkId = 'ae_uat';
+        walletNetworkId = process.env.VUE_APP_DEFAULT_NETWORK;
       }
 
       await dispatch('selectNetwork', walletNetworkId);
