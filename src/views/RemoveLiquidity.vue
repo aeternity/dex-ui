@@ -10,8 +10,8 @@
         class="header"
       >
         <div>
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.cid}`">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.cid}`">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
           <span>{{ tokenA.symbol + '/' + tokenB.symbol }}</span>
         </div>
       </ButtonPlain>
