@@ -163,7 +163,7 @@ export default createStore({
         window.location = addressDeepLink;
       } else {
         try {
-          await resolveWithTimeout(10000, async () => {
+          await resolveWithTimeout(30000, async () => {
             commit('useSdkWallet');
             commit('enableIframeWallet');
 
