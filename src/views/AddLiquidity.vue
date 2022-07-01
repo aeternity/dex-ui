@@ -5,6 +5,9 @@
     settings
     class="add-liquidity"
   >
+    <Head>
+      <title>Add Liquidity - Superhero DEX</title>
+    </Head>
     <Tip :tip="$t('liquidityTip')" />
     <InputToken
       :value="amountTokenA"
@@ -86,6 +89,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import { Head } from '@vueuse/head';
 import BigNumber from 'bignumber.js';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
@@ -105,6 +109,7 @@ export default {
     ButtonDefault,
     PlusIcon,
     AnimatedSpinner,
+    Head,
   },
   mixins: [saveTokenSelectionMixin, approvalMixin, setTokenPairInfoMixin],
   data: () => ({

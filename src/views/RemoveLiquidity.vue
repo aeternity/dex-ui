@@ -5,6 +5,9 @@
       back-button
       settings
     >
+      <Head>
+        <title>Remove Liquidity - Superhero DEX</title>
+      </Head>
       <div
         v-if="tokenA && tokenB"
         class="header"
@@ -182,6 +185,7 @@
 </template>
 
 <script>
+import { Head } from '@vueuse/head';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
@@ -207,6 +211,7 @@ export default {
     InputToken,
     DownArrow,
     PlusIcon,
+    Head,
   },
   mixins: [approvalMixin],
   data() {

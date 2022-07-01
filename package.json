@@ -17,6 +17,7 @@
     "@popperjs/core": "^2.10.2",
     "@sentry/tracing": "^6.18.0",
     "@sentry/vue": "^6.18.0",
+    "@vueuse/head": "^0.7.6",
     "aeternity-fungible-token": "^2.0.0",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.8.3",
@@ -54,7 +55,7 @@
     "stylelint": "^13.3.1",
     "stylelint-config-standard": "^20.0.0",
     "svg-url-loader": "^6.0.0",
-    "vue-svg-loader": "^0.17.0-beta.2",
-    "svgo-loader": "^3.0.0"
+    "svgo-loader": "^3.0.0",
+    "vue-svg-loader": "^0.17.0-beta.2"
   }
 }
