@@ -5,7 +5,7 @@
       back-button
       settings
     >
-      <ButtonPlain
+      <div
         v-if="tokenA && tokenB"
         class="header"
       >
@@ -14,7 +14,7 @@
           <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
           <span>{{ tokenA.symbol + '/' + tokenB.symbol }}</span>
         </div>
-      </ButtonPlain>
+      </div>
       <div class="remove-container">
         <div class="remove-subheader">
           <div>{{ $t('removeLiquidity.removeAmount') }}</div>
@@ -185,7 +185,6 @@
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';
-import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
@@ -203,7 +202,6 @@ import approvalMixin from '../mixins/allowanceMixin';
 export default {
   components: {
     MainWrapper,
-    ButtonPlain,
     ButtonDefault,
     InputRange,
     InputToken,
