@@ -4,6 +4,9 @@
     settings
     class="swap-view"
   >
+    <Head>
+      <title>Swap - Superhero DEX</title>
+    </Head>
     <InputToken
       :value="amountTokenA"
       :token="tokenA"
@@ -71,6 +74,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import { Head } from '@vueuse/head';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
@@ -95,6 +99,7 @@ export default {
     DownArrow,
     QuestionCircle,
     AnimatedSpinner,
+    Head,
   },
   mixins: [approvalMixin, saveTokenSelectionMixin, setSwapRoutesMixin],
   data: () => ({

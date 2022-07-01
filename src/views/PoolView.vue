@@ -3,6 +3,9 @@
     :title="$t('pool.title')"
     class="pool-view"
   >
+    <Head>
+      <title>Pool - Superhero DEX</title>
+    </Head>
     <div class="title">
       <span>{{ $t('pool.yourLiquidity') }}</span>
       <ButtonTooltip
@@ -32,6 +35,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { Head } from '@vueuse/head';
 import MainWrapper from '../components/MainWrapper.vue';
 import ButtonDefault from '../components/ButtonDefault.vue';
 import ButtonTooltip from '../components/ButtonTooltip.vue';
@@ -45,6 +49,7 @@ export default {
     ButtonTooltip,
     LiquidityItem,
     QuestionCircle,
+    Head,
   },
   computed: {
     ...mapState({

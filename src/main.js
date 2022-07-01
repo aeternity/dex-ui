@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { sync } from 'vuex-router-sync';
 import * as Sentry from '@sentry/vue';
 import { BrowserTracing } from '@sentry/tracing';
+import { createHead } from '@vueuse/head';
 
 import App from './App.vue';
 import router from './router';
@@ -10,6 +11,7 @@ import i18n from './i18n';
 import registerModals from './router/modals';
 
 const app = createApp(App);
+const head = createHead();
 
 app.config.globalProperties.$watchUntilTruly = function watchUntilTruly(getter) {
   return new Promise((resolve) => {
@@ -48,4 +50,8 @@ if (!window.location.host.includes('localhost')) {
   });
 }
 
-app.use(i18n).use(store).use(router).mount('#app');
+app.use(head)
+  .use(i18n)
+  .use(store)
+  .use(router)
+  .mount('#app');

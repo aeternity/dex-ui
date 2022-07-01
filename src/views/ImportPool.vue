@@ -4,6 +4,9 @@
       :title="$t('importPool.title')"
       back-button
     >
+      <Head>
+        <title>Import Pool - Superhero DEX</title>
+      </Head>
       <Tip :tip="$t('importPool.importTip')" />
       <ButtonToken
         fill="transparent"
@@ -49,6 +52,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { Head } from '@vueuse/head';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
@@ -63,6 +67,7 @@ export default {
     Tip,
     LiquidityDetails,
     PlusIcon,
+    Head,
   },
   data: () => ({
     tokenA: null,
