@@ -201,7 +201,7 @@ export default {
         {
           id: 'wallet.superhero.com',
           name: 'Superhero',
-          networkId: 'ae_uat',
+          networkId: process.env.VUE_APP_DEFAULT_NETWORK,
           type: 'website',
         },
       ];
