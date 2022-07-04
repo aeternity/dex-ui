@@ -5,7 +5,7 @@ import {
 import createPersistedState from 'vuex-persistedstate';
 import {
   handleUnknownError, findErrorExplanation, createDeepLinkUrl,
-  resolveWithTimeout, isSafariBrowser,
+  resolveWithTimeout, isSafariBrowser, isDexBackendDisabled,
 } from '@/lib/utils';
 import {
   DEFAULT_NETWORKS,
@@ -299,7 +299,10 @@ export default createStore({
 
         sdk.selectNode(nodeToSelect.name);
         await commit('setNetwork', newNetworkId);
-        await dispatch('backend/init');
+
+        if (!isDexBackendDisabled) {
+          await dispatch('backend/init');
+        }
         await dispatch('aeternity/init');
       }
     },

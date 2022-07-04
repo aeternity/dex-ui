@@ -175,3 +175,9 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
   }
   throw new Error(message);
 };
+
+/**
+ * Flag showing when the dex-ui is setup to work without dex-backend
+ */
+export const isDexBackendDisabled = process.env.VUE_APP_DISABLE_DEX_BACKEND
+    && JSON.parse(process.env.VUE_APP_DISABLE_DEX_BACKEND);
