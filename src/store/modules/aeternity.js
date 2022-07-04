@@ -5,7 +5,7 @@ import factoryInterface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
 import pairInterface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
-  getPairId, sortTokens,
+  getPairId, sortTokens, isDexBackendDisabled,
 } from '../../lib/utils';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
@@ -18,7 +18,7 @@ const getAddress = (x) => x.deployInfo.address;
 const getCtAddress = (contract) => cttoak(getAddress(contract));
 const logDryRunAlternative = async (actionName, args) => {
   const logDryRun = process.env.VUE_APP_DEBUG_LOG_DRY_RUN_ALTERNATIVE;
-  if (parseInt(logDryRun || '0', 10)) {
+  if (!isDexBackendDisabled && parseInt(logDryRun || '0', 10)) {
     console.warn(`Going with dry-run alternative for: ${actionName}(${JSON.stringify(args)})`);
   }
 };

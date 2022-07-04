@@ -1,13 +1,13 @@
 import {
   handleUnknownError,
-  getPairId,
+  getPairId, isDexBackendDisabled,
 } from '../../lib/utils';
 
 export default {
   namespaced: true,
 
   state: {
-    failed: false,
+    failed: isDexBackendDisabled,
     pairs: null,
     tokensUpdatedFor: {},
   },
@@ -36,8 +36,8 @@ export default {
       state: { failed, tokensUpdatedFor },
       dispatch, commit, rootGetters: { activeNetwork: { networkId } },
     }) {
+      if (tokensUpdatedFor[networkId] || isDexBackendDisabled) return;
       // check if tokens list was already updated
-      if (tokensUpdatedFor[networkId]) return;
       const tokens = await dispatch('getListedTokens');
       // abort if it failed in the meantime
       // or no tokens were provided during the tokens list fetching
@@ -57,7 +57,7 @@ export default {
     async safeFetch({
       dispatch, commit, state: { failed }, rootGetters: { activeNetwork },
     }, { url, manageFailingStatus = true }) {
-      if (activeNetwork) {
+      if (activeNetwork && !isDexBackendDisabled) {
         let timeoutId;
         try {
           const baseUrl = (activeNetwork.dexBackendUrl || '');
@@ -99,6 +99,7 @@ export default {
     },
 
     async checkStatus({ dispatch, commit, state: { pairs } }) {
+      if (isDexBackendDisabled) return false;
       const resp = await dispatch(
         'safeFetch',
         { url: 'global-state', dontSetFailingStatus: true },

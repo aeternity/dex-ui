@@ -26,6 +26,7 @@ import { mapGetters, mapState } from 'vuex';
 import Header from '@/components/Header.vue';
 import NavigationMenu from '@/components/NavigationMenu.vue';
 import ConnectionStatus from '@/components/ConnectionStatus.vue';
+import { isDexBackendDisabled } from '@/lib/utils';
 
 export default {
   components: {
@@ -75,8 +76,10 @@ export default {
     } finally {
       this.$store.commit('setIsSdkInitializing', false);
     }
-    await this.$store.dispatch('backend/init');
-    this.checkBackendStatus();
+    if (!isDexBackendDisabled) {
+      await this.$store.dispatch('backend/init');
+      this.checkBackendStatus();
+    }
 
     await this.$watchUntilTruly(() => this.$store.state.sdk);
 
@@ -98,6 +101,7 @@ export default {
   methods: {
     async checkBackendStatus() {
       clearTimeout(this.backendSanityCheckTimeoutId);
+      if (isDexBackendDisabled) return;
       const up = await this.$store.dispatch('backend/checkStatus');
       if (!up) {
         this.backendSanityCheckTimeoutId = setTimeout(
