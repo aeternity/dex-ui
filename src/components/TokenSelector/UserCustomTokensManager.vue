@@ -3,7 +3,7 @@
     <div class="input-wrapper">
       <InputField
         v-model:value="searchTerm"
-        placeholder="Search name or paste address"
+        :placeholder="$t('searchTokenInput')"
         class="search-bar"
       />
     </div>
@@ -19,13 +19,13 @@
       />
 
       <div class="filters">
-        {{ tokens.length }} Custom Tokens
+        {{ tokens.length }} {{ $t('customTokens') }}
         <ButtonPlain
           v-if="tokens.length"
           class="clear-all"
           @click.prevent="removeAllTokens()"
         >
-          Clear all
+          {{ $t('clearAll') }}
         </ButtonPlain>
       </div>
 
@@ -66,7 +66,7 @@
     </div>
 
     <div class="token-list-footer">
-      Custom tokens are stored locally in your browser
+      {{ $t('tokenSelector.userCustomTokensManagerFooter') }}
     </div>
   </div>
 </template>

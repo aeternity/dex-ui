@@ -1,15 +1,12 @@
 <template>
   <MainWrapper
-    title="Pool"
+    :title="$t('pool.title')"
     class="pool-view"
   >
     <div class="title">
-      <span>Your liquidity</span>
+      <span>{{ $t('pool.yourLiquidity') }}</span>
       <ButtonTooltip
-        :tooltip="`Liquidity providers earn a 0.3% fee on
-        all trades proportional to their share of the pool.
-        Fees are added to the pool, accrue in real time
-        and can be claimed by withdrawing your liquidity.`"
+        :tooltip="$t('pool.liquidityPopup')"
       >
         <QuestionCircle />
       </ButtonTooltip>
@@ -23,12 +20,12 @@
       />
     </div>
     <span class="import">
-      Don't see a pool you've joined?
-      <RouterLink :to="{ name: 'import-pool' }">Import it.</RouterLink>
+      {{ $t('pool.dontSeePool') }}
+      <RouterLink :to="{ name: 'import-pool' }">{{ $t('pool.importIt') }}.</RouterLink>
     </span>
 
     <ButtonDefault @click="clickHandler">
-      {{ address ? 'Add liquidity' : 'Connect Wallet' }}
+      {{ address ? $t('addLiquidity.title') : $t('connectWallet') }}
     </ButtonDefault>
   </MainWrapper>
 </template>

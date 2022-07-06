@@ -1,10 +1,10 @@
 <template>
   <div class="import-pool">
     <MainWrapper
-      title="Import V2 Pool"
+      :title="$t('importPool.title')"
       back-button
     >
-      <Tip tip="Use this tool to find v2 pools that don't automatically appear in the interface." />
+      <Tip :tip="$t('importPool.importTip')" />
       <ButtonToken
         fill="transparent"
         :token="tokenA"
@@ -26,7 +26,7 @@
         v-if="imported"
         class="pool-found"
       >
-        Pool found!
+        {{ $t('importPool.poolFound') }}
       </div>
       <div class="connect">
         <div v-if="imported">
@@ -81,11 +81,11 @@ export default {
     ...mapState(['address']),
     ...mapState('aeternity', ['providedLiquidity']),
     footerText() {
-      if (this.importing) return 'Fetching data...';
-      if (!this.address) return 'Connect to a wallet to find pools';
-      if (!this.tokenA || !this.tokenB) return 'Select both tokens to find your provided liquidity.';
-      if (this.imported) return 'The liquidity is imported, you can go back to see your provided liquidity in the main pool screen';
-      return 'You have no provided liquidity for the selected tokens';
+      if (this.importing) return this.$t('importPool.fetchingData');
+      if (!this.address) return this.$t('connectWalletFindPool');
+      if (!this.tokenA || !this.tokenB) return this.$t('importPool.selectBothTokens');
+      if (this.imported) return this.$t('importPool.imported');
+      return this.$t('importPool.footerText');
     },
   },
   methods: {

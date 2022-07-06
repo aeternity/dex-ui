@@ -1,7 +1,8 @@
 <template>
   <ModalDefault
     class="confirm-add-modal"
-    :title="isAdding ? 'You will receive' : 'Tokens to be removed'"
+    :title="isAdding ?
+      $t('confirmLiquidityModal.willReceive') : $t('confirmLiquidityModal.beRemoved')"
     close
     @close="denyHandler"
   >
@@ -20,42 +21,61 @@
         v-if="!isAdding"
         class="estimation"
       >
-        You will receive at least
-        <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
-        and at least <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
-        or the transaction will revert.
+        <i18n-t keypath="confirmLiquidityModal.estimation">
+          <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
+          <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
+        </i18n-t>
       </div>
       <span
         v-else
         class="estimation"
       >
-        Output is estimated. If the price changes by more than {{ slippage }}%
-        your transaction will revert.
+        <i18n-t keypath="confirmLiquidityModal.outputEstimated">
+          <span>{{ slippage }}</span>
+        </i18n-t>
       </span>
       <div class="transaction-details">
         <div class="title">
-          {{ isAdding ? 'Supply details' : 'Removal details' }}
+          {{
+            isAdding ?
+              $t('confirmLiquidityModal.supplyDetails') :
+              $t('confirmLiquidityModal.removalDetails')
+          }}
         </div>
         <div>
-          <span>{{ tokenA.symbol }} {{ isAdding ? 'deposited' : 'estimated' }}</span>
+          <span>
+            {{ tokenA.symbol }}
+            {{
+              isAdding ?
+                $t("confirmLiquidityModal.deposited") :
+                $t("confirmLiquidityModal.estimated")
+            }}
+          </span>
           <div>
             {{ amountA ? amountA.toFixed(5) : '-' }}
           </div>
         </div>
         <div>
-          <span>{{ tokenB.symbol }} {{ isAdding ? 'deposited' : 'estimated' }}</span>
+          <span>
+            {{ tokenB.symbol }}
+            {{
+              isAdding ?
+                $t("confirmLiquidityModal.deposited") :
+                $t("confirmLiquidityModal.estimated")
+            }}
+          </span>
           <div>
             {{ amountB ? amountB.toFixed(5) : '-' }}
           </div>
         </div>
         <div v-if="!isAdding">
-          <span>Allowed slippage</span>
+          <span>{{ $t("confirmLiquidityModal.allowedSlippage") }}</span>
           <div>
             {{ slippage }}%
           </div>
         </div>
         <div class="rates">
-          <span>Rates</span>
+          <span>{{ $t("confirmLiquidityModal.rates") }}</span>
           <span>
             1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
             <br>
@@ -63,12 +83,12 @@
           </span>
         </div>
         <div v-if="isAdding">
-          <span>Your pool share</span>
+          <span>{{ $t("confirmLiquidityModal.yourPoolShare") }} }}</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
       <ButtonDefault @click="allowHandler">
-        Confirm {{ isAdding ? 'Supply' : 'Removal' }}
+        {{ $t("confirmLiquidityModal.confirm") }} {{ isAdding ? $t('supply') : $t('removal') }}
       </ButtonDefault>
     </div>
   </ModalDefault>
@@ -119,7 +139,7 @@ export default {
       );
     },
     denyHandler() {
-      this.reject(new Error('Rejected by user'));
+      this.reject(new Error(this.$t('errors.rejectedByUser')));
     },
     allowHandler() {
       this.resolve();

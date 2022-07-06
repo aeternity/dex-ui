@@ -1,20 +1,22 @@
 <template>
   <ModalDefault
     class="account-info-modal"
-    title="Connected account"
+    :title="$t('accountInfoModal.title')"
     close
     @close="resolve"
   >
     <div class="box">
       <div class="header">
         <div class="title">
-          Connected with {{ wallet ? wallet.name : '' }} Wallet
+          <i18n-t keypath="accountInfoModal.connectWithWallet">
+            <span>{{ wallet ? wallet.name : '' }}</span>
+          </i18n-t>
         </div>
         <ButtonPlain
           class="change-button"
           @click.prevent="disconnectWallet"
         >
-          <span class="h-xs">Disconnect</span>
+          <span class="h-xs">{{ $t('accountInfoModal.disconnect') }}</span>
           <LogoutIcon class="h-xl h-lg h-md h-sm" />
         </ButtonPlain>
       </div>
@@ -26,7 +28,7 @@
         <div class="links">
           <ClipboardCopy
             class="copy-address"
-            title="Copy Address"
+            :title="$t('accountInfoModal.copyAddress')"
             :content="address"
           />
           <a
@@ -35,7 +37,7 @@
             target="_blank"
           >
             <ExternalLinkIcon />
-            View in explorer
+            {{ $t('viewExplorer') }}
           </a>
         </div>
       </div>
@@ -43,14 +45,14 @@
     <div class="box">
       <div class="header">
         <div class="title">
-          Recent Transactions
+          {{ $t('accountInfoModal.recentTransactions') }}
         </div>
         <ButtonPlain
           v-if="filteredTransactions.length"
           class="change-button"
           @click="removeAllTransactions"
         >
-          <span class="h-xs">Clear all</span>
+          <span class="h-xs">{{ $t('clearAll') }}</span>
           <DeleteIcon class="h-xl h-lg h-md h-sm" />
         </ButtonPlain>
       </div>
@@ -76,7 +78,7 @@
           v-else
           class="no-data"
         >
-          Your transactions will appear here...
+          {{ $t('accountInfoModal.transactionsWillAppear') }}
         </div>
       </div>
     </div>

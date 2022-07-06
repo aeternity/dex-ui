@@ -1,35 +1,27 @@
 <template>
   <ModalDefault
     class="connect-wallet-modal"
-    title="Connect a wallet"
+    :title="$t('connectWalletModal.title')"
     close
     @close="resolve"
   >
-    <div
+    <i18n-t
       v-if="UNFINISHED_FEATURES"
       class="description"
+      keypath="connectWalletModal.disclaimer"
+      tag="div"
     >
-      By connecting a wallet, you acknowledge that you
-      have read and understand the Superhero DEX's
-      <ButtonPlain @click.prevent="showTerms = !showTerms">
-        Terms and Conditions.
+      <ButtonPlain @click.prevent="$store.dispatch('modals/open', { name: 'term-and-condition' })">
+        {{ $t('connectWalletModal.termsOfService') }}
       </ButtonPlain>
-    </div>
-
-    <div
-      v-if="showTerms"
-      class="terms"
-    >
-      By connecting a wallet, you agree to Superhero Swap's Terms
-      of Service and acknowledge that you have read and understand the Protocol Disclaimer.
-    </div>
+    </i18n-t>
 
     <div
       v-if="scanningForWallets"
       class="box loading"
     >
       <AnimatedSpinner />
-      <span>Scanning for wallets...</span>
+      <span>{{ $t('connectWalletModal.scanningWallet') }}...</span>
     </div>
     <template
       v-for="wallet of wallets"
@@ -58,7 +50,7 @@
             fill="primary"
             @click.prevent="onWalletConnect(wallet)"
           >
-            <span>Connect Wallet</span>
+            <span>{{ $t('connectWallet') }}</span>
           </ButtonDefault>
         </div>
         <div
@@ -69,11 +61,11 @@
             v-if="connecting"
             class="loading"
           >
-            Initializing...
+            {{ $t('initializing') }}
           </div>
           <div v-if="wallet.type === 'website'">
             <div class="title">
-              Get the browser extension
+              {{ $t('connectWalletModal.getTheBrowserExtension') }}
             </div>
             <div class="extentions">
               <a
@@ -83,7 +75,7 @@
               >
                 <FirefoxLogo />
                 <div class="description">
-                  Install for Firefox Browser
+                  {{ $t('connectWalletModal.installFirefox') }}
                 </div>
               </a>
               <a
@@ -93,7 +85,7 @@
               >
                 <ChromeLogo />
                 <div class="description">
-                  Install for Chrome Browser
+                  {{ $t('connectWalletModal.installChrome') }}
                 </div>
               </a>
             </div>
@@ -134,7 +126,6 @@ export default {
       connecting: false,
       connectingTo: null,
       scanningForWallets: false,
-      showTerms: false,
       icons: {
         // eslint-disable-next-line global-require
         Superhero: require('../assets/wallets/superhero.png'),
@@ -162,7 +153,10 @@ export default {
 
       detector.scan(async ({ wallets }) => {
         this.wallets = [
-          ...Object.values(wallets),
+          ...Object.values(wallets).map((wallet) => ({
+            ...wallet,
+            description: this.$t('connectWalletModal.superheroDesc'),
+          })),
         ];
         clearTimeout(walletScanningTimeout);
         detector.stopScan();
@@ -183,7 +177,7 @@ export default {
       } catch (error) {
         this.$store.dispatch('modals/open', {
           name: 'show-error',
-          message: 'Connection to SDK has been timeout, please try again later.',
+          message: this.$t('connectWalletModal.onWalletConnectTimeout'),
         });
         this.connecting = false;
         this.connectingTo = null;
@@ -203,6 +197,7 @@ export default {
           name: 'Superhero',
           networkId: process.env.VUE_APP_DEFAULT_NETWORK,
           type: 'website',
+          description: this.$t('connectWalletModal.easyUseWallet'),
         },
       ];
     },
@@ -241,15 +236,6 @@ export default {
         color: variables.$color-primary-light;
       }
     }
-  }
-
-  .terms {
-    background-color: variables.$color-primary-dark2;
-    color: variables.$color-primary;
-    text-align: left;
-    padding: 8px 16px;
-    border-radius: 16px;
-    margin-top: 20px;
   }
 
   .box {

@@ -6,6 +6,7 @@ import { BrowserTracing } from '@sentry/tracing';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import i18n from './i18n';
 import registerModals from './router/modals';
 
 const app = createApp(App);
@@ -47,4 +48,4 @@ if (!window.location.host.includes('localhost')) {
   });
 }
 
-app.use(store).use(router).mount('#app');
+app.use(i18n).use(store).use(router).mount('#app');

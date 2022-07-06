@@ -22,7 +22,7 @@
         fill="primary"
         @click="connectWallet"
       >
-        <span>Connect Wallet</span>
+        <span>{{ $t('connectWallet') }}</span>
       </ButtonDefault>
       <div
         v-else
@@ -30,7 +30,7 @@
       >
         <div
           :class="['address', { pending: pendingTransactions.length }]"
-          @click.prevent="openAccountInfo()"
+          @click="openAccountInfo()"
         >
           <template v-if="pendingTransactions.length">
             <span>{{ `${pendingTransactions.length} Pending` }}</span>
@@ -54,82 +54,91 @@
             href="https://aeternity.com/"
             target="_blank"
           >
-            About us
+            {{ $t('nav.aboutUs') }}
+            <AeLogo />
           </a>
           <ButtonPlain
             class="link"
-            @click.prevent="$store.dispatch('modals/open', { name: 'term-and-condition' })"
+            @click="$store.dispatch('modals/open', { name: 'term-and-condition' })"
           >
             Terms & Condition
           </ButtonPlain>
-          <div
-            v-if="UNFINISHED_FEATURES"
+          <ButtonPlain
             class="link"
-            @click.prevent="activeMenu = 'settings'"
+            @click="activeMenu = 'settings'"
           >
-            Settings
+            {{ $t('nav.settings.title') }}
             <Cog />
-          </div>
+          </ButtonPlain>
           <a
             href="https://discord.com/invite/55f8F2jZq4"
             target="_blank"
           >
-            Discord
+            {{ $t('nav.discord') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-contracts-v2/"
             target="_blank"
           >
-            Contracts
+            {{ $t('nav.contracts') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/"
             target="_blank"
           >
-            Source
+            {{ $t('nav.source') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/issues"
             target="_blank"
           >
-            Report a bug
+            {{ $t('nav.reportBug') }}
           </a>
         </div>
 
         <div v-if="activeMenu === 'settings'">
-          <div
+          <ButtonPlain
             class="link"
-            @click.prevent="activeMenu = 'main'"
+            @click="activeMenu = 'main'"
           >
             <BackArrow />
-          </div>
-          <div
+          </ButtonPlain>
+          <ButtonPlain
             class="link"
-            @click.prevent="activeMenu = 'languages'"
+            @click="activeMenu = 'languages'"
           >
-            Languages
-          </div>
+            {{ $t('nav.settings.languages') }}
+          </ButtonPlain>
 
-          <div class="link">
-            Light Theme
-          </div>
+          <ButtonPlain
+            v-if="UNFINISHED_FEATURES"
+            class="link"
+          >
+            {{ $t('nav.settings.theme') }}
+          </ButtonPlain>
         </div>
 
         <div v-if="activeMenu === 'languages'">
-          <div
+          <ButtonPlain
             class="link"
-            @click.prevent="activeMenu = 'settings'"
+            @click="activeMenu = 'settings'"
           >
             <BackArrow />
-          </div>
+          </ButtonPlain>
 
-          <div class="link">
+          <ButtonPlain
+            class="link"
+            @click="setLocale('en')"
+          >
             English
-          </div>
+          </ButtonPlain>
 
-          <div class="link">
+          <ButtonPlain
+            class="link"
+            @click="setLocale('fr')"
+          >
             French
-          </div>
+          </ButtonPlain>
         </div>
       </ActionsMenu>
     </div>
@@ -186,6 +195,10 @@ export default {
     },
     openAccountInfo() {
       this.$store.dispatch('modals/open', { name: 'account-info' });
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale;
+      this.$store.commit('setLang', locale);
     },
   },
 };

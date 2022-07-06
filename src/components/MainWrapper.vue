@@ -25,12 +25,11 @@
           </template>
           <div class="settings">
             <div class="title">
-              Transaction settings
+              {{ $t('swap.transactSettings') }}
             </div>
             <SettingsItem
-              title="Slippage tolerance"
-              description="Your transaction will revert if the price
-                changes unfavorably by more than this percentage."
+              :title="$t('swap.slipTolerance')"
+              :description="$t('swap.transactSettingsPopup')"
               class="slippage"
             >
               <div>
@@ -38,7 +37,7 @@
                   :fill="showedSlippage ? 'second-dark' : 'primary'"
                   @click="resetData()"
                 >
-                  Auto
+                  {{ $t('swap.auto') }}
                 </ButtonDefault>
                 <InputAmount
                   :value="showedSlippage"
@@ -61,15 +60,14 @@
               <div :class="['message', slippageStatus]">
                 {{
                   slippageStatus && slippageStatus === 'warning'
-                    ? 'Your transaction may be frontrun'
-                    : 'Enter a valid slippage percentage'
+                    ? $t('swap.transactionFrontrun')
+                    : $t('swap.enterSlipPercentage')
                 }}
               </div>
             </SettingsItem>
             <SettingsItem
-              title="Transaction deadline"
-              description="Your transaction will revert if
-                it is pending for more than this period of time."
+              :title="$t('swap.transactDeadline')"
+              :description="$t('swap.transactDeadlinePopup')"
               class="deadline"
             >
               <InputAmount
@@ -78,7 +76,7 @@
                 :class="{ error: isInvalidDeadline }"
                 @update:value="updateDeadline($event)"
               />
-              <span>minutes</span>
+              <span>{{ $t('swap.minutes') }}</span>
             </SettingsItem>
           </div>
         </ActionsMenu>

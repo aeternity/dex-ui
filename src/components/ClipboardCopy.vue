@@ -4,7 +4,7 @@
     @click.prevent="copy()"
   >
     <CopyIcon />
-    <span>{{ copied ? 'Copied!' : title }}</span>
+    <span>{{ copied ? $t('copied') : title }}</span>
   </span>
 </template>
 
