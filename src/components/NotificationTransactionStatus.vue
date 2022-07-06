@@ -21,7 +21,7 @@
         :href="`${activeNetwork.explorerUrl}/transactions/${hash}`"
         target="_blank"
       >
-        View in Explorer
+        {{ $t('viewExplorer') }}
       </a>
     </div>
   </NotificationDefault>

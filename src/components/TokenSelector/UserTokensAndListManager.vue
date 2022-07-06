@@ -5,13 +5,13 @@
         :class="['option', { active: tab === 'lists' }]"
         @click.prevent="tab = 'lists'"
       >
-        Lists
+        {{ $t('lists') }}
       </div>
       <div
         :class="['option', { active: tab === 'custom' }]"
         @click.prevent="tab = 'custom'"
       >
-        Custom
+        {{ $t('custom') }}
       </div>
     </div>
 

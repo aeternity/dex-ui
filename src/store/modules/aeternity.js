@@ -11,6 +11,7 @@ import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
   DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
 } from '../../lib/constants';
+import i18n from '../../i18n';
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
@@ -695,11 +696,11 @@ export default {
         instance: await dispatch('getTokenInstance', token.contract_id),
         toAccount: getCtAddress(router),
         amount,
-        transactionInfo: `Approve ${token.symbol}`,
+        transactionInfo: `${i18n.global.t('approve')} ${token.symbol}`,
       });
       if (result) {
         commit('addTransaction',
-          { hash: result.hash, info: `Approve ${token.symbol}`, pending: true },
+          { hash: result.hash, info: `${i18n.global.t('approve')} ${token.symbol}`, pending: true },
           { root: true });
       }
     },
@@ -726,11 +727,11 @@ export default {
           { tokenA: tokenA.contract_id, tokenB: tokenB.contract_id }),
         toAccount: getCtAddress(router),
         amount,
-        transactionInfo: `Approve ${tokenA.symbol}/${tokenB.symbol}`,
+        transactionInfo: `${i18n.global.t('approve')} ${tokenA.symbol}/${tokenB.symbol}`,
       });
       if (result) {
         commit('addTransaction',
-          { hash: result.hash, info: `Approve ${tokenA.symbol}/${tokenB.symbol}`, pending: true },
+          { hash: result.hash, info: `${i18n.global.t('approve')} ${tokenA.symbol}/${tokenB.symbol}`, pending: true },
           { root: true });
       }
     },

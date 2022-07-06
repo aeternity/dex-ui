@@ -1,6 +1,6 @@
 <template>
   <MainWrapper
-    title="Swap"
+    :title="$t('swap.title')"
     settings
     class="swap-view"
   >
@@ -144,12 +144,12 @@ export default {
         this.amountTokenA, this.tokenA.decimals);
     },
     buttonMessage() {
-      if (!this.address) return 'Connect Wallet';
+      if (!this.address) return this.$t('connectWallet');
       if (this.factory && this.tokenB && this.tokenA
-        && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return 'No liquidity pool found';
-      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return 'Enter amount';
-      if (!this.enoughBalance) return `Insufficient ${this.tokenA.symbol} balance`;
-      return 'Swap';
+        && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return this.$t('NoLiquidityFound');
+      if (!this.isValidAmount || !this.tokenB || !this.tokenA) return this.$t('enterAmount');
+      if (!this.enoughBalance) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
+      return this.$t('swap.title');
     },
     amountTokenAExpanded() {
       return !this.tokenA || !this.amountTokenA
@@ -169,8 +169,8 @@ export default {
   },
   methods: {
     generateSwapMessage(isFinished) {
-      return `Swap${isFinished ? '' : 'ping'} ${this.isLastInputTokenA ? 'exact' : ''} ${this.amountTokenA}
-        ${this.tokenA.symbol} for ${this.isLastInputTokenA ? '' : 'exact'} ${this.amountTokenB} ${this.tokenB.symbol}`;
+      return `${isFinished ? this.$t('swap.title') : this.$t('swaping')} ${this.isLastInputTokenA ? this.$t('exact') : ''} ${this.amountTokenA}
+        ${this.tokenA.symbol} ${this.$t('for')} ${this.isLastInputTokenA ? '' : this.$t('exact')} ${this.amountTokenB} ${this.tokenB.symbol}`;
     },
     async approve() {
       try {

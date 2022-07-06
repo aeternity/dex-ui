@@ -12,8 +12,12 @@
     <ErrorIcon v-if="!isConfirmed && !loading" />
     <div class="transaction-status">
       <span class="status">
-        {{ loading ? 'Waiting For Confirmation' :
-          isConfirmed ? 'Transaction Submitted' : 'Confirmation Error' }}
+        {{
+          loading ? $t('submitTransactionModal.waiting') :
+          isConfirmed ?
+            $t('submitTransactionModal.submitted') :
+            $t('submitTransactionModal.error')
+        }}
       </span>
       <template v-if="loading">
         <span
@@ -22,7 +26,7 @@
         >
           {{ submitMessage }}
         </span>
-        <span class="guide">Confirm this transaction in your wallet</span>
+        <span class="guide">{{ $t('submitTransactionModal.confirm') }}</span>
       </template>
       <template v-else>
         <div v-if="isConfirmed">
@@ -33,20 +37,20 @@
               target="_blank"
             >
               <ExternalLink />
-              Open transaction in explorer
+              {{ $t('viewExplorer') }}
             </a>
           </div>
           <ButtonDefault @click="resolve">
-            Close
+            {{ $t('close') }}
           </ButtonDefault>
         </div>
         <div v-else>
-          <span class="guide">Operation rejected by user</span>
+          <span class="guide">{{ $t('submitTransactionModal.rejected') }}</span>
           <ButtonDefault
             fill="light"
             @click="resolve"
           >
-            Dismiss
+            {{ $t('dismiss') }}
           </ButtonDefault>
         </div>
       </template>

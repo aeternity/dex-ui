@@ -2,8 +2,7 @@
   <div class="token-import-card">
     <QuestionCircleIcon />
     <div class="description">
-      This token doesn't appear on the active token list(s).
-      Make sure this is the token that you want to trade.
+      {{ $t('tokenSelector.tokenImportCardDescription') }}
     </div>
 
     <div class="token-info">
@@ -27,7 +26,7 @@
       class="import-button"
       @click.prevent="$emit('token:import')"
     >
-      Import
+      {{ $t('import') }}
     </ButtonDefault>
   </div>
 </template>

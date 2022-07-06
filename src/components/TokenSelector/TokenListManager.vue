@@ -18,7 +18,7 @@
               </div>
               <div class="total-tokens">
                 {{ provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length }}
-                tokens
+                {{ $t('tokens') }}
               </div>
             </div>
           </div>

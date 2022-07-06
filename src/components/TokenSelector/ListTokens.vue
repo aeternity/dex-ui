@@ -4,15 +4,13 @@
       v-if="expandedList"
       class="expanded-tokens-list"
     >
-      Expanded results from inactive Token Lists
-
+      {{ $t('tokenSelector.expandedInactiveTokenLists') }}
       <ActionsMenu>
         <template #display>
           <QuestionCircleIcon />
         </template>
         <div>
-          Tokens from an active lists.
-          Import specific tokens below or click manage to add custom tokens.
+          {{ $t('tokenSelector.importSpecificTokensOrManageCustoms') }}
         </div>
       </ActionsMenu>
     </div>
@@ -39,7 +37,7 @@
             </span>
             <span class="name">
               {{ token.name }}
-              {{ token.custom ? '• Added by user': '' }}
+              {{ token.custom ? $t('tokenSelector.addedByUser') : '' }}
             </span>
           </div>
         </div>
@@ -48,7 +46,7 @@
             v-if="!!activeTokens.filter(t => t.contract_id === token.contract_id).length"
             class="active-token"
           >
-            Active
+            {{ $t('active') }}
           </div>
 
           <ButtonDefault
@@ -56,7 +54,7 @@
             class="import-button"
             @click.prevent="$emit('token:import', token)"
           >
-            Import
+            {{ $t('import') }}
           </ButtonDefault>
         </div>
       </div>

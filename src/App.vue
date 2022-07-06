@@ -52,6 +52,9 @@ export default {
     },
   },
   async mounted() {
+    const { lang } = this.$store.state;
+    this.$i18n.locale = lang;
+
     this.$store.commit('tokens/initDefaultTokens');
 
     const query = {

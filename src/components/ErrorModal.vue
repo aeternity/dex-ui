@@ -1,7 +1,7 @@
 <template>
   <ModalDefault
     class="error-modal"
-    title="Error"
+    :title="$t('error')"
     @close="resolve"
   >
     <div class="error-details">

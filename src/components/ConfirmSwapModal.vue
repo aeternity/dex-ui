@@ -1,12 +1,12 @@
 <template>
   <ModalDefault
     class="confirm-swap-modal"
-    title="Confirm Swap"
+    :title="$t('confirmSwapModal.title')"
     close
     @close="denyHandler"
   >
     <TokenAmountDetails
-      label="From"
+      :label="$t('confirmSwapModal.from')"
       :symbol="from.symbol"
       :contract="from.contract_id"
       :amount="amountFrom"
@@ -15,36 +15,47 @@
       <DownArrow />
     </div>
     <TokenAmountDetails
-      label="To"
+      :label="$t('confirmSwapModal.to')"
       :symbol="to.symbol"
       :contract="to.contract_id"
       :amount="amountTo"
     />
     <div class="estimation">
-      {{ isLastAmountFrom ? 'Output' : 'Input' }} is estimated.
-      {{ isLastAmountFrom? 'You will receive at least' : 'You will spend no more than' }}
+      {{ isLastAmountFrom ? $t("confirmSwapModal.output") : $t("confirmSwapModal.input") }}
+      {{ $t("confirmSwapModal.input") }}.
+      {{
+        isLastAmountFrom ?
+          $t("confirmSwapModal.receiveAtLeast") :
+          $t("confirmSwapModal.spendNoMore")
+      }}
       <strong>{{ receivedOrSpentValueMsg }}</strong>
-      or the transaction will revert.
+      {{ $t('transactionWillRevert') }}
     </div>
     <div class="transaction-details">
       <div class="title no-border">
-        Transaction Details
+        {{ $t('confirmSwapModal.transactionDetails') }}
       </div>
       <div>
-        <span>Price</span>
+        <span>{{ $t('price') }}</span>
         <span>{{ `1 ${to.symbol} = ${1/ratio} ${from.symbol}` }}</span>
       </div>
       <div v-if="!isAeVsWae">
-        <span>Allowed Slippage</span>
+        <span>{{ $t('confirmSwapModal.allowedSlippage') }}</span>
         <span>{{ slippage }}%</span>
       </div>
       <div class="no-border">
-        <span>{{ isLastAmountFrom? 'Minimum received' : 'Maximum spent' }}</span>
+        <span>
+          {{
+            isLastAmountFrom ?
+              $t('confirmSwapModal.minReceived') :
+              $t('confirmSwapModal.maxSpent')
+          }}
+        </span>
         <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
     </div>
     <ButtonDefault @click="allowHandler">
-      Confirm Swap
+      {{ $t("confirmSwapModal.title") }}
     </ButtonDefault>
   </ModalDefault>
 </template>
@@ -101,7 +112,7 @@ export default {
   },
   methods: {
     denyHandler() {
-      this.reject(new Error('Rejected by user'));
+      this.reject(new Error(this.$t('errors.rejectedByUser')));
     },
     allowHandler() {
       this.resolve();

@@ -4,13 +4,13 @@
       to="/swap"
       @click.prevent="navigateSwap"
     >
-      Swap
+      {{ $t('nav.swap') }}
     </router-link>
     <router-link
       to="/pool"
       @click.prevent="navigatePool"
     >
-      Pool
+      {{ $t('nav.pool') }}
     </router-link>
   </nav>
 </template>

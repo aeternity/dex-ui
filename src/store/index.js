@@ -31,6 +31,7 @@ export default createStore({
     useSdkWallet: false,
     networkId: process.env.VUE_APP_DEFAULT_NETWORK,
     transactions: [],
+    lang: process.env.VUE_APP_I18N_LOCALE || 'en',
   },
   getters: {
     networks() {
@@ -96,6 +97,9 @@ export default createStore({
     },
     removeAllTransactions(state) {
       state.transactions = [];
+    },
+    setLang(state, lang) {
+      state.lang = lang;
     },
   },
   actions: {
@@ -343,6 +347,7 @@ export default createStore({
         useIframeWallet,
         networkId,
         wallet,
+        lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
       }) => ({
@@ -351,6 +356,7 @@ export default createStore({
         useIframeWallet,
         networkId,
         wallet,
+        lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
       }),

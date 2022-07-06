@@ -1,7 +1,7 @@
 <template>
   <div class="remove-liquidity">
     <MainWrapper
-      title="Remove Liquidity"
+      :title="$t('removeLiquidity.title')"
       back-button
       settings
     >
@@ -17,7 +17,7 @@
       </ButtonPlain>
       <div class="remove-container">
         <div class="remove-subheader">
-          <div>Remove amount</div>
+          <div>{{ $t('removeLiquidity.removeAmount') }}</div>
           <!-- <ButtonPlain
             v-if="UNFINISHED_FEATURES"
             @click="detailed = !detailed"
@@ -156,7 +156,7 @@
           :class="{ loading: connectingToWallet }"
           @click="connectWallet"
         >
-          Connect Wallet
+          {{ $t('connectWallet') }}
         </ButtonDefault>
         <ButtonDefault
           v-if="address"
@@ -278,9 +278,9 @@ export default {
       return this.enoughAllowance && !this.approving && !this.removing && this.poolTokenInput.gt(0);
     },
     approveButtonMessage() {
-      if (this.approving) return 'Approving...';
-      if (this.fetchingAllowance) return 'Verifying approval...';
-      if (this.enoughAllowance) return 'Approved';
+      if (this.approving) return `${this.$t('approving')}...`;
+      if (this.fetchingAllowance) return `${this.$t('verifyingApproval')}...`;
+      if (this.enoughAllowance) return this.$t('approved');
       return 'Approve';
     },
   },
@@ -385,7 +385,10 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: this.generateRemoveLiquidityMessage(),
+          submitMessage: `${this.$t('removeLiquidity.removingAround')}
+            ${this.poolTokenInput.toFixed(5)}
+            ${this.tokenA.symbol}/${this.tokenB.symbol}
+            ${this.$t('removeLiquidity.poolTokensLiquidity')}`,
           work: this.removalProcess,
         });
       } catch (e) {

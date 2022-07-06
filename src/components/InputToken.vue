@@ -20,7 +20,7 @@
       v-if="$attrs.token && address"
       class="balance"
     >
-      <span>Balance:
+      <span>{{ $t('swap.balance') }}:
         <AeBalance
           :address="contractId"
           @update:balance="updateBalance($event)"
@@ -31,7 +31,7 @@
         v-if="+balance"
         @click="setMax"
       >
-        (Max)
+        ({{ $t('max') }})
       </ButtonPlain>
     </div>
   </div>

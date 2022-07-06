@@ -20,19 +20,19 @@ export default {
     ...mapGetters(['activeNetwork']),
     ...mapState({
       message({ onLine, sdk, isSdkInitializing }) {
-        if (!onLine) return { text: 'You are offline... Please check your connection.' };
-        if (!isSdkInitializing && !sdk) return { text: 'We are unable to connect to the chosen node.' };
-        if (isSdkInitializing) return { text: 'Connecting to the network...', className: 'connecting' };
+        if (!onLine) return { text: this.$t('connectionStatus.offline') };
+        if (!isSdkInitializing && !sdk) return { text: this.$t('connectionStatus.unableToConnectChosenNode') };
+        if (isSdkInitializing) return { text: this.$t('connectionStatus.connectingNetwork'), className: 'connecting' };
         if (!this.middlewareStatus) {
           return {
-            text: 'Middleware is not available, some functionality may not work properly.',
+            text: this.$t('connectionStatus.middlewareNotAvailable'),
             className: 'warning',
           };
         }
         if (!this.middlewareStatus.loading && !this.middlewareStatus.mdw_synced
           && this.middlewareStatus.node_height - this.middlewareStatus.mdw_height > 15) {
           return {
-            text: 'The middleware is out of sync, some functionality may not work properly.',
+            text: this.$t('connectionStatus.middlewareOutOfSync'),
             className: 'warning',
           };
         }

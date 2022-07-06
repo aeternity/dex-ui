@@ -1,13 +1,13 @@
 <template>
   <div class="body">
     <div>
-      <span>Pooled {{ token0.symbol }}:</span>
+      <span>{{ $t('liquidityDetails.pooled') }} {{ token0.symbol }}:</span>
       <div>
         <div
           v-if="poolInfoImportFailed"
           class="error"
         >
-          Loading Failed
+          {{ $t('liquidityDetails.loadingFailed') }}
           <div
             class="reload"
             @click="$emit('load:pool-info')"
@@ -19,17 +19,17 @@
       </div>
     </div>
     <div>
-      <span>Pooled {{ token1.symbol }}:</span>
+      <span>{{ $t('liquidityDetails.pooled') }} {{ token1.symbol }}:</span>
       <div>
         {{ getAmountText(amount1,token1) }}
       </div>
     </div>
     <div>
-      <span>Your pool tokens:</span>
+      <span>{{ $t('liquidityDetails.yourPoolTokens') }}:</span>
       <div>{{ balanceText }}</div>
     </div>
     <div>
-      <span>Your pool share:</span>
+      <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}::</span>
       <div>{{ shareText }}%</div>
     </div>
   </div>
@@ -39,7 +39,7 @@
       href="https://aeternity.com/"
       target="_blank"
     >
-      View pool information
+      {{ $t('liquidityDetails.poolInformation') }}
     </a>
     <div>
       <ButtonDefault
@@ -52,13 +52,13 @@
           }
         }"
       >
-        Add
+        {{ $t('liquidityDetails.add') }}
       </ButtonDefault>
       <ButtonDefault
         class="liquidity-button"
         :to="`/pool/remove/${poolId}`"
       >
-        Remove
+        {{ $t('liquidityDetails.remove') }}
       </ButtonDefault>
     </div>
   </div>
