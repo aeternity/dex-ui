@@ -59,7 +59,7 @@ export default {
       ).map((key) => ({
         id: key,
         payload: state.aeternity.providedLiquidity[state.address][key],
-      })).filter((x) => x.payload),
+      })).filter((x) => x.payload?.networkId === state.networkId),
     }),
   },
   methods: {

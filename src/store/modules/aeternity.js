@@ -127,6 +127,7 @@ export default {
       tokenADecimals, tokenBDecimals,
       balance,
       address,
+      networkId,
     }) {
       const [token0, token1] = sortTokens(
         { cid: tokenA, symbol: tokenASymbol, decimals: tokenADecimals },
@@ -137,7 +138,10 @@ export default {
         state.providedLiquidity[address] = {};
       }
       state.providedLiquidity[address][getPairId(tokenA, tokenB)] = balance ? {
-        token0, token1, balanceStr: balance.toString(),
+        token0,
+        token1,
+        balanceStr: balance.toString(),
+        networkId,
       } : undefined;
     },
     updatePoolInfo(state, {
@@ -276,11 +280,13 @@ export default {
       dispatch,
       commit,
       rootState: { address },
+      rootGetters: { activeNetwork },
     }, {
       tokenA, tokenB,
       tokenASymbol, tokenBSymbol,
       tokenADecimals, tokenBDecimals,
     }) {
+      if (!activeNetwork) return null;
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
 
       const { decodedResult: balance } = await pair.methods.balance(address);
@@ -293,6 +299,7 @@ export default {
         tokenADecimals,
         tokenBDecimals,
         address,
+        networkId: activeNetwork.networkId,
       });
       return balance;
     },
