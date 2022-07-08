@@ -130,9 +130,9 @@ export default {
       networkId,
     }) {
       const [token0, token1] = sortTokens(
-        { cid: tokenA, symbol: tokenASymbol, decimals: tokenADecimals },
-        { cid: tokenB, symbol: tokenBSymbol, decimals: tokenBDecimals },
-        (x) => x.cid,
+        { contract_id: tokenA, symbol: tokenASymbol, decimals: tokenADecimals },
+        { contract_id: tokenB, symbol: tokenBSymbol, decimals: tokenBDecimals },
+        (x) => x.contract_id,
       );
       if (!state.providedLiquidity[address]) {
         state.providedLiquidity[address] = {};
@@ -148,9 +148,9 @@ export default {
       tokenA, tokenB, reserveA, reserveB, totalSupply,
     }) {
       const [token0, token1] = sortTokens(
-        { cid: tokenA, reserve: reserveA },
-        { cid: tokenB, reserve: reserveB },
-        (x) => x.cid,
+        { contract_id: tokenA, reserve: reserveA },
+        { contract_id: tokenB, reserve: reserveB },
+        (x) => x.contract_id,
       );
       state.poolInfo[getPairId(tokenA, tokenB)] = {
         token0, token1, totalSupply,

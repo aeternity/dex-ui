@@ -7,11 +7,11 @@
       <div>
         <img
           :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token0.cid}`"
+          :src="`https://avatars.z52da5wt.xyz/${token0.contract_id}`"
         >
         <img
           :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token1.cid}`"
+          :src="`https://avatars.z52da5wt.xyz/${token1.contract_id}`"
         >
         <span>{{ token0.symbol + '/' + token1.symbol }}</span>
       </div>
@@ -67,8 +67,8 @@ export default {
       try {
         this.poolInfoImporting = true;
         await this.$store.dispatch('aeternity/fetchPoolInfo', {
-          tokenA: this.token0.cid,
-          tokenB: this.token1.cid,
+          tokenA: this.token0.contract_id,
+          tokenB: this.token1.contract_id,
         });
         this.poolInfoImportFailed = false;
       } catch (error) {
