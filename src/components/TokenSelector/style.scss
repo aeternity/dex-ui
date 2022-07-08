@@ -78,11 +78,10 @@
     @extend %face-sans-14-medium;
   }
 
-  img,
-  svg {
+  .token-icon :deep(svg),
+  .token-icon :deep(img) {
     width: 32px;
     height: 32px;
-    border-radius: 24px;
     margin-right: 16px;
   }
 }

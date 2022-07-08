@@ -5,14 +5,11 @@
       @click="onShow"
     >
       <div>
-        <img
-          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token0.contract_id}`"
-        >
-        <img
-          :class="{rotating: poolInfoImporting && !poolInfoImportFailed}"
-          :src="`https://avatars.z52da5wt.xyz/${token1.contract_id}`"
-        >
+        <TokenIcon
+          :token-a="token0"
+          :token-b="token1"
+          :rotating="poolInfoImporting && !poolInfoImportFailed"
+        />
         <span>{{ token0.symbol + '/' + token1.symbol }}</span>
       </div>
       <DownChevron :class="{ rotated: show }" />
@@ -28,14 +25,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { handleUnknownError } from '@/lib/utils';
 import ButtonPlain from './ButtonPlain.vue';
+import TokenIcon from './TokenIcon.vue';
 import LiquidityDetails from './LiquidityDetails.vue';
 import DownChevron from '../assets/arrow.svg?vue-component';
 
 export default {
   components: {
     ButtonPlain,
+    TokenIcon,
     LiquidityDetails,
     DownChevron,
   },
@@ -49,11 +49,20 @@ export default {
     poolInfoImportFailed: false,
   }),
   computed: {
+    ...mapGetters('tokens', ['getAvailableTokens']),
     token0() {
-      return this.poolInfo.token0;
+      return {
+        ...this.getAvailableTokens()
+          .find((t) => t.contract_id === this.poolInfo.token0.contract_id),
+        ...this.poolInfo.token0,
+      };
     },
     token1() {
-      return this.poolInfo.token1;
+      return {
+        ...this.getAvailableTokens()
+          .find((t) => t.contract_id === this.poolInfo.token1.contract_id),
+        ...this.poolInfo.token1,
+      };
     },
   },
   methods: {
@@ -103,8 +112,7 @@ export default {
     max-height: 49px;
   }
 
-  svg,
-  img {
+  svg {
     height: 24px;
     width: 24px;
   }
@@ -121,14 +129,6 @@ export default {
     > div {
       display: flex;
       align-items: center;
-
-      img:nth-of-type(1) {
-        z-index: 1;
-      }
-
-      img:nth-of-type(2) {
-        margin-left: -10px;
-      }
 
       span {
         color: white;

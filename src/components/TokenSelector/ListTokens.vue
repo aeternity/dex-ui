@@ -30,7 +30,7 @@
     >
       <div class="wrapper">
         <div class="row">
-          <img :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`">
+          <TokenIcon :token-a="token" />
           <div class="info">
             <span class="symbol">
               {{ token.symbol }}
@@ -65,6 +65,7 @@
 <script>
 import ButtonPlain from '../ButtonPlain.vue';
 import ButtonDefault from '../ButtonDefault.vue';
+import TokenIcon from '../TokenIcon.vue';
 import ActionsMenu from '../ActionsMenu.vue';
 import QuestionCircleIcon from '../../assets/question-circle.svg?vue-component';
 
@@ -74,6 +75,7 @@ export default {
     ButtonPlain,
     ActionsMenu,
     QuestionCircleIcon,
+    TokenIcon,
   },
   props: {
     tokens: {

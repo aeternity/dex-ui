@@ -8,7 +8,7 @@
     <TokenAmountDetails
       :label="$t('confirmSwapModal.from')"
       :symbol="from.symbol"
-      :contract="from.contract_id"
+      :token="from"
       :amount="amountFrom"
     />
     <div class="arrow">
@@ -17,7 +17,7 @@
     <TokenAmountDetails
       :label="$t('confirmSwapModal.to')"
       :symbol="to.symbol"
-      :contract="to.contract_id"
+      :token="to"
       :amount="amountTo"
     />
     <div class="estimation">
