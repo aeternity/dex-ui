@@ -8,8 +8,9 @@ export default async (store) => {
     let errorMessage = '';
     try {
       const returnedTransaction = await store.state.sdk.poll(hash);
+      const { callInfo } = await store.state.sdk.api.getTransactionInfoByHash(hash);
       handleCallError(
-        returnedTransaction,
+        callInfo,
         store.state.aeternity.wae.deployInfo.address === returnedTransaction.contractId
           ? store.state.aeternity.wae
           : store.state.aeternity.router,
