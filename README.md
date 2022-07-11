@@ -1,5 +1,11 @@
 # dex-ui
 
+## Feedback
+
+If you simply want to provide feedback, please use the following form: [https://form.jotform.com/221174404956355](https://form.jotform.com/221174404956355)
+
+For bug reports or feature requests, please use the issues: [https://github.com/aeternity/dex-ui/issues/new/choose](https://github.com/aeternity/dex-ui/issues/new/choose)
+
 ## Project setup
 ```
 npm install
