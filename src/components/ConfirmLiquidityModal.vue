@@ -83,7 +83,7 @@
           </span>
         </div>
         <div v-if="isAdding">
-          <span>{{ $t("confirmLiquidityModal.yourPoolShare") }} }}</span>
+          <span>{{ $t("confirmLiquidityModal.yourPoolShare") }}</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
