@@ -43,6 +43,7 @@
     </a>
     <div>
       <ButtonDefault
+        v-if="!withOneButton"
         class="liquidity-button"
         :to="{
           name: 'add-pool',
@@ -56,9 +57,9 @@
       </ButtonDefault>
       <ButtonDefault
         class="liquidity-button"
-        :to="`/pool/remove/${poolId}`"
+        :to="withOneButton ? `/pool` : `/pool/remove/${poolId}`"
       >
-        {{ $t('liquidityDetails.remove') }}
+        {{ $t(withOneButton ? 'liquidityDetails.ok' : 'liquidityDetails.remove') }}
       </ButtonDefault>
     </div>
   </div>
@@ -80,6 +81,7 @@ export default {
     poolInfo: { type: Object, required: true },
     poolInfoImporting: { type: Boolean, required: false },
     poolInfoImportFailed: { type: Boolean, required: false },
+    withOneButton: { type: Boolean, default: false },
   },
   emits: ['load:pool-info'],
   data: () => ({
@@ -225,8 +227,8 @@ export default {
       width: 100%;
       padding: 12px;
 
-      &:first-child {
-        margin-right: 16px;
+      &:nth-child(2) {
+        margin-left: 16px;
       }
     }
   }
