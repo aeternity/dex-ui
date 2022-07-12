@@ -37,6 +37,7 @@
             :pool-id="poolId"
             :pool-info="providedLiquidity[address][poolId]"
             :pool-info-importing="poolInfoImporting"
+            :with-one-button="true"
           />
         </div>
         <div

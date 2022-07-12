@@ -85,7 +85,7 @@
     "importTip": "Use this tool to find v2 pools that don't automatically appear in the interface.",
     "fetchingData": "Fetching data",
     "selectBothTokens": "Select both tokens to find your provided liquidity.",
-    "poolFound": "Pool found!",
+    "poolFound": "Your pool share was imported successfully!",
     "imported": "The liquidity is imported, you can go back to see your provided liquidity in the main pool screen",
     "footerText": "You have no provided liquidity for the selected tokens"
   },
@@ -125,7 +125,8 @@
     "poolInformation": "View pool information",
     "add": "Add",
     "remove": "Remove",
-    "yourPoolTokens": "Your pool tokens"
+    "yourPoolTokens": "Your pool tokens",
+    "ok": "Ok"
   },
   "tokenSelector": {
     "expandedInactiveTokenLists": "Expanded results from inactive Token Lists",

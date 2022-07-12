@@ -85,7 +85,7 @@
     "importTip": "Utilisez cet outil pour trouver les pools v2 qui n'apparaissent pas automatiquement dans l'interface.",
     "fetchingData": "Récupération des données",
     "selectBothTokens": "Sélectionnez les deux jetons pour trouver votre liquidité fournie.",
-    "poolFound": "Piscine retrouvée !",
+    "poolFound": "Votre partage de pool a été importé avec succès !",
     "imported": "La liquidité est importée, vous pouvez revenir en arrière pour voir votre liquidité fournie dans l'écran principal du pool",
     "footerText": "Vous n'avez fourni aucune liquidité pour les jetons sélectionnés"
   },
@@ -125,7 +125,8 @@
     "poolInformation": "Afficher les informations sur la piscine",
     "add": "Ajouter",
     "remove": "Retirer",
-    "yourPoolTokens": "Vos jetons de piscine"
+    "yourPoolTokens": "Vos jetons de piscine",
+    "ok": "D'accord"
   },
   "tokenSelector": {
     "expandedInactiveTokenLists": "Résultats élargis des listes de jetons inactifs",
