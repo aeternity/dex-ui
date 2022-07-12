@@ -345,6 +345,7 @@ export default {
       tokenA, tokenB,
     }) {
       // get faster pair address from backend module
+
       const action = 'backend/fetchPairDetails';
       const args = { tokenA, tokenB };
       const resp = await dispatch(action, args, { root: true });
@@ -359,7 +360,7 @@ export default {
 
       if (resp && resp.synchronized && resp.liquidityInfo) {
         totalSupply = resp.liquidityInfo.totalSupply;
-        assignReserves({ ...resp.liquidityInfo, token0: resp.token0 });
+        assignReserves({ ...resp.liquidityInfo, token0: resp.token0.address });
       } else {
         // if for any reason backend module isn't successfully
         // returning synchronized values or no values at all
