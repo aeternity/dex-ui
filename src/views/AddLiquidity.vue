@@ -92,6 +92,7 @@ import { mapState, mapGetters } from 'vuex';
 import { Head } from '@vueuse/head';
 import BigNumber from 'bignumber.js';
 import MainWrapper from '@/components/MainWrapper.vue';
+import Tip from '@/components/Tip.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import { reduceDecimals, expandDecimals, getAePair } from '../lib/utils';
@@ -110,6 +111,7 @@ export default {
     PlusIcon,
     AnimatedSpinner,
     Head,
+    Tip,
   },
   mixins: [saveTokenSelectionMixin, approvalMixin, setTokenPairInfoMixin],
   data: () => ({
