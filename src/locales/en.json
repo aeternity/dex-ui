@@ -43,7 +43,8 @@
     "input": "Input",
     "isEstimated": "is estimated",
     "spendNoMore": "You will spend no more than",
-    "receiveAtLeast": "You will receive at least"
+    "receiveAtLeast": "You will receive at least",
+    "priceImpactWarning": "Due to the high price impact and the low slippage this transaction has little to no chance to be successfully executed"
   },
   "pool": {
     "title": "Pool",

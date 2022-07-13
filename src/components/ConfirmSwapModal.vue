@@ -43,6 +43,10 @@
         <span>{{ $t('confirmSwapModal.allowedSlippage') }}</span>
         <span>{{ slippage }}%</span>
       </div>
+      <div v-if="!isAeVsWae">
+        <span>{{ $t('confirmSwapModal.priceImpact') }}</span>
+        <span>{{ priceImpact?.toFixed(8) }}%</span>
+      </div>
       <div class="no-border">
         <span>
           {{
@@ -54,7 +58,15 @@
         <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
     </div>
-    <ButtonDefault @click="allowHandler">
+    <div
+      v-if="shouldShowWarning"
+      class="warning"
+    >
+      {{ $t('confirmSwapModal.priceImpactWarning') }}
+    </div>
+    <ButtonDefault
+      @click="allowHandler"
+    >
       {{ $t("confirmSwapModal.title") }}
     </ButtonDefault>
   </ModalDefault>
@@ -87,6 +99,7 @@ export default {
     isLastAmountFrom: { type: Boolean, required: true },
     isAeVsWae: { type: Boolean },
     numberOfPairs: { type: [Number], required: true },
+    receivedTokensByPriceImpact: { type: [Object, String, Number], required: true },
   },
   computed: {
     ...mapState('aeternity', ['slippage']),
@@ -108,6 +121,10 @@ export default {
       return this.isLastAmountFrom
         ? `${this.minimumReceived} ${this.to.symbol}`
         : `${this.maximumSpent} ${this.from.symbol}`;
+    },
+    shouldShowWarning() {
+      if (this.isAeVsWae) return false;
+      return BigNumber(this.receivedTokensByPriceImpact).lt(this.minimumReceived);
     },
   },
   methods: {
@@ -212,6 +229,13 @@ export default {
       color: variables.$color-white;
       font-weight: bold;
     }
+  }
+
+  .warning {
+    margin-top: 8px;
+    color: variables.$color-orange;
+    text-align: justify;
+    margin-bottom: 12px;
   }
 
   .button-default {
