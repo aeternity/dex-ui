@@ -2,10 +2,11 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import {
   handleUnknownError, calculateSelectedToken, getPairId,
-  expandDecimals,
+  expandDecimals, reduceDecimals,
 } from '../lib/utils';
 import {
   ratioFromRoute, ratioWithDecimals, getPriceImpactForRoute,
+  getReceivedTokensForRoute,
 } from '../lib/swapUtils';
 
 // if there is a direct Pair for tokenA/tokenB or tokenB/tokenA,
@@ -62,6 +63,19 @@ export default {
       return getPriceImpactForRoute(
         this.selectedRoute, this.tokenA.contract_id,
         expandDecimals(this.amountTokenA, this.tokenA.decimals),
+      );
+    },
+    receivedTokensByPriceImpact() {
+      if (!this.selectedRoute || !this.amountTokenA || !this.amountTokenB) {
+        return BigNumber(0);
+      }
+      if (this.isAeVsWae) return new BigNumber(this.amountTokenA);
+      return reduceDecimals(
+        getReceivedTokensForRoute(
+          this.selectedRoute, this.tokenA.contract_id,
+          expandDecimals(this.amountTokenA, this.tokenA.decimals),
+        ),
+        this.tokenB.decimals,
       );
     },
   },

@@ -43,7 +43,8 @@
     "input": "Contribution",
     "isEstimated": "est estimé",
     "spendNoMore": "Vous ne dépenserez pas plus de",
-    "receiveAtLeast": "Vous recevrez au moins"
+    "receiveAtLeast": "Vous recevrez au moins",
+    "priceImpactWarning": "En raison de l'impact élevé sur les prix et du faible glissement, cette transaction a peu ou pas de chance d'être exécutée avec succès"
   },
   "pool": {
     "title": "Piscine",
