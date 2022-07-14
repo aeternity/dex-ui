@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.10.0](https://github.com/aeternity/dex-ui/compare/v1.9.0...v1.10.0) (2022-07-14)
+
+
+### Features
+
+* **dex-backend:** .env var for enable/disable ([c26a448](https://github.com/aeternity/dex-ui/commit/c26a448fbf5b4057803e27fe1acab596fe6c6d7a))
+* **import-pool-view:** ux changes ([254a148](https://github.com/aeternity/dex-ui/commit/254a148fb0ac81976f035bed55d2cb595af62119))
+* meta information [#351](https://github.com/aeternity/dex-ui/issues/351) ([07f5b7d](https://github.com/aeternity/dex-ui/commit/07f5b7d91d9b591db88c1d1f845975abb90e9208))
+* multi languages support [#266](https://github.com/aeternity/dex-ui/issues/266) ([584aef3](https://github.com/aeternity/dex-ui/commit/584aef39e5c71339a9de54c3f6b0b2ba66b8d8dd))
+
+
+### Bug Fixes
+
+* **add-liquidity-view:** restore tip message ([5a1d084](https://github.com/aeternity/dex-ui/commit/5a1d084c5cafd26c1ce9095ac98235a1cf8370ea))
+* **add-liquidity-view:** wrong ratios with dex-backend enabled ([3d83b10](https://github.com/aeternity/dex-ui/commit/3d83b10e741130a5479f3ec76fd2405042e6fa95))
+* **pool-view:** filter provided liquidity by active network ([9c2bc71](https://github.com/aeternity/dex-ui/commit/9c2bc71436085c381438be0c665322a366dac6e2))
+* **pool:** removes leftover brackets ([6adecb3](https://github.com/aeternity/dex-ui/commit/6adecb320107ddb70ddf7a71e9af9a7b099aa266))
+* **remove-liquidity:** ability to remove custom liquidity ([ffe8a39](https://github.com/aeternity/dex-ui/commit/ffe8a399a822b4d86ebbc8e059742a29f8d06941))
+* **remove-liquidity:** use a proper tag for a header ([ea61357](https://github.com/aeternity/dex-ui/commit/ea61357bda7626acbe017897e56181ddd09249cb))
+* show correct information for sent transactions ([fb636a3](https://github.com/aeternity/dex-ui/commit/fb636a3631d4c0823bd13b6428150eed148a94dc))
+* **swap-view:** swap button is enabled when there is no pair/route ([aa2ecb2](https://github.com/aeternity/dex-ui/commit/aa2ecb203b17ffbda2c6859c2db23b9de53d82be))
+
 ## [1.9.0](https://github.com/aeternity/dex-ui/compare/v1.8.0...v1.9.0) (2022-07-01)
 
 
