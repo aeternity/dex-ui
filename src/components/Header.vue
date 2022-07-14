@@ -139,6 +139,13 @@
           >
             French
           </ButtonPlain>
+
+          <ButtonPlain
+            class="link"
+            @click="setLocale('zh-cn')"
+          >
+            简体中文
+          </ButtonPlain>
         </div>
       </ActionsMenu>
     </div>
