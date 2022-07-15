@@ -12,7 +12,6 @@
 // -- This is a parent command --
 Cypress.Commands.add('login', () => {
   cy.get('[data-cy=connect-wallet]')
-    .should('contain', 'Connect Wallet')
     .click()
     .get('[data-cy=connect-Superhero]', { timeout: 6000 })
     .click()
@@ -26,10 +25,8 @@ Cypress.Commands.add('login', () => {
       } else {
         cy
           .get('[data-cy=error-dismiss]', { timeout: 6000 })
-          .should('contain', 'Open My Wallet')
           .click()
           .get('[data-cy=checkbox]')
-          .should('contain', 'I agree to the Superhero')
           .click()
           .get('[data-cy=import-wallet]')
           .click()
@@ -38,7 +35,6 @@ Cypress.Commands.add('login', () => {
           .get('[data-cy=import]')
           .click()
           .get('button')
-          .contains('Confirm')
           .click()
           .visit('/')
           .login();
@@ -50,9 +46,7 @@ Cypress.Commands.add('logout', () => {
   cy.get('[data-cy=wallet-address]')
     .click()
     .get('[data-cy=wallet-disconnect]')
-    .click()
-    .get('[data-cy=connect-wallet]')
-    .should('contain', 'Connect Wallet');
+    .click();
   // TODO: check if we gonna disconnect from wallet.superhero.com too
 });
 
