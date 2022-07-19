@@ -5,7 +5,10 @@
     close
     @close="resolve"
   >
-    <div v-if="tab === 'list-tokens'">
+    <div
+      v-if="tab === 'list-tokens'"
+      class="token-list-container"
+    >
       <div class="input-wrapper">
         <InputField
           v-model:value="searchTerm"
@@ -216,15 +219,21 @@ export default {
 @use './style.scss';
 
 .select-token-modal {
+  .token-list-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 50vh;
+    min-height: 20vh;
+  }
+
   .input-wrapper {
     margin: 0 20px 20px 20px;
   }
 
   .token-list {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    max-height: 50vh;
-    min-height: 40vh;
     overflow-y: auto;
     padding: 10px 0;
   }
