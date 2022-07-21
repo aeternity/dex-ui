@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/aeternity/dex-ui/compare/v1.11.0...v1.11.1) (2022-07-21)
+
+
+### Bug Fixes
+
+* **token-list:** manage token list button on smaller displays ([ea5b23d](https://github.com/aeternity/dex-ui/commit/ea5b23d18e870a9b5d446e53203557fc80e82f01))
+
 ## [1.11.0](https://github.com/aeternity/dex-ui/compare/v1.10.0...v1.11.0) (2022-07-19)
 
 
