@@ -28,7 +28,7 @@
     "minutes": "minutes",
     "balance": "Équilibre",
     "permissionToolTip": "Vous devez autoriser les contrats intelligents DEX à utiliser votre {msg}. Vous n'avez qu'à le faire une fois par jeton.",
-    "allowDEX": "Autoriser le DEX"
+    "allowDEX": "Autoriser le protocole DEX à utiliser votre {token}"
   },
   "confirmSwapModal": {
     "title": "Confirmer l'échange",
@@ -78,6 +78,7 @@
   "removeLiquidity": {
     "title": "Supprimer la liquidité",
     "removeAmount": "Supprimer le montant",
+    "removing": "Suppression",
     "simple": "Simple",
     "detailed": "Détaillé",
     "yourPosition": "Ta position"
@@ -193,5 +194,6 @@
   "providing": "Fourniture",
   "liquidityOf": "liquidité",
   "and": "et",
-  "approve": "Approuver"
+  "approve": "Approuver",
+  "pending": "En attente"
 }

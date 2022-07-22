@@ -51,7 +51,7 @@
       >
         <div>
           <span>
-            Rates
+            {{ $t('confirmLiquidityModal.rates') }}
           </span>
           <span>
             1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
@@ -61,7 +61,7 @@
         </div>
         <div>
           <span>
-            Your pool share
+            {{ $t('confirmLiquidityModal.yourPoolShare') }}
           </span>
           <span>
             {{ share ? share.toFixed(8) : '0.00000000' }} %
