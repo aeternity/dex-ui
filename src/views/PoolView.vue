@@ -24,7 +24,7 @@
     </div>
     <span class="import">
       {{ $t('pool.dontSeePool') }}
-      <RouterLink :to="{ name: 'import-pool' }">{{ $t('pool.importIt') }}.</RouterLink>
+      <RouterLink :to="{ name: 'import-pool' }">{{ $t('pool.importIt') }}</RouterLink>
     </span>
 
     <ButtonDefault @click="clickHandler">
