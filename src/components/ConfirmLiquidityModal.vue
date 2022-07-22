@@ -180,7 +180,7 @@ export default {
         margin-top: 12px;
         align-items: center;
         display: inline-flex;
-        justify-content: end;
+        justify-content: flex-end;
         width: 100%;
 
         @extend %face-sans-18-medium;
