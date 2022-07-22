@@ -29,7 +29,7 @@
       <div>{{ balanceText }}</div>
     </div>
     <div>
-      <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}::</span>
+      <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}:</span>
       <div>{{ shareText }}%</div>
     </div>
   </div>
