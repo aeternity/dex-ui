@@ -207,7 +207,7 @@ export default {
     }
 
     .right {
-      justify-content: end;
+      justify-content: flex-end;
 
       .actions-menu {
         svg {

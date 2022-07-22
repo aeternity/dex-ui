@@ -109,7 +109,7 @@ export default {
 
         &.active {
           background-color: variables.$color-green;
-          justify-content: end;
+          justify-content: flex-end;
         }
       }
 
