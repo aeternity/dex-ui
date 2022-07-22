@@ -16,7 +16,7 @@
             :token-a="tokenA"
             :token-b="tokenB"
           />
-          {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
+          {{ `${tokenA.symbol}/${tokenB.symbol} ${$t('poolTokens')}` }}
         </div>
       </div>
       <div

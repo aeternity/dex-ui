@@ -27,7 +27,7 @@
     "minutes": "分钟",
     "balance": "余额",
     "permissionToolTip": "您必须授权 DEX 智能合约使用您的 {msg}。每种Token您只需执行一次。",
-    "allowDEX": "允许 DEX"
+    "allowDEX": "允许 DEX 协议使用您的 {token}"
   },
   "confirmSwapModal": {
     "title": "确认交换",
@@ -76,6 +76,7 @@
   "removeLiquidity": {
     "title": "移除流动性",
     "removeAmount": "移除金额",
+    "removing": "去除",
     "simple": "Simple",
     "detailed": "Detailed",
     "yourPosition": "Your position"
@@ -191,5 +192,6 @@
   "providing": "Providing",
   "liquidityOf": "流动性",
   "and": "和",
-  "approve": "批准"
+  "approve": "批准",
+  "pending": "待处理"
 }

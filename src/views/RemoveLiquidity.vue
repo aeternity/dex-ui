@@ -117,37 +117,37 @@
         class="pool-info"
       >
         <div class="space-between">
-          Your position
+          {{ $t('removeLiquidity.yourPosition') }}
         </div>
         <div class="space-between">
-          <span>Price</span>
+          <span>{{ $t('price') }}</span>
           <div>
             {{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }} <br>
             {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
           </div>
         </div>
         <div class="space-between">
-          <span>Pooled {{ tokenA.symbol }}</span>
+          <span>{{ $t('liquidityDetails.pooled') }} {{ tokenA.symbol }}</span>
           <div>
             {{ (positionBalance(reserveA)*share).toFixed(5) }}
           </div>
         </div>
         <div class="space-between">
-          <span>Pooled {{ tokenB.symbol }}</span>
+          <span>{{ $t('liquidityDetails.pooled') }} {{ tokenB.symbol }}</span>
           <div>
             {{ (positionBalance(reserveB)*share).toFixed(5) }}
           </div>
         </div>
         <div class="space-between">
           <span>
-            Your pool tokens
+            {{ $t('liquidityDetails.yourPoolTokens') }}
           </span>
           <div>
             {{ positionBalance(position).toFixed(5) }}
           </div>
         </div>
         <div class="space-between">
-          <span>Your pool share</span>
+          <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}</span>
           <div>
             {{ (share*100).toFixed(5) }}%
           </div>
@@ -181,7 +181,7 @@
           :disabled="!removeButtonEnabled"
           @click="handleRemove"
         >
-          {{ removing ? 'Removing...' : 'Remove' }}
+          {{ removing ? $t('removeLiquidity.removing') : $t('liquidityDetails.remove') }}
         </ButtonDefault>
       </div>
     </MainWrapper>
@@ -292,7 +292,7 @@ export default {
       if (this.approving) return `${this.$t('approving')}...`;
       if (this.fetchingAllowance) return `${this.$t('verifyingApproval')}...`;
       if (this.enoughAllowance) return this.$t('approved');
-      return 'Approve';
+      return this.$t('approve');
     },
   },
   watch: {
@@ -317,8 +317,12 @@ export default {
       this.$store.dispatch('modals/open', { name: 'connect-wallet' });
     },
     generateRemoveLiquidityMessage() {
-      return `Removing liquidity of ${this.tokenAInput.toFixed(5)}
-        ${this.tokenA.symbol} and ${this.tokenBInput.toFixed(5)} ${this.tokenB.symbol}`;
+      return this.$t('removeLiquidity.transactionMessage', {
+        tokenAAmount: this.tokenAInput.toFixed(5),
+        tokenASymbol: this.tokenA.symbol,
+        tokenBAmount: this.tokenBInput.toFixed(5),
+        tokenBSymbol: this.tokenB.symbol,
+      });
     },
     fetchAlowance() {
       return this.$store.dispatch('aeternity/getRouterPairAllowance', {

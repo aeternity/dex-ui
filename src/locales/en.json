@@ -27,7 +27,7 @@
     "minutes": "minutes",
     "balance": "Balance",
     "permissionToolTip": "You must give the DEX smart contracts permission to use your {msg}. You only have to do this once per token.",
-    "allowDEX": "Allow the DEX"
+    "allowDEX": "Allow the DEX Protocol to use your {token}"
   },
   "confirmSwapModal": {
     "title": "Confirm Swap",
@@ -77,9 +77,11 @@
   "removeLiquidity": {
     "title": "Remove Liquidity",
     "removeAmount": "Remove amount",
+    "removing": "Removing",
     "simple": "Simple",
     "detailed": "Detailed",
-    "yourPosition": "Your position"
+    "yourPosition": "Your position",
+    "transactionMessage": "Removing liquidity of {tokenAAmount} {tokenASymbol} and {tokenBAmount} {tokenBSymbol}"
   },
   "importPool": {
     "title": "Import V2 Pool",
@@ -192,5 +194,6 @@
   "providing": "Providing",
   "liquidityOf": "liquidity of",
   "and": "and",
-  "approve": "Approve"
+  "approve": "Approve",
+  "pending": "Pending"
 }

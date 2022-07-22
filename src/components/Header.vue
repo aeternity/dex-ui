@@ -33,7 +33,7 @@
           @click="openAccountInfo()"
         >
           <template v-if="pendingTransactions.length">
-            <span>{{ `${pendingTransactions.length} Pending` }}</span>
+            <span>{{ `${pendingTransactions.length} ${$t('pending')}` }}</span>
             <AnimatedSpinner />
           </template>
           <template v-else>
@@ -61,7 +61,7 @@
             class="link"
             @click="$store.dispatch('modals/open', { name: 'term-and-condition' })"
           >
-            Terms & Condition
+            {{ $t('nav.termsCondition') }}
           </ButtonPlain>
           <ButtonPlain
             class="link"
