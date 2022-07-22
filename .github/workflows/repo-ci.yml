@@ -1,0 +1,31 @@
+name: Local
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: local-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'main' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Lint and Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Unit Tests
+        run: npm run test:unit
+      - name: E2E Tests
+        run: npm run test:e2e -- --headless
