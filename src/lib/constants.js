@@ -31,8 +31,6 @@ export const DEFAULT_NETWORKS = [
         name: 'AE',
         symbol: 'AE',
         is_ae: true,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
       },
       {
         contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
@@ -40,8 +38,6 @@ export const DEFAULT_NETWORKS = [
         name: 'Wrapped AE',
         symbol: 'WAE',
         is_ae: false,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
       },
     ],
   },
@@ -65,8 +61,6 @@ export const DEFAULT_NETWORKS = [
         name: 'AE',
         symbol: 'AE',
         is_ae: true,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
       },
       {
         contract_id: 'ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC',
@@ -92,8 +86,6 @@ export const DEFAULT_NETWORKS = [
         name: 'Wrapped AE',
         symbol: 'WAE',
         is_ae: false,
-        // eslint-disable-next-line global-require
-        image: require('../assets/ae.svg'),
       },
     ],
   },

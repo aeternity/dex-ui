@@ -13,8 +13,10 @@
         class="header"
       >
         <div>
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          <TokenIcon
+            :token-a="tokenA"
+            :token-b="tokenB"
+          />
           <span>{{ tokenA.symbol + '/' + tokenB.symbol }}</span>
         </div>
       </div>
@@ -80,8 +82,10 @@
         class="remove-container"
       >
         <div class="token-row">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          <TokenIcon
+            :token-a="tokenA"
+            :token-b="tokenB"
+          />
           <span>
             {{ `${tokenA.symbol}/${tokenB.symbol}` }}
           </span>
@@ -90,7 +94,7 @@
           </div>
         </div>
         <div class="token-row">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+          <TokenIcon :token-a="tokenA" />
           <span>
             {{ tokenA.symbol }}
           </span>
@@ -99,7 +103,7 @@
           </div>
         </div>
         <div class="token-row">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          <TokenIcon :token-a="tokenB" />
           <span>
             {{ tokenB.symbol }}
           </span>
@@ -192,6 +196,8 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
+import TokenIcon from '@/components/TokenIcon.vue';
+
 import {
   handleUnknownError,
   reduceDecimals,
@@ -206,6 +212,7 @@ import approvalMixin from '../mixins/allowanceMixin';
 export default {
   components: {
     MainWrapper,
+    TokenIcon,
     ButtonDefault,
     InputRange,
     InputToken,
@@ -457,14 +464,6 @@ export default {
     display: flex;
     align-items: center;
 
-    img:nth-of-type(1) {
-      z-index: 1;
-    }
-
-    img:nth-of-type(2) {
-      margin-left: -10px;
-    }
-
     span {
       color: white;
       margin-left: 15px;
@@ -539,20 +538,9 @@ export default {
         text-align: right;
       }
 
-      img {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
+      .token-icon {
         margin-right: 12px;
-      }
-
-      img:nth-of-type(1) {
         margin-left: 4px;
-        z-index: 1;
-      }
-
-      img:nth-of-type(2) {
-        margin-left: -24px;
       }
     }
   }

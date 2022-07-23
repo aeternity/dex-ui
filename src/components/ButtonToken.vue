@@ -6,10 +6,7 @@
     @click="selectToken"
   >
     <div class="token">
-      <img
-        v-if="token"
-        :src="token.image ?? `https://avatars.z52da5wt.xyz/${token.contract_id}`"
-      >
+      <TokenIcon :token-a="token" />
       <span>{{ token && token.symbol || $t('selectToken') }}</span>
     </div>
     <DownChevron
@@ -20,12 +17,14 @@
 
 <script>
 import ButtonDefault from './ButtonDefault.vue';
+import TokenIcon from './TokenIcon.vue';
 import DownChevron from '../assets/arrow.svg?vue-component';
 
 export default {
   components: {
     ButtonDefault,
     DownChevron,
+    TokenIcon,
   },
   props: {
     token: { type: Object, default: null },
@@ -69,12 +68,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     max-width: 200px;
-
-    img {
-      width: 24px;
-      height: 24px;
-      border-radius: 24px;
-    }
 
     > span {
       margin-left: 12px;

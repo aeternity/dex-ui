@@ -168,8 +168,9 @@ export default createStore({
       } else {
         try {
           await resolveWithTimeout(30000, async () => {
+            const webWalletTimeout = window.navigator.userAgent.toLowerCase().includes('mobi') ? 0
+              : setTimeout(() => commit('enableIframeWallet'), 15000);
             commit('useSdkWallet');
-            commit('enableIframeWallet');
 
             const scannerConnection = await BrowserWindowMessageConnection({
               connectionInfo: { id: 'spy' },
@@ -180,6 +181,7 @@ export default createStore({
               detector.scan(async ({ wallets }) => {
                 const detectedWallet = Object.values(wallets).find((w) => w.name === wallet.name);
                 if (!detectedWallet) return;
+                clearInterval(webWalletTimeout);
 
                 try {
                   await sdk.connectToWallet(await detectedWallet.getConnection());

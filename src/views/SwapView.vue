@@ -246,6 +246,7 @@ export default {
           isLastAmountFrom: this.isLastInputTokenA,
           isAeVsWae: this.isAeVsWae,
           numberOfPairs: this.getPath().length - 1,
+          receivedTokensByPriceImpact: this.receivedTokensByPriceImpact,
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',

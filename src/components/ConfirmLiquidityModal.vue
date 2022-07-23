@@ -12,8 +12,10 @@
           {{ pairAmount ? pairAmount.toFixed(5) : '-' }}
         </div>
         <div class="tokens">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
-          <img :src="`https://avatars.z52da5wt.xyz/${tokenB.contract_id}`">
+          <TokenIcon
+            :token-a="tokenA"
+            :token-b="tokenB"
+          />
           {{ `${tokenA.symbol}/${tokenB.symbol} Pool Tokens` }}
         </div>
       </div>
@@ -99,11 +101,13 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ButtonDefault from './ButtonDefault.vue';
 import ModalDefault from './ModalDefault.vue';
+import TokenIcon from './TokenIcon.vue';
 
 export default {
   components: {
     ModalDefault,
     ButtonDefault,
+    TokenIcon,
   },
   props: {
     isAdding: { type: Boolean, required: true },
@@ -160,11 +164,6 @@ export default {
     color: white;
     text-align: left;
 
-    img {
-      width: 20px;
-      height: 20px;
-    }
-
     .tokens-box {
       background-color: variables.$color-black2;
       padding: 12px 16px;
@@ -187,14 +186,14 @@ export default {
         @extend %face-sans-18-medium;
       }
 
-      img:nth-of-type(1) {
+      .token-icon {
         margin-left: 4px;
-        z-index: 1;
-      }
-
-      img:nth-of-type(2) {
-        margin-left: -5px;
         margin-right: 10px;
+
+        :deep(img) {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
 

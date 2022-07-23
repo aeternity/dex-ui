@@ -140,7 +140,7 @@ export default {
     },
     getTokenIdentifier(token) {
       if (!token) return null;
-      return token.symbol === 'AE' ? token.symbol : token.cid;
+      return token.symbol === 'AE' ? token.symbol : token.contract_id;
     },
   },
 };

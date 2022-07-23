@@ -5,7 +5,7 @@
     </label>
     <div class="token-amount">
       <div>
-        <img :src="`https://avatars.z52da5wt.xyz/${contract}`">
+        <TokenIcon :token-a="token" />
         {{ symbol }}
       </div>
       {{ amount }}
@@ -14,11 +14,14 @@
 </template>
 
 <script>
+import TokenIcon from './TokenIcon.vue';
+
 export default {
+  components: { TokenIcon },
   props: {
     label: { type: String, required: true },
     symbol: { type: String, required: true },
-    contract: { type: String, required: true },
+    token: { type: Object, required: true },
     amount: { type: [String, Number], required: true },
   },
 };
@@ -60,7 +63,7 @@ export default {
     }
   }
 
-  img {
+  .token-icon :deep(img) {
     width: 20px;
     height: 20px;
     margin-right: 12px;

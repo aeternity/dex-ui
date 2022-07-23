@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.0](https://github.com/aeternity/dex-ui/compare/v1.10.0...v1.11.0) (2022-07-19)
+
+
+### Features
+
+* **swap-view:** warning for expecting swap failure due to high price impact ([0dae434](https://github.com/aeternity/dex-ui/commit/0dae434982e8a901bb4d1f1e5d4418ec5f5e699c))
+
+
+### Bug Fixes
+
+* avoid issues with different fields for contract id ([019e079](https://github.com/aeternity/dex-ui/commit/019e0795875d5f052c5e33fac5f7e2622a372c4a))
+* lint:style command ([ab42cff](https://github.com/aeternity/dex-ui/commit/ab42cff2cadf7a61956970e23f1270b0e3f1490e))
+* make AE/WAE tokens icon the same everywhere ([d6a0378](https://github.com/aeternity/dex-ui/commit/d6a037876eeb1cfc49364a73c58d19321e7b3c83))
+
 ## [1.10.0](https://github.com/aeternity/dex-ui/compare/v1.9.0...v1.10.0) (2022-07-14)
 
 

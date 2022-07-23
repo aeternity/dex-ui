@@ -128,9 +128,20 @@ const getPriceImpactForPairReserves = (pairReserves, amountA) => {
  * @description for a given swap-route it gets the priceImpact
  * @param {array} route the route in the shape received from 'dex-backend'
  * @param {string} tokenA tokenA address
- * @return {BigNumber} number of tokens received after the swap
+ * @return {BigNumber} the price impact affected by the swap
 */
 export const getPriceImpactForRoute = (route, tokenA, amountA) => {
   const pairReserves = getRouteReserves(route, tokenA);
   return getPriceImpactForPairReserves(pairReserves, amountA);
+};
+
+/**
+ * @description for a given swap-route it gets the number of tokensB received after the swap
+ * @param {array} route the route in the shape received from 'dex-backend'
+ * @param {string} tokenA tokenA address
+ * @return {BigNumber} number of tokens received after the swap
+*/
+export const getReceivedTokensForRoute = (route, tokenA, amountA) => {
+  const pairReserves = getRouteReserves(route, tokenA);
+  return getReceivedTokensForPairReserves(pairReserves, amountA);
 };
