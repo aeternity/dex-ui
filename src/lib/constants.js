@@ -54,10 +54,17 @@ export const DEFAULT_NETWORKS = [
         is_ae: false,
       },
       {
-        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        contract_id: 'ct_7UfopTwsRuLGFEcsScbYgQ6YnySXuyMxQWhw6fjycnzS5Nyzq',
         decimals: MAGNITUDE,
         name: 'AE Box Coin',
         symbol: 'ABC',
+        is_ae: false,
+      },
+      {
+        contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
+        decimals: MAGNITUDE,
+        name: 'Wrapped AE',
+        symbol: 'WAE',
         is_ae: false,
       },
     ],
