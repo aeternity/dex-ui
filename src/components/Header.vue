@@ -92,6 +92,12 @@
           >
             {{ $t('nav.reportBug') }}
           </a>
+          <a
+            href="https://form.jotform.com/221174404956355"
+            target="_blank"
+          >
+            {{ $t('nav.leaveFeedback') }}
+          </a>
         </div>
 
         <div v-if="activeMenu === 'settings'">
