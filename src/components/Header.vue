@@ -55,7 +55,6 @@
             target="_blank"
           >
             {{ $t('nav.aboutUs') }}
-            <AeLogo />
           </a>
           <ButtonPlain
             class="link"
@@ -68,7 +67,6 @@
             @click="activeMenu = 'settings'"
           >
             {{ $t('nav.settings.title') }}
-            <Cog />
           </ButtonPlain>
           <a
             href="https://discord.com/invite/55f8F2jZq4"
@@ -161,7 +159,6 @@ import { mapState, mapGetters } from 'vuex';
 import AeLogo from '../assets/logo.svg?vue-component';
 import AeLogoSmall from '../assets/logo-small.svg?vue-component';
 import BackArrow from '../assets/back.svg?vue-component';
-import Cog from '../assets/cog.svg?vue-component';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
@@ -174,7 +171,6 @@ export default {
     AeLogo,
     AeLogoSmall,
     BackArrow,
-    Cog,
     AnimatedSpinner,
     ActionsMenu,
     NavigationMenu,
