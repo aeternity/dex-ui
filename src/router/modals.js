@@ -5,6 +5,7 @@ import ErrorModal from '../components/ErrorModal.vue';
 import TooltipModal from '../components/TooltipModal.vue';
 import ConfirmSwapModal from '../components/ConfirmSwapModal.vue';
 import ConfirmLiquidityModal from '../components/ConfirmLiquidityModal.vue';
+import AboutModal from '../components/AboutModal.vue';
 import SubmitTransactionModal from '../components/SubmitTransactionModal.vue';
 import ConnectWalletModal from '../components/ConnectWalletModal.vue';
 import NotificationTransactionStatus from '../components/NotificationTransactionStatus.vue';
@@ -16,6 +17,7 @@ export default () => {
   registerModal({ name: 'select-token', component: SelectTokenModal });
   registerModal({ name: 'confirm-swap', component: ConfirmSwapModal });
   registerModal({ name: 'confirm-liquidity', component: ConfirmLiquidityModal });
+  registerModal({ name: 'about-dex', component: AboutModal });
   registerModal({ name: 'submit-transaction', component: SubmitTransactionModal });
   registerModal({ name: 'show-error', component: ErrorModal });
   registerModal({ name: 'connect-wallet', component: ConnectWalletModal });

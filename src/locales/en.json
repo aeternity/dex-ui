@@ -3,6 +3,7 @@
     "swap": "Swap",
     "pool": "Pool",
     "aboutUs": "About us",
+    "aboutDex": "About DEX",
     "termsCondition": "Terms & Condition",
     "settings": {
       "title": "Settings",
@@ -14,6 +15,18 @@
     "source": "Source",
     "reportBug": "Report a bug",
     "leaveFeedback": "Leave Feedback"
+  },
+  "aboutModal": {
+    "title": "About Superhero DEX",
+    "info": "Information about the library and service versions used within Superhero DEX",
+    "network": "Network",
+    "contracts": "DEX Contracts",
+    "middleware": "Middleware",
+    "compiler": "Compiler",
+    "backend": "Dex Backend",
+    "node": "Node",
+    "sdk": "SDK",
+    "height": "Height"
   },
   "swap": {
     "title": "Swap",
@@ -149,6 +162,7 @@
     "middlewareNotAvailable": "Middleware is not available, some functionality may not work properly.",
     "middlewareOutOfSync": "The middleware is out of sync, some functionality may not work properly."
   },
+  "superheroDex": "Superhero DEX",
   "initializing": "Initializing...",
   "connectWallet": "Connect Wallet",
   "insufficientBalance": "Insufficient {msg} balance",

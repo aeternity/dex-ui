@@ -3,6 +3,7 @@
     "swap": "Échanger",
     "pool": "Piscine",
     "aboutUs": "À propos de nous",
+    "aboutDex": "À propos de DEX",
     "termsCondition": "Termes et conditions",
     "settings": {
       "title": "Réglages",
@@ -14,6 +15,11 @@
     "source": "La source",
     "reportBug": "Signaler un bug",
     "leaveFeedback": "Laissez vos commentaires"
+  },
+  "aboutModal": {
+      "title": "À propos de Superhero DEX",
+      "info": "Informations sur les versions de bibliothèque et de service utilisées dans Superhero DEX",
+      "network": "Réseau"
   },
   "swap": {
     "title": "Échanger",
