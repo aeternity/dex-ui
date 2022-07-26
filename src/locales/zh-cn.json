@@ -12,7 +12,8 @@
     "discord": "Discord",
     "contracts": "智能合约",
     "source": "源码",
-    "reportBug": "报告错误"
+    "reportBug": "报告错误",
+    "leaveFeedback": "留下您的反馈"
   },
   "swap": {
     "title": "交换",

@@ -12,7 +12,8 @@
     "discord": "Discord",
     "contracts": "Contracts",
     "source": "Source",
-    "reportBug": "Report a bug"
+    "reportBug": "Report a bug",
+    "leaveFeedback": "Leave Feedback"
   },
   "swap": {
     "title": "Swap",
