@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.0](https://github.com/aeternity/dex-ui/compare/v1.11.0...v1.12.0) (2022-07-26)
+
+
+### Features
+
+* add Leave Feedback menu item ([21d0ca1](https://github.com/aeternity/dex-ui/commit/21d0ca10dc97728fcb69e3e6bf2624d07239de42))
+* **dex-backend:** switch it on ([c9b6abf](https://github.com/aeternity/dex-ui/commit/c9b6abfba003aebb88829c6dbadfe8d42d06546d))
+* remove menu icons ([066121d](https://github.com/aeternity/dex-ui/commit/066121d2a93b7cc9de413e1349130b7323efec24))
+
+
+### Bug Fixes
+
+* ability to remove account on mobile ([07d7ed7](https://github.com/aeternity/dex-ui/commit/07d7ed71f60080b59daca5f8f21ca8fff80e3c9f))
+* **token-list:** manage token list button on smaller displays ([ea5b23d](https://github.com/aeternity/dex-ui/commit/ea5b23d18e870a9b5d446e53203557fc80e82f01))
+
 ## [1.11.0](https://github.com/aeternity/dex-ui/compare/v1.10.0...v1.11.0) (2022-07-19)
 
 
