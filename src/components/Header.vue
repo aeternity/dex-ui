@@ -66,6 +66,12 @@
           </ButtonPlain>
           <ButtonPlain
             class="link"
+            @click="$store.dispatch('modals/open', { name: 'about-dex' })"
+          >
+            {{ $t('nav.aboutDex') }}
+          </ButtonPlain>
+          <ButtonPlain
+            class="link"
             @click="activeMenu = 'settings'"
           >
             {{ $t('nav.settings.title') }}
