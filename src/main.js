@@ -40,7 +40,7 @@ if (!window.location.host.includes('localhost')) {
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),
         // https://docs.sentry.io/platforms/javascript/guides/react/performance/instrumentation/automatic-instrumentation/#tracingorigins
-        tracingOrigins: ['testnet.aeternity.io', 'mainnet.aeternity.io', /^\//],
+        // tracingOrigins: ['testnet.aeternity.io', 'mainnet.aeternity.io', /^\//],
       }),
     ],
     // Set tracesSampleRate to 1.0 to capture 100%
