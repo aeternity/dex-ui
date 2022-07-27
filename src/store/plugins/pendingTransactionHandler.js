@@ -11,7 +11,7 @@ export default async (store) => {
       const { callInfo } = await store.state.sdk.api.getTransactionInfoByHash(hash);
       handleCallError(
         callInfo,
-        store.state.aeternity.wae.deployInfo.address === returnedTransaction.contractId
+        store.state.aeternity?.wae?.deployInfo?.address === returnedTransaction.contractId
           ? store.state.aeternity.wae
           : store.state.aeternity.router,
       );
@@ -19,6 +19,7 @@ export default async (store) => {
       error = true;
       errorMessage = findErrorExplanation(e.message, store.state);
     } finally {
+      if (errorMessage) console.error(errorMessage);
       store.dispatch('modals/open', {
         name: 'transaction-status', hash, info, error, errorMessage,
       });
