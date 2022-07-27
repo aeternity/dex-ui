@@ -17,7 +17,7 @@
     />
     <ButtonPlain
       class="swap-button"
-      @click="setSelectedToken(null)"
+      @click="switchSelectedTokens(null)"
     >
       <DownArrow />
     </ButtonPlain>
