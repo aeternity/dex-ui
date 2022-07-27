@@ -106,6 +106,23 @@ export default {
     clearTimeout(this.pairInfoTimeoutId);
   },
   methods: {
+    async switchSelectedTokens() {
+      const swapToken = this.tokenA;
+      this.tokenA = this.tokenB;
+      this.tokenB = swapToken;
+
+      const swapAmount = this.amountTokenA;
+      this.amountTokenA = this.amountTokenB;
+      this.amountTokenB = swapAmount;
+      this.isLastInputTokenA = !this.isLastInputTokenA;
+
+      this.setAmount(
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+      );
+      await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
+
+      this.saveTokenSelection(this.tokenA, this.tokenB);
+    },
     async setSelectedToken(token, isTokenA) {
       let switched;
       [this.tokenA, this.tokenB, switched] = calculateSelectedToken(

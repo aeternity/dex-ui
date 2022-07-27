@@ -17,8 +17,7 @@ export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
   const result = [from, to, false];
   const getKey = (t) => t?.contract_id + (!!t?.is_ae);
-  if (!token
-    || (getKey(token) === getKey(from) && !isFrom)
+  if ((getKey(token) === getKey(from) && !isFrom)
     || (getKey(token) === getKey(to) && isFrom)) {
     result[1] = from;
     result[0] = to;
