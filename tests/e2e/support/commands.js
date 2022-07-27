@@ -35,7 +35,7 @@ Cypress.Commands.add('login', () => {
           .get('[data-cy=import]')
           .click()
           .get('button')
-          .contains('confirm')
+          .contains('Confirm')
           .click()
           .visit('/')
           .login();
