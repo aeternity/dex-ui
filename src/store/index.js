@@ -314,12 +314,26 @@ export default createStore({
       }
     },
     sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {
+      const currentUrl = new URL(window.location.href);
+      // reset url
+      currentUrl.searchParams.delete('transaction');
+      currentUrl.searchParams.delete('transaction-status');
+
+      // append transaction parameter for success case
+      const successUrl = new URL(currentUrl.href);
+      successUrl.searchParams.set('transaction', '{transaction}');
+
+      // append transaction parameter for failed case
+      const cancelUrl = new URL(currentUrl.href);
+      cancelUrl.searchParams.set('transaction-status', 'cancelled');
+
       return createDeepLinkUrl({
         type: 'sign-transaction',
         transaction: encodedTx,
         networkId,
-        'x-success': `${window.location.href.split('?')[0]}?transaction={transaction}`,
-        'x-cancel': `${window.location.href.split('?')[0]}?transaction-status=cancelled`,
+        // decode these urls because they will be encoded again
+        'x-success': decodeURI(successUrl.href),
+        'x-cancel': decodeURI(cancelUrl.href),
       });
     },
     /**
