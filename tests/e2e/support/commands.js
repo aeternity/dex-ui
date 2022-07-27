@@ -13,9 +13,9 @@
 Cypress.Commands.add('login', () => {
   cy.get('[data-cy=connect-wallet]')
     .click()
-    .get('[data-cy=connect-Superhero]', { timeout: 6000 })
+    .get('[data-cy=connect-Superhero]', { timeout: 60000 })
     .click()
-    .get('[data-cy=connect-Superhero]', { timeout: 6000 })
+    .get('[data-cy=connect-Superhero]', { timeout: 60000 })
     .should('not.exist')
     .get('body')
     .then((body) => {
@@ -35,6 +35,7 @@ Cypress.Commands.add('login', () => {
           .get('[data-cy=import]')
           .click()
           .get('button')
+          .contains('confirm')
           .click()
           .visit('/')
           .login();
