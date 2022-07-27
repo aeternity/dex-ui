@@ -43,7 +43,8 @@
     "input": "输入",
     "isEstimated": "估计",
     "spendNoMore": "您将支付不超过",
-    "receiveAtLeast": "您至少会收到"
+    "receiveAtLeast": "您至少会收到",
+    "priceImpactWarning": "由于高价格影响和低滑点，该交易几乎没有机会成功执行"
   },
   "pool": {
     "title": "流动池",
@@ -69,17 +70,16 @@
     "supplyDetails": "供应详情",
     "removalDetails": "移除详情",
     "removingAround": "Removing around",
-    "poolTokensLiquidity": "pool tokens from the provided liquidity",
+    "poolTokensLiquidity": "流动性中汇集的Tokens",
     "estimation": "您将收到至少 {0} 和至少 {1}，否则交易将恢复。",
     "outputEstimated": "输出估计。如果价格变化超过 {0}%，您的交易将恢复。"
   },
   "removeLiquidity": {
     "title": "移除流动性",
     "removeAmount": "移除金额",
-    "removing": "去除",
-    "simple": "Simple",
-    "detailed": "Detailed",
-    "yourPosition": "Your position"
+    "simple": "简略",
+    "detailed": "详情",
+    "yourPosition": "您的位置"
   },
   "importPool": {
     "title": "导入 V2 池",
@@ -103,7 +103,7 @@
     "getTheBrowserExtension": "获取浏览器扩展",
     "installFirefox": "安装火狐(Firefox)浏览器",
     "installChrome": "安装酷容(Chrome)浏览器",
-    "onWalletConnectTimeout": "SDK连接超时，请稍后重试。"
+    "onWalletConnectTimeout": "SDK连接超时,请稍后重试。"
   },
   "accountInfoModal": {
     "title": "连接账户",
@@ -135,7 +135,7 @@
     "addedByUser": "• 由用户添加",
     "notFound": "未找到结果",
     "manageTokens": "管理 Token 列表",
-    "tokenImportCardDescription": "此Token不在活跃Token列表中，确保这是您要交易的Token。",
+    "tokenImportCardDescription": "此Token不在活跃Token列表中,确保这是您要交易的Token。",
     "userCustomTokensManagerFooter": "自定义Tokens将存储在您的本地浏览器中"
   },
   "errors": {
@@ -170,8 +170,8 @@
   "verifyingApproval": "验证批准",
   "approved": "已批准",
   "tip": "Tip",
-  "viewExplorer": "View in explorer",
-  "poolTokens": "Pool Tokens",
+  "viewExplorer": "查看 Explorer",
+  "poolTokens": "池 Tokens",
   "customTokens": "自定义Tokens",
   "tokens": "Tokens",
   "price": "价格",
@@ -191,7 +191,7 @@
   "provide": "提供",
   "providing": "Providing",
   "liquidityOf": "流动性",
-  "and": "和",
+  "and": "与",
   "approve": "批准",
   "pending": "待处理"
 }
