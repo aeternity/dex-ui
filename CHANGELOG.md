@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.13.0](https://github.com/aeternity/dex-ui/compare/v1.12.0...v1.13.0) (2022-07-28)
+
+
+### Features
+
+* **ci:** adds unit and e2e tests ([f8e2211](https://github.com/aeternity/dex-ui/commit/f8e2211fa7a3aea1c6376e9545f4ba16826f1e01))
+* **e2e:** extends swap test ([677dea5](https://github.com/aeternity/dex-ui/commit/677dea51cb6d251cdb25563e132d6cb7e3596948))
+
+
+### Bug Fixes
+
+* add missing wording ([b3d866f](https://github.com/aeternity/dex-ui/commit/b3d866f33a4f94ebd21bd23d94e8262edc9f1ddd))
+* **deeplink:** preserves query params on callback ([8a31266](https://github.com/aeternity/dex-ui/commit/8a31266d879f76cf8b3f878d99fbe7fcfe7781d8))
+* **e2e:** fixed typo ([4f23f75](https://github.com/aeternity/dex-ui/commit/4f23f75523a6bbe5de10eee0932fa814c7a02b44))
+* **e2e:** increases timeout for wallet gen ([8b623bc](https://github.com/aeternity/dex-ui/commit/8b623bcb3cfecfdfc99cae99a5cbd5b2565a977f))
+* remove leftover punctuation ([1b976ab](https://github.com/aeternity/dex-ui/commit/1b976abd36ffa52df5ecaa6f0d456d98159acf16))
+* **swap:** makes from / to switch explicit function ([f8ef7ea](https://github.com/aeternity/dex-ui/commit/f8ef7ea25860d1809f438ae2c1da6b501c071913))
+* **tx:** defaults to router in case the contracts are not initialized ([31859a7](https://github.com/aeternity/dex-ui/commit/31859a72cb981dde4bded270231eb5898de62c9a))
+
+
+### Refactorings
+
+* use flex-end instead end value with mixed support ([0920045](https://github.com/aeternity/dex-ui/commit/09200459c5a4e31a1e1d4519354c923fb4eb4574))
+
+
+### Miscellaneous
+
+* **deps:** upgrade browserlist ([ea495d0](https://github.com/aeternity/dex-ui/commit/ea495d03da07ce7f46906d619b7a0dae178d799d))
+* removes linting from dockerfile ([b343626](https://github.com/aeternity/dex-ui/commit/b343626957c670fe28e86615ad905cad53820741))
+* update Chinese translations ([4c168c9](https://github.com/aeternity/dex-ui/commit/4c168c96444dfea1d857ef2536b8ab6bf4451b54))
+
+
+### Testing
+
+* **e2e:** removes swapping ([46023a2](https://github.com/aeternity/dex-ui/commit/46023a2a0c3267bb4dee7451ae380f1e55e3f0f6))
+* fix e2e tests ([91abcdc](https://github.com/aeternity/dex-ui/commit/91abcdce1ea25695a1ed0b8e5c0a479be33945c4))
+* wallet login & logout e2e tests [#309](https://github.com/aeternity/dex-ui/issues/309) ([e35300e](https://github.com/aeternity/dex-ui/commit/e35300e26ac0dc86047de9cd3148ced5e67a4f78))
+
 ## [1.12.0](https://github.com/aeternity/dex-ui/compare/v1.11.0...v1.12.0) (2022-07-26)
 
 
