@@ -9,7 +9,7 @@ The Superhero DEX consists of multiple parts:
 
 ## Access
 
-Find a hosted version of the interface over at [aepp.dex.superhero.com](aepp.dex.superhero.com) or
+Find a hosted version of the interface over at [aepp.dex.superhero.com](https://aepp.dex.superhero.com) or
 feel free to run it on your own machine following these instructions:
 
 1. clone repo 
