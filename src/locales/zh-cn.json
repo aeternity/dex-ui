@@ -70,7 +70,7 @@
     "confirm": "确认",
     "supplyDetails": "供应详情",
     "removalDetails": "移除详情",
-    "removingAround": "Removing around",
+    "removingAround": "移出",
     "poolTokensLiquidity": "流动性中汇集的Tokens",
     "estimation": "您将收到至少 {0} 和至少 {1}，否则交易将恢复。",
     "outputEstimated": "输出估计。如果价格变化超过 {0}%，您的交易将恢复。"
@@ -78,9 +78,11 @@
   "removeLiquidity": {
     "title": "移除流动性",
     "removeAmount": "移除金额",
+    "removing": "移除",
     "simple": "简略",
     "detailed": "详情",
-    "yourPosition": "您的位置"
+    "yourPosition": "您的位置",
+    "transactionMessage": "移除 {tokenAAmount} {tokenASymbol} 和 {tokenBAmount} {tokenBSymbol} 的流动性"
   },
   "importPool": {
     "title": "导入 V2 池",
