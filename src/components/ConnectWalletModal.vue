@@ -197,7 +197,7 @@ export default {
         {
           id: 'wallet.superhero.com',
           name: 'Superhero',
-          networkId: process.env.VUE_APP_DEFAULT_NETWORK,
+          networkId: this.$store.state.networkId || process.env.VUE_APP_DEFAULT_NETWORK,
           type: 'website',
           description: this.$t('connectWalletModal.easyUseWallet'),
         },
