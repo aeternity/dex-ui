@@ -76,9 +76,11 @@
   "removeLiquidity": {
     "title": "移除流动性",
     "removeAmount": "移除金额",
+    "removing": "移除",
     "simple": "简略",
     "detailed": "详情",
-    "yourPosition": "您的位置"
+    "yourPosition": "您的位置",
+    "transactionMessage": "移除 {tokenAAmount} {tokenASymbol} 和 {tokenBAmount} {tokenBSymbol} 的流动性"
   },
   "importPool": {
     "title": "导入 V2 池",
