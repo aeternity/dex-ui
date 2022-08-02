@@ -103,7 +103,9 @@ export default createStore({
     },
   },
   actions: {
-    async initUniversal({ commit, getters: { networks } }) {
+    async initUniversal({
+      commit, dispatch, state: { networkId }, getters: { networks },
+    }) {
       const nodes = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const network of Object.values(networks)) {
@@ -119,6 +121,7 @@ export default createStore({
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
       commit('setSdk', instance);
+      dispatch('selectNetwork', networkId);
     },
     async initSdk({
       commit, dispatch, state, getters: { networks },
@@ -148,7 +151,7 @@ export default createStore({
         },
       });
       commit('setSdk', instance);
-      commit('setNetwork', state.networkId);
+      dispatch('selectNetwork', state.networkId);
     },
     async connectWallet({ dispatch, commit, state: { sdk, address } }, wallet = {}) {
       commit('setConnectingToWallet', true);
@@ -232,15 +235,12 @@ export default createStore({
       commit('setConnectingToWallet', false);
     },
     async connectDefaultWallet(
-      { commit, dispatch },
-      { address, networkId },
+      { commit, dispatch, state: { networkId } },
+      { address, networkId: walletNetworkId },
     ) {
-      let walletNetworkId = networkId;
-      if (!networkId || networkId.includes('networkId')) {
-        walletNetworkId = process.env.VUE_APP_DEFAULT_NETWORK;
-      }
-
-      await dispatch('selectNetwork', walletNetworkId);
+      await dispatch('selectNetwork', !walletNetworkId || walletNetworkId.includes('networkId')
+        ? networkId
+        : walletNetworkId);
 
       commit('enableIframeWallet');
       commit('setAddress', address);
