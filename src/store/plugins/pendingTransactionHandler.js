@@ -43,7 +43,8 @@ export default async (store) => {
       }
       await waitTransactionMined(store.state.transactions[index]);
     }
-    if (mutation.type !== 'addTransaction') return;
+    if (mutation.type !== 'addTransaction'
+    || (mutation.type === 'addTransaction' && mutation.payload?.unfinished)) return;
     await waitTransactionMined(mutation.payload);
   });
 };
