@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.14.0](https://github.com/aeternity/dex-ui/compare/v1.13.0...v1.14.0) (2022-08-02)
+
+
+### Features
+
+* **dex-backend:** restore token list fetching ([9bb4f0b](https://github.com/aeternity/dex-ui/commit/9bb4f0bc3264c91332bb1f74770a3f4b07ac8f22))
+* **env:** moves compiler to new address ([1e5f81e](https://github.com/aeternity/dex-ui/commit/1e5f81efcf538d4a389e99b94cd7209f816aa343))
+
+
+### Bug Fixes
+
+* **env:** removes unrequired version from compiler ([fab0022](https://github.com/aeternity/dex-ui/commit/fab00223affae7cb21d7112c2167a867a9ad8971))
+* **pending-transaction-handler:** do not process unfinished transactions ([ce8391a](https://github.com/aeternity/dex-ui/commit/ce8391a3e77c4e3071ba6f109697ceeeda3fd1e1))
+
+
+### Miscellaneous
+
+* **constants:** cleans left over variables ([1056a95](https://github.com/aeternity/dex-ui/commit/1056a95785c5cf88430a77d11d86e96d5829c498))
+
+
+### Testing
+
+* **e2e:** do not record videos or screenshots ([7ad213b](https://github.com/aeternity/dex-ui/commit/7ad213b29463a5ae8eea3053adc989216f7217ae))
+
 ## [1.13.0](https://github.com/aeternity/dex-ui/compare/v1.12.0...v1.13.0) (2022-07-28)
 
 
