@@ -22,7 +22,7 @@
     />
     <div class="estimation">
       {{ isLastAmountFrom ? $t("confirmSwapModal.output") : $t("confirmSwapModal.input") }}
-      {{ $t("confirmSwapModal.input") }}.
+      {{ $t("confirmSwapModal.isEstimated") }}.
       {{
         isLastAmountFrom ?
           $t("confirmSwapModal.receiveAtLeast") :

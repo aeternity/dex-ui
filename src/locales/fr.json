@@ -70,8 +70,6 @@
     "confirm": "Confirmer",
     "supplyDetails": "Détails de l'approvisionnement",
     "removalDetails": "Détails de la suppression",
-    "removingAround": "Enlever autour",
-    "poolTokensLiquidity": "jetons de pool à partir de la liquidité fournie",
     "estimation": "Vous recevrez au moins {0} et au moins {1} ou la transaction reviendra.",
     "outputEstimated": "La sortie est estimée.Si le prix change de plus de {0}%, votre transaction reviendra."
   },
