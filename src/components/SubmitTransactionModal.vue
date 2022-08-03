@@ -94,6 +94,7 @@ export default {
       this.hash = null;
       const result = await this.work();
       this.hash = result.hash;
+      if (this.$isMobile) this.resolve();
       this.isConfirmed = true;
     } catch (e) {
       this.reject(e);
