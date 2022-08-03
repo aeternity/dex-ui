@@ -15,6 +15,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'vue/eqeqeq': 'error',
+    'vue/no-reserved-component-names': 'off',
     'space-infix-ops': ['error', { int32Hint: false }],
     'brace-style': ['error', '1tbs', { allowSingleLine: false }],
   },
