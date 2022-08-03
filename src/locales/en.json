@@ -70,8 +70,6 @@
     "confirm": "Confirm",
     "supplyDetails": "Supply details",
     "removalDetails": "Removal details",
-    "removingAround": "Removing around",
-    "poolTokensLiquidity": "pool tokens from the provided liquidity",
     "estimation": "You will receive at least {0} and at least {1} or the transaction will revert.",
     "outputEstimated": "Output is estimated. If the price changes by more than {0}% your transaction will revert."
   },
@@ -109,7 +107,7 @@
     "onWalletConnectTimeout": "Connection to SDK has been timeout, please try again later."
   },
   "accountInfoModal": {
-    "title": "Connected account",
+    "title": "Connected Account",
     "connectWithWallet": "Connected with {0} Wallet",
     "disconnect": "Disconnect",
     "copyAddress": "Copy Address",

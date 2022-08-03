@@ -396,10 +396,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `${this.$t('removeLiquidity.removingAround')}
-            ${this.poolTokenInput.toFixed(5)}
-            ${this.tokenA.symbol}/${this.tokenB.symbol}
-            ${this.$t('removeLiquidity.poolTokensLiquidity')}`,
+          submitMessage: this.generateRemoveLiquidityMessage(),
           work: this.removalProcess,
         });
       } catch (e) {

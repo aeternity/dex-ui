@@ -70,8 +70,6 @@
     "confirm": "确认",
     "supplyDetails": "供应详情",
     "removalDetails": "移除详情",
-    "removingAround": "Removing around",
-    "poolTokensLiquidity": "流动性中汇集的Tokens",
     "estimation": "您将收到至少 {0} 和至少 {1}，否则交易将恢复。",
     "outputEstimated": "输出估计。如果价格变化超过 {0}%，您的交易将恢复。"
   },
