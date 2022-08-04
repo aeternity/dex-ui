@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.15.0](https://github.com/aeternity/dex-ui/compare/v1.14.0...v1.15.0) (2022-08-04)
+
+
+### Features
+
+* **nginx:** removes password protection ([f865a01](https://github.com/aeternity/dex-ui/commit/f865a018ba0831ac27770dc26d9a7b2416063aa9))
+
+
+### Bug Fixes
+
+* **index:** initialize using stored networkId ([7e0b7db](https://github.com/aeternity/dex-ui/commit/7e0b7dbf84be7dcda4911893472415636b152184))
+* **remove-liquidity:** do not add wrong/duplicate transaction info ([231bef5](https://github.com/aeternity/dex-ui/commit/231bef59fbd8dd43d17b9d25b11d7d065377d78f))
+* wording ([8965245](https://github.com/aeternity/dex-ui/commit/8965245ebfe74cb9108602801d30ecf9e25f180f))
+
+
+### Refactorings
+
+* **env:** set Testnet as default network in develop ([d962715](https://github.com/aeternity/dex-ui/commit/d962715f5cbc31a65cac8ac4019e7a7b963c5911))
+* skip confirmed submission modal on mobile ([569e924](https://github.com/aeternity/dex-ui/commit/569e924f5aafd52928a4e09f96ee5b788d15f002))
+
 ## [1.14.0](https://github.com/aeternity/dex-ui/compare/v1.13.0...v1.14.0) (2022-08-02)
 
 
