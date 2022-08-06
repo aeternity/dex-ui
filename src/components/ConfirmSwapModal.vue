@@ -215,6 +215,11 @@ export default {
 
     .no-border {
       border-bottom: none;
+
+      > span:first-of-type {
+        text-align: left;
+        max-width: 100px;
+      }
     }
   }
 
