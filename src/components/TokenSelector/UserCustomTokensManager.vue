@@ -36,7 +36,7 @@
       >
         <div class="wrapper">
           <div class="row">
-            <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`">
+            <TokenIcon :token-a="token" />
             <div class="info">
               <span class="symbol">
                 {{ token.symbol }}
@@ -77,6 +77,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import ListTokens from './ListTokens.vue';
 import InputField from '../InputField.vue';
 import ButtonPlain from '../ButtonPlain.vue';
+import TokenIcon from '../TokenIcon.vue';
 import DeleteIcon from '../../assets/delete.svg?vue-component';
 import ExternalLinkIcon from '../../assets/external-link.svg?vue-component';
 
@@ -85,6 +86,7 @@ export default {
     ListTokens,
     InputField,
     ButtonPlain,
+    TokenIcon,
     DeleteIcon,
     ExternalLinkIcon,
   },
