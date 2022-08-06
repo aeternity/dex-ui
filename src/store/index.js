@@ -31,7 +31,7 @@ export default createStore({
     useSdkWallet: false,
     networkId: process.env.VUE_APP_DEFAULT_NETWORK,
     transactions: [],
-    lang: process.env.VUE_APP_I18N_LOCALE || 'en',
+    lang: null,
   },
   getters: {
     networks() {
