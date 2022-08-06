@@ -19,7 +19,7 @@
       />
 
       <div class="filters">
-        {{ tokens.length }} {{ $t('customTokens') }}
+        {{ $t('customTokens', { n: tokens.length }) }}
         <ButtonPlain
           v-if="tokens.length"
           class="clear-all"
