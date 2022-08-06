@@ -152,6 +152,12 @@
           >
             简体中文
           </ButtonPlain>
+          <ButtonPlain
+            class="link"
+            @click="setLocale('ru')"
+          >
+            Русский
+          </ButtonPlain>
         </div>
       </ActionsMenu>
     </div>
