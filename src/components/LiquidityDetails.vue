@@ -1,7 +1,11 @@
 <template>
   <div class="body">
     <div>
-      <span>{{ $t('liquidityDetails.pooled') }} {{ token0.symbol }}:</span>
+      <span>
+        <i18n-t keypath="liquidityDetails.pooled">
+          <span>{{ token0.symbol }}</span>
+        </i18n-t>
+      </span>
       <div>
         <div
           v-if="poolInfoImportFailed"
@@ -15,13 +19,17 @@
             <RefreshIcon :class="{rotating: poolInfoImporting}" />
           </div>
         </div>
-        {{ getAmountText(amount0,token0) }}
+        {{ getAmountText(amount0, token0) }}
       </div>
     </div>
     <div>
-      <span>{{ $t('liquidityDetails.pooled') }} {{ token1.symbol }}:</span>
+      <span>
+        <i18n-t keypath="liquidityDetails.pooled">
+          <span>{{ token1.symbol }}</span>
+        </i18n-t>
+      </span>
       <div>
-        {{ getAmountText(amount1,token1) }}
+        {{ getAmountText(amount1, token1) }}
       </div>
     </div>
     <div>

@@ -1,6 +1,6 @@
 <template>
   <MainWrapper
-    :title="$t('swap.title')"
+    :title="$t('nav.swap')"
     settings
     class="swap-view"
   >
@@ -152,7 +152,7 @@ export default {
         && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return this.$t('NoLiquidityFound');
       if (!this.isValidAmount || !this.tokenB || !this.tokenA) return this.$t('enterAmount');
       if (!this.enoughBalance) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
-      return this.$t('swap.title');
+      return this.$t('swap.button');
     },
     amountTokenAExpanded() {
       return !this.tokenA || !this.amountTokenA
@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     generateSwapMessage(isFinished) {
-      return `${isFinished ? this.$t('swap.title') : this.$t('swaping')} ${this.isLastInputTokenA ? this.$t('exact') : ''} ${this.amountTokenA}
+      return `${isFinished ? this.$t('swap.button') : this.$t('swapping')} ${this.isLastInputTokenA ? this.$t('exact') : ''} ${this.amountTokenA}
         ${this.tokenA.symbol} ${this.$t('for')} ${this.isLastInputTokenA ? '' : this.$t('exact')} ${this.amountTokenB} ${this.tokenB.symbol}`;
     },
     async approve() {

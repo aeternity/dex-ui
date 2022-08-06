@@ -1,6 +1,6 @@
 <template>
   <MainWrapper
-    :title="$t('pool.title')"
+    :title="$t('nav.pool')"
     class="pool-view"
   >
     <Head>
