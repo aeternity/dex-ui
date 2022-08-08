@@ -14,7 +14,7 @@
           The present Terms and Conditions (henceforth “Terms”) can be a subject of amendment.
         </strong>
         The new version of these Terms become effective from the day it is announced on the website
-        - ……………. (henceforth “the Website”),
+        - aepp.dex.superhero.com. (henceforth “the Website”),
         unless stated otherwise. Once You agree to the Terms,
         we consider this an explicit consent to the following:
       </p>
@@ -34,11 +34,11 @@
         Any reference to the Website hereto shall be interpreted as referring to the collection
         of web pages and related content that is identified by the common domain name
         <a
-          href="http://aepp.dex.superhero.com/"
+          href="https://aepp.dex.superhero.com/"
           target="_blank"
         >aepp.dex.superhero.com</a>
         and the web-hosted user interface <strong>(henceforth “the Website”)</strong>
-        facilitating the connection to the Decentralized Exchange ………………
+        facilitating the connection to the Superhero Decentralized Exchange
         <strong>(henceforth “the DEX”)</strong>.
         The DEX represents an automated and decentralized peer-to-peer marketplace with
         the following functions: possibility for tokens exchange on the æternity blockchain
@@ -302,12 +302,34 @@
         of their applications.
       </p>
 
-      <h2>5. TAXES AND FEES</h2>
+      <h2>5. PERSONAL DATA</h2>
+      <p>
+        Solely the wallet public addresses are reflected on the Website.
+        The address shall be treated as an indirect identifier, which alone cannot identify
+        the corresponding data subject. Æternity Establishment does not conduct processing
+        activities on any personal data of users from their use of the Website. Æternity
+        Establishment does not use any third-party service providers on the Website which
+        could process your personal data.
+      </p>
+      <p>
+        Please bear in mind that any information reflected on the blockchain
+        upon the use of the DEX cannot be amended, corrected or deleted.
+        Æternity Establishment does not have any control whatsoever and shall
+        not be treated as a Data Controller in this case. Æternity Establishment cannot
+        change, restore, delete or amend in any way the above-mentioned information and therefore,
+        shall not be held liable in any way for the collection of the information on the blockchain.
+      </p>
+
+      <p>
+        The website does not use Cookies.
+      </p>
+      <h2>6. TAXES AND FEES</h2>
       <p>
         Æternity Establishment does not collect any fees or taxes for its use of
         the Website whatsoever. However, taxes and fees are payable in connection
-        to the use of the DEX. With every swap a “Liquidity Provider Fee” is payable
-        which fee is added to the corresponding pool and increases the pool's balance.
+        to the use of the DEX and the transactions on the æternity blockchain including but
+        not limited to gas fee, liquidity provider fee. With every swap a “Liquidity Provider Fee”
+        is payable which fee is added to the corresponding pool and increases the pool's balance.
         The fee is always paid in the token the User sends to the DEX.
         <br><br>
         In addition, depending on the territory access point, the transfer and
@@ -317,7 +339,7 @@
         responsible for their donations.
       </p>
 
-      <h2>6. OPEN-SOURCE LICENSE</h2>
+      <h2>7. OPEN-SOURCE LICENSE</h2>
       <p>
         The DEX is a decentralized peer-to-peer platform consisting of a system of
         smart contracts deployed on the æternity blockchain.
@@ -328,11 +350,18 @@
         The license only requires preservation of the copyright and license notice below.
         <br><br>
         The notice is as it follows:
-        “………….”
       </p>
 
       <p>
         <strong>
+          ISC License<br>
+          <br>
+          Copyright (c) 2022, aeternity developers<br>
+          <br>
+          Permission to use, copy, modify, and/or distribute this software for any
+          purpose with or without fee is hereby granted, provided that the above
+          copyright notice and this permission notice appear in all copies.<br>
+          <br>
           THE DEX AND ITS SMART CONTRACTS ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND,
           EXPRESS OR IMPLIED, AND AT USERS' OWN RISK. NO PERSON (PHYSICAL OR LEGAL)
           INVOLVED IN CONTRIBUTING TO THE DEX SHALL BE LIABLE FOR ANY CLAIMS AND DAMAGES
@@ -343,7 +372,7 @@
         </strong>
       </p>
 
-      <h2>7. INTELLECTUAL PROPERTY RIGHTS</h2>
+      <h2>8. INTELLECTUAL PROPERTY RIGHTS</h2>
       <p>
         The Website is developed by Æternity Establishment.
         The Website may display or include elements which are subject
@@ -371,7 +400,7 @@
         legal action against intellectual property infringement.
       </p>
 
-      <h2>8. FINAL PROVISIONS</h2>
+      <h2>9. FINAL PROVISIONS</h2>
       <p>
         The legislation and jurisdiction of Liechtenstein are applicable for
         the issues outstanding the present Terms without regard to possible
@@ -381,7 +410,7 @@
 
       <p>
         For more information regarding our Services and the present Terms,
-        please do not hesitate to contact Us at: ………………..
+        please do not hesitate to contact Us at: info(at)aeternity(dot)com
       </p>
     </div>
   </ModalDefault>
