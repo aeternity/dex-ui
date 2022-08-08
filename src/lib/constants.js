@@ -37,6 +37,18 @@ export const DEFAULT_NETWORKS = [
         symbol: 'WAE',
         is_ae: false,
       },
+      {
+        contract_id: 'ct_KeTvHnhU85vuuQMMZocaiYkPL9tkoavDRT3Jsy47LK2YqLHYb',
+        decimals: MAGNITUDE,
+        name: 'WeTrue Token',
+        symbol: 'WTT',
+      },
+      {
+        contract_id: 'ct_7UfopTwsRuLGFEcsScbYgQ6YnySXuyMxQWhw6fjycnzS5Nyzq',
+        decimals: MAGNITUDE,
+        name: 'AeBox Coin',
+        symbol: 'ABC',
+      },
     ],
   },
   {
