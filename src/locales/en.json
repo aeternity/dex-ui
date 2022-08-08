@@ -95,8 +95,8 @@
     "transactionMessage": "Removing liquidity of {tokenAAmount} {tokenASymbol} and {tokenBAmount} {tokenBSymbol}"
   },
   "importPool": {
-    "title": "Import V2 Pool",
-    "importTip": "Use this tool to find v2 pools that don't automatically appear in the interface.",
+    "title": "Import Pool",
+    "importTip": "Use this tool to find pools that don't automatically appear in the interface.",
     "fetchingData": "Fetching data",
     "selectBothTokens": "Select both tokens to find your provided liquidity.",
     "poolFound": "Your pool share was imported successfully!",

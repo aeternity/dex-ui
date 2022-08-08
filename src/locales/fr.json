@@ -86,8 +86,8 @@
     "yourPosition": "Ta position"
   },
   "importPool": {
-    "title": "Importer le pool V2",
-    "importTip": "Utilisez cet outil pour trouver les pools v2 qui n'apparaissent pas automatiquement dans l'interface.",
+    "title": "Importer le pool",
+    "importTip": "Utilisez cet outil pour trouver les pools qui n'apparaissent pas automatiquement dans l'interface.",
     "fetchingData": "Récupération des données",
     "selectBothTokens": "Sélectionnez les deux jetons pour trouver votre liquidité fournie.",
     "poolFound": "Votre partage de pool a été importé avec succès !",

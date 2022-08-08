@@ -88,8 +88,8 @@
     "transactionMessage": "移除 {tokenAAmount} {tokenASymbol} 和 {tokenBAmount} {tokenBSymbol} 的流动性"
   },
   "importPool": {
-    "title": "导入 V2 池",
-    "importTip": "使用此工具查找未出现在选项中的v2池。",
+    "title": "导入 池",
+    "importTip": "使用此工具查找未出现在选项中的池。",
     "fetchingData": "获取数据",
     "selectBothTokens": "选择两个Tokens以查找您提供的流动性。",
     "poolFound": "您的共享池已成功导入!",
