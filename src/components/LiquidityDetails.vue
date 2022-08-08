@@ -3,7 +3,7 @@
     <div>
       <span>
         <i18n-t keypath="liquidityDetails.pooled">
-          <span>{{ token0.symbol }}</span>
+          <span class="symbol">{{ token0.symbol }}</span>
         </i18n-t>
       </span>
       <div>
@@ -25,7 +25,7 @@
     <div>
       <span>
         <i18n-t keypath="liquidityDetails.pooled">
-          <span>{{ token1.symbol }}</span>
+          <span class="symbol">{{ token1.symbol }}</span>
         </i18n-t>
       </span>
       <div>
@@ -172,6 +172,10 @@ export default {
     border-bottom: 2px solid rgba(143, 150, 172, 0.1);
 
     @extend %face-sans-15-medium;
+
+    .symbol {
+      color: variables.$color-white;
+    }
 
     span {
       color: variables.$color-gray2;
