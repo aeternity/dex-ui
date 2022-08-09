@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.1](https://github.com/aeternity/dex-ui/compare/v1.16.0...v1.16.1) (2022-08-09)
+
+
+### Bug Fixes
+
+* amount with slippage for create_allowance on mobile ([e4683d7](https://github.com/aeternity/dex-ui/commit/e4683d73d1fdf8d515712fc3b48d16732ec69f95))
+
 ## [1.16.0](https://github.com/aeternity/dex-ui/compare/v1.15.0...v1.16.0) (2022-08-09)
 
 
