@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.16.0](https://github.com/aeternity/dex-ui/compare/v1.15.0...v1.16.0) (2022-08-09)
+
+
+### Features
+
+* add the about dex modal ([2f20efa](https://github.com/aeternity/dex-ui/commit/2f20efacb609e1d5d115838637ee7abb8175a6fc))
+* adds 2 aex9 tokens ([987b8d5](https://github.com/aeternity/dex-ui/commit/987b8d576b9a150b05c7dc315675396bc80bf927))
+* adds 404 fallback page ([5a3528f](https://github.com/aeternity/dex-ui/commit/5a3528f3af6e7e2c55e082f2a2323a4f121a6274))
+* show loader on selection restoring ([0d7ed70](https://github.com/aeternity/dex-ui/commit/0d7ed709afc87d754ca055cc3c6ba0980bf06ed7))
+* **t&c:** updates terms and conditions to v4 ([4c040cc](https://github.com/aeternity/dex-ui/commit/4c040cc60d54b91c9825a7d6534f9fddeb24fb9c))
+* **wording:** make first initialization base on user language ([a2bb803](https://github.com/aeternity/dex-ui/commit/a2bb803448edee779dc6aa096119f5a9fa189430))
+
+
+### Bug Fixes
+
+* **eslintrc:** resolve lint warnings ([46e8ff9](https://github.com/aeternity/dex-ui/commit/46e8ff91a462b9cbc2799969fdea3c37a07db490))
+* **save-token-selection:** restore selected backend tokens ([09588b2](https://github.com/aeternity/dex-ui/commit/09588b2b8166f89ef3f0cf8bcd5fc18c035f5038))
+* **translation:** adjusts cn translation ([b4fbebf](https://github.com/aeternity/dex-ui/commit/b4fbebf2aafa4e7822e8f7f14eb0308b35de86d9))
+* **user-custom-tokens-manager:** show token image correct size ([2e0c520](https://github.com/aeternity/dex-ui/commit/2e0c520fd6f5a467b9ba04c0f4b0860526634ae3))
+* **wording:** adjust ui for different languages ([f980fb2](https://github.com/aeternity/dex-ui/commit/f980fb2091c2c45e94ef03cec3843785bd0ab2a9))
+
+
+### Refactorings
+
+* **liquidity-details:** highlight pooled tokens ([a25e16b](https://github.com/aeternity/dex-ui/commit/a25e16bc74650f1d08008ba7ffbea02a482d9a37))
+* **wording:** drop v2 notations ([de3e2f0](https://github.com/aeternity/dex-ui/commit/de3e2f01acfcad5f2b9505bce9d66206ca638db7))
+
+
+### Miscellaneous
+
+* updates licence copyright date ([ffb3f87](https://github.com/aeternity/dex-ui/commit/ffb3f87315fab80086c6c236fc9c03cbb00086bd))
+
 ## [1.15.0](https://github.com/aeternity/dex-ui/compare/v1.14.0...v1.15.0) (2022-08-04)
 
 
