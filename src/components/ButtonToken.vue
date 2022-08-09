@@ -6,12 +6,14 @@
     @click="selectToken"
   >
     <div class="token">
-      <TokenIcon :token-a="token" />
+      <AnimatedSpinner v-if="loading" />
+      <TokenIcon
+        v-else
+        :token-a="token"
+      />
       <span>{{ token && token.symbol || $t('selectToken') }}</span>
     </div>
-    <DownChevron
-      v-if="arrow"
-    />
+    <DownChevron v-if="arrow" />
   </ButtonDefault>
 </template>
 
@@ -19,16 +21,19 @@
 import ButtonDefault from './ButtonDefault.vue';
 import TokenIcon from './TokenIcon.vue';
 import DownChevron from '../assets/arrow.svg?vue-component';
+import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 export default {
   components: {
     ButtonDefault,
     DownChevron,
+    AnimatedSpinner,
     TokenIcon,
   },
   props: {
     token: { type: Object, default: null },
     arrow: { type: Boolean },
+    loading: { type: Boolean },
   },
   emits: ['update:token'],
   methods: {

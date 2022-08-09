@@ -11,6 +11,7 @@
       :value="amountTokenA"
       :token="tokenA"
       :chosen-tokens="[tokenA, tokenB]"
+      :loading="restoringTokenSelection"
       @update:value="setAmount($event, true)"
       @update:token="setSelectedToken($event, true)"
       @update:balance="balance = $event"
@@ -25,6 +26,7 @@
       :value="amountTokenB"
       :token="tokenB"
       :chosen-tokens="[tokenB, tokenA]"
+      :loading="restoringTokenSelection"
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
     />
