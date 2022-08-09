@@ -654,7 +654,7 @@ export default {
         const onAccount = createOnAccountObject(address);
         const { tx } = await instance.methods.create_allowance.get(
           toAccount,
-          amount,
+          amountWithSlippage,
           { onAccount },
         );
         commit('addTransaction', {
