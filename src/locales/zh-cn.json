@@ -125,6 +125,11 @@
     "error": "确认错误",
     "rejected": "操作被用户拒绝"
   },
+  "onboardingModal": {
+    "headline": "嘿!",
+    "body": "感谢您试用 DEX! 我们仍在努力改进它的各个方面，因此您在使用移动设备时可能会遇到一些小问题。 要了解有关常见问题的解决方案的更多信息，请访问此链接:",
+    "confirm": "Ok"
+  },
   "liquidityDetails": {
     "pooled": "提供 {0}:",
     "loadingFailed": "加载失败",

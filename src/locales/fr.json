@@ -123,6 +123,11 @@
     "error": "Erreur de confirmation",
     "rejected": "Opération rejetée par l'utilisateur"
   },
+  "onboardingModal": {
+    "headline": "Hé!",
+    "body": "Merci d'avoir essayé le DEX ! Nous travaillons toujours dur pour l'améliorer dans tous les aspects, vous pourriez donc rencontrer quelques problèmes mineurs lors de l'utilisation d'un appareil mobile. Pour en savoir plus sur les solutions aux problèmes courants, veuillez visiter ce lien:",
+    "confirm": "D'accord"
+  },
   "liquidityDetails": {
     "pooled": "Regroupé {0}:",
     "loadingFailed": "Échec du chargement",

@@ -11,6 +11,7 @@ import ConnectWalletModal from '../components/ConnectWalletModal.vue';
 import NotificationTransactionStatus from '../components/NotificationTransactionStatus.vue';
 import NotificationConnectionStatus from '../components/NotificationConnectionStatus.vue';
 import TermAndConditionModal from '../components/TermAndConditionModal.vue';
+import OnboardingModal from '../components/OnboardingModal.vue';
 
 export default () => {
   registerModal({ name: 'show-tooltip', component: TooltipModal });
@@ -25,4 +26,5 @@ export default () => {
   registerModal({ name: 'transaction-status', component: NotificationTransactionStatus, allowRedirect: true });
   registerModal({ name: 'connection-status', component: NotificationConnectionStatus, allowRedirect: true });
   registerModal({ name: 'term-and-condition', component: TermAndConditionModal });
+  registerModal({ name: 'onboarding', component: OnboardingModal });
 };
