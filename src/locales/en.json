@@ -132,6 +132,11 @@
     "error": "Confirmation Error",
     "rejected": "Operation rejected by user"
   },
+  "onboardingModal": {
+    "headline": "Hey!",
+    "body": "Thanks for trying out the DEX! We are still working hard to improve it in all aspects, so you might run into some minor issues when using a mobile device. To find out more about solutions for common problems please visit this link:",
+    "confirm": "Ok"
+  },
   "liquidityDetails": {
     "pooled": "Pooled {0}:",
     "loadingFailed": "Loading Failed",

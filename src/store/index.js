@@ -32,6 +32,7 @@ export default createStore({
     networkId: process.env.VUE_APP_DEFAULT_NETWORK,
     transactions: [],
     lang: null,
+    hasSeenOnboarding: false,
   },
   getters: {
     networks() {
@@ -100,6 +101,9 @@ export default createStore({
     },
     setLang(state, lang) {
       state.lang = lang;
+    },
+    setOnboardingModalAsSeen(state) {
+      state.hasSeenOnboarding = true;
     },
   },
   actions: {
@@ -348,6 +352,11 @@ export default createStore({
       dispatch('modals/open', { name: 'show-error', message });
     },
 
+    showOnboarding({ dispatch, commit }) {
+      dispatch('modals/open', { name: 'onboarding' });
+      commit('setOnboardingModalAsSeen');
+    },
+
   },
 
   modules: {
@@ -367,6 +376,7 @@ export default createStore({
         lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
+        hasSeenOnboarding,
       }) => ({
         address,
         transactions,
@@ -376,6 +386,7 @@ export default createStore({
         lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
+        hasSeenOnboarding,
       }),
     }),
     modals,
