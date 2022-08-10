@@ -70,9 +70,6 @@ export default {
       if (this.$isMobile) {
         await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
         this.$store.dispatch('parseAndSendTransactionFromQuery');
-        if (!this.$store.state.hasSeenOnboarding) {
-          this.$store.dispatch('showOnboarding');
-        }
       } else {
         await this.$store.dispatch('initSdk');
       }
@@ -101,6 +98,17 @@ export default {
       this.$router.replace({ query });
     } else if (this.wallet && this.address) {
       await this.$store.dispatch('connectWallet', this.wallet);
+    }
+    if (
+      this.$isMobile
+      && !query.address
+      && !query.transaction
+      && !query.networkId
+      && !this.$store.state.hasSeenOnboarding
+    ) {
+      this.$store.dispatch('showOnboarding');
+    } else if (!this.$store.state.hasSeenOnboarding) {
+      this.$store.commit('setOnboardingModalAsSeen');
     }
   },
   methods: {
