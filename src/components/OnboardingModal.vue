@@ -20,7 +20,7 @@
       <ButtonDefault
         class="confirm-button"
         fill="primary"
-        @click.prevent="close"
+        @click.prevent="resolve"
       >
         {{ $t('onboardingModal.confirm') }}
       </ButtonDefault>
@@ -40,11 +40,6 @@ export default {
   props: {
     resolve: { type: Function, required: true },
     reject: { type: Function, required: true },
-  },
-  methods: {
-    close() {
-      this.resolve();
-    },
   },
 };
 </script>
