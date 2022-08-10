@@ -13,10 +13,10 @@
       </p>
       <p class="info-text">
         <a
-          href="https://superherodex.mimosa.digital/superhero-dex-and-ios"
+          href="https://dex.superhero.com/superhero-dex-and-ios"
           target="_blank"
         >
-          https://superherodex.mimosa.digital/superhero-dex-and-ios
+          https://dex.superhero.com/superhero-dex-and-ios
         </a>
       </p>
       <ButtonDefault
