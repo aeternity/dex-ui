@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.17.0](https://github.com/aeternity/dex-ui/compare/v1.16.1...v1.17.0) (2022-08-10)
+
+
+### Features
+
+* adds mobile onboarding modal ([56871e5](https://github.com/aeternity/dex-ui/commit/56871e54a61ae281d46182cfef2c0c97d03a20f2))
+* **onboarding:** adds correct link ([8c5bf15](https://github.com/aeternity/dex-ui/commit/8c5bf155f83a3c2745cca632ca3f0d5e128f198c))
+
+
+### Bug Fixes
+
+* **onboarding:** onboarding triggers when not wallet callback url ([28dded4](https://github.com/aeternity/dex-ui/commit/28dded4e6de18dbe69b667fbfc5c9c447218d668))
+* **svg:** make skip optimize flag works correctly ([abc2463](https://github.com/aeternity/dex-ui/commit/abc24634206f5d3f058a3d6687d77607893107d3))
+* **wording:** russian translation typos ([7fd1ce5](https://github.com/aeternity/dex-ui/commit/7fd1ce5d9952cd40b7eda79203c21464ebe47188))
+
+
+### Refactorings
+
+* **onboarding:** removes unnecessary method ([cfdc031](https://github.com/aeternity/dex-ui/commit/cfdc03103c570e3085c4afcfb3a6a7d15e5509c6))
+
 ## [1.16.1](https://github.com/aeternity/dex-ui/compare/v1.16.0...v1.16.1) (2022-08-09)
 
 
