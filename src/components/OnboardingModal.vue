@@ -13,9 +13,11 @@
       </p>
       <p class="info-text">
         <a
-          href="https://dex.superhero.com"
+          href="https://superherodex.mimosa.digital/superhero-dex-and-ios"
           target="_blank"
-        >https://dex.superhero.com</a>
+        >
+          https://superherodex.mimosa.digital/superhero-dex-and-ios
+        </a>
       </p>
       <ButtonDefault
         class="confirm-button"
@@ -58,7 +60,7 @@ export default {
     }
 
     .info-text {
-      color: variables.$color-white;
+      color: variables.$color-gray2;
       text-align: left;
       line-height: 1.5;
 
