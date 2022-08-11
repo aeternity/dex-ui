@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.1](https://github.com/aeternity/dex-ui/compare/v1.17.0...v1.17.1) (2022-08-11)
+
+
+### Bug Fixes
+
+* **onboarding:** adds correct link ([9596a86](https://github.com/aeternity/dex-ui/commit/9596a869eee4186062639be64e1a7825d5182fca))
+
 ## [1.17.0](https://github.com/aeternity/dex-ui/compare/v1.16.1...v1.17.0) (2022-08-10)
 
 
