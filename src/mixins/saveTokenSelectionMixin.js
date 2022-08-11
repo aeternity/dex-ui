@@ -73,9 +73,8 @@ export default {
         amount, isFrom,
       } = this.$route.query;
       const getToken = (token) => this.$store.getters['tokens/getAvailableTokens']().find(
-        (_token) => (
-          _token.is_ae && _token.symbol === token)
-          || (!_token.is_ae && _token.contract_id === token),
+        (_token) => (_token.is_ae ? _token.symbol : _token.contract_id) === token
+          && _token.networkId === this.$store.state.networkId,
       );
       if ((from && !getToken(from)) || (to && !getToken(to))) {
         await new Promise((resolve) => {
