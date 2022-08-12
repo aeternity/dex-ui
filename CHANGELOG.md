@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.2](https://github.com/aeternity/dex-ui/compare/v1.17.1...v1.17.2) (2022-08-12)
+
+
+### Bug Fixes
+
+* refresh page for non-default network and selected AE ([59c2a0e](https://github.com/aeternity/dex-ui/commit/59c2a0e43db1f560a3682956a74653c55989d34f))
+
 ## [1.17.1](https://github.com/aeternity/dex-ui/compare/v1.17.0...v1.17.1) (2022-08-11)
 
 
