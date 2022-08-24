@@ -60,8 +60,8 @@
     </ButtonDefault>
 
     <ButtonDefault
-      :disabled="address && (connectingToWallet || isDisabled || approving || fetchingPairInfo
-        || !enoughAllowance)"
+      :disabled="address && (swapping || connectingToWallet || isDisabled || approving
+        || fetchingPairInfo || !enoughAllowance)"
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -112,6 +112,7 @@ export default {
     reserveTokenA: null,
     reserveTokenB: null,
     approving: false,
+    swapping: false,
   }),
   computed: {
     ...mapState(['address', 'connectingToWallet']),
@@ -149,6 +150,7 @@ export default {
         this.amountTokenA, this.tokenA.decimals);
     },
     buttonMessage() {
+      if (this.swapping) return `${this.$t('swapping')}...`;
       if (!this.address) return this.$t('connectWallet');
       if (this.factory && this.tokenB && this.tokenA
         && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return this.$t('NoLiquidityFound');
@@ -247,6 +249,7 @@ export default {
           numberOfPairs: this.getPath().length - 1,
           receivedTokensByPriceImpact: this.receivedTokensByPriceImpact,
         });
+        this.swapping = true;
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
           submitMessage: this.generateSwapMessage(),
@@ -256,6 +259,7 @@ export default {
         if (e.message === 'Rejected by user') return;
         await this.$store.dispatch('showUnknownError', e);
       } finally {
+        this.swapping = false;
         this.amountTokenA = '';
         this.amountTokenB = '';
         this.isLastInputTokenA = true;
