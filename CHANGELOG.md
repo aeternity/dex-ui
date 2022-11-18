@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.3](https://github.com/aeternity/dex-ui/compare/v1.17.2...v1.17.3) (2022-11-18)
+
+
+### Bug Fixes
+
+* fix gitsha ([a8c6c31](https://github.com/aeternity/dex-ui/commit/a8c6c31457a23829aff6c7d6f0ce976887ebad75))
+* **swap-view:** insufficient funds button label ([522f050](https://github.com/aeternity/dex-ui/commit/522f050a7fb2b9615622d3ef752d1e6f1a1c9c37))
+
 ## [1.17.2](https://github.com/aeternity/dex-ui/compare/v1.17.1...v1.17.2) (2022-08-12)
 
 
