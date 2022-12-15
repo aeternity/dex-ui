@@ -58,7 +58,7 @@ jobs:
         id: git-sha
         shell: bash
         run: |
-          echo "::set-output name=git-sha::$(git rev-parse --short HEAD)"
+          echo GIT_SHA=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
 
       - name: Extract metadata for docker
         if: |
@@ -117,7 +117,7 @@ jobs:
         if: github.event_name == 'push'
         uses: aeternity/ae-github-actions/argocd-pr-sync@v4
         with:
-          git-sha: ${{ steps.git-sha.outputs.git-sha }}
+          git-sha: ${{ steps.git-sha.outputs.GIT_SHA }}
           url-prefix: main
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
