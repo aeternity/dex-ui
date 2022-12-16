@@ -14,10 +14,10 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import BigNumber from 'bignumber.js';
-import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullInterface.aes';
 import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
+import fungibleTokenAci from '../lib/contracts/FungibleTokenFullACI.json';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 const pollState = {};
@@ -33,7 +33,7 @@ async function poll() {
             if (!state.instance) {
               state.instance = await storeState.value.sdk.getContractInstance(
                 {
-                  source: FUNGIBLE_TOKEN_CONTRACT,
+                  aci: fungibleTokenAci,
                   contractAddress: address,
                   useless: 2,
                 },

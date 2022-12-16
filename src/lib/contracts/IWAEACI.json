@@ -1,0 +1,449 @@
+{
+  "encoded_aci": {
+    "contract": {
+      "event": {
+        "variant": [
+          {
+            "Transfer": [
+              "address",
+              "address",
+              "int"
+            ]
+          },
+          {
+            "Allowance": [
+              "address",
+              "address",
+              "int"
+            ]
+          },
+          {
+            "Deposit": [
+              "address",
+              "int"
+            ]
+          },
+          {
+            "Withdrawal": [
+              "address",
+              "int"
+            ]
+          }
+        ]
+      },
+      "functions": [
+        {
+          "arguments": [],
+          "name": "init",
+          "payable": false,
+          "returns": "WAE.state",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "total_supply",
+          "payable": false,
+          "returns": "int",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "owner",
+          "payable": false,
+          "returns": "address",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "balances",
+          "payable": false,
+          "returns": "WAE.balances",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "meta_info",
+          "payable": false,
+          "returns": "IAEX9Minimal.meta_info",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "aex9_extensions",
+          "payable": false,
+          "returns": {
+            "list": [
+              "string"
+            ]
+          },
+          "stateful": false
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            }
+          ],
+          "name": "balance",
+          "payable": false,
+          "returns": {
+            "option": [
+              "int"
+            ]
+          },
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "allowances",
+          "payable": false,
+          "returns": "WAE.allowances",
+          "stateful": false
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "IAEX9Minimal.allowance_accounts"
+            }
+          ],
+          "name": "allowance",
+          "payable": false,
+          "returns": {
+            "option": [
+              "int"
+            ]
+          },
+          "stateful": false
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            }
+          ],
+          "name": "allowance_for_caller",
+          "payable": false,
+          "returns": {
+            "option": [
+              "int"
+            ]
+          },
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "deposit",
+          "payable": true,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            }
+          ],
+          "name": "deposit_to",
+          "payable": true,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "int"
+            }
+          ],
+          "name": "withdraw",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            },
+            {
+              "name": "_2",
+              "type": "int"
+            }
+          ],
+          "name": "create_allowance",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            },
+            {
+              "name": "_2",
+              "type": "int"
+            }
+          ],
+          "name": "change_allowance",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            }
+          ],
+          "name": "reset_allowance",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            },
+            {
+              "name": "_2",
+              "type": "int"
+            }
+          ],
+          "name": "transfer",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        },
+        {
+          "arguments": [
+            {
+              "name": "_1",
+              "type": "address"
+            },
+            {
+              "name": "_2",
+              "type": "address"
+            },
+            {
+              "name": "_3",
+              "type": "int"
+            }
+          ],
+          "name": "transfer_allowance",
+          "payable": false,
+          "returns": "unit",
+          "stateful": true
+        }
+      ],
+      "kind": "contract_main",
+      "name": "WAE",
+      "payable": false,
+      "state": {
+        "record": [
+          {
+            "name": "balance_of",
+            "type": "WAE.balances"
+          },
+          {
+            "name": "allowances",
+            "type": "WAE.allowances"
+          },
+          {
+            "name": "owner",
+            "type": "address"
+          }
+        ]
+      },
+      "type_defs": [
+        {
+          "name": "owner",
+          "typedef": "address",
+          "vars": []
+        },
+        {
+          "name": "spender",
+          "typedef": "address",
+          "vars": []
+        },
+        {
+          "name": "allowances",
+          "typedef": {
+            "map": [
+              "IAEX9Minimal.allowance_accounts",
+              "int"
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "balances",
+          "typedef": {
+            "map": [
+              "WAE.owner",
+              "int"
+            ]
+          },
+          "vars": []
+        }
+      ]
+    }
+  },
+  "external_encoded_aci": [
+    {
+      "contract": {
+        "functions": [
+          {
+            "arguments": [],
+            "name": "meta_info",
+            "payable": false,
+            "returns": "IAEX9Minimal.meta_info",
+            "stateful": false
+          },
+          {
+            "arguments": [],
+            "name": "total_supply",
+            "payable": false,
+            "returns": "int",
+            "stateful": false
+          },
+          {
+            "arguments": [
+              {
+                "name": "_1",
+                "type": "address"
+              }
+            ],
+            "name": "balance",
+            "payable": false,
+            "returns": {
+              "option": [
+                "int"
+              ]
+            },
+            "stateful": false
+          },
+          {
+            "arguments": [
+              {
+                "name": "_1",
+                "type": "IAEX9Minimal.allowance_accounts"
+              }
+            ],
+            "name": "allowance",
+            "payable": false,
+            "returns": {
+              "option": [
+                "int"
+              ]
+            },
+            "stateful": false
+          },
+          {
+            "arguments": [
+              {
+                "name": "_1",
+                "type": "address"
+              },
+              {
+                "name": "_2",
+                "type": "int"
+              }
+            ],
+            "name": "transfer",
+            "payable": false,
+            "returns": "unit",
+            "stateful": true
+          },
+          {
+            "arguments": [
+              {
+                "name": "_1",
+                "type": "address"
+              },
+              {
+                "name": "_2",
+                "type": "int"
+              }
+            ],
+            "name": "create_allowance",
+            "payable": false,
+            "returns": "unit",
+            "stateful": true
+          },
+          {
+            "arguments": [
+              {
+                "name": "_1",
+                "type": "address"
+              },
+              {
+                "name": "_2",
+                "type": "address"
+              },
+              {
+                "name": "_3",
+                "type": "int"
+              }
+            ],
+            "name": "transfer_allowance",
+            "payable": false,
+            "returns": "unit",
+            "stateful": true
+          }
+        ],
+        "kind": "contract_interface",
+        "name": "IAEX9Minimal",
+        "payable": false,
+        "type_defs": [
+          {
+            "name": "allowance_accounts",
+            "typedef": {
+              "record": [
+                {
+                  "name": "from_account",
+                  "type": "address"
+                },
+                {
+                  "name": "for_account",
+                  "type": "address"
+                }
+              ]
+            },
+            "vars": []
+          },
+          {
+            "name": "meta_info",
+            "typedef": {
+              "record": [
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "symbol",
+                  "type": "string"
+                },
+                {
+                  "name": "decimals",
+                  "type": "int"
+                }
+              ]
+            },
+            "vars": []
+          }
+        ]
+      }
+    }
+  ],
+  "interface": "contract interface IAEX9Minimal =\n  record allowance_accounts = {from_account : address,for_account : address}\n  record meta_info = {name : string,symbol : string,decimals : int}\n  entrypoint meta_info : () => IAEX9Minimal.meta_info\n  entrypoint total_supply : () => int\n  entrypoint balance : (address) => option(int)\n  entrypoint allowance : (IAEX9Minimal.allowance_accounts) => option(int)\n  stateful entrypoint transfer : (address, int) => unit\n  stateful entrypoint create_allowance : (address, int) => unit\n  stateful entrypoint transfer_allowance : (address, address, int) => unit\n\nmain contract WAE =\n  record state = {balance_of : WAE.balances,allowances : WAE.allowances,owner : address}\n  datatype event = Transfer(address, address, int) | Allowance(address, address, int) | Deposit(address, int) | Withdrawal(address, int)\n  type owner = address\n  type spender = address\n  type allowances = map(IAEX9Minimal.allowance_accounts, int)\n  type balances = map(WAE.owner, int)\n  entrypoint init : () => WAE.state\n  entrypoint total_supply : () => int\n  entrypoint owner : () => address\n  entrypoint balances : () => WAE.balances\n  entrypoint meta_info : () => IAEX9Minimal.meta_info\n  entrypoint aex9_extensions : () => list(string)\n  entrypoint balance : (address) => option(int)\n  entrypoint allowances : () => WAE.allowances\n  entrypoint allowance : (IAEX9Minimal.allowance_accounts) => option(int)\n  entrypoint allowance_for_caller : (address) => option(int)\n  payable stateful entrypoint deposit : () => unit\n  payable stateful entrypoint deposit_to : (address) => unit\n  stateful entrypoint withdraw : (int) => unit\n  stateful entrypoint create_allowance : (address, int) => unit\n  stateful entrypoint change_allowance : (address, int) => unit\n  stateful entrypoint reset_allowance : (address) => unit\n  stateful entrypoint transfer : (address, int) => unit\n  stateful entrypoint transfer_allowance : (address, address, int) => unit\n"
+}

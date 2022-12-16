@@ -1,8 +1,8 @@
-import aex9Interface from 'aeternity-fungible-token/FungibleTokenFull.aes';
-import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
-import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
-import factoryInterface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
-import pairInterface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
+import aex9Interface from '../../lib/contracts/FungibleTokenFullACI.json';
+import routerInterface from '../../lib/contracts/IAedexV2RouterACI.json';
+import waeInterface from '../../lib/contracts/IWAEACI.json';
+import factoryInterface from '../../lib/contracts/IAedexV2FactoryACI.json';
+import pairInterface from '../../lib/contracts/IAedexV2FactoryForPairACI.json';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
   getPairId, sortTokens, isDexBackendDisabled,
@@ -173,7 +173,7 @@ export default {
       if (activeNetwork) {
         const contract = await sdk.getContractInstance(
           {
-            source: routerInterface,
+            aci: routerInterface,
             contractAddress: activeNetwork.routerAddress,
           },
         );
@@ -184,7 +184,7 @@ export default {
       const { decodedResult: factoryAddress } = await router.methods.factory();
       const contract = await sdk.getContractInstance(
         {
-          source: factoryInterface,
+          aci: factoryInterface,
           contractAddress: factoryAddress,
         },
       );
@@ -194,7 +194,7 @@ export default {
       if (activeNetwork) {
         const contract = await sdk.getContractInstance(
           {
-            source: waeInterface,
+            aci: waeInterface,
             contractAddress: activeNetwork.waeAddress,
           },
         );
@@ -239,7 +239,7 @@ export default {
       }
       const instance = await sdk.getContractInstance(
         {
-          source: pairInterface,
+          aci: pairInterface,
           contractAddress,
         },
       );
@@ -248,7 +248,7 @@ export default {
     },
     getTokenInstance({ rootState: { sdk } }, contractAddress) {
       return sdk.getContractInstance({
-        source: aex9Interface,
+        aci: aex9Interface,
         contractAddress,
       });
     },

@@ -32,10 +32,6 @@
         />
       </template>
       <InfoRow
-        :left-text="$t('aboutModal.compiler')"
-        :right-text="compilerUrl"
-      />
-      <InfoRow
         :left-text="$t('aboutModal.node')"
         :right-text="nodeVersion"
       />
@@ -54,7 +50,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import sdkInfo from '@aeternity/aepp-sdk/package.json';
-import contractInfo from 'dex-contracts-v2/package.json';
 import ModalDefault from './ModalDefault.vue';
 import appInfo from '../../package.json';
 import InfoRow from './InfoRow.vue';
@@ -71,8 +66,9 @@ export default {
   data: () => ({
     appVersion: appInfo.version,
     sdkVersion: sdkInfo.version,
-    contractsVersion: contractInfo.version,
-    compilerUrl: process.env.VUE_APP_COMPILER_URL,
+    // Since we are precompiling the initial contracts into ACI,
+    // we can't use actual dependency version
+    contractsVersion: '1.0.0',
     height: null,
     nodeVersion: null,
     pollHeight: null,

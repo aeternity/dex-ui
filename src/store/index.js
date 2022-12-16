@@ -120,10 +120,7 @@ export default createStore({
         });
       }
 
-      const instance = await Universal({
-        nodes,
-        compilerUrl: process.env.VUE_APP_COMPILER_URL,
-      });
+      const instance = await Universal({ nodes });
       commit('setSdk', instance);
       dispatch('selectNetwork', networkId);
     },
@@ -140,12 +137,8 @@ export default createStore({
         });
       }
 
-      const options = {
-        nodes,
-        compilerUrl: process.env.VUE_APP_COMPILER_URL,
-      };
       const instance = await RpcAepp({
-        ...options,
+        nodes,
         onNetworkChange: ({ networkId }) => {
           dispatch('selectNetwork', networkId);
         },
