@@ -15,8 +15,17 @@ export default {
     ],
   },
   getters: {
-    getAvailableTokens: ({ providers, userTokens }) => (isActive = true) => providers
-      .reduce((a, b) => a.concat(b.active === isActive ? b.tokens : []), []).concat(userTokens),
+    getAvailableTokens: ({ providers, userTokens }) => (isActive = true) => {
+      const encounteredKeys = {};
+      return providers
+        .reduce((a, b) => a.concat(b.active === isActive ? b.tokens : []), [])
+        .concat(userTokens)
+        .filter((token) => {
+          if (encounteredKeys[token.contract_id]) return false;
+          encounteredKeys[token.contract_id] = true;
+          return true;
+        });
+    },
   },
   mutations: {
     addToken(state, token) {
