@@ -90,7 +90,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Chekc the initial PR deployment status before make a PR Sync.
+      - name: Check the initial PR deployment status before make a PR Sync.
         if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
         uses: aeternity/ae-github-actions/deploy-status@v7
         with:
