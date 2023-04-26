@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.18.0](https://github.com/aeternity/dex-ui/compare/v1.17.3...v1.18.0) (2023-04-26)
+
+
+### Features
+
+* add extra info for low slippage errors ([a5eacfc](https://github.com/aeternity/dex-ui/commit/a5eacfcedc6c3133b65b828f731f650ec3fc7fd7))
+
+
+### Bug Fixes
+
+* **AeBalance:** balance goes to 0 when error is catched ([e000517](https://github.com/aeternity/dex-ui/commit/e00051747b3b4349814c83aa688446d135aae990))
+* remove duplicate tokens ([12e063e](https://github.com/aeternity/dex-ui/commit/12e063ef8c6f5da1d42baaff0146f3bed4e2fbba))
+
+
+### CI / CD
+
+* **build:** patch-deprecated-gh-action-steps ([98f4e27](https://github.com/aeternity/dex-ui/commit/98f4e2797c9025bdc33cd6afb2dbcfb02bca7629))
+* check pr deployment state before sync ([6f8b70d](https://github.com/aeternity/dex-ui/commit/6f8b70d8b337760491050fe906576bd43c3f0943))
+* fix spelling ([623392f](https://github.com/aeternity/dex-ui/commit/623392f4cc1699341649acb18bbc9a8456427ddc))
+
+
+### Refactorings
+
+* change low slippage message ([50d4ebf](https://github.com/aeternity/dex-ui/commit/50d4ebfaf1a026d936fdf08da9b2e0b72f3299f7))
+
 ## [1.17.3](https://github.com/aeternity/dex-ui/compare/v1.17.2...v1.17.3) (2022-11-18)
 
 
