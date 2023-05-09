@@ -1,5 +1,4 @@
-import { AmountFormatter } from '@aeternity/aepp-sdk';
-import { decode } from '@aeternity/aepp-sdk/es/tx/builder/helpers';
+import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from './errors';
@@ -14,9 +13,9 @@ export const fetchJson = async (...args) => {
   return response.json();
 };
 
-export const aettosToAe = (v) => AmountFormatter.formatAmount(v, {
-  denomination: AmountFormatter.AE_AMOUNT_FORMATS.AETTOS,
-  targetDenomination: AmountFormatter.AE_AMOUNT_FORMATS.AE,
+export const aettosToAe = (v) => formatAmount(v, {
+  denomination: AE_AMOUNT_FORMATS.AETTOS,
+  targetDenomination: AE_AMOUNT_FORMATS.AE,
 });
 
 export const cttoak = (value) => value.replace('ct_', 'ak_');
@@ -70,14 +69,14 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
   Object.entries(params)
     .filter(([, value]) => ![undefined, null].includes(value))
     .forEach(([name, value]) => url.searchParams.set(name, value));
+  console.log('params', params);
+  console.log('url', url);
   return url;
 };
 
 export const createOnAccountObject = (address) => ({
-  address: () => address,
-  sign: () => {
-    throw new Error('Private key is not available');
-  },
+  address,
+  signTransaction: () => null,
 });
 
 export const getAePair = (from, to, amountFrom, amountTo) => {
@@ -167,11 +166,11 @@ export const getPairId = (tokenA, tokenB) => {
 
 export const handleCallError = ({ returnType, returnValue }, instance) => {
   let message;
-  // TODO: ensure that it works correctly https://github.com/aeternity/aepp-calldata-js/issues/88
   switch (returnType) {
     case 'ok': return;
     case 'revert':
-      message = instance.calldata.decodeFateString(returnValue);
+      // eslint-disable-next-line no-underscore-dangle
+      message = instance._calldata.decodeFateString(returnValue);
       break;
     case 'error':
       message = decode(returnValue).toString();

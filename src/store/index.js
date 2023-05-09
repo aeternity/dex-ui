@@ -1,6 +1,8 @@
+import { shallowReactive } from 'vue';
 import { createStore } from 'vuex';
 import {
-  Node, RpcAepp, WalletDetector, BrowserWindowMessageConnection, Universal, TxBuilder,
+  Node, AeSdkAepp, walletDetector, BrowserWindowMessageConnection, AeSdk, unpackTx,
+  RpcRejectedByUserError,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
@@ -42,11 +44,12 @@ export default createStore({
         ...DEFAULT_NETWORKS,
       ].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
     },
+    // returns the network object for the currently selected network
+    // or null if no network is selected
     activeNetwork({ sdk }, { networks }) {
-      if (!sdk || !sdk.selectedNode) {
-        return null;
-      }
-      return networks[sdk.selectedNode.networkId];
+      return sdk && Object.values(networks).find(
+        (network) => network.networkName === sdk.selectedNodeName,
+      );
     },
     WAE({ networkId }, { activeNetwork }) {
       return (networkId && activeNetwork) ? activeNetwork.waeAddress : null;
@@ -112,42 +115,24 @@ export default createStore({
     async initUniversal({
       commit, dispatch, state: { networkId }, getters: { networks },
     }) {
-      const nodes = [];
-      // eslint-disable-next-line no-restricted-syntax
-      for (const network of Object.values(networks)) {
-        nodes.push({
-          name: network.networkName,
-          // eslint-disable-next-line no-await-in-loop
-          instance: await Node({ url: network.url }),
-        });
-      }
+      const nodes = Object.values(networks).map((network) => ({
+        name: network.networkName,
+        instance: new Node(network.url),
+      }));
 
-      const instance = await Universal({
-        nodes,
-        compilerUrl: process.env.VUE_APP_COMPILER_URL,
-      });
+      const instance = shallowReactive(new AeSdk({ nodes }));
       commit('setSdk', instance);
-      dispatch('selectNetwork', networkId);
+      await dispatch('selectNetwork', networkId);
     },
     async initSdk({
       commit, dispatch, state, getters: { networks },
     }) {
-      const nodes = [];
-      // eslint-disable-next-line no-restricted-syntax
-      for (const network of Object.values(networks)) {
-        nodes.push({
-          name: network.networkName,
-          // eslint-disable-next-line no-await-in-loop
-          instance: await Node({ url: network.url }),
-        });
-      }
-
-      const options = {
+      const nodes = Object.values(networks).map((network) => ({
+        name: network.networkName,
+        instance: new Node(network.url),
+      }));
+      const instance = shallowReactive(new AeSdkAepp({
         nodes,
-        compilerUrl: process.env.VUE_APP_COMPILER_URL,
-      };
-      const instance = await RpcAepp({
-        ...options,
         onNetworkChange: ({ networkId }) => {
           dispatch('selectNetwork', networkId);
         },
@@ -155,13 +140,13 @@ export default createStore({
         onDisconnect() {
           commit('resetState');
         },
-      });
+      }));
       commit('setSdk', instance);
       dispatch('selectNetwork', state.networkId);
     },
-    async connectWallet({ dispatch, commit, state: { sdk, address } }, wallet = {}) {
+    async connectWallet({ dispatch, commit, state: { sdk, address } }, walletObj = {}) {
       commit('setConnectingToWallet', true);
-      commit('setWallet', wallet);
+      commit('setWallet', walletObj.info);
 
       if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
         if (address) {
@@ -181,41 +166,53 @@ export default createStore({
               : setTimeout(() => commit('enableIframeWallet'), 15000);
             commit('useSdkWallet');
 
-            const scannerConnection = await BrowserWindowMessageConnection({
-              connectionInfo: { id: 'spy' },
-            });
-            const detector = await WalletDetector({ connection: scannerConnection });
+            let resolve = null;
+            let rejected = (e) => {
+              throw e;
+            };
+            let stopScan = null;
 
-            await new Promise((resolve, rejected) => {
-              detector.scan(async ({ wallets }) => {
-                const detectedWallet = Object.values(wallets).find((w) => w.name === wallet.name);
-                if (!detectedWallet) return;
-                clearInterval(webWalletTimeout);
-
-                try {
-                  await sdk.connectToWallet(await detectedWallet.getConnection());
-                  await sdk.subscribeAddress('subscribe', 'current');
-                } catch (e) {
-                  if (e.message !== 'Operation rejected by user') {
-                    dispatch('showUnknownError', e);
-                    dispatch('disconnectWallet');
-                  }
-                  rejected(e);
-                  return;
-                }
-
-                const currentAccountAddress = sdk.rpcClient.getCurrentAccount();
+            const connectWallet = async (wallet) => {
+              try {
+                const { networkId } = await sdk.connectToWallet(wallet.getConnection());
+                const ret = await sdk.subscribeAddress('subscribe', 'connected');
+                const { address: { current } } = ret;
+                const currentAccountAddress = Object.keys(current)[0];
                 if (!currentAccountAddress) return;
-                detector.stopScan();
-                const { networkId: walletNetworkId } = sdk.rpcClient.info;
+                stopScan?.();
                 commit('setAddress', currentAccountAddress);
-                dispatch('selectNetwork', walletNetworkId);
-                resolve(currentAccountAddress);
+                dispatch('selectNetwork', networkId);
+                resolve?.(currentAccountAddress);
+              } catch (e) {
+                if (!(e instanceof RpcRejectedByUserError)) {
+                  dispatch('showUnknownError', e);
+                  dispatch('disconnectWallet');
+                }
+                rejected(e);
+              }
+            };
+            if (walletObj.getConnection) {
+              await connectWallet(walletObj);
+            } else {
+              const handleWallet = async ({ wallets }) => {
+                const detectedWalletObject = Object.values(wallets).find(
+                  (wallet) => wallet.info.name === walletObj.info.name,
+                );
+                if (!detectedWalletObject) return;
+                clearInterval(webWalletTimeout);
+                await connectWallet(detectedWalletObject);
+              };
+              const scannerConnection = new BrowserWindowMessageConnection();
+              stopScan = walletDetector(scannerConnection, handleWallet);
+
+              await new Promise((_resolve, _rejected) => {
+                resolve = _resolve;
+                rejected = _rejected;
               });
-            });
+            }
           });
         } catch (error) {
-          if (wallet.name === 'Superhero') {
+          if (walletObj.info.name === 'Superhero') {
             dispatch('modals/open', {
               name: 'show-error',
               message: 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
@@ -232,7 +229,7 @@ export default createStore({
           } else {
             dispatch('modals/open', {
               name: 'show-error',
-              message: `Connection to ${wallet.name} has been timeout, please try again later.`,
+              message: `Connection to ${walletObj.info.name} has been timeout, please try again later.`,
             });
           }
         }
@@ -263,17 +260,20 @@ export default createStore({
       window.location.search = '';
     },
     async parseAndSendTransactionFromQuery(
-      { commit, dispatch, state: { route, transactions, sdk } },
+      { commit, dispatch, state: { transactions, sdk /* address */ } },
     ) {
-      const { transaction } = route.query;
+      // const { transaction } = route.query;
+      const transaction = new URLSearchParams(window.location.search).get('transaction');
       if (transactions?.length && transaction) {
         try {
-          const { tx } = TxBuilder.unpackTx(transaction);
+          const tx = unpackTx(transaction);
           const index = transactions.indexOf(transactions
-            .find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx.tx)));
+            .find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx)));
 
           if (index !== -1 && transactions[index].pending && transactions[index].unfinished) {
-            const { hash } = await sdk.sendTransaction(transaction, { waitMined: false });
+            const { txHash: hash } = await sdk.api.postTransaction({ tx: transaction });
+            console.log('HASH', hash);
+            debugger;
             commit('changeTransactionById', { index, transaction: { unfinished: false, hash } });
           }
         } catch (e) {
@@ -295,7 +295,7 @@ export default createStore({
       return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-      const nodeToSelect = sdk.getNodesInPool()
+      const nodeToSelect = (await sdk.getNodesInPool())
         .find((node) => node.nodeNetworkId === newNetworkId);
 
       if (!nodeToSelect) {

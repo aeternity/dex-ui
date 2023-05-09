@@ -14,7 +14,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import BigNumber from 'bignumber.js';
-import FUNGIBLE_TOKEN_CONTRACT from 'aeternity-fungible-token/FungibleTokenFullInterface.aes';
+import FUNGIBLE_TOKEN_CONTRACT from 'dex-contracts-v2/build/FungibleTokenFull.aci.json';
 import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
@@ -31,25 +31,24 @@ async function poll() {
         try {
           if (address.startsWith('ct_') && storeState.value.address) {
             if (!state.instance) {
-              state.instance = await storeState.value.sdk.getContractInstance(
+              state.instance = await storeState.value.sdk.initializeContract(
                 {
-                  source: FUNGIBLE_TOKEN_CONTRACT,
-                  contractAddress: address,
-                  useless: 2,
+                  aci: FUNGIBLE_TOKEN_CONTRACT,
+                  address,
                 },
               );
             }
 
             if (!state.decimals) {
-              state.decimals = new BigNumber((await state.instance.methods.meta_info())
+              state.decimals = new BigNumber((await state.instance.meta_info())
                 .decodedResult.decimals);
             }
             state.lastValue = new BigNumber(
-              (await state.instance.methods.balance(storeState.value.address)).decodedResult || 0,
+              (await state.instance.balance(storeState.value.address)).decodedResult || 0,
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_') && storeState.value.sdk) {
             state.lastValue = new BigNumber(aettosToAe(
-              (await storeState.value.sdk.balance(address)
+              (await storeState.value.sdk.getBalance(address)
                 .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e)))),
             ));
           }
@@ -99,9 +98,10 @@ export default {
     const balanceRef = getBalanceRef(toRef(props, 'address'));
     const balance = ref(0);
 
-    watch(() => balanceRef.value, (newVal) => {
+    watch(() => balanceRef.value, async (newVal) => {
+      const networkId = await (storeState.value.sdk.api.getNetworkId().catch(() => null));
       if (storeState.value.sdk
-        && storeState.value.networkId === storeState.value.sdk.selectedNode.networkId) {
+        && storeState.value.networkId === networkId) {
         balance.value = newVal;
         emit('update:balance', newVal);
       } else {

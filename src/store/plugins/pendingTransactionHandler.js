@@ -11,7 +11,7 @@ export default async (store) => {
       const { callInfo } = await store.state.sdk.api.getTransactionInfoByHash(hash);
       handleCallError(
         callInfo,
-        store.state.aeternity?.wae?.deployInfo?.address === returnedTransaction.contractId
+        store.state.aeternity?.wae?.$options.address === returnedTransaction.contractId
           ? store.state.aeternity.wae
           : store.state.aeternity.router,
       );

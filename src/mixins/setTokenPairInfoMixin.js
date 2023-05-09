@@ -5,7 +5,7 @@ import { handleUnknownError, calculateSelectedToken, getPairId } from '../lib/ut
 export default {
   computed: {
     ...mapState({
-      factory: (state) => state.aeternity.factory?.deployInfo.address,
+      factory: (state) => state.aeternity.factory?.$options.address,
     }),
     ...mapState('backend', { backendFailed: 'failed', pairs: 'pairs' }),
     selectedBackendPair() {

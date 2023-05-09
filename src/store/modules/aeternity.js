@@ -1,8 +1,8 @@
-import aex9Interface from 'aeternity-fungible-token/FungibleTokenFull.aes';
-import routerInterface from 'dex-contracts-v2/build/IAedexV2Router.aes';
-import waeInterface from 'dex-contracts-v2/build/IWAE.aes';
-import factoryInterface from 'dex-contracts-v2/build/IAedexV2Factory.aes';
-import pairInterface from 'dex-contracts-v2/build/IAedexV2Pair.aes';
+import aex9ACI from 'dex-contracts-v2/build/FungibleTokenFull.aci.json';
+import routerACI from 'dex-contracts-v2/build/AedexV2Router.aci.json';
+import waeACI from 'dex-contracts-v2/build/WAE.aci.json';
+import factoryACI from 'dex-contracts-v2/build/AedexV2Factory.aci.json';
+import pairACI from 'dex-contracts-v2/build/AedexV2Pair.aci.json';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
   getPairId, sortTokens, isDexBackendDisabled,
@@ -15,7 +15,7 @@ import i18n from '../../i18n';
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
-const getAddress = (x) => x.deployInfo.address;
+const getAddress = (x) => x.$options.address;
 const getCtAddress = (contract) => cttoak(getAddress(contract));
 const logDryRunAlternative = async (actionName, args) => {
   const logDryRun = process.env.VUE_APP_DEBUG_LOG_DRY_RUN_ALTERNATIVE;
@@ -45,19 +45,25 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   const methodArgs = argsMapper(context, args);
   methodArgs[methodArgs.length - 1] = {
     ...methodArgs[methodArgs.length - 1],
-    ...(useSdkWallet ? { waitMined: false } : { onAccount: createOnAccountObject(address) }),
+    ...(useSdkWallet ? { waitMined: false } : {
+      callStatic: true, onAccount: createOnAccountObject(address),
+    }),
   };
   if (useSdkWallet) {
-    const result = await (isWae ? wae : router).methods[method](...methodArgs);
+    const result = await (isWae ? wae : router)[method](...methodArgs);
     commit('addTransaction',
       { hash: result.hash, info: transactionInfo, pending: true }, { root: true });
     return result;
   }
-  const result = await (isWae ? wae : router).methods[method].get(...methodArgs);
+  const result = await (isWae ? wae : router)[method](...methodArgs);
+  const builded = result.rawTx;
   commit('addTransaction', {
-    txParams: result.tx.params, info: transactionInfo, pending: true, unfinished: true,
+    txParams: result.tx, info: transactionInfo, pending: true, unfinished: true,
   }, { root: true });
-  window.location = await dispatch('sendTxDeepLinkUrl', result.tx.encodedTx, { root: true });
+  const ret = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
+  console.log(ret);
+  console.log('href', ret.href);
+  window.location = ret;
   return result;
 };
 const withFetchingPairInfo = (work) => async (context, args) => {
@@ -171,31 +177,31 @@ export default {
     },
     async initRouter({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
       if (activeNetwork) {
-        const contract = await sdk.getContractInstance(
+        const contract = await sdk.initializeContract(
           {
-            source: routerInterface,
-            contractAddress: activeNetwork.routerAddress,
+            aci: routerACI,
+            address: activeNetwork.routerAddress,
           },
         );
         commit('setRouterInstance', Object.freeze(contract));
       }
     },
     async initFactory({ commit, state: { router }, rootState: { sdk } }) {
-      const { decodedResult: factoryAddress } = await router.methods.factory();
-      const contract = await sdk.getContractInstance(
+      const { decodedResult: factoryAddress } = await router.factory();
+      const contract = await sdk.initializeContract(
         {
-          source: factoryInterface,
-          contractAddress: factoryAddress,
+          aci: factoryACI,
+          address: factoryAddress,
         },
       );
       commit('setFactoryInstance', contract);
     },
     async initWae({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
       if (activeNetwork) {
-        const contract = await sdk.getContractInstance(
+        const contract = await sdk.initializeContract(
           {
-            source: waeInterface,
-            contractAddress: activeNetwork.waeAddress,
+            aci: waeACI,
+            address: activeNetwork.waeAddress,
           },
         );
         commit('setWaeInstance', Object.freeze(contract));
@@ -231,30 +237,30 @@ export default {
         // if backend module isn't successfully initialized or pair
         // wasn't found for any reason let's try also getting it through
         // a dry-run sdk call
-        contractAddress = (await factory.methods.get_pair(tokenA, tokenB)).decodedResult;
+        contractAddress = (await factory.get_pair(tokenA, tokenB)).decodedResult;
       }
 
       if (contractAddress == null) {
         throw new Error('PAIR NOT FOUND');
       }
-      const instance = await sdk.getContractInstance(
+      const instance = await sdk.initializeContract(
         {
-          source: pairInterface,
-          contractAddress,
+          aci: pairACI,
+          address: contractAddress,
         },
       );
       commit('addPair', { tokenA, tokenB, instance });
       return instance;
     },
     getTokenInstance({ rootState: { sdk } }, contractAddress) {
-      return sdk.getContractInstance({
-        source: aex9Interface,
-        contractAddress,
+      return sdk.initializeContract({
+        aci: aex9ACI,
+        address: contractAddress,
       });
     },
     async getTokenInstanceMetaInfo({ dispatch }, contractAddress) {
       const contractInstance = await dispatch('getTokenInstance', contractAddress);
-      const metaInfo = await contractInstance.methods.meta_info();
+      const metaInfo = await contractInstance.meta_info();
       return metaInfo;
     },
     /**
@@ -289,7 +295,7 @@ export default {
       if (!activeNetwork) return null;
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
 
-      const { decodedResult: balance } = await pair.methods.balance(address);
+      const { decodedResult: balance } = await pair.balance(address);
       commit('updateProvidedLiquidity', {
         tokenA,
         tokenB,
@@ -313,7 +319,7 @@ export default {
     */
     async getTotalSupply({ dispatch }, { tokenA, tokenB }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: totalSupply } = await pair.methods.total_supply();
+      const { decodedResult: totalSupply } = await pair.total_supply();
       return totalSupply;
     },
     /**
@@ -330,8 +336,8 @@ export default {
       tokenA, tokenB,
     }) {
       const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-      const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
-      const { decodedResult: token0 } = await pair.methods.token0();
+      const { decodedResult: { reserve0, reserve1 } } = await pair.get_reserves();
+      const { decodedResult: token0 } = await pair.token0();
       const [reserveA, reserveB] = token0 === tokenA
         ? [reserve0, reserve1]
         : [reserve1, reserve0];
@@ -375,10 +381,10 @@ export default {
         logDryRunAlternative(action, args);
         const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
         assignReserves({
-          ...(await pair.methods.get_reserves()).decodedResult,
-          token0: (await pair.methods.token0()).decodedResult,
+          ...(await pair.get_reserves()).decodedResult,
+          token0: (await pair.token0()).decodedResult,
         });
-        totalSupply = (await pair.methods.total_supply()).decodedResult;
+        totalSupply = (await pair.total_supply()).decodedResult;
       }
 
       commit('updatePoolInfo', {
@@ -437,12 +443,12 @@ export default {
       if (!routes?.length) {
         logDryRunAlternative(action, args);
         const pair = await dispatch('getPairByTokens', { tokenA, tokenB });
-        const { decodedResult: { reserve0, reserve1 } } = await pair.methods.get_reserves();
-        const { decodedResult: token0 } = await pair.methods.token0();
+        const { decodedResult: { reserve0, reserve1 } } = await pair.get_reserves();
+        const { decodedResult: token0 } = await pair.token0();
         const {
           decodedResult: totalSupply,
           result: { height },
-        } = await pair.methods.total_supply();
+        } = await pair.total_supply();
         const pairAddress = getAddress(pair);
         routes = [[{
           address: pairAddress,
@@ -564,7 +570,7 @@ export default {
       instance,
       toAccount,
     }) {
-      const { decodedResult: currentAllowance } = await instance.methods.allowance({
+      const { decodedResult: currentAllowance } = await instance.allowance({
         from_account: address,
         for_account: toAccount,
       });
@@ -637,7 +643,7 @@ export default {
       transactionInfo,
     }) {
       // see first if we have any allowance
-      const { decodedResult: currentAllowance } = await instance.methods.allowance({
+      const { decodedResult: currentAllowance } = await instance.allowance({
         from_account: address,
         for_account: toAccount,
       });
@@ -646,13 +652,13 @@ export default {
       if (currentAllowance == null) {
         // we don't have any allowance entry, let's create one
         if (useSdkWallet) {
-          return instance.methods.create_allowance(
+          return instance.create_allowance(
             toAccount,
             amountWithSlippage,
           );
         }
         const onAccount = createOnAccountObject(address);
-        const { tx } = await instance.methods.create_allowance.get(
+        const { tx } = await instance.create_allowance(
           toAccount,
           amountWithSlippage,
           { onAccount },
@@ -665,21 +671,21 @@ export default {
         // we have something there but is less then
         // what we need, let's increase it
         if (useSdkWallet) {
-          return instance.methods.change_allowance(
+          return instance.change_allowance(
             toAccount,
             amountWithSlippage - currentAllowance,
           );
         }
         const onAccount = createOnAccountObject(address);
-        const { tx } = await instance.methods.change_allowance.get(
+        const { tx, rawTx: builded } = await instance.change_allowance(
           toAccount,
           amountWithSlippage - currentAllowance,
-          { onAccount },
+          { onAccount, callStatic: true },
         );
         commit('addTransaction', {
-          txParams: tx.params, info: transactionInfo, pending: true, unfinished: true,
+          txParams: tx, info: transactionInfo, pending: true, unfinished: true,
         }, { root: true });
-        window.location = await dispatch('sendTxDeepLinkUrl', tx.encodedTx, { root: true });
+        window.location = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
       }
       // at this point we are good, we have enough allowance
       return null;
