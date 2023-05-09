@@ -171,7 +171,8 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
       message = instance._calldata.decodeFateString(returnValue);
       break;
     case 'error':
-      message = decode(returnValue).toString();
+      // TODO: COMMENTED
+      // message = decode(returnValue).toString();
       break;
     default: message = `Unknown returnType: ${returnType}`;
   }

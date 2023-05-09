@@ -37,6 +37,8 @@ export default createStore({
     transactions: [],
     lang: null,
     hasSeenOnboarding: false,
+    // This was added because of the following error:
+    // sdk.getNodesInPool()
   },
   getters: {
     networks() {
@@ -112,6 +114,7 @@ export default createStore({
     },
   },
   actions: {
+    // HERE this is for mobile
     async initUniversal({
       commit, dispatch, state: { networkId }, getters: { networks },
     }) {
@@ -251,6 +254,7 @@ export default createStore({
     },
     async disconnectWallet({ state: { sdk }, commit }) {
       try {
+        // HERE
         await sdk.disconnectWallet(false);
       } catch (error) {
         // TODO
@@ -271,6 +275,7 @@ export default createStore({
             .find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx)));
 
           if (index !== -1 && transactions[index].pending && transactions[index].unfinished) {
+            // HERE
             const { txHash: hash } = await sdk.api.postTransaction({ tx: transaction });
             commit('changeTransactionById', { index, transaction: { unfinished: false, hash } });
           }
@@ -293,28 +298,41 @@ export default createStore({
       return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-      const nodeToSelect = (await sdk.getNodesInPool())
-        .find((node) => node.nodeNetworkId === newNetworkId);
+    // HERE
+      try {
+        // TODO: getNodesInPool gives an error
+        // we comment this temporarily
+        const nodeToSelect = (await sdk.getNodesInPool())
+          .find((node) => node.nodeNetworkId === newNetworkId);
+        // const nodeToSelect = DEFAULT_NETWORKS.find(
+          // (network) => network.networkId === newNetworkId,
+        // );
 
-      if (!nodeToSelect) {
-        commit('setNetwork', newNetworkId);
-        await dispatch('modals/open', {
-          name: 'show-error',
-          message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
-          resolve: null,
-        });
-      } else {
-        if (networkId !== newNetworkId) {
-          commit('modals/closeByKey', 'show-error');
+        if (!nodeToSelect) {
+          commit('setNetwork', newNetworkId);
+          await dispatch('modals/open', {
+            name: 'show-error',
+            message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
+            resolve: null,
+          });
+        } else {
+          if (networkId !== newNetworkId) {
+            commit('modals/closeByKey', 'show-error');
+          }
+
+          // HERE
+          sdk.selectNode(nodeToSelect.name);
+          await commit('setNetwork', newNetworkId);
+
+          if (!isDexBackendDisabled) {
+            await dispatch('backend/init');
+          }
+          await dispatch('aeternity/init');
         }
-
-        sdk.selectNode(nodeToSelect.name);
-        await commit('setNetwork', newNetworkId);
-
-        if (!isDexBackendDisabled) {
-          await dispatch('backend/init');
-        }
-        await dispatch('aeternity/init');
+        // }
+      } catch (e) {
+        // see the error here
+        console.log(e);
       }
     },
     sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {

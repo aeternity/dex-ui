@@ -7,7 +7,9 @@ export default async (store) => {
     let error = false;
     let errorMessage = '';
     try {
+    // HERE
       const returnedTransaction = await store.state.sdk.poll(hash);
+      // HERE
       const { callInfo } = await store.state.sdk.api.getTransactionInfoByHash(hash);
       handleCallError(
         callInfo,

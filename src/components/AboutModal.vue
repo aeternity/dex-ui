@@ -50,6 +50,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import contractInfo from 'dex-contracts-v2/package.json';
+// TODO: i don't think this is ok
+import packageLock from '../../package-lock.json';
 import ModalDefault from './ModalDefault.vue';
 import appInfo from '../../package.json';
 import InfoRow from './InfoRow.vue';
@@ -84,6 +86,7 @@ export default {
     }
     this.height = await this.sdk.getHeight();
     this.pollHeight = setInterval(async () => {
+    // HERE
       this.height = await this.sdk.getHeight();
     }, 20000);
   },
