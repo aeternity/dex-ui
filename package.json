@@ -12,16 +12,15 @@
     "lint": "npm run lint:script && npm run lint:style"
   },
   "dependencies": {
-    "@aeternity/aepp-sdk": "^11.0.1",
+    "@aeternity/aepp-sdk": "^13.2.2",
     "@fontsource/ibm-plex-sans": "^4.5.11",
     "@popperjs/core": "^2.11.5",
     "@sentry/tracing": "^7.8.1",
     "@sentry/vue": "^7.8.1",
     "@vueuse/head": "^0.7.9",
-    "aeternity-fungible-token": "^2.0.0",
     "bignumber.js": "^9.0.2",
     "core-js": "^3.24.1",
-    "dex-contracts-v2": "github:aeternity/dex-contracts-v2",
+    "dex-contracts-v2": "github:aeternity/dex-contracts-v2#69f800fece02da1444af7f0d6622fec356a15496",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "vue": "^3.2.37",
     "vue-i18n": "^9.2.0",

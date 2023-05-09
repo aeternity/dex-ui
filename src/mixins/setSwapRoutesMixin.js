@@ -20,7 +20,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      factory: (state) => state.aeternity.factory?.deployInfo.address,
+      factory: (state) => state.aeternity.factory?.$options.address,
     }),
     ...mapState('aeternity', ['routes']),
     ...mapState('backend', { backendFailed: 'failed' }),

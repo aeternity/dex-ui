@@ -25,24 +25,24 @@
     </div>
     <template
       v-for="wallet of wallets"
-      :key="wallet.id"
+      :key="wallet.info.id"
     >
       <div
-        v-if="!connecting || wallet.id === connectingTo"
+        v-if="!connecting || wallet.info.id === connectingTo"
         class="box wallet"
-        :data-cy="`connect-${wallet.name}`"
+        :data-cy="`connect-${wallet.info.name}`"
         @click.prevent="onWalletConnect(wallet)"
       >
         <div class="wallet">
           <div class="info">
             <img
-              v-if="icons[wallet.name]"
-              :src="icons[wallet.name]"
-              :alt="wallet.name"
+              v-if="icons[wallet.info.name]"
+              :src="icons[wallet.info.name]"
+              :alt="wallet.info.name"
             >
             <div class="title">
-              {{ wallet.name }}
-              {{ wallet.name.includes('Wallet') ? '' : ' Wallet' }}
+              {{ wallet.info.name }}
+              {{ wallet.info.name.includes('Wallet') ? '' : ' Wallet' }}
             </div>
           </div>
 
@@ -56,7 +56,7 @@
           </ButtonDefault>
         </div>
         <div
-          v-if="connecting || wallet.type === 'website'"
+          v-if="connecting || wallet.info.type === 'website'"
           class="wallet-extentions"
         >
           <div
@@ -65,7 +65,7 @@
           >
             {{ $t('initializing') }}
           </div>
-          <div v-if="wallet.type === 'website'">
+          <div v-if="wallet.info.type === 'website'">
             <div class="title">
               {{ $t('connectWalletModal.getTheBrowserExtension') }}
             </div>
@@ -100,7 +100,7 @@
 
 <script>
 import {
-  WalletDetector, BrowserWindowMessageConnection,
+  walletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
 import { resolveWithTimeout } from '../lib/utils';
 import ModalDefault from './ModalDefault.vue';
@@ -141,19 +141,19 @@ export default {
       this.addDefaultWallet();
     } else {
       this.scanningForWallets = true;
-      const scannerConnection = await BrowserWindowMessageConnection({
+      const scannerConnection = new BrowserWindowMessageConnection({
         connectionInfo: { id: 'spy' },
       });
 
-      const detector = await WalletDetector({ connection: scannerConnection });
+      let stopScan = null;
 
       const walletScanningTimeout = setTimeout(() => {
-        detector.stopScan();
+        stopScan?.();
         this.addDefaultWallet();
         this.scanningForWallets = false;
       }, 5000);
 
-      detector.scan(async ({ wallets }) => {
+      const handleWallet = async ({ wallets }) => {
         this.wallets = [
           ...Object.values(wallets).map((wallet) => ({
             ...wallet,
@@ -161,16 +161,18 @@ export default {
           })),
         ];
         clearTimeout(walletScanningTimeout);
-        detector.stopScan();
+        stopScan?.();
         this.scanningForWallets = false;
-      });
+      };
+
+      stopScan = walletDetector(scannerConnection, handleWallet);
     }
   },
   methods: {
-    async onWalletConnect(wallet) {
+    async onWalletConnect(walletObj) {
       if (this.connecting) return;
       this.connecting = true;
-      this.connectingTo = wallet.id;
+      this.connectingTo = walletObj.info.id;
 
       try {
         await resolveWithTimeout(5000, async () => {
@@ -186,7 +188,7 @@ export default {
         return;
       }
 
-      await this.$store.dispatch('connectWallet', wallet);
+      await this.$store.dispatch('connectWallet', walletObj);
 
       this.connecting = false;
       this.connectingTo = null;
@@ -195,11 +197,15 @@ export default {
     addDefaultWallet() {
       this.wallets = [
         {
-          id: 'wallet.superhero.com',
-          name: 'Superhero',
-          networkId: this.$store.state.networkId || process.env.VUE_APP_DEFAULT_NETWORK,
-          type: 'website',
-          description: this.$t('connectWalletModal.easyUseWallet'),
+          // just a stub
+          getConnection: null,
+          info: {
+            id: 'wallet.superhero.com',
+            name: 'Superhero',
+            networkId: this.$store.state.networkId || process.env.VUE_APP_DEFAULT_NETWORK,
+            type: 'website',
+            description: this.$t('connectWalletModal.easyUseWallet'),
+          },
         },
       ];
     },

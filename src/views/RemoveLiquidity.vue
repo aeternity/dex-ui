@@ -242,7 +242,7 @@ export default {
   computed: {
     ...mapState({
       address: 'address',
-      factory: (state) => state.aeternity.factory?.deployInfo.address,
+      factory: (state) => state.aeternity.factory?.$options.address,
     }),
     ...mapState('aeternity', ['slippage']),
     ...mapGetters('tokens', ['getAvailableTokens']),

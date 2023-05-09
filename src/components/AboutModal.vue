@@ -53,8 +53,9 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import sdkInfo from '@aeternity/aepp-sdk/package.json';
 import contractInfo from 'dex-contracts-v2/package.json';
+// TODO: i don't think this is ok
+import packageLock from '../../package-lock.json';
 import ModalDefault from './ModalDefault.vue';
 import appInfo from '../../package.json';
 import InfoRow from './InfoRow.vue';
@@ -70,7 +71,7 @@ export default {
   },
   data: () => ({
     appVersion: appInfo.version,
-    sdkVersion: sdkInfo.version,
+    sdkVersion: packageLock.packages['node_modules/@aeternity/aepp-sdk'].version,
     contractsVersion: contractInfo.version,
     compilerUrl: process.env.VUE_APP_COMPILER_URL,
     height: null,
@@ -83,10 +84,11 @@ export default {
   },
   async mounted() {
     await this.$watchUntilTruly(() => this.$store.state.sdk);
-    this.nodeVersion = this.sdk.selectedNode.version;
-    this.height = await this.sdk.height();
+    this.nodeVersion = (await this.sdk.getNodesInPool()).find((node) => node.name
+      === this.sdk.selectedNodeName)?.version || '-';
+    this.height = await this.sdk.getHeight();
     this.pollHeight = setInterval(async () => {
-      this.height = await this.sdk.height();
+      this.height = await this.sdk.getHeight();
     }, 20000);
   },
   beforeUnmount() {

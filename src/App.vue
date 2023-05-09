@@ -69,7 +69,8 @@ export default {
     try {
       if (this.$isMobile) {
         await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
-        this.$store.dispatch('parseAndSendTransactionFromQuery');
+        setTimeout(() => this.$store.dispatch('parseAndSendTransactionFromQuery'),
+          1000);
       } else {
         await this.$store.dispatch('initSdk');
       }
@@ -97,7 +98,7 @@ export default {
       delete query.networkId;
       this.$router.replace({ query });
     } else if (this.wallet && this.address) {
-      await this.$store.dispatch('connectWallet', this.wallet);
+      await this.$store.dispatch('connectWallet', { info: this.wallet });
     }
     if (
       this.$isMobile
