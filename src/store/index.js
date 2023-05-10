@@ -299,40 +299,30 @@ export default createStore({
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
     // HERE
-      try {
-        // TODO: getNodesInPool gives an error
-        // we comment this temporarily
-        const nodeToSelect = (await sdk.getNodesInPool())
-          .find((node) => node.nodeNetworkId === newNetworkId);
-        // const nodeToSelect = DEFAULT_NETWORKS.find(
-          // (network) => network.networkId === newNetworkId,
-        // );
+      const nodeToSelect = DEFAULT_NETWORKS.find(
+        (network) => network.networkId === newNetworkId,
+      );
 
-        if (!nodeToSelect) {
-          commit('setNetwork', newNetworkId);
-          await dispatch('modals/open', {
-            name: 'show-error',
-            message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
-            resolve: null,
-          });
-        } else {
-          if (networkId !== newNetworkId) {
-            commit('modals/closeByKey', 'show-error');
-          }
-
-          // HERE
-          sdk.selectNode(nodeToSelect.name);
-          await commit('setNetwork', newNetworkId);
-
-          if (!isDexBackendDisabled) {
-            await dispatch('backend/init');
-          }
-          await dispatch('aeternity/init');
+      if (!nodeToSelect) {
+        commit('setNetwork', newNetworkId);
+        await dispatch('modals/open', {
+          name: 'show-error',
+          message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
+          resolve: null,
+        });
+      } else {
+        if (networkId !== newNetworkId) {
+          commit('modals/closeByKey', 'show-error');
         }
-        // }
-      } catch (e) {
-        // see the error here
-        console.log(e);
+
+        // HERE
+        sdk.selectNode(nodeToSelect.name);
+        await commit('setNetwork', newNetworkId);
+
+        if (!isDexBackendDisabled) {
+          await dispatch('backend/init');
+        }
+        await dispatch('aeternity/init');
       }
     },
     sendTxDeepLinkUrl({ state: { networkId } }, encodedTx) {
