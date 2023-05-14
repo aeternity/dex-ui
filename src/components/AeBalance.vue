@@ -19,6 +19,7 @@ import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
 import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
+import { DEFAULT_NETWORKS } from '../lib/constants';
 
 const pollState = {};
 let storeState;
@@ -31,7 +32,6 @@ async function poll() {
         try {
           if (address.startsWith('ct_') && storeState.value.address) {
             if (!state.instance) {
-              // HERE
               state.instance = await storeState.value.sdk.initializeContract(
                 {
                   aci: FUNGIBLE_TOKEN_CONTRACT,
@@ -49,7 +49,6 @@ async function poll() {
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_') && storeState.value.sdk) {
             state.lastValue = new BigNumber(aettosToAe(
-              /* HERE */
               (await storeState.value.sdk.getBalance(address)
                 .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e)))),
             ));

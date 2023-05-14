@@ -254,7 +254,6 @@ export default createStore({
     },
     async disconnectWallet({ state: { sdk }, commit }) {
       try {
-        // HERE
         await sdk.disconnectWallet(false);
       } catch (error) {
         // TODO
@@ -298,10 +297,8 @@ export default createStore({
       return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-    // HERE
-      const nodeToSelect = DEFAULT_NETWORKS.find(
-        (network) => network.networkId === newNetworkId,
-      );
+      const nodeToSelect = (await sdk.getNodesInPool())
+        .find((node) => node.nodeNetworkId === newNetworkId);
 
       if (!nodeToSelect) {
         commit('setNetwork', newNetworkId);
@@ -315,7 +312,6 @@ export default createStore({
           commit('modals/closeByKey', 'show-error');
         }
 
-        // HERE
         sdk.selectNode(nodeToSelect.name);
         await commit('setNetwork', newNetworkId);
 

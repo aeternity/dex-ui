@@ -86,7 +86,6 @@ export default {
     }
     this.height = await this.sdk.getHeight();
     this.pollHeight = setInterval(async () => {
-    // HERE
       this.height = await this.sdk.getHeight();
     }, 20000);
   },
