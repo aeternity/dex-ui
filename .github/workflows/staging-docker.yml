@@ -15,9 +15,10 @@ jobs:
     runs-on: ubuntu-latest    
     name: Web build docker
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       
       - name: Set up Docker Buildx
         id: buildx
@@ -59,7 +60,7 @@ jobs:
         id: git-sha
         shell: bash
         run: |
-          echo "::set-output name=git-sha::$(git rev-parse --short HEAD)"
+          echo GIT_SHA=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
       
       - name: Build and push docker image
         if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
@@ -88,12 +89,18 @@ jobs:
           ref: stg
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Check the initial PR deployment status before make a PR Sync.
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        uses: aeternity/ae-github-actions/deploy-status@v7
+        with:
+          url: https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.aepps.com
       
       - name: Staging PR Sync
         if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
         uses: aeternity/ae-github-actions/argocd-pr-sync@v4
         with:
-          git-sha: ${{ steps.git-sha.outputs.git-sha }}
+          git-sha: ${{ steps.git-sha.outputs.GIT_SHA }}
           url-prefix: pr-${{ env.PR_NUMBER }}
           env: ${{ env.ENV }}
           app: ${{ env.APP }}

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="tip">
-    {{ ` ${tip}` }}
+    {{ `${tip}` }}
   </div>
 </template>
 

@@ -66,6 +66,12 @@
           </ButtonPlain>
           <ButtonPlain
             class="link"
+            @click="$store.dispatch('modals/open', { name: 'about-dex' })"
+          >
+            {{ $t('nav.aboutDex') }}
+          </ButtonPlain>
+          <ButtonPlain
+            class="link"
             @click="activeMenu = 'settings'"
           >
             {{ $t('nav.settings.title') }}
@@ -151,6 +157,12 @@
             @click="setLocale('zh-cn')"
           >
             简体中文
+          </ButtonPlain>
+          <ButtonPlain
+            class="link"
+            @click="setLocale('ru')"
+          >
+            Русский
           </ButtonPlain>
         </div>
       </ActionsMenu>

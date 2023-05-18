@@ -72,20 +72,19 @@ export default {
         from, to,
         amount, isFrom,
       } = this.$route.query;
-
-      const tokenList = [];
-      this.$store.state.tokens.providers
-        .filter((provider) => provider.active)
-        .forEach((provider) => {
-          tokenList.push(...provider.tokens);
-        });
-      tokenList.push(...this.$store.state.tokens.userTokens);
-
-      const getToken = (token) => tokenList.find(
-        (_token) => (
-          _token.is_ae && _token.symbol === token)
-          || (!_token.is_ae && _token.contract_id === token),
+      const getToken = (token) => this.$store.getters['tokens/getAvailableTokens']().find(
+        (_token) => (_token.is_ae ? _token.symbol : _token.contract_id) === token
+          && _token.networkId === this.$store.state.networkId,
       );
+      if ((from && !getToken(from)) || (to && !getToken(to))) {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 5000);
+          this.$watchUntilTruly(() => this.$store.state.backend
+            ?.tokensUpdatedFor[this.$store.state.networkId]).then(resolve);
+        });
+      }
 
       await Promise.all([
         from && this.setSelectedToken(getToken(from), true),

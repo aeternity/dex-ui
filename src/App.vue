@@ -52,8 +52,7 @@ export default {
     },
   },
   async mounted() {
-    const { lang } = this.$store.state;
-    this.$i18n.locale = lang;
+    if (this.$store.state.lang) this.$i18n.locale = this.$store.state.lang;
 
     this.$store.commit('tokens/initDefaultTokens');
 
@@ -99,6 +98,17 @@ export default {
       this.$router.replace({ query });
     } else if (this.wallet && this.address) {
       await this.$store.dispatch('connectWallet', this.wallet);
+    }
+    if (
+      this.$isMobile
+      && !query.address
+      && !query.transaction
+      && !query.networkId
+      && !this.$store.state.hasSeenOnboarding
+    ) {
+      this.$store.dispatch('showOnboarding');
+    } else if (!this.$store.state.hasSeenOnboarding) {
+      this.$store.commit('setOnboardingModalAsSeen');
     }
   },
   methods: {

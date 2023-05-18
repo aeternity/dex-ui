@@ -3,6 +3,7 @@
     "swap": "Échanger",
     "pool": "Piscine",
     "aboutUs": "À propos de nous",
+    "aboutDex": "À propos de DEX",
     "termsCondition": "Termes et conditions",
     "settings": {
       "title": "Réglages",
@@ -14,6 +15,11 @@
     "source": "La source",
     "reportBug": "Signaler un bug",
     "leaveFeedback": "Laissez vos commentaires"
+  },
+  "aboutModal": {
+      "title": "À propos de Superhero DEX",
+      "info": "Informations sur les versions de bibliothèque et de service utilisées dans Superhero DEX",
+      "network": "Réseau"
   },
   "swap": {
     "title": "Échanger",
@@ -27,7 +33,7 @@
     "enterSlipPercentage": "Entrez un pourcentage de glissement valide",
     "minutes": "minutes",
     "balance": "Équilibre",
-    "permissionToolTip": "Vous devez autoriser les contrats intelligents DEX à utiliser votre {msg}. Vous n'avez qu'à le faire une fois par jeton.",
+    "permissionToolTip": "Vous devez autoriser les contrats intelligents DEX à utiliser votre {msg}.",
     "allowDEX": "Autoriser le protocole DEX à utiliser votre {token}"
   },
   "confirmSwapModal": {
@@ -48,7 +54,6 @@
     "priceImpactWarning": "En raison de l'impact élevé sur les prix et du faible glissement, cette transaction a peu ou pas de chance d'être exécutée avec succès"
   },
   "pool": {
-    "title": "Piscine",
     "yourLiquidity": "Votre liquidité",
     "liquidityPopup": "Les fournisseurs de liquidité perçoivent une commission de 0,3 % sur toutes les transactions proportionnelle à leur part du pool. Les frais sont ajoutés au pool, s'accumulent en temps réel et peuvent être réclamés en retirant vos liquidités.",
     "dontSeePool": "Vous ne voyez pas un groupe que vous avez rejoint?",
@@ -62,16 +67,13 @@
     "willReceive": "Vous allez recevoir",
     "beRemoved": "Jetons à retirer",
     "yourPoolShare": "Votre partage de piscine",
-    "deposited": "Déposé",
-    "estimated": "Estimation",
-    "addAtLeast": "et au moins",
+    "deposited": "{0} Déposé",
+    "estimated": "{0} Estimation",
     "allowedSlippage": "Slippage autorisé",
     "rates": "Les taux",
     "confirm": "Confirmer",
     "supplyDetails": "Détails de l'approvisionnement",
     "removalDetails": "Détails de la suppression",
-    "removingAround": "Enlever autour",
-    "poolTokensLiquidity": "jetons de pool à partir de la liquidité fournie",
     "estimation": "Vous recevrez au moins {0} et au moins {1} ou la transaction reviendra.",
     "outputEstimated": "La sortie est estimée.Si le prix change de plus de {0}%, votre transaction reviendra."
   },
@@ -84,8 +86,8 @@
     "yourPosition": "Ta position"
   },
   "importPool": {
-    "title": "Importer le pool V2",
-    "importTip": "Utilisez cet outil pour trouver les pools v2 qui n'apparaissent pas automatiquement dans l'interface.",
+    "title": "Importer le pool",
+    "importTip": "Utilisez cet outil pour trouver les pools qui n'apparaissent pas automatiquement dans l'interface.",
     "fetchingData": "Récupération des données",
     "selectBothTokens": "Sélectionnez les deux jetons pour trouver votre liquidité fournie.",
     "poolFound": "Votre partage de pool a été importé avec succès !",
@@ -96,7 +98,6 @@
     "title": "Connecter un portefeuille",
     "disclaimer": "En connectant un portefeuille, vous acceptez Dex {0} et reconnaissez que vous avez lu et compris le dex {1}.",
     "termsOfService": "Conditions d'utilisation",
-    "protocolDisclaimer": "Avertissement de protocole",
     "superhero": "Superhero",
     "superheroDesc": "Extension de navigateur facile à utiliser.",
     "easyUseWallet": "Portefeuille facile à utiliser.",
@@ -122,8 +123,13 @@
     "error": "Erreur de confirmation",
     "rejected": "Opération rejetée par l'utilisateur"
   },
+  "onboardingModal": {
+    "headline": "Hé!",
+    "body": "Merci d'avoir essayé le DEX ! Nous travaillons toujours dur pour l'améliorer dans tous les aspects, vous pourriez donc rencontrer quelques problèmes mineurs lors de l'utilisation d'un appareil mobile. Pour en savoir plus sur les solutions aux problèmes courants, veuillez visiter ce lien:",
+    "confirm": "D'accord"
+  },
   "liquidityDetails": {
-    "pooled": "Regroupé",
+    "pooled": "Regroupé {0}:",
     "loadingFailed": "Échec du chargement",
     "poolInformation": "Afficher les informations sur la piscine",
     "add": "Ajouter",
@@ -166,7 +172,7 @@
   "connectWalletFindPool": "Connectez-vous à un portefeuille pour trouver des piscines",
   "liquidityTip": "Lorsque vous ajoutez de la liquidité, vous recevrez des jetons de piscine représentant votre position.Ces jetons gagnent automatiquement des frais proportionnels à votre part de la piscine et peuvent être échangés à tout moment.",
   "receiveAtLeast": "Vous recevrez au moins",
-  "transactionWillRevert": "ou la transaction reviendra",
+  "transactionWillRevert": "ou la transaction reviendra.",
   "max": "max",
   "approving": "Approuvant",
   "verifyingApproval": "Vérification de l'approbation",
@@ -174,12 +180,11 @@
   "tip": "Pointe",
   "viewExplorer": "Voir dans Explorer",
   "poolTokens": "Jetons de piscine",
-  "customTokens": "Jetons personnalisés",
+  "customTokens": "Aucun Jeton personnalisé | {n} Jeton personnalisé | {n} Jetons personnalisés",
   "tokens": "Jetons",
   "price": "Prix",
   "clearAll": "Tout effacer",
   "active": "Active",
-  "import": "Importer",
   "lists": "Listes",
   "custom": "Personnalisé",
   "copied": "Copié!",
@@ -187,7 +192,7 @@
   "error": "Erreur",
   "close": "Proche",
   "dismiss": "Rejeter",
-  "swaping": "Échange",
+  "swapping": "Échange",
   "exact": "exacte",
   "for": "pour",
   "provide": "Apporter",

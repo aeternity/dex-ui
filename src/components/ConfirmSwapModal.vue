@@ -22,7 +22,7 @@
     />
     <div class="estimation">
       {{ isLastAmountFrom ? $t("confirmSwapModal.output") : $t("confirmSwapModal.input") }}
-      {{ $t("confirmSwapModal.input") }}.
+      {{ $t("confirmSwapModal.isEstimated") }}.
       {{
         isLastAmountFrom ?
           $t("confirmSwapModal.receiveAtLeast") :
@@ -215,6 +215,11 @@ export default {
 
     .no-border {
       border-bottom: none;
+
+      > span:first-of-type {
+        text-align: left;
+        max-width: 100px;
+      }
     }
   }
 

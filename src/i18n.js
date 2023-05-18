@@ -20,8 +20,36 @@ function loadLocaleMessages() {
   return messages;
 }
 
+function preferredLocale() {
+  const code = navigator.language.split('-')[0];
+  return require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i).keys()
+    .map((key) => key.match(/([A-Za-z0-9-_]+)\./i)[1]).includes(code) ? code : '';
+}
+
 export default createI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || 'en',
+  locale: preferredLocale() || 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
   messages: loadLocaleMessages(),
+  pluralizationRules: {
+    ru(choice, choicesLength) {
+      if (choice === 0) {
+        return 0;
+      }
+
+      const teen = choice > 10 && choice < 20;
+      const endsWithOne = choice % 10 === 1;
+
+      if (choicesLength < 4) {
+        return (!teen && endsWithOne) ? 1 : 2;
+      }
+      if (!teen && endsWithOne) {
+        return 1;
+      }
+      if (!teen && choice % 10 >= 2 && choice % 10 <= 4) {
+        return 2;
+      }
+
+      return (choicesLength < 4) ? 2 : 3;
+    },
+  },
 });

@@ -46,7 +46,7 @@ export default {
 @use '../../styles/typography.scss';
 
 .toggle {
-  max-width: 160px;
+  max-width: 250px;
   margin: 0 auto;
   padding: 4px;
   border-radius: 16px;

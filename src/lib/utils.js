@@ -1,7 +1,13 @@
 import { AmountFormatter } from '@aeternity/aepp-sdk';
 import { decode } from '@aeternity/aepp-sdk/es/tx/builder/helpers';
 import BigNumber from 'bignumber.js';
-import dexErrorMessages from 'dex-contracts-v2/build/errors';
+import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
+import dexUiErrorMessages from './errors';
+
+const errorMessages = {
+  ...dexContractsErrorMessages,
+  ...dexUiErrorMessages,
+};
 
 export const fetchJson = async (...args) => {
   const response = await fetch(...args);
@@ -49,7 +55,7 @@ export const findErrorExplanation = (message, { networkId } = {}) => {
 
   const found = message.replace('Invocation failed: "', '').split('"')[0];
 
-  const errorExplanation = dexErrorMessages[found];
+  const errorExplanation = errorMessages[found];
   return errorExplanation || message;
 };
 

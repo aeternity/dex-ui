@@ -54,7 +54,9 @@ async function poll() {
             ));
           }
         } catch (e) {
-          state.lastValue = BigNumber(0);
+          if (e?.message.indexOf('tx_nonce_too_high_for_account') === -1) {
+            state.lastValue = BigNumber(0);
+          }
           handleUnknownError(e);
         }
         // eslint-disable-next-line no-return-assign, no-param-reassign

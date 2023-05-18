@@ -3,6 +3,7 @@
     "swap": "Swap",
     "pool": "Pool",
     "aboutUs": "About us",
+    "aboutDex": "About DEX",
     "termsCondition": "Terms & Condition",
     "settings": {
       "title": "Settings",
@@ -15,8 +16,20 @@
     "reportBug": "Report a bug",
     "leaveFeedback": "Leave Feedback"
   },
+  "aboutModal": {
+    "title": "About Superhero DEX",
+    "info": "Information about the library and service versions used within Superhero DEX",
+    "network": "Network",
+    "contracts": "DEX Contracts",
+    "middleware": "Middleware",
+    "compiler": "Compiler",
+    "backend": "Dex Backend",
+    "node": "Node",
+    "sdk": "SDK",
+    "height": "Height"
+  },
   "swap": {
-    "title": "Swap",
+    "button": "Swap",
     "transactSettings": "Transaction settings",
     "transactSettingsPopup": "Your transaction will revert if the price changes unfavorably by more than this percentage.",
     "slipTolerance": "Slippage tolerance",
@@ -27,7 +40,7 @@
     "enterSlipPercentage": "Enter a valid slippage percentage",
     "minutes": "minutes",
     "balance": "Balance",
-    "permissionToolTip": "You must give the DEX smart contracts permission to use your {msg}. You only have to do this once per token.",
+    "permissionToolTip": "You must give the DEX smart contracts permission to use your {msg}.",
     "allowDEX": "Allow the DEX Protocol to use your {token}"
   },
   "confirmSwapModal": {
@@ -48,7 +61,6 @@
     "priceImpactWarning": "Due to the high price impact and the low slippage this transaction has little to no chance to be successfully executed"
   },
   "pool": {
-    "title": "Pool",
     "yourLiquidity": "Your Liquidity",
     "liquidityPopup": "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.",
     "dontSeePool": "Don't see a pool you've joined?",
@@ -62,16 +74,14 @@
     "willReceive": "You will receive",
     "beRemoved": "Tokens to be removed",
     "yourPoolShare": "Your pool share",
-    "deposited": "Deposited",
-    "estimated": "Estimated",
-    "addAtLeast": "and at least",
+    "deposited": "{0} Deposited",
+    "estimated": "{0} Estimated",
     "allowedSlippage": "Allowed slippage",
     "rates": "Rates",
-    "confirm": "Confirm",
+    "confirmAdding": "Confirm Supply",
+    "confirmRemoving": "Confirm Removal",
     "supplyDetails": "Supply details",
     "removalDetails": "Removal details",
-    "removingAround": "Removing around",
-    "poolTokensLiquidity": "pool tokens from the provided liquidity",
     "estimation": "You will receive at least {0} and at least {1} or the transaction will revert.",
     "outputEstimated": "Output is estimated. If the price changes by more than {0}% your transaction will revert."
   },
@@ -85,8 +95,8 @@
     "transactionMessage": "Removing liquidity of {tokenAAmount} {tokenASymbol} and {tokenBAmount} {tokenBSymbol}"
   },
   "importPool": {
-    "title": "Import V2 Pool",
-    "importTip": "Use this tool to find v2 pools that don't automatically appear in the interface.",
+    "title": "Import Pool",
+    "importTip": "Use this tool to find pools that don't automatically appear in the interface.",
     "fetchingData": "Fetching data",
     "selectBothTokens": "Select both tokens to find your provided liquidity.",
     "poolFound": "Your pool share was imported successfully!",
@@ -95,9 +105,8 @@
   },
   "connectWalletModal": {
     "title": "Connect a wallet",
-    "disclaimer": "By connecting a wallet, you agree to DEX {0}  and acknowledge that you have read and understand the DEX {1}.",
+    "disclaimer": "By connecting a wallet, you agree to DEX {0} and acknowledge that you have read and understand the DEX {1}.",
     "termsOfService": "Terms of Service",
-    "protocolDisclaimer": "Protocol Disclaimer",
     "superhero": "Superhero",
     "superheroDesc": "Easy-to-use browser extension.",
     "easyUseWallet": "Easy-to-use wallet.",
@@ -109,7 +118,7 @@
     "onWalletConnectTimeout": "Connection to SDK has been timeout, please try again later."
   },
   "accountInfoModal": {
-    "title": "Connected account",
+    "title": "Connected Account",
     "connectWithWallet": "Connected with {0} Wallet",
     "disconnect": "Disconnect",
     "copyAddress": "Copy Address",
@@ -123,8 +132,13 @@
     "error": "Confirmation Error",
     "rejected": "Operation rejected by user"
   },
+  "onboardingModal": {
+    "headline": "Hey!",
+    "body": "Thanks for trying out the DEX! We are still working hard to improve it in all aspects, so you might run into some minor issues when using a mobile device. To find out more about solutions for common problems please visit this link:",
+    "confirm": "Ok"
+  },
   "liquidityDetails": {
-    "pooled": "Pooled",
+    "pooled": "Pooled {0}:",
     "loadingFailed": "Loading Failed",
     "poolInformation": "View pool information",
     "add": "Add",
@@ -151,6 +165,7 @@
     "middlewareNotAvailable": "Middleware is not available, some functionality may not work properly.",
     "middlewareOutOfSync": "The middleware is out of sync, some functionality may not work properly."
   },
+  "superheroDex": "Superhero DEX",
   "initializing": "Initializing...",
   "connectWallet": "Connect Wallet",
   "insufficientBalance": "Insufficient {msg} balance",
@@ -167,20 +182,18 @@
   "connectWalletFindPool": "Connect to a wallet to find pools",
   "liquidityTip": "When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.",
   "receiveAtLeast": "You will receive at least",
-  "transactionWillRevert": "or the transaction will revert",
+  "transactionWillRevert": "or the transaction will revert.",
   "max": "Max",
   "approving": "Approving",
   "verifyingApproval": "Verifying approval",
   "approved": "Approved",
-  "tip": "Tip",
   "viewExplorer": "View in explorer",
   "poolTokens": "Pool Tokens",
-  "customTokens": "Custom Tokens",
+  "customTokens": "No Custom Tokens | {n} Custom Token | {n} Custom Tokens",
   "tokens": "Tokens",
   "price": "Price",
   "clearAll": "Clear all",
   "active": "Active",
-  "import": "Import",
   "lists": "Lists",
   "custom": "Custom",
   "copied": "Copied!",
@@ -188,7 +201,7 @@
   "error": "Error",
   "close": "Close",
   "dismiss": "Dismiss",
-  "swaping": "Swaping",
+  "swapping": "Swapping",
   "exact": "exact",
   "for": "for",
   "provide": "Provide",

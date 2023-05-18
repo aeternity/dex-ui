@@ -42,7 +42,12 @@ export const DEFAULT_NETWORKS = [
         decimals: MAGNITUDE,
         name: 'WeTrue Token',
         symbol: 'WTT',
-        is_ae: false,
+      },
+      {
+        contract_id: 'ct_7UfopTwsRuLGFEcsScbYgQ6YnySXuyMxQWhw6fjycnzS5Nyzq',
+        decimals: MAGNITUDE,
+        name: 'AeBox Coin',
+        symbol: 'ABC',
       },
     ],
   },

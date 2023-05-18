@@ -363,6 +363,7 @@ export default {
           liquidity,
           amountADesired: expandDecimals(this.tokenAInput, this.tokenA.decimals),
           amountBDesired: expandDecimals(this.tokenBInput, this.tokenB.decimals),
+          transactionInfo: this.generateRemoveLiquidityMessage(),
         });
       } else {
         const { token, isTokenFrom } = aePair;
@@ -375,11 +376,9 @@ export default {
           amountAEDesired: isTokenFrom
             ? expandDecimals(this.tokenBInput, this.tokenB.decimals)
             : expandDecimals(this.tokenAInput, this.tokenA.decimals),
+          transactionInfo: this.generateRemoveLiquidityMessage(),
         });
       }
-      this.$store.commit('addTransaction', {
-        hash: result.hash, info: this.generateRemoveLiquidityMessage(), pending: true,
-      });
       return result;
     },
     async handleRemove() {
@@ -397,10 +396,7 @@ export default {
         });
         await this.$store.dispatch('modals/open', {
           name: 'submit-transaction',
-          submitMessage: `${this.$t('removeLiquidity.removingAround')}
-            ${this.poolTokenInput.toFixed(5)}
-            ${this.tokenA.symbol}/${this.tokenB.symbol}
-            ${this.$t('removeLiquidity.poolTokensLiquidity')}`,
+          submitMessage: this.generateRemoveLiquidityMessage(),
           work: this.removalProcess,
         });
       } catch (e) {

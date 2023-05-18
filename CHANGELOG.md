@@ -1,5 +1,155 @@
 # Changelog
 
+## [1.18.0](https://github.com/aeternity/dex-ui/compare/v1.17.3...v1.18.0) (2023-04-26)
+
+
+### Features
+
+* add extra info for low slippage errors ([a5eacfc](https://github.com/aeternity/dex-ui/commit/a5eacfcedc6c3133b65b828f731f650ec3fc7fd7))
+
+
+### Bug Fixes
+
+* **AeBalance:** balance goes to 0 when error is catched ([e000517](https://github.com/aeternity/dex-ui/commit/e00051747b3b4349814c83aa688446d135aae990))
+* remove duplicate tokens ([12e063e](https://github.com/aeternity/dex-ui/commit/12e063ef8c6f5da1d42baaff0146f3bed4e2fbba))
+
+
+### CI / CD
+
+* **build:** patch-deprecated-gh-action-steps ([98f4e27](https://github.com/aeternity/dex-ui/commit/98f4e2797c9025bdc33cd6afb2dbcfb02bca7629))
+* check pr deployment state before sync ([6f8b70d](https://github.com/aeternity/dex-ui/commit/6f8b70d8b337760491050fe906576bd43c3f0943))
+* fix spelling ([623392f](https://github.com/aeternity/dex-ui/commit/623392f4cc1699341649acb18bbc9a8456427ddc))
+
+
+### Refactorings
+
+* change low slippage message ([50d4ebf](https://github.com/aeternity/dex-ui/commit/50d4ebfaf1a026d936fdf08da9b2e0b72f3299f7))
+
+## [1.17.3](https://github.com/aeternity/dex-ui/compare/v1.17.2...v1.17.3) (2022-11-18)
+
+
+### Bug Fixes
+
+* fix gitsha ([a8c6c31](https://github.com/aeternity/dex-ui/commit/a8c6c31457a23829aff6c7d6f0ce976887ebad75))
+* **swap-view:** insufficient funds button label ([522f050](https://github.com/aeternity/dex-ui/commit/522f050a7fb2b9615622d3ef752d1e6f1a1c9c37))
+
+## [1.17.2](https://github.com/aeternity/dex-ui/compare/v1.17.1...v1.17.2) (2022-08-12)
+
+
+### Bug Fixes
+
+* refresh page for non-default network and selected AE ([59c2a0e](https://github.com/aeternity/dex-ui/commit/59c2a0e43db1f560a3682956a74653c55989d34f))
+
+## [1.17.1](https://github.com/aeternity/dex-ui/compare/v1.17.0...v1.17.1) (2022-08-11)
+
+
+### Bug Fixes
+
+* **onboarding:** adds correct link ([9596a86](https://github.com/aeternity/dex-ui/commit/9596a869eee4186062639be64e1a7825d5182fca))
+
+## [1.17.0](https://github.com/aeternity/dex-ui/compare/v1.16.1...v1.17.0) (2022-08-10)
+
+
+### Features
+
+* adds mobile onboarding modal ([56871e5](https://github.com/aeternity/dex-ui/commit/56871e54a61ae281d46182cfef2c0c97d03a20f2))
+* **onboarding:** adds correct link ([8c5bf15](https://github.com/aeternity/dex-ui/commit/8c5bf155f83a3c2745cca632ca3f0d5e128f198c))
+
+
+### Bug Fixes
+
+* **onboarding:** onboarding triggers when not wallet callback url ([28dded4](https://github.com/aeternity/dex-ui/commit/28dded4e6de18dbe69b667fbfc5c9c447218d668))
+* **svg:** make skip optimize flag works correctly ([abc2463](https://github.com/aeternity/dex-ui/commit/abc24634206f5d3f058a3d6687d77607893107d3))
+* **wording:** russian translation typos ([7fd1ce5](https://github.com/aeternity/dex-ui/commit/7fd1ce5d9952cd40b7eda79203c21464ebe47188))
+
+
+### Refactorings
+
+* **onboarding:** removes unnecessary method ([cfdc031](https://github.com/aeternity/dex-ui/commit/cfdc03103c570e3085c4afcfb3a6a7d15e5509c6))
+
+## [1.16.1](https://github.com/aeternity/dex-ui/compare/v1.16.0...v1.16.1) (2022-08-09)
+
+
+### Bug Fixes
+
+* amount with slippage for create_allowance on mobile ([e4683d7](https://github.com/aeternity/dex-ui/commit/e4683d73d1fdf8d515712fc3b48d16732ec69f95))
+
+## [1.16.0](https://github.com/aeternity/dex-ui/compare/v1.15.0...v1.16.0) (2022-08-09)
+
+
+### Features
+
+* add the about dex modal ([2f20efa](https://github.com/aeternity/dex-ui/commit/2f20efacb609e1d5d115838637ee7abb8175a6fc))
+* adds 2 aex9 tokens ([987b8d5](https://github.com/aeternity/dex-ui/commit/987b8d576b9a150b05c7dc315675396bc80bf927))
+* adds 404 fallback page ([5a3528f](https://github.com/aeternity/dex-ui/commit/5a3528f3af6e7e2c55e082f2a2323a4f121a6274))
+* show loader on selection restoring ([0d7ed70](https://github.com/aeternity/dex-ui/commit/0d7ed709afc87d754ca055cc3c6ba0980bf06ed7))
+* **t&c:** updates terms and conditions to v4 ([4c040cc](https://github.com/aeternity/dex-ui/commit/4c040cc60d54b91c9825a7d6534f9fddeb24fb9c))
+* **wording:** make first initialization base on user language ([a2bb803](https://github.com/aeternity/dex-ui/commit/a2bb803448edee779dc6aa096119f5a9fa189430))
+
+
+### Bug Fixes
+
+* **eslintrc:** resolve lint warnings ([46e8ff9](https://github.com/aeternity/dex-ui/commit/46e8ff91a462b9cbc2799969fdea3c37a07db490))
+* **save-token-selection:** restore selected backend tokens ([09588b2](https://github.com/aeternity/dex-ui/commit/09588b2b8166f89ef3f0cf8bcd5fc18c035f5038))
+* **translation:** adjusts cn translation ([b4fbebf](https://github.com/aeternity/dex-ui/commit/b4fbebf2aafa4e7822e8f7f14eb0308b35de86d9))
+* **user-custom-tokens-manager:** show token image correct size ([2e0c520](https://github.com/aeternity/dex-ui/commit/2e0c520fd6f5a467b9ba04c0f4b0860526634ae3))
+* **wording:** adjust ui for different languages ([f980fb2](https://github.com/aeternity/dex-ui/commit/f980fb2091c2c45e94ef03cec3843785bd0ab2a9))
+
+
+### Refactorings
+
+* **liquidity-details:** highlight pooled tokens ([a25e16b](https://github.com/aeternity/dex-ui/commit/a25e16bc74650f1d08008ba7ffbea02a482d9a37))
+* **wording:** drop v2 notations ([de3e2f0](https://github.com/aeternity/dex-ui/commit/de3e2f01acfcad5f2b9505bce9d66206ca638db7))
+
+
+### Miscellaneous
+
+* updates licence copyright date ([ffb3f87](https://github.com/aeternity/dex-ui/commit/ffb3f87315fab80086c6c236fc9c03cbb00086bd))
+
+## [1.15.0](https://github.com/aeternity/dex-ui/compare/v1.14.0...v1.15.0) (2022-08-04)
+
+
+### Features
+
+* **nginx:** removes password protection ([f865a01](https://github.com/aeternity/dex-ui/commit/f865a018ba0831ac27770dc26d9a7b2416063aa9))
+
+
+### Bug Fixes
+
+* **index:** initialize using stored networkId ([7e0b7db](https://github.com/aeternity/dex-ui/commit/7e0b7dbf84be7dcda4911893472415636b152184))
+* **remove-liquidity:** do not add wrong/duplicate transaction info ([231bef5](https://github.com/aeternity/dex-ui/commit/231bef59fbd8dd43d17b9d25b11d7d065377d78f))
+* wording ([8965245](https://github.com/aeternity/dex-ui/commit/8965245ebfe74cb9108602801d30ecf9e25f180f))
+
+
+### Refactorings
+
+* **env:** set Testnet as default network in develop ([d962715](https://github.com/aeternity/dex-ui/commit/d962715f5cbc31a65cac8ac4019e7a7b963c5911))
+* skip confirmed submission modal on mobile ([569e924](https://github.com/aeternity/dex-ui/commit/569e924f5aafd52928a4e09f96ee5b788d15f002))
+
+## [1.14.0](https://github.com/aeternity/dex-ui/compare/v1.13.0...v1.14.0) (2022-08-02)
+
+
+### Features
+
+* **dex-backend:** restore token list fetching ([9bb4f0b](https://github.com/aeternity/dex-ui/commit/9bb4f0bc3264c91332bb1f74770a3f4b07ac8f22))
+* **env:** moves compiler to new address ([1e5f81e](https://github.com/aeternity/dex-ui/commit/1e5f81efcf538d4a389e99b94cd7209f816aa343))
+
+
+### Bug Fixes
+
+* **env:** removes unrequired version from compiler ([fab0022](https://github.com/aeternity/dex-ui/commit/fab00223affae7cb21d7112c2167a867a9ad8971))
+* **pending-transaction-handler:** do not process unfinished transactions ([ce8391a](https://github.com/aeternity/dex-ui/commit/ce8391a3e77c4e3071ba6f109697ceeeda3fd1e1))
+
+
+### Miscellaneous
+
+* **constants:** cleans left over variables ([1056a95](https://github.com/aeternity/dex-ui/commit/1056a95785c5cf88430a77d11d86e96d5829c498))
+
+
+### Testing
+
+* **e2e:** do not record videos or screenshots ([7ad213b](https://github.com/aeternity/dex-ui/commit/7ad213b29463a5ae8eea3053adc989216f7217ae))
+
 ## [1.13.0](https://github.com/aeternity/dex-ui/compare/v1.12.0...v1.13.0) (2022-07-28)
 
 

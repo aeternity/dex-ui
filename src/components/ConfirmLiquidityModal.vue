@@ -46,12 +46,12 @@
         </div>
         <div>
           <span>
-            {{ tokenA.symbol }}
-            {{
-              isAdding ?
-                $t("confirmLiquidityModal.deposited") :
-                $t("confirmLiquidityModal.estimated")
-            }}
+            <i18n-t
+              :keypath="isAdding
+                ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'"
+            >
+              <span>{{ tokenA.symbol }}</span>
+            </i18n-t>
           </span>
           <div>
             {{ amountA ? amountA.toFixed(5) : '-' }}
@@ -59,12 +59,12 @@
         </div>
         <div>
           <span>
-            {{ tokenB.symbol }}
-            {{
-              isAdding ?
-                $t("confirmLiquidityModal.deposited") :
-                $t("confirmLiquidityModal.estimated")
-            }}
+            <i18n-t
+              :keypath="isAdding
+                ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'"
+            >
+              <span>{{ tokenB.symbol }}</span>
+            </i18n-t>
           </span>
           <div>
             {{ amountB ? amountB.toFixed(5) : '-' }}
@@ -90,7 +90,9 @@
         </div>
       </div>
       <ButtonDefault @click="allowHandler">
-        {{ $t("confirmLiquidityModal.confirm") }} {{ isAdding ? $t('supply') : $t('removal') }}
+        {{ isAdding
+          ? $t("confirmLiquidityModal.confirmAdding")
+          : $t("confirmLiquidityModal.confirmRemoving") }}
       </ButtonDefault>
     </div>
   </ModalDefault>

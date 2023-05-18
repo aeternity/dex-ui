@@ -31,7 +31,8 @@ export default createStore({
     useSdkWallet: false,
     networkId: process.env.VUE_APP_DEFAULT_NETWORK,
     transactions: [],
-    lang: process.env.VUE_APP_I18N_LOCALE || 'en',
+    lang: null,
+    hasSeenOnboarding: false,
   },
   getters: {
     networks() {
@@ -101,9 +102,14 @@ export default createStore({
     setLang(state, lang) {
       state.lang = lang;
     },
+    setOnboardingModalAsSeen(state) {
+      state.hasSeenOnboarding = true;
+    },
   },
   actions: {
-    async initUniversal({ commit, getters: { networks } }) {
+    async initUniversal({
+      commit, dispatch, state: { networkId }, getters: { networks },
+    }) {
       const nodes = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const network of Object.values(networks)) {
@@ -119,6 +125,7 @@ export default createStore({
         compilerUrl: process.env.VUE_APP_COMPILER_URL,
       });
       commit('setSdk', instance);
+      dispatch('selectNetwork', networkId);
     },
     async initSdk({
       commit, dispatch, state, getters: { networks },
@@ -148,7 +155,7 @@ export default createStore({
         },
       });
       commit('setSdk', instance);
-      commit('setNetwork', state.networkId);
+      dispatch('selectNetwork', state.networkId);
     },
     async connectWallet({ dispatch, commit, state: { sdk, address } }, wallet = {}) {
       commit('setConnectingToWallet', true);
@@ -232,15 +239,12 @@ export default createStore({
       commit('setConnectingToWallet', false);
     },
     async connectDefaultWallet(
-      { commit, dispatch },
-      { address, networkId },
+      { commit, dispatch, state: { networkId } },
+      { address, networkId: walletNetworkId },
     ) {
-      let walletNetworkId = networkId;
-      if (!networkId || networkId.includes('networkId')) {
-        walletNetworkId = process.env.VUE_APP_DEFAULT_NETWORK;
-      }
-
-      await dispatch('selectNetwork', walletNetworkId);
+      await dispatch('selectNetwork', !walletNetworkId || walletNetworkId.includes('networkId')
+        ? networkId
+        : walletNetworkId);
 
       commit('enableIframeWallet');
       commit('setAddress', address);
@@ -348,6 +352,11 @@ export default createStore({
       dispatch('modals/open', { name: 'show-error', message });
     },
 
+    showOnboarding({ dispatch, commit }) {
+      dispatch('modals/open', { name: 'onboarding' });
+      commit('setOnboardingModalAsSeen');
+    },
+
   },
 
   modules: {
@@ -367,6 +376,7 @@ export default createStore({
         lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
+        hasSeenOnboarding,
       }) => ({
         address,
         transactions,
@@ -376,6 +386,7 @@ export default createStore({
         lang,
         aeternity: { providedLiquidity, slippage, deadline },
         tokens: { userTokens, providers },
+        hasSeenOnboarding,
       }),
     }),
     modals,

@@ -3,6 +3,7 @@
     "swap": "交换",
     "pool": "流动池",
     "aboutUs": "关于我们",
+    "aboutDex": "关于 DEX",
     "termsCondition": "条款&协议",
     "settings": {
       "title": "设置",
@@ -14,6 +15,11 @@
     "source": "源码",
     "reportBug": "报告错误",
     "leaveFeedback": "留下您的反馈"
+  },
+  "aboutModal": {
+      "title": "关于 Superhero DEX",
+      "info": "有关 Superhero DEX 中使用的库和服务版本的信息",
+      "network": "网络"
   },
   "swap": {
     "title": "交换",
@@ -27,7 +33,7 @@
     "enterSlipPercentage": "请输入有效的滑点百分比",
     "minutes": "分钟",
     "balance": "余额",
-    "permissionToolTip": "您必须授权 DEX 智能合约使用您的 {msg}。每种Token您只需执行一次。",
+    "permissionToolTip": "您必须授权 DEX 智能合约使用您的 {msg}。",
     "allowDEX": "允许 DEX 协议使用您的 {token}"
   },
   "confirmSwapModal": {
@@ -62,16 +68,13 @@
     "willReceive": "您将收到",
     "beRemoved": "移除的Tokens",
     "yourPoolShare": "您的池份额",
-    "deposited": "存款",
-    "estimated": "估计",
-    "addAtLeast": "并且至少",
+    "deposited": "{0} 存款",
+    "estimated": "{0} 估计",
     "allowedSlippage": "允许滑点",
     "rates": "费率",
     "confirm": "确认",
     "supplyDetails": "供应详情",
     "removalDetails": "移除详情",
-    "removingAround": "移出",
-    "poolTokensLiquidity": "流动性中汇集的Tokens",
     "estimation": "您将收到至少 {0} 和至少 {1}，否则交易将恢复。",
     "outputEstimated": "输出估计。如果价格变化超过 {0}%，您的交易将恢复。"
   },
@@ -85,8 +88,8 @@
     "transactionMessage": "移除 {tokenAAmount} {tokenASymbol} 和 {tokenBAmount} {tokenBSymbol} 的流动性"
   },
   "importPool": {
-    "title": "导入 V2 池",
-    "importTip": "使用此工具查找未出现在选项中的v2池。",
+    "title": "导入 池",
+    "importTip": "使用此工具查找未出现在选项中的池。",
     "fetchingData": "获取数据",
     "selectBothTokens": "选择两个Tokens以查找您提供的流动性。",
     "poolFound": "您的共享池已成功导入!",
@@ -97,7 +100,6 @@
     "title": "连接钱包",
     "disclaimer": "连接钱包即表示您同意 DEX {0} 并确认您已阅读并理解 DEX {1}。",
     "termsOfService": "服务条款",
-    "protocolDisclaimer": "协议免责声明",
     "superhero": "Superhero",
     "superheroDesc": "易于使用的浏览器扩展插件。",
     "easyUseWallet": "易于使用的钱包。",
@@ -123,8 +125,13 @@
     "error": "确认错误",
     "rejected": "操作被用户拒绝"
   },
+  "onboardingModal": {
+    "headline": "嘿!",
+    "body": "感谢您试用 DEX! 我们仍在努力改进它的各个方面，因此您在使用移动设备时可能会遇到一些小问题。 要了解有关常见问题的解决方案的更多信息，请访问此链接:",
+    "confirm": "Ok"
+  },
   "liquidityDetails": {
-    "pooled": "提供",
+    "pooled": "提供 {0}:",
     "loadingFailed": "加载失败",
     "poolInformation": "查看池信息",
     "add": "添加",
@@ -167,7 +174,7 @@
   "connectWalletFindPool": "连接到钱包以查找流动池",
   "liquidityTip": "当您增加流动性时，您将收到代表您头寸的池代币。这些代币会自动赚取与您在池中的份额成比例的费用，并且可以随时赎回。",
   "receiveAtLeast": "您至少会收到",
-  "transactionWillRevert": "否则交易将恢复",
+  "transactionWillRevert": "否则交易将恢复。",
   "max": "最大",
   "approving": "批准",
   "verifyingApproval": "验证批准",
@@ -175,12 +182,11 @@
   "tip": "Tip",
   "viewExplorer": "查看 Explorer",
   "poolTokens": "池 Tokens",
-  "customTokens": "自定义Tokens",
+  "customTokens": "{n} 自定义Tokens",
   "tokens": "Tokens",
   "price": "价格",
   "clearAll": "全部清除",
   "active": "活跃",
-  "import": "导入",
   "lists": "列表",
   "custom": "自定义",
   "copied": "已复制!",
@@ -188,7 +194,7 @@
   "error": "错误",
   "close": "关闭",
   "dismiss": "解除",
-  "swaping": "交换",
+  "swapping": "交换",
   "exact": "exact",
   "for": "for",
   "provide": "提供",

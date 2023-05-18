@@ -5,6 +5,7 @@ import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -39,6 +40,15 @@ const routes = [
       name: 'remove-pool',
       component: RemoveLiquidity,
     }],
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: NotFound,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
   },
 ];
 
