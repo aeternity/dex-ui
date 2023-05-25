@@ -56,7 +56,7 @@ export const DEFAULT_NETWORKS = [
         is_ae: false,
       },
       {
-        contract_id: 'ak_2uny6n3qLA1kgboiK4GBYmmdbQKvCCcgU2VvfrVwLiCc5gPFuP',
+        contract_id: 'ct_2uny6n3qLA1kgboiK4GBYmmdbQKvCCcgU2VvfrVwLiCc5gPFuP',
         decimals: MAGNITUDE,
         name: 'Regenerates Points Token',
         symbol: 'RPT',
