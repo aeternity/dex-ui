@@ -2,7 +2,7 @@ import { shallowReactive } from 'vue';
 import { createStore } from 'vuex';
 import {
   Node, AeSdkAepp, walletDetector, BrowserWindowMessageConnection, AeSdk, unpackTx,
-  RpcRejectedByUserError,
+  RpcRejectedByUserError
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
@@ -123,7 +123,7 @@ export default createStore({
         instance: new Node(network.url),
       }));
 
-      const instance = shallowReactive(new AeSdk({ nodes }));
+      const instance = shallowReactive(new AeSdk({ nodes })));
       commit('setSdk', instance);
       await dispatch('selectNetwork', networkId);
     },
