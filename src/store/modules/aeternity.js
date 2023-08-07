@@ -3,6 +3,7 @@ import routerACI from 'dex-contracts-v2/build/AedexV2Router.aci.json';
 import waeACI from 'dex-contracts-v2/build/WAE.aci.json';
 import factoryACI from 'dex-contracts-v2/build/AedexV2Factory.aci.json';
 import pairACI from 'dex-contracts-v2/build/AedexV2Pair.aci.json';
+import { decode } from '@aeternity/aepp-sdk';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
   getPairId, sortTokens, isDexBackendDisabled,
@@ -40,7 +41,7 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
     dispatch,
     commit,
     state: { router, wae },
-    rootState: { address, useSdkWallet },
+    rootState: { sdk, address, useSdkWallet },
   } = context;
   const methodArgs = argsMapper(context, args);
   methodArgs[methodArgs.length - 1] = {
@@ -56,11 +57,19 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
     return result;
   }
   const result = await (isWae ? wae : router)[method](...methodArgs);
+  debugger;
   const builded = result.rawTx;
+  console.log('builded', builded);
+  const decoded = decode(builded);
+  console.log('decoded', decoded);
   commit('addTransaction', {
     txParams: result.tx, info: transactionInfo, pending: true, unfinished: true,
   }, { root: true });
-  window.location = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
+  const ret = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
+  debugger;
+  console.log(ret);
+  console.log('href', ret.href);
+  window.location = ret;
   return result;
 };
 const withFetchingPairInfo = (work) => async (context, args) => {
@@ -632,7 +641,7 @@ export default {
       dispatch,
       commit,
       state: { slippage },
-      rootState: { address, useSdkWallet },
+      rootState: { address, useSdkWallet, sdk },
     }, {
       instance,
       toAccount,
@@ -679,6 +688,8 @@ export default {
           amountWithSlippage - currentAllowance,
           { onAccount, callStatic: true },
         );
+        debugger;
+        const builded = await sdk.buildTx(tx);
         commit('addTransaction', {
           txParams: tx, info: transactionInfo, pending: true, unfinished: true,
         }, { root: true });

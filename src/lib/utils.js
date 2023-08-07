@@ -69,6 +69,8 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
   Object.entries(params)
     .filter(([, value]) => ![undefined, null].includes(value))
     .forEach(([name, value]) => url.searchParams.set(name, value));
+  console.log('params', params);
+  console.log('url', url);
   return url;
 };
 
