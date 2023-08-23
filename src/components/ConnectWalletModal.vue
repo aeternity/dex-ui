@@ -103,6 +103,7 @@ import {
   WalletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
 import { resolveWithTimeout } from '../lib/utils';
+import { IN_FRAME } from '../lib/constants';
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
 import ButtonPlain from './ButtonPlain.vue';
@@ -137,7 +138,7 @@ export default {
     };
   },
   async mounted() {
-    if (this.$isMobile) {
+    if (this.$isMobile && !IN_FRAME) {
       this.addDefaultWallet();
     } else {
       this.scanningForWallets = true;

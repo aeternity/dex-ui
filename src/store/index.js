@@ -9,6 +9,8 @@ import {
 } from '@/lib/utils';
 import {
   DEFAULT_NETWORKS,
+  IN_FRAME,
+  IS_MOBILE,
 } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import dexBackendModule from './modules/dexBackend';
@@ -161,7 +163,7 @@ export default createStore({
       commit('setConnectingToWallet', true);
       commit('setWallet', wallet);
 
-      if (window.navigator.userAgent.includes('Mobi') || isSafariBrowser()) {
+      if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
         if (address) {
           commit('setConnectingToWallet', false);
           return;
@@ -175,7 +177,7 @@ export default createStore({
       } else {
         try {
           await resolveWithTimeout(30000, async () => {
-            const webWalletTimeout = window.navigator.userAgent.toLowerCase().includes('mobi') ? 0
+            const webWalletTimeout = IS_MOBILE ? 0
               : setTimeout(() => commit('enableIframeWallet'), 15000);
             commit('useSdkWallet');
 
