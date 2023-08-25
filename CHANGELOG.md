@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.1](https://github.com/aeternity/dex-ui/compare/v1.18.0...v1.18.1) (2023-08-25)
+
+
+### Bug Fixes
+
+* be able to connect within iframe ([e716371](https://github.com/aeternity/dex-ui/commit/e71637160ec02272c74d4622281300d0dc409be3))
+
 ## [1.18.0](https://github.com/aeternity/dex-ui/compare/v1.17.3...v1.18.0) (2023-04-26)
 
 
