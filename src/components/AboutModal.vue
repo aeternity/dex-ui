@@ -32,10 +32,6 @@
         />
       </template>
       <InfoRow
-        :left-text="$t('aboutModal.compiler')"
-        :right-text="compilerUrl"
-      />
-      <InfoRow
         :left-text="$t('aboutModal.node')"
         :right-text="nodeVersion"
       />
@@ -54,8 +50,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import contractInfo from 'dex-contracts-v2/package.json';
-// TODO: i don't think this is ok
-import packageLock from '../../package-lock.json';
 import ModalDefault from './ModalDefault.vue';
 import appInfo from '../../package.json';
 import InfoRow from './InfoRow.vue';
@@ -71,9 +65,8 @@ export default {
   },
   data: () => ({
     appVersion: appInfo.version,
-    sdkVersion: packageLock.packages['node_modules/@aeternity/aepp-sdk'].version,
+    sdkVersion: appInfo.dependencies['@aeternity/aepp-sdk'],
     contractsVersion: contractInfo.version,
-    compilerUrl: process.env.VUE_APP_COMPILER_URL,
     height: null,
     nodeVersion: null,
     pollHeight: null,
