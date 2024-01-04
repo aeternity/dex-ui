@@ -60,10 +60,7 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   commit('addTransaction', {
     txParams: result.tx, info: transactionInfo, pending: true, unfinished: true,
   }, { root: true });
-  const ret = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
-  console.log(ret);
-  console.log('href', ret.href);
-  window.location = ret;
+  window.location = await dispatch('sendTxDeepLinkUrl', builded, { root: true });
   return result;
 };
 const withFetchingPairInfo = (work) => async (context, args) => {
