@@ -272,8 +272,6 @@ export default createStore({
 
           if (index !== -1 && transactions[index].pending && transactions[index].unfinished) {
             const { txHash: hash } = await sdk.api.postTransaction({ tx: transaction });
-            console.log('HASH', hash);
-            debugger;
             commit('changeTransactionById', { index, transaction: { unfinished: false, hash } });
           }
         } catch (e) {
