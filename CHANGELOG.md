@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.18.2](https://github.com/aeternity/dex-ui/compare/v1.18.1...v1.18.2) (2024-02-14)
+
+
+### Bug Fixes
+
+* more readable version of node version retrieval ([73eb9e0](https://github.com/aeternity/dex-ui/commit/73eb9e012efa173670d3863ea9d319bdbfbba02d))
+
+
+### CI / CD
+
+* change gitops repo for stg ([ffe28ab](https://github.com/aeternity/dex-ui/commit/ffe28abf89e2651196aa63745cc5ff610f1232ba))
+* change token key ([88f752c](https://github.com/aeternity/dex-ui/commit/88f752c7edda011f5cc62050e08ad642b32f52de))
+
+
+### Refactorings
+
+* **AboutModel:** get sdk version from package.json ([dcd8173](https://github.com/aeternity/dex-ui/commit/dcd81737e74e4235ba0b26801033f8258673f61d))
+* removing debugging entries ([474f4ad](https://github.com/aeternity/dex-ui/commit/474f4ad08ff3928f696dea2c7957c0dc64f63962))
+
+
+### Miscellaneous
+
+* update to sdk@13.2.2 ([c16cfb3](https://github.com/aeternity/dex-ui/commit/c16cfb358b2b75039169e405e4bf797f75f531cf))
+
 ## [1.18.1](https://github.com/aeternity/dex-ui/compare/v1.18.0...v1.18.1) (2023-08-25)
 
 
