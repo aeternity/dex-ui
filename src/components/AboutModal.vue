@@ -77,8 +77,11 @@ export default {
   },
   async mounted() {
     await this.$watchUntilTruly(() => this.$store.state.sdk);
-    this.nodeVersion = (await this.sdk.getNodesInPool()).find((node) => node.name
-      === this.sdk.selectedNodeName)?.version || '-';
+    try {
+      this.nodeVersion = (await this.sdk.api.getNodeInfo()).version;
+    } catch (e) {
+      this.nodeVersion = '-';
+    }
     this.height = await this.sdk.getHeight();
     this.pollHeight = setInterval(async () => {
       this.height = await this.sdk.getHeight();
