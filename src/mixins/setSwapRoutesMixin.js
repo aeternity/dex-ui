@@ -3,11 +3,11 @@ import BigNumber from 'bignumber.js';
 import {
   handleUnknownError, calculateSelectedToken, getPairId,
   expandDecimals, reduceDecimals,
-} from '../lib/utils';
+} from '@/lib/utils';
 import {
   ratioFromRoute, ratioWithDecimals, getPriceImpactForRoute,
   getReceivedTokensForRoute,
-} from '../lib/swapUtils';
+} from '@/lib/swapUtils';
 
 // if there is a direct Pair for tokenA/tokenB or tokenB/tokenA,
 // the Dex-Backend will put it at the beginning of the swap-routes list.
@@ -49,19 +49,21 @@ export default {
     ratio() {
       if (this.isAeVsWae) return 1;
       if (!this.tokenA || !this.tokenB || !this.selectedRoute) return null;
-      return ratioWithDecimals(
-        ratioFromRoute(this.selectedRoute, this.tokenA.contract_id).toString(), {
-          decimalsA: this.tokenA.decimals,
-          decimalsB: this.tokenB.decimals,
-        },
-      ).toNumber();
+      return ratioWithDecimals(ratioFromRoute(
+        this.selectedRoute,
+        this.tokenA.contract_id,
+      ).toString(), {
+        decimalsA: this.tokenA.decimals,
+        decimalsB: this.tokenB.decimals,
+      }).toNumber();
     },
     priceImpact() {
       if (!this.selectedRoute || !this.amountTokenA) {
         return BigNumber(0);
       }
       return getPriceImpactForRoute(
-        this.selectedRoute, this.tokenA.contract_id,
+        this.selectedRoute,
+        this.tokenA.contract_id,
         expandDecimals(this.amountTokenA, this.tokenA.decimals),
       );
     },
@@ -72,7 +74,8 @@ export default {
       if (this.isAeVsWae) return new BigNumber(this.amountTokenA);
       return reduceDecimals(
         getReceivedTokensForRoute(
-          this.selectedRoute, this.tokenA.contract_id,
+          this.selectedRoute,
+          this.tokenA.contract_id,
           expandDecimals(this.amountTokenA, this.tokenA.decimals),
         ),
         this.tokenB.decimals,
@@ -86,7 +89,8 @@ export default {
         await this.setSwapRoutes();
         if (this.amountTokenA || this.amountTokenB) {
           this.setAmount(
-            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB,
+            this.isLastInputTokenA,
           );
         }
       }
@@ -117,7 +121,8 @@ export default {
       this.isLastInputTokenA = !this.isLastInputTokenA;
 
       this.setAmount(
-        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB,
+        this.isLastInputTokenA,
       );
       await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
 
@@ -126,7 +131,10 @@ export default {
     async setSelectedToken(token, isTokenA) {
       let switched;
       [this.tokenA, this.tokenB, switched] = calculateSelectedToken(
-        token, this.tokenA, this.tokenB, isTokenA,
+        token,
+        this.tokenA,
+        this.tokenB,
+        isTokenA,
       );
       if (!switched) {
         // TODO: this is a subject of change after user selection
@@ -141,7 +149,8 @@ export default {
         this.isLastInputTokenA = !this.isLastInputTokenA;
       }
       this.setAmount(
-        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB,
+        this.isLastInputTokenA,
       );
       await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
       if (!switched) {
@@ -169,7 +178,7 @@ export default {
         if (!this.backendFailed && this.swapRoutes) {
           this.pairInfoTimeoutId = setTimeout(
             this.setSwapRoutes,
-            parseInt(process.env.VUE_APP_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
+            parseInt(import.meta.env.VITE_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
           );
         }
       }

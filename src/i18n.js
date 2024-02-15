@@ -1,35 +1,25 @@
 import { createI18n } from 'vue-i18n';
+import en from './locales/en.json';
+import fr from './locales/fr.json';
+import ru from './locales/ru.json';
+import cn from './locales/zh-cn.json';
 
-/**
- * Load locale messages
- * https://vue-i18n.intlify.dev
- * The loaded `JSON` locale messages is pre-compiled by `@intlify/vue-i18n-loader`,
- * which is integrated into `vue-cli-plugin-i18n`.
- * See: https://github.com/intlify/vue-i18n-loader#rocket-i18n-resource-pre-compilation
- */
-function loadLocaleMessages() {
-  const locales = require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i);
-  const messages = {};
-  locales.keys().forEach((key) => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
-    if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
-    }
-  });
-  return messages;
-}
+const messages = {
+  en,
+  fr,
+  ru,
+  'zh-cn': cn,
+};
 
-function preferredLocale() {
-  const code = navigator.language.split('-')[0];
-  return require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i).keys()
-    .map((key) => key.match(/([A-Za-z0-9-_]+)\./i)[1]).includes(code) ? code : '';
+function getLocale() {
+  const browserLanguageCode = navigator.language.split('-')[0];
+  return Object.keys(messages).includes(browserLanguageCode) ? browserLanguageCode : 'en';
 }
 
 export default createI18n({
-  locale: preferredLocale() || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages: loadLocaleMessages(),
+  locale: getLocale(),
+  fallbackLocale: import.meta.env.VITE_I18N_FALLBACK_LOCALE || 'en',
+  messages,
   pluralizationRules: {
     ru(choice, choicesLength) {
       if (choice === 0) {

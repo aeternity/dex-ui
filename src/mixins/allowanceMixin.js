@@ -1,5 +1,5 @@
 import { mapState } from 'vuex';
-import { handleUnknownError, addSlippage, expandDecimals } from '../lib/utils';
+import { handleUnknownError, addSlippage, expandDecimals } from '@/lib/utils';
 
 export default {
   computed: {
@@ -27,9 +27,7 @@ export default {
       return allowance >= this.amountWithSlippage(amount, decimals);
     },
     amountWithSlippage(amount, decimals) {
-      return addSlippage(
-        expandDecimals(amount ?? 0n, decimals), this.slippage,
-      );
+      return addSlippage(expandDecimals(amount ?? 0n, decimals), this.slippage);
     },
 
     fetchAllowance(tokenId) {
@@ -42,9 +40,7 @@ export default {
         amount: expandDecimals(amount, token.decimals),
       });
       if (token && !token.is_ae) {
-        this.safeRefreshAllowance(
-          token.contract_id, amount, token.decimals, this.fetchAllowance,
-        );
+        this.safeRefreshAllowance(token.contract_id, amount, token.decimals, this.fetchAllowance);
       }
     },
 

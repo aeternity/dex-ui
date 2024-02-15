@@ -15,6 +15,7 @@
         <a
           href="https://dex.superhero.com/superhero-dex-and-ios"
           target="_blank"
+          rel="noopener noreferrer"
         >
           https://dex.superhero.com/superhero-dex-and-ios
         </a>

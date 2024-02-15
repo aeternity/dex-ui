@@ -3,6 +3,7 @@
     <div
       class="modal"
       @click.self="$emit('close')"
+      @keydown.self="$emit('close')"
     >
       <div class="container">
         <div
@@ -39,8 +40,8 @@
 </template>
 
 <script>
+import Times from '@/assets/times.svg';
 import ButtonPlain from './ButtonPlain.vue';
-import Times from '../assets/times.svg?vue-component';
 
 export default {
   components: {
@@ -95,7 +96,7 @@ export default {
     }
 
     .header {
-      padding: 20px 20px 16px 20px;
+      padding: 20px 20px 16px;
       color: white;
       word-break: break-word;
       text-align: center;

@@ -57,8 +57,10 @@
               v-if="activeNetwork"
               :href="`${activeNetwork.explorerUrl}/contracts/${token.contract_id}`"
               target="_blank"
+              rel="noopener noreferrer"
             >
-              <ExternalLinkIcon />
+              <ExternalLinkIcon aria-hidden="true" />
+              <span class="sr-only">External link</span>
             </a>
           </div>
         </div>
@@ -74,12 +76,12 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 
+import DeleteIcon from '@/assets/delete.svg';
+import ExternalLinkIcon from '@/assets/external-link.svg';
 import ListTokens from './ListTokens.vue';
 import InputField from '../InputField.vue';
 import ButtonPlain from '../ButtonPlain.vue';
 import TokenIcon from '../TokenIcon.vue';
-import DeleteIcon from '../../assets/delete.svg?vue-component';
-import ExternalLinkIcon from '../../assets/external-link.svg?vue-component';
 
 export default {
   components: {

@@ -15,8 +15,8 @@
 </template>
 
 <script>
+import Close from '@/assets/times.svg';
 import ButtonPlain from './ButtonPlain.vue';
-import Close from '../assets/times.svg?vue-component';
 
 export default {
   components: { ButtonPlain, Close },

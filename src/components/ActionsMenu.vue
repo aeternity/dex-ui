@@ -3,6 +3,7 @@
     class="actions-menu"
     :class="{ active: showMenu }"
     @click="showMenu = true"
+    @keydown="showMenu = true"
   >
     <slot name="display" />
     <SmallModal

@@ -2,19 +2,17 @@ import {
   ratioFromRoute, ratioWithDecimals, getPath,
   getRouteReserves, getPriceImpactForRoute,
   getReceivedTokensForPairReserves,
-} from '../../src/lib/swapUtils';
+} from '@/lib/swapUtils';
 
 describe('get path tests', () => {
   const A = 'a';
   const B = 'b';
   const C = 'c';
-  const path = (route, tokenA) => getPath(
-    route.map((x) => ({
-      ...x,
-      token0: x.t0,
-      token1: x.t1,
-    })), tokenA,
-  );
+  const path = (route, tokenA) => getPath(route.map((x) => ({
+    ...x,
+    token0: x.t0,
+    token1: x.t1,
+  })), tokenA);
   it('gets nothing from empty route', () => {
     expect(getPath([], 'ct_1')).toEqual([]);
   });
@@ -51,9 +49,7 @@ describe('route price impact', () => {
     },
   });
   const toPairs = (xs) => xs.map(toPair);
-  const priceImpact = (xs, tokenA, amountA) => getPriceImpactForRoute(
-    toPairs(xs), tokenA, amountA,
-  );
+  const priceImpact = (xs, tokenA, amountA) => getPriceImpactForRoute(toPairs(xs), tokenA, amountA);
   it('price impact to be 0.5', () => {
     expect(priceImpact([
       [['a', 2000000n], ['b', 1000n]],

@@ -25,7 +25,7 @@ export const DEFAULT_NETWORKS = [
     factoryAddress: 'ct_2mfj3FoZxnhkSw5RZMcP8BfPoB1QR4QiYGNCdkAvLZ1zfF6paW',
     routerAddress: 'ct_azbNZ1XrPjXfqBqbAh1ffLNTQ1sbnuUDFvJrXjYz7JQA1saQ3',
     waeAddress: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
-    dexBackendUrl: process.env.VUE_APP_MAINNET_DEX_BACKEND_URL,
+    dexBackendUrl: import.meta.env.VITE_MAINNET_DEX_BACKEND_URL,
     tokens: [
       {
         contract_id: 'ct_J3zBY8xxjsRr3QojETNw48Eb38fjvEuJKkQ6KzECvubvEcvCa',
@@ -74,7 +74,7 @@ export const DEFAULT_NETWORKS = [
     factoryAddress: 'ct_NhbxN8wg8NLkGuzwRNDQhMDKSKBwDAQgxQawK7tkigi2aC7i9',
     routerAddress: 'ct_MLXQEP12MBn99HL6WDaiTqDbG4bJQ3Q9Bzr57oLfvEkghvpFb',
     waeAddress: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',
-    dexBackendUrl: process.env.VUE_APP_TESTNET_DEX_BACKEND_URL,
+    dexBackendUrl: import.meta.env.VITE_TESTNET_DEX_BACKEND_URL,
     tokens: [
       {
         contract_id: 'ct_JDp175ruWd7mQggeHewSLS1PFXt9AzThCDaFedxon8mF8xTRF',

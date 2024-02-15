@@ -1,7 +1,7 @@
 import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
-import dexUiErrorMessages from './errors';
+import dexUiErrorMessages from '@/lib/errors';
 
 const errorMessages = {
   ...dexContractsErrorMessages,
@@ -21,7 +21,7 @@ export const aettosToAe = (v) => formatAmount(v, {
 export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
   const result = [from, to, false];
-  const getKey = (t) => t?.contract_id + (!!t?.is_ae);
+  const getKey = (t) => (t?.contract_id || '') + (!!t?.is_ae);
   if ((getKey(token) === getKey(from) && !isFrom)
     || (getKey(token) === getKey(to) && isFrom)) {
     result[1] = from;
@@ -61,7 +61,7 @@ export const findErrorExplanation = (message, { networkId } = {}) => {
 export const isNotFoundError = (error) => error.statusCode === 404;
 
 export const createDeepLinkUrl = ({ type, callbackUrl, ...params }) => {
-  const url = new URL(`${process.env.VUE_APP_WALLET_URL}/${type}`);
+  const url = new URL(`${import.meta.env.VITE_WALLET_URL}/${type}`);
   if (callbackUrl) {
     url.searchParams.set('x-success', callbackUrl);
     url.searchParams.set('x-cancel', callbackUrl);
@@ -127,9 +127,11 @@ export const subSlippage = (value, slippage) => value - (value * BigInt(slippage
  */
 export const resolveWithTimeout = (timeout, callback) => Promise.race([
   callback(),
-  new Promise((resolve, reject) => setTimeout(() => {
-    reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
-  }, timeout)),
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
+    }, timeout);
+  }),
 ]);
 
 /**
@@ -181,5 +183,5 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
 /**
  * Flag showing when the dex-ui is setup to work without dex-backend
  */
-export const isDexBackendDisabled = process.env.VUE_APP_DISABLE_DEX_BACKEND
-    && JSON.parse(process.env.VUE_APP_DISABLE_DEX_BACKEND);
+export const isDexBackendDisabled = import.meta.env.VITE_DISABLE_DEX_BACKEND
+    && JSON.parse(import.meta.env.VITE_DISABLE_DEX_BACKEND);

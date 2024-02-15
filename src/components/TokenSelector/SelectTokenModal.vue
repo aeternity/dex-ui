@@ -43,9 +43,9 @@
         />
 
         <div
-          v-else-if="!filteredActiveProvidersTokens.length &&
-            !filteredInActiveProvidersTokens.length &&
-            !extraTokens.length"
+          v-else-if="!filteredActiveProvidersTokens.length
+            && !filteredInActiveProvidersTokens.length
+            && !extraTokens.length"
           class="empty"
         >
           {{ $t('tokenSelector.notFound') }}.
@@ -55,6 +55,7 @@
       <div
         class="manage-token-list"
         @click.prevent="tab = 'manage-token-list'"
+        @keydown.prevent="tab = 'manage-token-list'"
       >
         <EditIcon />
         {{ $t('tokenSelector.manageTokens') }}
@@ -86,15 +87,15 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import EditIcon from '@/assets/edit.svg';
+import BackIcon from '@/assets/back.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import ModalDefault from '../ModalDefault.vue';
 import UserTokensAndListManager from './UserTokensAndListManager.vue';
 import InputField from '../InputField.vue';
 import ButtonPlain from '../ButtonPlain.vue';
 import ListTokens from './ListTokens.vue';
 import TokenImportCard from './TokenImportCard.vue';
-import EditIcon from '../../assets/edit.svg?vue-component';
-import BackIcon from '../../assets/back.svg?vue-component';
-import AnimatedSpinner from '../../assets/animated-spinner.svg?vue-component';
 
 export default {
   components: {

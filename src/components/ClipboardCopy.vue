@@ -2,6 +2,7 @@
   <span
     class="clipboard"
     @click.prevent="copy()"
+    @keydown.prevent="copy()"
   >
     <CopyIcon />
     <span>{{ copied ? $t('copied') : title }}</span>
@@ -9,7 +10,7 @@
 </template>
 
 <script>
-import CopyIcon from '../assets/copy.svg?vue-component';
+import CopyIcon from '@/assets/copy.svg';
 
 export default {
   components: {

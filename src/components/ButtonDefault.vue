@@ -12,8 +12,8 @@
 </template>
 
 <script>
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import ButtonPlain from './ButtonPlain.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 export default {
   components: {

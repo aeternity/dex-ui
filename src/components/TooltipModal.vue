@@ -5,7 +5,9 @@
       id="tooltip"
       class="tooltip-modal"
       @mouseenter="enterHandler"
+      @focusin="enterHandler"
       @mouseleave="leaveHandler"
+      @focusout="leaveHandler"
     >
       <slot />
       <template v-if="!$slots.default">

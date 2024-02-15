@@ -10,7 +10,7 @@
           :token-b="token1"
           :rotating="poolInfoImporting && !poolInfoImportFailed"
         />
-        <span>{{ token0.symbol + '/' + token1.symbol }}</span>
+        <span>{{ `${token0.symbol}/${token1.symbol}` }}</span>
       </div>
       <DownChevron :class="{ rotated: show }" />
     </ButtonPlain>
@@ -27,10 +27,10 @@
 <script>
 import { mapGetters } from 'vuex';
 import { handleUnknownError } from '@/lib/utils';
+import DownChevron from '@/assets/arrow.svg';
 import ButtonPlain from './ButtonPlain.vue';
 import TokenIcon from './TokenIcon.vue';
 import LiquidityDetails from './LiquidityDetails.vue';
-import DownChevron from '../assets/arrow.svg?vue-component';
 
 export default {
   components: {

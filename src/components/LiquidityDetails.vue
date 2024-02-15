@@ -15,8 +15,9 @@
           <div
             class="reload"
             @click="$emit('load:pool-info')"
+            @keydown="$emit('load:pool-info')"
           >
-            <RefreshIcon :class="{rotating: poolInfoImporting}" />
+            <RefreshIcon :class="{ rotating: poolInfoImporting }" />
           </div>
         </div>
         {{ getAmountText(amount0, token0) }}
@@ -46,6 +47,7 @@
       v-if="UNFINISHED_FEATURES"
       href="https://aeternity.com/"
       target="_blank"
+      rel="noopener noreferrer"
     >
       {{ $t('liquidityDetails.poolInformation') }}
     </a>
@@ -57,8 +59,8 @@
           name: 'add-pool',
           query: {
             from: getTokenIdentifier(token0),
-            to: getTokenIdentifier(token1)
-          }
+            to: getTokenIdentifier(token1),
+          },
         }"
       >
         {{ $t('liquidityDetails.add') }}
@@ -76,9 +78,9 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { reduceDecimals } from '@/lib/utils';
+import RefreshIcon from '@/assets/refresh.svg';
 import ButtonDefault from './ButtonDefault.vue';
-import { reduceDecimals } from '../lib/utils';
-import RefreshIcon from '../assets/refresh.svg?vue-component';
 
 export default {
   components: {
@@ -93,7 +95,7 @@ export default {
   },
   emits: ['load:pool-info'],
   data: () => ({
-    UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
+    UNFINISHED_FEATURES: import.meta.env.UNFINISHED_FEATURES,
   }),
   computed: {
     ...mapState({
@@ -118,14 +120,10 @@ export default {
       return reduceDecimals(this.balance, 18);
     },
     amount0() {
-      return this.calculateAmount(
-        this.balance, this.totalSupply, this.supplyInfo?.token0.reserve,
-      );
+      return this.calculateAmount(this.balance, this.totalSupply, this.supplyInfo?.token0.reserve);
     },
     amount1() {
-      return this.calculateAmount(
-        this.balance, this.totalSupply, this.supplyInfo?.token1.reserve,
-      );
+      return this.calculateAmount(this.balance, this.totalSupply, this.supplyInfo?.token1.reserve);
     },
     shareText() {
       if (this.balance == null || !this.totalSupply) {
@@ -169,7 +167,7 @@ export default {
     justify-content: space-between;
     color: variables.$color-white;
     padding: 12px 0;
-    border-bottom: 2px solid rgba(143, 150, 172, 0.1);
+    border-bottom: 2px solid rgb(143 150 172 / 10%);
 
     @extend %face-sans-15-medium;
 

@@ -18,6 +18,7 @@
       <div
         class="right"
         @click="settingsClickHandler"
+        @keydown="settingsClickHandler"
       >
         <ActionsMenu v-if="settings">
           <template #display>
@@ -92,16 +93,16 @@
 
 <script>
 import { mapState } from 'vuex';
+import BackArrow from '@/assets/back.svg';
+import Cog from '@/assets/cog.svg';
+import Warning from '@/assets/warning.svg';
+import {
+  DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE, DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
+} from '@/lib/constants';
 import ButtonDefault from './ButtonDefault.vue';
 import ActionsMenu from './ActionsMenu.vue';
 import SettingsItem from './SettingsItem.vue';
 import InputAmount from './InputAmount.vue';
-import {
-  DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE, DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
-} from '../lib/constants';
-import BackArrow from '../assets/back.svg?vue-component';
-import Cog from '../assets/cog.svg?vue-component';
-import Warning from '../assets/warning.svg?vue-component';
 
 export default {
   components: {
@@ -172,7 +173,7 @@ export default {
 .main-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 4vh auto 0 auto;
+  margin: 4vh auto 0;
   border-radius: 24px;
   max-width: 480px;
   background: variables.$color-black3;
@@ -184,7 +185,7 @@ export default {
 
   .header {
     display: flex;
-    padding: 20px 20px 0 20px;
+    padding: 20px 20px 0;
 
     .left,
     .right {

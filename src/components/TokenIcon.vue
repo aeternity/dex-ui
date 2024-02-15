@@ -4,17 +4,19 @@
       v-if="tokenA"
       :class="{ rotating, 'not-pool-token': !tokenB }"
       :src="mapToken(tokenA)"
+      alt=""
     >
     <img
       v-if="tokenB"
       :class="{ rotating }"
       :src="mapToken(tokenB)"
+      alt=""
     >
   </div>
 </template>
 
 <script>
-import AeIcon from '../assets/ae.svg';
+import AeIcon from '@/assets/ae.svg';
 
 export default {
   props: {

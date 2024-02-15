@@ -18,7 +18,7 @@ import FUNGIBLE_TOKEN_CONTRACT from 'dex-contracts-v2/build/FungibleTokenFull.ac
 import {
   aettosToAe, handleUnknownError, isNotFoundError,
 } from '@/lib/utils';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
 
 const pollState = {};
 let storeState;

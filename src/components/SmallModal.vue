@@ -3,6 +3,7 @@
     <div
       class="overlay"
       @click.stop="$emit('close')"
+      @keydown.stop="$emit('close')"
     />
     <div class="content">
       <slot />
@@ -14,10 +15,7 @@
 .small-modal {
   .overlay {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
+    inset: 0;
   }
 
   .content {

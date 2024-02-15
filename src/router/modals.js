@@ -1,17 +1,17 @@
+import AccountInfoModal from '@/components/AccountInfoModal.vue';
+import SelectTokenModal from '@/components/TokenSelector/SelectTokenModal.vue';
+import ErrorModal from '@/components/ErrorModal.vue';
+import TooltipModal from '@/components/TooltipModal.vue';
+import ConfirmSwapModal from '@/components/ConfirmSwapModal.vue';
+import ConfirmLiquidityModal from '@/components/ConfirmLiquidityModal.vue';
+import AboutModal from '@/components/AboutModal.vue';
+import SubmitTransactionModal from '@/components/SubmitTransactionModal.vue';
+import ConnectWalletModal from '@/components/ConnectWalletModal.vue';
+import NotificationTransactionStatus from '@/components/NotificationTransactionStatus.vue';
+import NotificationConnectionStatus from '@/components/NotificationConnectionStatus.vue';
+import TermAndConditionModal from '@/components/TermAndConditionModal.vue';
+import OnboardingModal from '@/components/OnboardingModal.vue';
 import { registerModal } from '../store/plugins/modals';
-import AccountInfoModal from '../components/AccountInfoModal.vue';
-import SelectTokenModal from '../components/TokenSelector/SelectTokenModal.vue';
-import ErrorModal from '../components/ErrorModal.vue';
-import TooltipModal from '../components/TooltipModal.vue';
-import ConfirmSwapModal from '../components/ConfirmSwapModal.vue';
-import ConfirmLiquidityModal from '../components/ConfirmLiquidityModal.vue';
-import AboutModal from '../components/AboutModal.vue';
-import SubmitTransactionModal from '../components/SubmitTransactionModal.vue';
-import ConnectWalletModal from '../components/ConnectWalletModal.vue';
-import NotificationTransactionStatus from '../components/NotificationTransactionStatus.vue';
-import NotificationConnectionStatus from '../components/NotificationConnectionStatus.vue';
-import TermAndConditionModal from '../components/TermAndConditionModal.vue';
-import OnboardingModal from '../components/OnboardingModal.vue';
 
 export default () => {
   registerModal({ name: 'show-tooltip', component: TooltipModal });

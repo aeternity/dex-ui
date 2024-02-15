@@ -1,8 +1,8 @@
 <template>
   <ModalDefault
     class="confirm-add-modal"
-    :title="isAdding ?
-      $t('confirmLiquidityModal.willReceive') : $t('confirmLiquidityModal.beRemoved')"
+    :title="isAdding
+      ? $t('confirmLiquidityModal.willReceive') : $t('confirmLiquidityModal.beRemoved')"
     close
     @close="denyHandler"
   >
@@ -39,9 +39,9 @@
       <div class="transaction-details">
         <div class="title">
           {{
-            isAdding ?
-              $t('confirmLiquidityModal.supplyDetails') :
-              $t('confirmLiquidityModal.removalDetails')
+            isAdding
+              ? $t('confirmLiquidityModal.supplyDetails')
+              : $t('confirmLiquidityModal.removalDetails')
           }}
         </div>
         <div>

@@ -33,7 +33,7 @@ export default createStore({
     balance: 0,
     useIframeWallet: false,
     useSdkWallet: false,
-    networkId: process.env.VUE_APP_DEFAULT_NETWORK,
+    networkId: import.meta.env.VITE_DEFAULT_NETWORK,
     transactions: [],
     lang: null,
     hasSeenOnboarding: false,
@@ -84,7 +84,7 @@ export default createStore({
       state.useIframeWallet = false;
       state.wallet = null;
       state.address = null;
-      state.networkId = process.env.VUE_APP_DEFAULT_NETWORK;
+      state.networkId = import.meta.env.VITE_DEFAULT_NETWORK;
       state.transactions = [];
     },
     setNetwork(state, networkId) {

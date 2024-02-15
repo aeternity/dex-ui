@@ -19,10 +19,10 @@
       v-for="token in tokens"
       :key="`${token.contract_id}|${token.symbol}`"
       :class="['token', {
-        'clickable': !importToken,
+        clickable: !importToken,
         selected: (chosenTokens?.[0] || chosenTokens?.[1]) && !!chosenTokens.find(
           (t) => token.symbol === t?.symbol && token.contract_id === t?.contract_id,
-        )
+        ),
       }]"
       :disabled="chosenTokens?.[0] && (chosenTokens[0]?.contract_id === token.contract_id
         && chosenTokens[0]?.symbol === token.symbol)"
@@ -63,11 +63,11 @@
 </template>
 
 <script>
+import QuestionCircleIcon from '@/assets/question-circle.svg';
 import ButtonPlain from '../ButtonPlain.vue';
 import ButtonDefault from '../ButtonDefault.vue';
 import TokenIcon from '../TokenIcon.vue';
 import ActionsMenu from '../ActionsMenu.vue';
-import QuestionCircleIcon from '../../assets/question-circle.svg?vue-component';
 
 export default {
   components: {

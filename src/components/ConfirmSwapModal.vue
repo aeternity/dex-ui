@@ -24,9 +24,9 @@
       {{ isLastAmountFrom ? $t("confirmSwapModal.output") : $t("confirmSwapModal.input") }}
       {{ $t("confirmSwapModal.isEstimated") }}.
       {{
-        isLastAmountFrom ?
-          $t("confirmSwapModal.receiveAtLeast") :
-          $t("confirmSwapModal.spendNoMore")
+        isLastAmountFrom
+          ? $t("confirmSwapModal.receiveAtLeast")
+          : $t("confirmSwapModal.spendNoMore")
       }}
       <strong>{{ receivedOrSpentValueMsg }}</strong>
       {{ $t('transactionWillRevert') }}
@@ -37,7 +37,7 @@
       </div>
       <div>
         <span>{{ $t('price') }}</span>
-        <span>{{ `1 ${to.symbol} = ${1/ratio} ${from.symbol}` }}</span>
+        <span>{{ `1 ${to.symbol} = ${1 / ratio} ${from.symbol}` }}</span>
       </div>
       <div v-if="!isAeVsWae">
         <span>{{ $t('confirmSwapModal.allowedSlippage') }}</span>
@@ -50,9 +50,9 @@
       <div class="no-border">
         <span>
           {{
-            isLastAmountFrom ?
-              $t('confirmSwapModal.minReceived') :
-              $t('confirmSwapModal.maxSpent')
+            isLastAmountFrom
+              ? $t('confirmSwapModal.minReceived')
+              : $t('confirmSwapModal.maxSpent')
           }}
         </span>
         <span>{{ receivedOrSpentValueMsg }}</span>
@@ -75,10 +75,10 @@
 <script>
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
+import DownArrow from '@/assets/arrow-down.svg';
 import ModalDefault from './ModalDefault.vue';
 import TokenAmountDetails from './TokenAmountDetails.vue';
 import ButtonDefault from './ButtonDefault.vue';
-import DownArrow from '../assets/arrow-down.svg?vue-component';
 
 export default {
   components: {
@@ -147,7 +147,7 @@ export default {
   color: white;
 
   :deep(.body) {
-    padding: 0 16px 16px 16px;
+    padding: 0 16px 16px;
   }
 
   .arrow {

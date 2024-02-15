@@ -36,6 +36,7 @@
         <a
           href="https://aepp.dex.superhero.com/"
           target="_blank"
+          rel="noopener noreferrer"
         >aepp.dex.superhero.com</a>
         and the web-hosted user interface <strong>(henceforth “the Website”)</strong>
         facilitating the connection to the Superhero Decentralized Exchange

@@ -1,7 +1,7 @@
 import {
   handleUnknownError,
   getPairId, isDexBackendDisabled,
-} from '../../lib/utils';
+} from '@/lib/utils';
 
 export default {
   namespaced: true,
@@ -65,9 +65,7 @@ export default {
             baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl
           }${url.startsWith('/') ? '' : '/'}${url}`;
 
-          const timeout = parseInt(
-            process.env.VUE_APP_DEX_BACKEND_FETCH_TIMEOUT || '2000', 10,
-          );
+          const timeout = parseInt(import.meta.env.VITE_DEX_BACKEND_FETCH_TIMEOUT || '2000', 10);
           const controller = new AbortController();
           timeoutId = setTimeout(() => controller.abort(), timeout);
           const resp = await fetch(fullUrl, {

@@ -33,14 +33,15 @@
           :class="['address', { pending: pendingTransactions.length }]"
           data-cy="wallet-address"
           @click.prevent="openAccountInfo()"
+          @keydown.prevent="openAccountInfo()"
         >
           <template v-if="pendingTransactions.length">
             <span>{{ `${pendingTransactions.length} ${$t('pending')}` }}</span>
             <AnimatedSpinner />
           </template>
           <template v-else>
-            <img :src="`https://avatars.z52da5wt.xyz/${address}`">
-            <span class="h-xs">{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
+            <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="">
+            <span class="h-xs">{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
           </template>
         </div>
         <span><AeBalance :address="address" /> AE</span>
@@ -55,6 +56,7 @@
           <a
             href="https://aeternity.com/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.aboutUs') }}
           </a>
@@ -79,30 +81,35 @@
           <a
             href="https://discord.com/invite/55f8F2jZq4"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.discord') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-contracts-v2/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.contracts') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.source') }}
           </a>
           <a
             href="https://github.com/aeternity/dex-ui/issues"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.reportBug') }}
           </a>
           <a
             href="https://form.jotform.com/221174404956355"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('nav.leaveFeedback') }}
           </a>
@@ -170,16 +177,17 @@
     <iframe
       v-if="useIframeWallet"
       :src="walletUrl"
+      title=""
     />
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import AeLogo from '../assets/logo.svg?vue-component';
-import AeLogoSmall from '../assets/logo-small.svg?vue-component';
-import BackArrow from '../assets/back.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
+import AeLogo from '@/assets/logo.svg';
+import AeLogoSmall from '@/assets/logo-small.svg';
+import BackArrow from '@/assets/back.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
@@ -199,9 +207,9 @@ export default {
     AeBalance,
   },
   data: () => ({
-    walletUrl: process.env.VUE_APP_WALLET_URL,
+    walletUrl: import.meta.env.VITE_WALLET_URL,
     activeMenu: 'main',
-    UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
+    UNFINISHED_FEATURES: import.meta.env.UNFINISHED_FEATURES,
   }),
   computed: {
     ...mapState(['address', 'useIframeWallet', 'connectingToWallet']),

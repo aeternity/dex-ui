@@ -1,9 +1,9 @@
 <template>
   <div class="token-amount-details">
-    <label>
+    <label for="token-amount">
       {{ label }}
     </label>
-    <div class="token-amount">
+    <div id="token-amount" class="token-amount">
       <div>
         <TokenIcon :token-a="token" />
         {{ symbol }}

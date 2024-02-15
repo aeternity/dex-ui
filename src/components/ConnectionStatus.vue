@@ -10,7 +10,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { fetchJson, handleUnknownError } from '../lib/utils';
+import { fetchJson, handleUnknownError } from '@/lib/utils';
 
 export default {
   data: () => ({
