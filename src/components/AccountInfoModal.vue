@@ -23,8 +23,8 @@
       </div>
       <div class="content">
         <div class="address">
-          <img :src="`https://avatars.z52da5wt.xyz/${address}`">
-          <span>{{ `${address.slice(0,6)}...${address.slice(-3)}` }}</span>
+          <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="">
+          <span>{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
         </div>
         <div class="links">
           <ClipboardCopy
@@ -36,6 +36,7 @@
             v-if="activeNetwork"
             :href="`${activeNetwork.explorerUrl}/account/${address}`"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <ExternalLinkIcon />
             {{ $t('viewExplorer') }}
@@ -64,6 +65,7 @@
             :key="transaction.hash"
             :href="`${activeNetwork.explorerUrl}/transactions/${transaction.hash}`"
             target="_blank"
+            rel="noopener noreferrer"
             class="transaction"
           >
             <AnimatedSpinner v-if="transaction.pending" />
@@ -88,15 +90,15 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import ModalDefault from './ModalDefault.vue';
-import ClipboardCopy from './ClipboardCopy.vue';
+import ExternalLinkIcon from '@/assets/external-link.svg';
+import LogoutIcon from '@/assets/logout.svg';
+import DeleteIcon from '@/assets/delete.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import Alert from '@/assets/alert.svg';
+import Check from '@/assets/check.svg';
 import ButtonPlain from './ButtonPlain.vue';
-import ExternalLinkIcon from '../assets/external-link.svg?vue-component';
-import LogoutIcon from '../assets/logout.svg?vue-component';
-import DeleteIcon from '../assets/delete.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import Alert from '../assets/alert.svg?vue-component';
-import Check from '../assets/check.svg?vue-component';
+import ClipboardCopy from './ClipboardCopy.vue';
+import ModalDefault from './ModalDefault.vue';
 
 export default {
   components: {

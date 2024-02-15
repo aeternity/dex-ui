@@ -70,8 +70,10 @@ export default {
     try {
       if (this.$isMobile && !IN_FRAME) {
         await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
-        setTimeout(() => this.$store.dispatch('parseAndSendTransactionFromQuery'),
-          1000);
+        setTimeout(
+          () => this.$store.dispatch('parseAndSendTransactionFromQuery'),
+          1000,
+        );
       } else {
         await this.$store.dispatch('initSdk');
       }
@@ -121,7 +123,7 @@ export default {
       if (!up) {
         this.backendSanityCheckTimeoutId = setTimeout(
           this.checkBackendStatus,
-          parseInt(process.env.VUE_APP_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
+          parseInt(import.meta.env.VITE_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
         );
       }
     },

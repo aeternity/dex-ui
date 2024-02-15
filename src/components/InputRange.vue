@@ -1,5 +1,7 @@
 <template>
+  <label for="input-range" />
   <input
+    id="input-range"
     class="input-range"
     v-bind="$attrs"
     type="range"

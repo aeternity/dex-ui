@@ -1,4 +1,4 @@
-import { handleCallError, findErrorExplanation } from '../../lib/utils';
+import { handleCallError, findErrorExplanation } from '@/lib/utils';
 
 export default async (store) => {
   const waitTransactionMined = async ({

@@ -20,9 +20,9 @@
 </template>
 
 <script>
+import Alert from '@/assets/alert.svg';
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
-import Alert from '../assets/alert.svg?vue-component';
 
 export default {
   name: 'ErrorModal',

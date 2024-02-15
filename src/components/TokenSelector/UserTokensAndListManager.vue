@@ -4,12 +4,14 @@
       <div
         :class="['option', { active: tab === 'lists' }]"
         @click.prevent="tab = 'lists'"
+        @keydown.prevent="tab = 'lists'"
       >
         {{ $t('lists') }}
       </div>
       <div
         :class="['option', { active: tab === 'custom' }]"
         @click.prevent="tab = 'custom'"
+        @keydown.prevent="tab = 'custom'"
       >
         {{ $t('custom') }}
       </div>

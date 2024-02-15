@@ -6,19 +6,19 @@ import pairACI from 'dex-contracts-v2/build/AedexV2Pair.aci.json';
 import {
   cttoak, createOnAccountObject, addSlippage, subSlippage,
   getPairId, sortTokens, isDexBackendDisabled,
-} from '../../lib/utils';
+} from '@/lib/utils';
 import {
   DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE,
   DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
-} from '../../lib/constants';
-import i18n from '../../i18n';
+} from '@/lib/constants';
+import i18n from '@/i18n';
 
 const calculateDeadline = (deadline) => Date.now() + deadline * 60000;
 
 const getAddress = (x) => x.$options.address;
 const getCtAddress = (contract) => cttoak(getAddress(contract));
 const logDryRunAlternative = async (actionName, args) => {
-  const logDryRun = process.env.VUE_APP_DEBUG_LOG_DRY_RUN_ALTERNATIVE;
+  const logDryRun = import.meta.env.VITE_DEBUG_LOG_DRY_RUN_ALTERNATIVE;
   if (!isDexBackendDisabled && parseInt(logDryRun || '0', 10)) {
     console.warn(`Going with dry-run alternative for: ${actionName}(${JSON.stringify(args)})`);
   }
@@ -51,8 +51,11 @@ const genRouterWaeMethodAction = (method, argsMapper, isWae = false) => async (
   };
   if (useSdkWallet) {
     const result = await (isWae ? wae : router)[method](...methodArgs);
-    commit('addTransaction',
-      { hash: result.hash, info: transactionInfo, pending: true }, { root: true });
+    commit(
+      'addTransaction',
+      { hash: result.hash, info: transactionInfo, pending: true },
+      { root: true },
+    );
     return result;
   }
   const result = await (isWae ? wae : router)[method](...methodArgs);
@@ -710,9 +713,11 @@ export default {
         transactionInfo: `${i18n.global.t('approve')} ${token.symbol}`,
       });
       if (result) {
-        commit('addTransaction',
+        commit(
+          'addTransaction',
           { hash: result.hash, info: `${i18n.global.t('approve')} ${token.symbol}`, pending: true },
-          { root: true });
+          { root: true },
+        );
       }
     },
 
@@ -734,16 +739,20 @@ export default {
       amount,
     }) {
       const result = await dispatch('createAllowance', {
-        instance: await dispatch('getPairByTokens',
-          { tokenA: tokenA.contract_id, tokenB: tokenB.contract_id }),
+        instance: await dispatch(
+          'getPairByTokens',
+          { tokenA: tokenA.contract_id, tokenB: tokenB.contract_id },
+        ),
         toAccount: getCtAddress(router),
         amount,
         transactionInfo: `${i18n.global.t('approve')} ${tokenA.symbol}/${tokenB.symbol}`,
       });
       if (result) {
-        commit('addTransaction',
+        commit(
+          'addTransaction',
           { hash: result.hash, info: `${i18n.global.t('approve')} ${tokenA.symbol}/${tokenB.symbol}`, pending: true },
-          { root: true });
+          { root: true },
+        );
       }
     },
 
@@ -800,18 +809,14 @@ export default {
         }]),
     ),
 
-    swapExactAeForExactWae: genRouterWaeMethodAction(
-      'deposit', (_, { amount }) => ([{ amount: amount.toString() }]), true,
-    ),
+    swapExactAeForExactWae: genRouterWaeMethodAction('deposit', (_, { amount }) => ([{ amount: amount.toString() }]), true),
 
     /**
      * @description swaps WAE to AE token bypassing any dex/router entrypoints
      * @param p1 vuex context
      * @param {bigint} p2.amount exact amount WAE to be transformed into AE
     */
-    swapExactWaeForExactAe: genRouterWaeMethodAction(
-      'withdraw', (_, { amount }) => ([amount, null]), true,
-    ),
+    swapExactWaeForExactAe: genRouterWaeMethodAction('withdraw', (_, { amount }) => ([amount, null]), true),
 
     /**
      * @description

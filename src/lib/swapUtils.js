@@ -30,12 +30,14 @@ const orderRoute = (route, tokenA) => {
 export const getRouteReserves = (route, tokenA) => {
   if (!route || !route.length) return [];
   return orderRoute(route, tokenA)
-    .reduce(([acc, prev], { token0, token1, liquidityInfo: { reserve0, reserve1 } }) => {
-      const [reserves, next] = token0 === prev
-        ? [[reserve0, reserve1], token1] : [[reserve1, reserve0], token0];
-      return [acc.concat([reserves]), next];
-    },
-    [[], tokenA])[0];
+    .reduce(
+      ([acc, prev], { token0, token1, liquidityInfo: { reserve0, reserve1 } }) => {
+        const [reserves, next] = token0 === prev
+          ? [[reserve0, reserve1], token1] : [[reserve1, reserve0], token0];
+        return [acc.concat([reserves]), next];
+      },
+      [[], tokenA],
+    )[0];
 };
 /**
  * @description gets ratio from a full swap-route path
@@ -54,9 +56,9 @@ const ratioFromPairReserves = (pairReserves) => pairReserves.reduce(
  * @param {string} tokenA address
  * @return {BigNumber}
 */
-export const ratioFromRoute = (
-  route, tokenA,
-) => ratioFromPairReserves(getRouteReserves(route, tokenA));
+export const ratioFromRoute = (route, tokenA) => ratioFromPairReserves(
+  getRouteReserves(route, tokenA),
+);
 
 /**
  * @description reduce the decimals from a token pair ratio
@@ -81,11 +83,13 @@ export const getPath = (route, tokenA) => {
   if (!route?.length) return [];
   const ordered = orderRoute(route, tokenA);
   const [first, last] = ordered
-    .reduce(([acc, prev], pair) => {
-      const next = pair.token0 === prev ? pair.token1 : pair.token0;
-      return [acc.concat(prev), next];
-    },
-    [[], tokenA]);
+    .reduce(
+      ([acc, prev], pair) => {
+        const next = pair.token0 === prev ? pair.token1 : pair.token0;
+        return [acc.concat(prev), next];
+      },
+      [[], tokenA],
+    );
   return first.concat(last);
 };
 
@@ -111,7 +115,9 @@ const getReceivedTokensForOnePair = (reserveA, reserveB, amountA) => {
 */
 export const getReceivedTokensForPairReserves = (pairReserves, amountA) => pairReserves.reduce(
   (amountFrom, [reserveFrom, reserveTo]) => getReceivedTokensForOnePair(
-    reserveFrom, reserveTo, amountFrom,
+    reserveFrom,
+    reserveTo,
+    amountFrom,
   ),
   amountA,
 );

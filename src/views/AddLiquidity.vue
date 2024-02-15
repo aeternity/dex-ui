@@ -95,13 +95,13 @@ import MainWrapper from '@/components/MainWrapper.vue';
 import Tip from '@/components/Tip.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import { reduceDecimals, expandDecimals, getAePair } from '../lib/utils';
-import saveTokenSelectionMixin from '../mixins/saveTokenSelectionMixin';
-import setTokenPairInfoMixin from '../mixins/setTokenPairInfoMixin';
-import { MAGNITUDE, MINIMUM_LIQUIDITY } from '../lib/constants';
-import PlusIcon from '../assets/plus.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import approvalMixin from '../mixins/allowanceMixin';
+import { reduceDecimals, expandDecimals, getAePair } from '@/lib/utils';
+import { MAGNITUDE, MINIMUM_LIQUIDITY } from '@/lib/constants';
+import PlusIcon from '@/assets/plus.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import saveTokenSelectionMixin from '@/mixins/saveTokenSelectionMixin';
+import setTokenPairInfoMixin from '@/mixins/setTokenPairInfoMixin';
+import approvalMixin from '@/mixins/allowanceMixin';
 
 export default {
   components: {
@@ -211,7 +211,9 @@ export default {
     enoughAllowance() {
       if (!this.tokenA || !this.tokenB) return false;
       const enough = (token, amount) => token.is_ae || this.enoughTokenAllowance(
-        token.contract_id, amount, token.decimals,
+        token.contract_id,
+        amount,
+        token.decimals,
       );
 
       return enough(this.tokenA, this.amountTokenA) && enough(this.tokenB, this.amountTokenB);
@@ -232,9 +234,7 @@ export default {
     async approve() {
       try {
         this.approving = true;
-        const aePair = getAePair(
-          this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
-        );
+        const aePair = getAePair(this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB);
         if (!aePair) {
           await this.createAndRefreshAllowance(this.tokenA, this.amountTokenA);
           await this.createAndRefreshAllowance(this.tokenB, this.amountTokenB);
@@ -264,9 +264,7 @@ export default {
     },
     async supplyProcess() {
       let result;
-      const aePair = getAePair(
-        this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB,
-      );
+      const aePair = getAePair(this.tokenA, this.tokenB, this.amountTokenA, this.amountTokenB);
       this.supplying = true;
       // if none of the selected tokens are WAE
       if (!aePair) {

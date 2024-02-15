@@ -35,7 +35,7 @@ sync(store, router);
 if (!window.location.host.includes('localhost')) {
   Sentry.init({
     app,
-    dsn: process.env.VUE_APP_SENTRY_URL,
+    dsn: import.meta.env.VITE_SENTRY_URL,
     integrations: [
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),

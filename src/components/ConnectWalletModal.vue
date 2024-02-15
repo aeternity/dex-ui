@@ -32,6 +32,7 @@
         class="box wallet"
         :data-cy="`connect-${wallet.info.name}`"
         @click.prevent="onWalletConnect(wallet)"
+        @keydown.prevent="onWalletConnect(wallet)"
       >
         <div class="wallet">
           <div class="info">
@@ -73,6 +74,7 @@
               <a
                 href="https://addons.mozilla.org/en-US/firefox/addon/superhero-wallet/"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="extention"
               >
                 <FirefoxLogo />
@@ -83,6 +85,7 @@
               <a
                 href="https://chrome.google.com/webstore/detail/superhero/mnhmmkepfddpifjkamaligfeemcbhdne"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="extention"
               >
                 <ChromeLogo />
@@ -102,14 +105,15 @@
 import {
   walletDetector, BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
-import { resolveWithTimeout } from '../lib/utils';
-import { IN_FRAME } from '../lib/constants';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import ChromeLogo from '@/assets/chrome-logo.svg';
+import FirefoxLogo from '@/assets/firefox-logo.svg';
+import SuperheroLogo from '@/assets/wallets/superhero.png';
+import { resolveWithTimeout } from '@/lib/utils';
+import { IN_FRAME } from '@/lib/constants';
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
 import ButtonPlain from './ButtonPlain.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import ChromeLogo from '../assets/chrome-logo.svg?skip-optimize';
-import FirefoxLogo from '../assets/firefox-logo.svg?skip-optimize';
 
 export default {
   components: {
@@ -131,10 +135,10 @@ export default {
       scanningForWallets: false,
       icons: {
         // eslint-disable-next-line global-require
-        Superhero: require('../assets/wallets/superhero.png'),
+        Superhero: SuperheroLogo,
       },
       wallets: [],
-      UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
+      UNFINISHED_FEATURES: import.meta.env.UNFINISHED_FEATURES,
     };
   },
   async mounted() {
@@ -203,7 +207,7 @@ export default {
           info: {
             id: 'wallet.superhero.com',
             name: 'Superhero',
-            networkId: this.$store.state.networkId || process.env.VUE_APP_DEFAULT_NETWORK,
+            networkId: this.$store.state.networkId || import.meta.env.VITE_DEFAULT_NETWORK,
             type: 'website',
             description: this.$t('connectWalletModal.easyUseWallet'),
           },

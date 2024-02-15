@@ -20,6 +20,7 @@
       <a
         :href="`${activeNetwork.explorerUrl}/transactions/${hash}`"
         target="_blank"
+        rel="noopener noreferrer"
       >
         {{ $t('viewExplorer') }}
       </a>
@@ -29,9 +30,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import Alert from '@/assets/alert.svg';
+import Check from '@/assets/check.svg';
 import NotificationDefault from './NotificationDefault.vue';
-import Alert from '../assets/alert.svg?vue-component';
-import Check from '../assets/check.svg?vue-component';
 
 export default {
   components: { NotificationDefault, Alert, Check },

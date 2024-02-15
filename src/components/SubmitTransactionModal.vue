@@ -13,10 +13,10 @@
     <div class="transaction-status">
       <span class="status">
         {{
-          loading ? $t('submitTransactionModal.waiting') :
-          isConfirmed ?
-            $t('submitTransactionModal.submitted') :
-            $t('submitTransactionModal.error')
+          loading ? $t('submitTransactionModal.waiting')
+          : isConfirmed
+            ? $t('submitTransactionModal.submitted')
+            : $t('submitTransactionModal.error')
         }}
       </span>
       <template v-if="loading">
@@ -35,6 +35,7 @@
               v-if="activeNetwork && hash"
               :href="`${activeNetwork.explorerUrl}/transactions/${hash}`"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <ExternalLink />
               {{ $t('viewExplorer') }}
@@ -60,12 +61,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ButtonDefault from './ButtonDefault.vue';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import SuccessIcon from '@/assets/check.svg';
+import ErrorIcon from '@/assets/error.svg';
+import ExternalLink from '@/assets/external-link.svg';
 import ModalDefault from './ModalDefault.vue';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import SuccessIcon from '../assets/check.svg?vue-component';
-import ErrorIcon from '../assets/error.svg?vue-component';
-import ExternalLink from '../assets/external-link.svg?vue-component';
+import ButtonDefault from './ButtonDefault.vue';
 
 export default {
   components: {

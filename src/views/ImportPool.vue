@@ -57,9 +57,9 @@ import { Head } from '@vueuse/head';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';
-import { getPairId, calculateSelectedToken } from '../lib/utils';
-import LiquidityDetails from '../components/LiquidityDetails.vue';
-import PlusIcon from '../assets/plus.svg?vue-component';
+import PlusIcon from '@/assets/plus.svg';
+import LiquidityDetails from '@/components/LiquidityDetails.vue';
+import { getPairId, calculateSelectedToken } from '@/lib/utils';
 
 export default {
   components: {

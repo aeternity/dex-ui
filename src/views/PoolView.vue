@@ -36,11 +36,11 @@
 <script>
 import { mapState } from 'vuex';
 import { Head } from '@vueuse/head';
-import MainWrapper from '../components/MainWrapper.vue';
-import ButtonDefault from '../components/ButtonDefault.vue';
-import ButtonTooltip from '../components/ButtonTooltip.vue';
-import LiquidityItem from '../components/LiquidityItem.vue';
-import QuestionCircle from '../assets/question-circle.svg?vue-component';
+import QuestionCircle from '@/assets/question-circle.svg';
+import MainWrapper from '@/components/MainWrapper.vue';
+import ButtonDefault from '@/components/ButtonDefault.vue';
+import ButtonTooltip from '@/components/ButtonTooltip.vue';
+import LiquidityItem from '@/components/LiquidityItem.vue';
 
 export default {
   components: {

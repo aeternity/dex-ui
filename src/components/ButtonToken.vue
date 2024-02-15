@@ -1,7 +1,7 @@
 <template>
   <ButtonDefault
     v-bind="$attrs"
-    :class="['button-token', {active: !!token}]"
+    :class="['button-token', { active: !!token }]"
     :fill="null"
     @click="selectToken"
   >
@@ -18,10 +18,10 @@
 </template>
 
 <script>
+import DownChevron from '@/assets/arrow.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import ButtonDefault from './ButtonDefault.vue';
 import TokenIcon from './TokenIcon.vue';
-import DownChevron from '../assets/arrow.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
 
 export default {
   components: {
@@ -55,16 +55,16 @@ export default {
   justify-content: space-between;
   align-items: center;
   border-radius: 20px;
-  background: rgba(142, 152, 186, 0.15);
+  background: rgb(142 152 186 / 15%);
   border: 2px solid transparent;
 
   &.active {
-    background: rgba(18, 20, 27, 1);
-    border-color: rgba(18, 20, 27, 1);
+    background: rgb(18 20 27 / 100%);
+    border-color: rgb(18 20 27 / 100%);
   }
 
   &:hover {
-    border-color: rgba(142, 152, 186, 0.4);
+    border-color: rgb(142 152 186 / 40%);
   }
 
   .token {

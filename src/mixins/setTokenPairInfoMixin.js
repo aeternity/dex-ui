@@ -1,6 +1,6 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
-import { handleUnknownError, calculateSelectedToken, getPairId } from '../lib/utils';
+import { handleUnknownError, calculateSelectedToken, getPairId } from '@/lib/utils';
 
 export default {
   computed: {
@@ -22,7 +22,8 @@ export default {
         await this.setPairInfo();
         if (this.amountTokenA || this.amountTokenB) {
           this.setAmount(
-            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+            this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB,
+            this.isLastInputTokenA,
           );
         }
       }
@@ -48,7 +49,10 @@ export default {
     async setSelectedToken(token, isTokenA) {
       let switched;
       [this.tokenA, this.tokenB, switched] = calculateSelectedToken(
-        token, this.tokenA, this.tokenB, isTokenA,
+        token,
+        this.tokenA,
+        this.tokenB,
+        isTokenA,
       );
       if (!switched) {
         await this.setPairInfo();
@@ -63,7 +67,8 @@ export default {
         this.reserveTokenB = swapReserve;
       }
       this.setAmount(
-        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB, this.isLastInputTokenA,
+        this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB,
+        this.isLastInputTokenA,
       );
       await this.$watchUntilTruly(() => this.$store.state.aeternity.router);
       if (!switched) {
@@ -92,7 +97,7 @@ export default {
         if (!this.backendFailed && this.selectedBackendPair) {
           this.pairInfoTimeoutId = setTimeout(
             this.setPairInfo,
-            parseInt(process.env.VUE_APP_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
+            parseInt(import.meta.env.VITE_DEX_BACKEND_FETCH_INTERVAL || '2000', 10),
           );
         }
       }

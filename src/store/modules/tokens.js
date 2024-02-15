@@ -1,5 +1,5 @@
-import { DEFAULT_NETWORKS } from '../../lib/constants';
-import { fetchJson } from '../../lib/utils';
+import { DEFAULT_NETWORKS } from '@/lib/constants';
+import { fetchJson } from '@/lib/utils';
 
 export default {
   namespaced: true,

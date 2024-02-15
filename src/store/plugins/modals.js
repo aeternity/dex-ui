@@ -32,12 +32,14 @@ export default (store) => {
         const key = modalCounter;
         modalCounter += 1;
         return new Promise(
-          (resolve, reject) => commit('open', {
-            name,
-            key,
-            ...(allowRedirect !== undefined && { allowRedirect }),
-            props: { resolve, reject, ...props },
-          }),
+          (resolve, reject) => {
+            commit('open', {
+              name,
+              key,
+              ...(allowRedirect !== undefined && { allowRedirect }),
+              props: { resolve, reject, ...props },
+            });
+          },
         )
           .finally(() => {
             if (!props.resolve) {

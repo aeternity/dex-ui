@@ -17,7 +17,7 @@
             :token-a="tokenA"
             :token-b="tokenB"
           />
-          <span>{{ tokenA.symbol + '/' + tokenB.symbol }}</span>
+          <span>{{ `${tokenA.symbol}/${tokenB.symbol}` }}</span>
         </div>
       </div>
       <div class="remove-container">
@@ -129,13 +129,13 @@
         <div class="space-between">
           <span>{{ $t('liquidityDetails.pooled') }} {{ tokenA.symbol }}</span>
           <div>
-            {{ (positionBalance(reserveA)*share).toFixed(5) }}
+            {{ (positionBalance(reserveA) * share).toFixed(5) }}
           </div>
         </div>
         <div class="space-between">
           <span>{{ $t('liquidityDetails.pooled') }} {{ tokenB.symbol }}</span>
           <div>
-            {{ (positionBalance(reserveB)*share).toFixed(5) }}
+            {{ (positionBalance(reserveB) * share).toFixed(5) }}
           </div>
         </div>
         <div class="space-between">
@@ -149,7 +149,7 @@
         <div class="space-between">
           <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}</span>
           <div>
-            {{ (share*100).toFixed(5) }}%
+            {{ (share * 100).toFixed(5) }}%
           </div>
         </div>
       </div>
@@ -168,7 +168,7 @@
         <ButtonDefault
           v-if="address"
           class="remove-btn"
-          :class="{'transparent' : enoughAllowance}"
+          :class="{ transparent: enoughAllowance }"
           :disabled="!approveButtonEnabled"
           @click="approve"
         >
@@ -177,7 +177,7 @@
         <ButtonDefault
           v-if="address"
           class="remove-btn"
-          :class="{'transparent' : !enoughAllowance}"
+          :class="{ transparent: !enoughAllowance }"
           :disabled="!removeButtonEnabled"
           @click="handleRemove"
         >
@@ -198,16 +198,16 @@ import InputRange from '@/components/InputRange.vue';
 import InputToken from '@/components/InputToken.vue';
 import TokenIcon from '@/components/TokenIcon.vue';
 
+import DownArrow from '@/assets/arrow-down.svg';
+import PlusIcon from '@/assets/plus.svg';
+import approvalMixin from '@/mixins/allowanceMixin';
 import {
   handleUnknownError,
   reduceDecimals,
   expandDecimals,
   getAePair,
   getPairId,
-} from '../lib/utils';
-import DownArrow from '../assets/arrow-down.svg?vue-component';
-import PlusIcon from '../assets/plus.svg?vue-component';
-import approvalMixin from '../mixins/allowanceMixin';
+} from '@/lib/utils';
 
 export default {
   components: {
@@ -236,7 +236,7 @@ export default {
       reserveB: null,
       position: null,
       totalSupply: null,
-      UNFINISHED_FEATURES: process.env.UNFINISHED_FEATURES,
+      UNFINISHED_FEATURES: import.meta.env.UNFINISHED_FEATURES,
     };
   },
   computed: {
@@ -352,9 +352,7 @@ export default {
     },
     async removalProcess() {
       let result;
-      const aePair = getAePair(
-        this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput,
-      );
+      const aePair = getAePair(this.tokenA, this.tokenB, this.tokenAInput, this.tokenBInput);
       const liquidity = expandDecimals(this.poolTokenInput, 18);
       if (!aePair) {
         result = await this.$store.dispatch('aeternity/removeLiquidity', {
@@ -605,7 +603,7 @@ export default {
 
     .space-between {
       padding: 12px 0;
-      border-bottom: 2px solid rgba(143, 150, 172, 0.1);
+      border-bottom: 2px solid rgb(143 150 172 / 10%);
     }
 
     .space-between:last-child,

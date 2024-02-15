@@ -10,6 +10,7 @@
             && provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length"
           class="provider"
           @click.prevent="$store.commit('tokens/toggleProvider', provider)"
+          @keydown.prevent="$store.commit('tokens/toggleProvider', provider)"
         >
           <div class="content">
             <div class="info">
@@ -24,7 +25,7 @@
           </div>
 
           <div class="actions">
-            <div :class="['switch', {active: provider.active}]">
+            <div :class="['switch', { active: provider.active }]">
               <div class="circle" />
             </div>
           </div>

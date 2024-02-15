@@ -105,7 +105,7 @@ export default {
     text-align: left;
 
     .info-container {
-      margin: 12px 0 30px 0;
+      margin: 12px 0 30px;
       color: variables.$color-gray2;
 
       @extend %face-sans-14-medium;

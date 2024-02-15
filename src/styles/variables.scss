@@ -2,36 +2,26 @@ $font-sans: 'IBM Plex Sans', sans-serif;
 $sm-phone-width: 400px;
 $phone-width: 480px;
 $laptop-width: 1100px;
-
 $color-white: #fff;
-$color-white2: rgb(195, 197, 203);
-
-$color-black: rgb(44, 47, 54);
-$color-black2: rgb(35, 38, 49);
-$color-black3: rgb(21, 23, 30);
-
-$color-modal-bg: rgba(0, 0, 0, 0.424); // modal background
-
-$color-gray:rgb(64, 68, 79);
-$color-gray2: rgb(143, 150, 172);
-$color-gray3: rgb(51, 55, 70);
-$color-gray-hover: rgb(86, 90, 105);
-
-$color-blue: rgb(33, 114, 229);
-$color-blue-hover: rgb(25, 102, 212);
-$color-blue2: rgba(21, 61, 111, 0.44);
-$color-blue2-hover: rgba(49, 95, 154, 0.44);
-
-$color-red: rgb(255, 67, 67);
-$color-red2: rgb(255, 43, 94);
-
-$color-orange: rgb(255, 170, 41);
-
-$color-green: rgb(39, 174, 96);
-
-$color-primary: rgba(0, 255, 157, 1);
-$color-primary-light: rgba(0, 255, 157, 0.8);
-$color-primary-dark: rgba(0, 255, 157, 0.4);
-$color-primary-dark2: rgba(0, 255, 157, 0.2);
-
-$text-dark: rgb(32, 34, 42);
+$color-white2: rgb(195 197 203);
+$color-black: rgb(44 47 54);
+$color-black2: rgb(35 38 49);
+$color-black3: rgb(21 23 30);
+$color-modal-bg: rgb(0 0 0 / 42.4%); // modal background
+$color-gray: rgb(64 68 79);
+$color-gray2: rgb(143 150 172);
+$color-gray3: rgb(51 55 70);
+$color-gray-hover: rgb(86 90 105);
+$color-blue: rgb(33 114 229);
+$color-blue-hover: rgb(25 102 212);
+$color-blue2: rgb(21 61 111 / 44%);
+$color-blue2-hover: rgb(49 95 154 / 44%);
+$color-red: rgb(255 67 67);
+$color-red2: rgb(255 43 94);
+$color-orange: rgb(255 170 41);
+$color-green: rgb(39 174 96);
+$color-primary: rgb(0 255 157 / 100%);
+$color-primary-light: rgb(0 255 157 / 80%);
+$color-primary-dark: rgb(0 255 157 / 40%);
+$color-primary-dark2: rgb(0 255 157 / 20%);
+$text-dark: rgb(32 34 42);

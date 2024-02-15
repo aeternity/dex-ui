@@ -41,7 +41,7 @@
       v-else-if="tokenB && tokenA && ratio"
       class="price"
     >
-      {{ `1 ${tokenB.symbol} = ${1/ratio} ${tokenA.symbol}` }}
+      {{ `1 ${tokenB.symbol} = ${1 / ratio} ${tokenA.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address && !enoughAllowance"
@@ -51,7 +51,7 @@
       @click="approve"
     >
       <div class="allowance">
-        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`">
+        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`" alt="">
         {{ approveBtnMessage }}
       </div>
       <ButtonTooltip :tooltip="$t('swap.permissionToolTip', { msg: tokenA.symbol })">
@@ -79,14 +79,14 @@ import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import ButtonTooltip from '@/components/ButtonTooltip.vue';
-import { expandDecimals, getAePair } from '../lib/utils';
-import { getPath } from '../lib/swapUtils';
-import DownArrow from '../assets/arrow-down.svg?vue-component';
-import QuestionCircle from '../assets/question-circle.svg?vue-component';
-import AnimatedSpinner from '../assets/animated-spinner.svg?skip-optimize';
-import saveTokenSelectionMixin from '../mixins/saveTokenSelectionMixin';
-import approvalMixin from '../mixins/allowanceMixin';
-import setSwapRoutesMixin from '../mixins/setSwapRoutesMixin';
+import { expandDecimals, getAePair } from '@/lib/utils';
+import { getPath } from '@/lib/swapUtils';
+import DownArrow from '@/assets/arrow-down.svg';
+import QuestionCircle from '@/assets/question-circle.svg';
+import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import saveTokenSelectionMixin from '@/mixins/saveTokenSelectionMixin';
+import approvalMixin from '@/mixins/allowanceMixin';
+import setSwapRoutesMixin from '@/mixins/setSwapRoutesMixin';
 
 export default {
   components: {
@@ -146,8 +146,11 @@ export default {
     enoughAllowance() {
       if (!this.tokenA) return false;
       if (this.isAeVsWae || this.tokenA.is_ae) return true;
-      return this.enoughTokenAllowance(this.tokenA.contract_id,
-        this.amountTokenA, this.tokenA.decimals);
+      return this.enoughTokenAllowance(
+        this.tokenA.contract_id,
+        this.amountTokenA,
+        this.tokenA.decimals,
+      );
     },
     buttonMessage() {
       if (this.swapping) return `${this.$t('swapping')}...`;
@@ -213,12 +216,10 @@ export default {
       return this.callSwapAction(this.isLastInputTokenA ? 'swapExactAeForTokens' : 'swapAeForExactTokens');
     },
     async swapAeVsWaeProcess() {
-      return this.$store.dispatch(
-        `aeternity/${this.tokenA.is_ae ? 'swapExactAeForExactWae' : 'swapExactWaeForExactAe'}`, {
-          amount: this.amountTokenAExpanded,
-          transactionInfo: this.generateSwapMessage(true),
-        },
-      );
+      return this.$store.dispatch(`aeternity/${this.tokenA.is_ae ? 'swapExactAeForExactWae' : 'swapExactWaeForExactAe'}`, {
+        amount: this.amountTokenAExpanded,
+        transactionInfo: this.generateSwapMessage(true),
+      });
     },
     getPath() {
       return getPath(

@@ -6,7 +6,7 @@
     </div>
 
     <div class="token-info">
-      <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`">
+      <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`" alt="">
       <div class="symbol">
         {{ token.symbol }}
       </div>
@@ -17,6 +17,7 @@
         v-if="activeNetwork"
         :href="`${activeNetwork.explorerUrl}/contracts/${token.contract_id}`"
         target="_blank"
+        rel="noopener noreferrer"
       >
         {{ token.contract_id }}
       </a>
@@ -33,8 +34,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import QuestionCircleIcon from '@/assets/question-circle.svg';
 import ButtonDefault from '../ButtonDefault.vue';
-import QuestionCircleIcon from '../../assets/question-circle.svg?vue-component';
 
 export default {
   components: {
