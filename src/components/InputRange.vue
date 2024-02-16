@@ -21,7 +21,7 @@ export default {
 <style lang="scss" scoped>
 @use '../styles/variables.scss';
 
-input[type=range] {
+input[type='range'] {
   -webkit-appearance: none;
   width: 100%;
   background: transparent;
