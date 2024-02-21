@@ -222,7 +222,7 @@ export default {
   }
 
   .input-wrapper {
-    margin: 0 20px 20px 20px;
+    margin: 0 20px 20px;
   }
 
   .token-list {
