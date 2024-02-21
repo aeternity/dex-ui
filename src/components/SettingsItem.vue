@@ -9,10 +9,7 @@
       </div>
     </div>
     <div>
-      <div
-        v-if="description"
-        class="description"
-      >
+      <div v-if="description" class="description">
         {{ description }}
       </div>
     </div>
@@ -20,7 +17,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     title: { type: String, required: true },

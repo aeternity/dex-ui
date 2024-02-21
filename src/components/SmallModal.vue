@@ -1,10 +1,6 @@
 <template>
   <div class="small-modal">
-    <div
-      class="overlay"
-      @click.stop="$emit('close')"
-      @keydown.stop="$emit('close')"
-    />
+    <div class="overlay" @click.stop="$emit('close')" @keydown.stop="$emit('close')" />
     <div class="content">
       <slot />
     </div>

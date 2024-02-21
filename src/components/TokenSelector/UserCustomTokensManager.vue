@@ -10,7 +10,7 @@
 
     <div class="token-list-wrapper">
       <ListTokens
-        v-if="!userTokens.filter(t => t.contract_id === searchTerm).length && extraTokens.length"
+        v-if="!userTokens.filter((t) => t.contract_id === searchTerm).length && extraTokens.length"
         class="custom-list"
         :tokens="extraTokens"
         :active-tokens="activeTokens"
@@ -20,20 +20,12 @@
 
       <div class="filters">
         {{ $t('customTokens', { n: tokens.length }) }}
-        <ButtonPlain
-          v-if="tokens.length"
-          class="clear-all"
-          @click.prevent="removeAllTokens()"
-        >
+        <ButtonPlain v-if="tokens.length" class="clear-all" @click.prevent="removeAllTokens()">
           {{ $t('clearAll') }}
         </ButtonPlain>
       </div>
 
-      <div
-        v-for="token in tokens"
-        :key="token.contract_id"
-        class="token"
-      >
+      <div v-for="token in tokens" :key="token.contract_id" class="token">
         <div class="wrapper">
           <div class="row">
             <TokenIcon :token-a="token" />
@@ -47,10 +39,7 @@
             </div>
           </div>
           <div class="actions">
-            <ButtonPlain
-              class="delete"
-              @click.prevent="removeToken(token)"
-            >
+            <ButtonPlain class="delete" @click.prevent="removeToken(token)">
               <DeleteIcon />
             </ButtonPlain>
             <a
@@ -106,11 +95,13 @@ export default {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       return this.userTokens
         .filter((token) => token.networkId === this.networkId)
-        .filter((token) => (!searchTerm
-          || token.symbol.toLowerCase().includes(searchTerm)
-          || token.name.toLowerCase().includes(searchTerm)
-          || token.contract_id.toLowerCase().includes(searchTerm)
-        ));
+        .filter(
+          (token) =>
+            !searchTerm ||
+            token.symbol.toLowerCase().includes(searchTerm) ||
+            token.name.toLowerCase().includes(searchTerm) ||
+            token.contract_id.toLowerCase().includes(searchTerm),
+        );
     },
     activeTokens() {
       return this.getAvailableTokens().filter((token) => token.networkId === this.networkId);
@@ -124,7 +115,10 @@ export default {
       if (!tokens.length && this.searchTerm && this.searchTerm.includes('ct_')) {
         this.loadingExtraTokens = true;
         try {
-          const token = await this.$store.dispatch('aeternity/getTokenInstanceMetaInfo', this.searchTerm);
+          const token = await this.$store.dispatch(
+            'aeternity/getTokenInstanceMetaInfo',
+            this.searchTerm,
+          );
 
           this.extraTokens = [
             {

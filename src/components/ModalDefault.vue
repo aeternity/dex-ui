@@ -1,35 +1,18 @@
 <template>
   <transition appear>
-    <div
-      class="modal"
-      @click.self="$emit('close')"
-      @keydown.self="$emit('close')"
-    >
+    <div class="modal" @click.self="$emit('close')" @keydown.self="$emit('close')">
       <div class="container">
-        <div
-          v-if="title || close"
-          class="header"
-        >
+        <div v-if="title || close" class="header">
           <slot name="header-left" />
           <span>{{ title }}</span>
-          <ButtonPlain
-            v-if="close"
-            class="close"
-            @click="$emit('close')"
-          >
+          <ButtonPlain v-if="close" class="close" @click="$emit('close')">
             <Times />
           </ButtonPlain>
         </div>
-        <div
-          v-if="$slots.default"
-          class="body"
-        >
+        <div v-if="$slots.default" class="body">
           <slot />
         </div>
-        <div
-          v-if="$slots.footer"
-          class="footer"
-        >
+        <div v-if="$slots.footer" class="footer">
           <div class="content">
             <slot name="footer" />
           </div>

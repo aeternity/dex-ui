@@ -20,11 +20,9 @@ Cypress.Commands.add('login', () => {
     .get('body')
     .then((body) => {
       if (body.find('[data-cy=wallet-address]').length > 0) {
-        cy.get('[data-cy=wallet-address]')
-          .should('contain', 'ak_');
+        cy.get('[data-cy=wallet-address]').should('contain', 'ak_');
       } else {
-        cy
-          .get('[data-cy=error-dismiss]', { timeout: 6000 })
+        cy.get('[data-cy=error-dismiss]', { timeout: 6000 })
           .click()
           .get('[data-cy=checkbox]')
           .click()
@@ -44,10 +42,7 @@ Cypress.Commands.add('login', () => {
 });
 
 Cypress.Commands.add('logout', () => {
-  cy.get('[data-cy=wallet-address]')
-    .click()
-    .get('[data-cy=wallet-disconnect]')
-    .click();
+  cy.get('[data-cy=wallet-address]').click().get('[data-cy=wallet-disconnect]').click();
   // TODO: check if we gonna disconnect from wallet.superhero.com too
 });
 

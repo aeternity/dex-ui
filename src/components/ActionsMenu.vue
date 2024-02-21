@@ -6,10 +6,7 @@
     @keydown="showMenu = true"
   >
     <slot name="display" />
-    <SmallModal
-      v-if="showMenu"
-      @close="showMenu = false"
-    >
+    <SmallModal v-if="showMenu" @close="showMenu = false">
       <slot />
     </SmallModal>
   </div>

@@ -13,17 +13,17 @@ export const fetchJson = async (...args) => {
   return response.json();
 };
 
-export const aettosToAe = (v) => formatAmount(v, {
-  denomination: AE_AMOUNT_FORMATS.AETTOS,
-  targetDenomination: AE_AMOUNT_FORMATS.AE,
-});
+export const aettosToAe = (v) =>
+  formatAmount(v, {
+    denomination: AE_AMOUNT_FORMATS.AETTOS,
+    targetDenomination: AE_AMOUNT_FORMATS.AE,
+  });
 
 export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
   const result = [from, to, false];
-  const getKey = (t) => (t?.contract_id || '') + (!!t?.is_ae);
-  if ((getKey(token) === getKey(from) && !isFrom)
-    || (getKey(token) === getKey(to) && isFrom)) {
+  const getKey = (t) => (t?.contract_id || '') + !!t?.is_ae;
+  if ((getKey(token) === getKey(from) && !isFrom) || (getKey(token) === getKey(to) && isFrom)) {
     result[1] = from;
     result[0] = to;
     result[2] = true;
@@ -38,9 +38,8 @@ export const calculateSelectedToken = (token, from, to, isFrom) => {
 };
 
 export const reduceDecimals = (val, decimals) => BigNumber(val).shiftedBy(-decimals);
-export const expandDecimals = (val, decimals) => BigInt(
-  BigNumber(val).shiftedBy(decimals).toFixed(0),
-);
+export const expandDecimals = (val, decimals) =>
+  BigInt(BigNumber(val).shiftedBy(decimals).toFixed(0));
 
 export const handleUnknownError = (error) => console.warn('Unknown rejection', error);
 
@@ -107,7 +106,7 @@ export const getAePair = (from, to, amountFrom, amountTo) => {
  * @param {bigint} value given value
  * @param {bigint} slippage percentage (eg. 10,20...100)
  * @return biging representing final value
-*/
+ */
 export const addSlippage = (value, slippage) => value + (value * BigInt(slippage * 10)) / 1000n;
 
 /**
@@ -116,7 +115,7 @@ export const addSlippage = (value, slippage) => value + (value * BigInt(slippage
  * @param {bigint} value given value
  * @param {bigint} slippage percentage (eg. 10,20...100)
  * @return biging representing final value
-*/
+ */
 export const subSlippage = (value, slippage) => value - (value * BigInt(slippage * 10)) / 1000n;
 
 /**
@@ -125,20 +124,22 @@ export const subSlippage = (value, slippage) => value - (value * BigInt(slippage
  * @param {fn} callback
  * @returns Promise
  */
-export const resolveWithTimeout = (timeout, callback) => Promise.race([
-  callback(),
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
-    }, timeout);
-  }),
-]);
+export const resolveWithTimeout = (timeout, callback) =>
+  Promise.race([
+    callback(),
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
+      }, timeout);
+    }),
+  ]);
 
 /**
  * Detect if Safari browser
  * @returns boolean
  */
-export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+export const isSafariBrowser = () =>
+  navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
 
 /**
  * Sort two tokens in ascending order
@@ -150,7 +151,7 @@ export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !
  */
 export const sortTokens = (tokenA, tokenB, transform) => {
   const f = transform || ((x) => x);
-  return (f(tokenA) < f(tokenB)) ? [tokenA, tokenB] : [tokenB, tokenA];
+  return f(tokenA) < f(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA];
 };
 
 /**
@@ -167,7 +168,8 @@ export const getPairId = (tokenA, tokenB) => {
 export const handleCallError = ({ returnType, returnValue }, instance) => {
   let message;
   switch (returnType) {
-    case 'ok': return;
+    case 'ok':
+      return;
     case 'revert':
       // eslint-disable-next-line no-underscore-dangle
       message = instance._calldata.decodeFateString(returnValue);
@@ -175,7 +177,8 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
     case 'error':
       message = decode(returnValue).toString();
       break;
-    default: message = `Unknown returnType: ${returnType}`;
+    default:
+      message = `Unknown returnType: ${returnType}`;
   }
   throw new Error(message);
 };
@@ -183,5 +186,5 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
 /**
  * Flag showing when the dex-ui is setup to work without dex-backend
  */
-export const isDexBackendDisabled = import.meta.env.VITE_DISABLE_DEX_BACKEND
-    && JSON.parse(import.meta.env.VITE_DISABLE_DEX_BACKEND);
+export const isDexBackendDisabled =
+  import.meta.env.VITE_DISABLE_DEX_BACKEND && JSON.parse(import.meta.env.VITE_DISABLE_DEX_BACKEND);

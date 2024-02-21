@@ -13,10 +13,7 @@
       <template v-if="!$slots.default">
         {{ tooltip }}
       </template>
-      <div
-        id="arrow"
-        data-popper-arrow
-      />
+      <div id="arrow" data-popper-arrow />
     </div>
   </Transition>
 </template>

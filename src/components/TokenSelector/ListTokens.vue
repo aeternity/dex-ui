@@ -1,9 +1,6 @@
 <template>
   <div class="list-tokens">
-    <div
-      v-if="expandedList"
-      class="expanded-tokens-list"
-    >
+    <div v-if="expandedList" class="expanded-tokens-list">
       {{ $t('tokenSelector.expandedInactiveTokenLists') }}
       <ActionsMenu>
         <template #display>
@@ -18,14 +15,22 @@
     <ButtonPlain
       v-for="token in tokens"
       :key="`${token.contract_id}|${token.symbol}`"
-      :class="['token', {
-        clickable: !importToken,
-        selected: (chosenTokens?.[0] || chosenTokens?.[1]) && !!chosenTokens.find(
-          (t) => token.symbol === t?.symbol && token.contract_id === t?.contract_id,
-        ),
-      }]"
-      :disabled="chosenTokens?.[0] && (chosenTokens[0]?.contract_id === token.contract_id
-        && chosenTokens[0]?.symbol === token.symbol)"
+      :class="[
+        'token',
+        {
+          clickable: !importToken,
+          selected:
+            (chosenTokens?.[0] || chosenTokens?.[1]) &&
+            !!chosenTokens.find(
+              (t) => token.symbol === t?.symbol && token.contract_id === t?.contract_id,
+            ),
+        },
+      ]"
+      :disabled="
+        chosenTokens?.[0] &&
+        chosenTokens[0]?.contract_id === token.contract_id &&
+        chosenTokens[0]?.symbol === token.symbol
+      "
       @click.prevent="!importToken ? $emit('token:click', token) : null"
     >
       <div class="wrapper">
@@ -43,17 +48,13 @@
         </div>
         <div v-if="importToken">
           <div
-            v-if="!!activeTokens.filter(t => t.contract_id === token.contract_id).length"
+            v-if="!!activeTokens.filter((t) => t.contract_id === token.contract_id).length"
             class="active-token"
           >
             {{ $t('active') }}
           </div>
 
-          <ButtonDefault
-            v-else
-            class="import-button"
-            @click.prevent="$emit('token:import', token)"
-          >
+          <ButtonDefault v-else class="import-button" @click.prevent="$emit('token:import', token)">
             {{ $t('import') }}
           </ButtonDefault>
         </div>
@@ -84,7 +85,7 @@ export default {
     },
     activeTokens: {
       type: Array,
-      default: () => ([]),
+      default: () => [],
     },
     expandedList: {
       type: Boolean,
@@ -151,5 +152,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -59,7 +59,7 @@ export default {
 
     const query = {
       // safari vue-router issue
-      address: (new URLSearchParams(window.location.search)).get('address'),
+      address: new URLSearchParams(window.location.search).get('address'),
       ...this.$route.query,
     };
 
@@ -70,10 +70,7 @@ export default {
     try {
       if (this.$isMobile && !IN_FRAME) {
         await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
-        setTimeout(
-          () => this.$store.dispatch('parseAndSendTransactionFromQuery'),
-          1000,
-        );
+        setTimeout(() => this.$store.dispatch('parseAndSendTransactionFromQuery'), 1000);
       } else {
         await this.$store.dispatch('initSdk');
       }
@@ -104,11 +101,11 @@ export default {
       await this.$store.dispatch('connectWallet', { info: this.wallet });
     }
     if (
-      this.$isMobile
-      && !query.address
-      && !query.transaction
-      && !query.networkId
-      && !this.$store.state.hasSeenOnboarding
+      this.$isMobile &&
+      !query.address &&
+      !query.transaction &&
+      !query.networkId &&
+      !this.$store.state.hasSeenOnboarding
     ) {
       this.$store.dispatch('showOnboarding');
     } else if (!this.$store.state.hasSeenOnboarding) {

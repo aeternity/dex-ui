@@ -1,9 +1,6 @@
 <template>
   <div class="import-pool">
-    <MainWrapper
-      :title="$t('importPool.title')"
-      back-button
-    >
+    <MainWrapper :title="$t('importPool.title')" back-button>
       <Head>
         <title>Import Pool - Superhero DEX</title>
       </Head>
@@ -25,10 +22,7 @@
         arrow
         @update:token="setSelectedToken($event, false)"
       />
-      <div
-        v-if="imported"
-        class="pool-found"
-      >
+      <div v-if="imported" class="pool-found">
         {{ $t('importPool.poolFound') }}
       </div>
       <div class="connect">
@@ -40,10 +34,7 @@
             :with-one-button="true"
           />
         </div>
-        <div
-          v-if="!imported"
-          class="footer-text"
-        >
+        <div v-if="!imported" class="footer-text">
           {{ footerText }}
         </div>
       </div>

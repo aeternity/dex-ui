@@ -1,11 +1,7 @@
 <template>
   <div class="input-amount">
     <slot name="left" />
-    <InputField
-      type="number"
-      v-bind="$attrs"
-      @input="$emit('input', $event)"
-    />
+    <InputField type="number" v-bind="$attrs" @input="$emit('input', $event)" />
     <slot name="right" />
   </div>
 </template>

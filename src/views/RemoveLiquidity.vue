@@ -1,22 +1,12 @@
 <template>
   <div class="remove-liquidity">
-    <MainWrapper
-      :title="$t('removeLiquidity.title')"
-      back-button
-      settings
-    >
+    <MainWrapper :title="$t('removeLiquidity.title')" back-button settings>
       <Head>
         <title>Remove Liquidity - Superhero DEX</title>
       </Head>
-      <div
-        v-if="tokenA && tokenB"
-        class="header"
-      >
+      <div v-if="tokenA && tokenB" class="header">
         <div>
-          <TokenIcon
-            :token-a="tokenA"
-            :token-b="tokenB"
-          />
+          <TokenIcon :token-a="tokenA" :token-b="tokenB" />
           <span>{{ `${tokenA.symbol}/${tokenB.symbol}` }}</span>
         </div>
       </div>
@@ -34,35 +24,12 @@
           <span>{{ percentage }}%</span>
         </div>
         <template v-if="!detailed">
-          <InputRange
-            :value="percentage"
-            @update="updatePercent($event)"
-          />
+          <InputRange :value="percentage" @update="updatePercent($event)" />
           <div class="percentage-btns">
-            <ButtonDefault
-              fill="light"
-              @click="updatePercent(25)"
-            >
-              25%
-            </ButtonDefault>
-            <ButtonDefault
-              fill="light"
-              @click="updatePercent(50)"
-            >
-              50%
-            </ButtonDefault>
-            <ButtonDefault
-              fill="light"
-              @click="updatePercent(75)"
-            >
-              75%
-            </ButtonDefault>
-            <ButtonDefault
-              fill="light"
-              @click="updatePercent(100)"
-            >
-              100%
-            </ButtonDefault>
+            <ButtonDefault fill="light" @click="updatePercent(25)"> 25% </ButtonDefault>
+            <ButtonDefault fill="light" @click="updatePercent(50)"> 50% </ButtonDefault>
+            <ButtonDefault fill="light" @click="updatePercent(75)"> 75% </ButtonDefault>
+            <ButtonDefault fill="light" @click="updatePercent(100)"> 100% </ButtonDefault>
           </div>
         </template>
       </div>
@@ -77,15 +44,9 @@
         <PlusIcon />
         <InputToken />
       </template>
-      <div
-        v-else-if="share"
-        class="remove-container"
-      >
+      <div v-else-if="share" class="remove-container">
         <div class="token-row">
-          <TokenIcon
-            :token-a="tokenA"
-            :token-b="tokenB"
-          />
+          <TokenIcon :token-a="tokenA" :token-b="tokenB" />
           <span>
             {{ `${tokenA.symbol}/${tokenB.symbol}` }}
           </span>
@@ -112,17 +73,14 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="position"
-        class="pool-info"
-      >
+      <div v-if="position" class="pool-info">
         <div class="space-between">
           {{ $t('removeLiquidity.yourPosition') }}
         </div>
         <div class="space-between">
           <span>{{ $t('price') }}</span>
           <div>
-            {{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }} <br>
+            {{ `1 ${tokenA.symbol} = ${ratioB.toFixed(5)} ${tokenB.symbol}` }} <br />
             {{ `1 ${tokenB.symbol} = ${ratioA.toFixed(5)} ${tokenA.symbol}` }}
           </div>
         </div>
@@ -148,9 +106,7 @@
         </div>
         <div class="space-between">
           <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}</span>
-          <div>
-            {{ (share * 100).toFixed(5) }}%
-          </div>
+          <div>{{ (share * 100).toFixed(5) }}%</div>
         </div>
       </div>
       <div class="btns-row">
@@ -248,17 +204,23 @@ export default {
     ...mapGetters('tokens', ['getAvailableTokens']),
     tokenAInput() {
       return this.positionBalance(this.reserveA ?? 0)
-        .times(this.share).times(this.percentage / 100);
+        .times(this.share)
+        .times(this.percentage / 100);
     },
     tokenBInput() {
       return this.positionBalance(this.reserveB ?? 0)
-        .times(this.share).times(this.percentage / 100);
+        .times(this.share)
+        .times(this.percentage / 100);
     },
     poolTokenInput() {
       return this.positionBalance(this.position ?? 0).times(this.percentage / 100);
     },
     share() {
-      return this.totalSupply ? BigNumber(this.position ?? 0).div(this.totalSupply).toNumber() : 0;
+      return this.totalSupply
+        ? BigNumber(this.position ?? 0)
+            .div(this.totalSupply)
+            .toNumber()
+        : 0;
     },
     pairId() {
       return getPairId(this.tokenA.contract_id, this.tokenB.contract_id);
@@ -272,18 +234,24 @@ export default {
         return null;
       }
       return reduceDecimals(this.reserveA, this.tokenA.decimals)
-        .div(reduceDecimals(this.reserveB, this.tokenB.decimals)).toNumber();
+        .div(reduceDecimals(this.reserveB, this.tokenB.decimals))
+        .toNumber();
     },
     ratioB() {
       if (!this.reserveA || !this.reserveB || !this.tokenA || !this.tokenB) {
         return null;
       }
       return reduceDecimals(this.reserveB, this.tokenB.decimals)
-        .div(reduceDecimals(this.reserveA, this.tokenA.decimals)).toNumber();
+        .div(reduceDecimals(this.reserveA, this.tokenA.decimals))
+        .toNumber();
     },
     approveButtonEnabled() {
-      return !this.fetchingAllowance && !this.enoughAllowance
-          && !this.approving && this.poolTokenInput.gt(0);
+      return (
+        !this.fetchingAllowance &&
+        !this.enoughAllowance &&
+        !this.approving &&
+        this.poolTokenInput.gt(0)
+      );
     },
     removeButtonEnabled() {
       return this.enoughAllowance && !this.approving && !this.removing && this.poolTokenInput.gt(0);
@@ -415,12 +383,13 @@ export default {
         if (!this.tokenA || !this.tokenB || !this.address) {
           return;
         }
-        [
-          this.totalSupply, this.reserveA, this.reserveB,
-        ] = await this.$store.dispatch('aeternity/getPairInfo', {
-          tokenA: this.tokenA,
-          tokenB: this.tokenB,
-        });
+        [this.totalSupply, this.reserveA, this.reserveB] = await this.$store.dispatch(
+          'aeternity/getPairInfo',
+          {
+            tokenA: this.tokenA,
+            tokenB: this.tokenB,
+          },
+        );
         const position = await this.$store.dispatch('aeternity/pullAccountLiquidity', {
           tokenA: this.tokenA.contract_id,
           tokenASymbol: this.tokenA.symbol,

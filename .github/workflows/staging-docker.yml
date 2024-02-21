@@ -2,24 +2,24 @@ name: Staging Dex UI Pipeline
 
 on:
   pull_request:
-    branches: [ main ]
-    types: [ opened, synchronize, closed ]
+    branches: [main]
+    types: [opened, synchronize, closed]
 
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
-  ENV: "stg"
-  APP: "dex-ui"
+  ENV: 'stg'
+  APP: 'dex-ui'
 
 jobs:
   main:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     name: Web build docker
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      
+
       - name: Set up Docker Buildx
         id: buildx
         # Use the action from the master, as we've seen some inconsistencies with @v1
@@ -54,14 +54,14 @@ jobs:
             type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'main') }}
             type=ref,event=tag
             type=ref,event=pr
-      
+
       - name: Get commit sha on PR Sync
-        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'  
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
         id: git-sha
         shell: bash
         run: |
           echo GIT_SHA=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT
-      
+
       - name: Build and push docker image
         if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         uses: docker/build-push-action@v2
@@ -93,14 +93,13 @@ jobs:
           ref: stg
           persist-credentials: false
           fetch-depth: 0
-      
 
       - name: Check the initial PR deployment status before make a PR Sync.
         if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
         uses: aeternity/ae-github-actions/deploy-status@v7
         with:
           url: https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.service.aepps.com
-      
+
       - name: Staging PR Sync
         if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
         uses: aeternity/ae-github-actions/argocd-pr-sync@v4

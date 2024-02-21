@@ -1,15 +1,9 @@
 <template>
   <nav class="navigation-menu">
-    <router-link
-      to="/swap"
-      @click.prevent="navigateSwap"
-    >
+    <router-link to="/swap" @click.prevent="navigateSwap">
       {{ $t('nav.swap') }}
     </router-link>
-    <router-link
-      to="/pool"
-      @click.prevent="navigatePool"
-    >
+    <router-link to="/pool" @click.prevent="navigatePool">
       {{ $t('nav.pool') }}
     </router-link>
   </nav>

@@ -1,8 +1,9 @@
 <template>
   <ModalDefault
     class="confirm-add-modal"
-    :title="isAdding
-      ? $t('confirmLiquidityModal.willReceive') : $t('confirmLiquidityModal.beRemoved')"
+    :title="
+      isAdding ? $t('confirmLiquidityModal.willReceive') : $t('confirmLiquidityModal.beRemoved')
+    "
     close
     @close="denyHandler"
   >
@@ -12,26 +13,17 @@
           {{ pairAmount ? pairAmount.toFixed(5) : '-' }}
         </div>
         <div class="tokens">
-          <TokenIcon
-            :token-a="tokenA"
-            :token-b="tokenB"
-          />
+          <TokenIcon :token-a="tokenA" :token-b="tokenB" />
           {{ `${tokenA.symbol}/${tokenB.symbol} ${$t('poolTokens')}` }}
         </div>
       </div>
-      <div
-        v-if="!isAdding"
-        class="estimation"
-      >
+      <div v-if="!isAdding" class="estimation">
         <i18n-t keypath="confirmLiquidityModal.estimation">
           <b>{{ minimumReceived(amountA).toFixed(5) }} {{ tokenA.symbol }}</b>
           <b>{{ minimumReceived(amountB).toFixed(5) }} {{ tokenB.symbol }}</b>
         </i18n-t>
       </div>
-      <span
-        v-else
-        class="estimation"
-      >
+      <span v-else class="estimation">
         <i18n-t keypath="confirmLiquidityModal.outputEstimated">
           <span>{{ slippage }}</span>
         </i18n-t>
@@ -47,8 +39,9 @@
         <div>
           <span>
             <i18n-t
-              :keypath="isAdding
-                ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'"
+              :keypath="
+                isAdding ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'
+              "
             >
               <span>{{ tokenA.symbol }}</span>
             </i18n-t>
@@ -60,8 +53,9 @@
         <div>
           <span>
             <i18n-t
-              :keypath="isAdding
-                ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'"
+              :keypath="
+                isAdding ? 'confirmLiquidityModal.deposited' : 'confirmLiquidityModal.estimated'
+              "
             >
               <span>{{ tokenB.symbol }}</span>
             </i18n-t>
@@ -71,28 +65,28 @@
           </div>
         </div>
         <div v-if="!isAdding">
-          <span>{{ $t("confirmLiquidityModal.allowedSlippage") }}</span>
-          <div>
-            {{ slippage }}%
-          </div>
+          <span>{{ $t('confirmLiquidityModal.allowedSlippage') }}</span>
+          <div>{{ slippage }}%</div>
         </div>
         <div class="rates">
-          <span>{{ $t("confirmLiquidityModal.rates") }}</span>
+          <span>{{ $t('confirmLiquidityModal.rates') }}</span>
           <span>
             1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
-            <br>
+            <br />
             1 {{ tokenB.symbol }} = {{ ratio?.toFixed(8) ?? '-' }} {{ tokenA.symbol }}
           </span>
         </div>
         <div v-if="isAdding">
-          <span>{{ $t("confirmLiquidityModal.yourPoolShare") }}</span>
+          <span>{{ $t('confirmLiquidityModal.yourPoolShare') }}</span>
           <div>{{ share ? share.toFixed(8) : '100.00000000' }} %</div>
         </div>
       </div>
       <ButtonDefault @click="allowHandler">
-        {{ isAdding
-          ? $t("confirmLiquidityModal.confirmAdding")
-          : $t("confirmLiquidityModal.confirmRemoving") }}
+        {{
+          isAdding
+            ? $t('confirmLiquidityModal.confirmAdding')
+            : $t('confirmLiquidityModal.confirmRemoving')
+        }}
       </ButtonDefault>
     </div>
   </ModalDefault>
@@ -130,9 +124,7 @@ export default {
         return BigNumber(this.ratio);
       }
       // this is for adding liquidity when there is no pool created yet
-      return this.amountA && this.amountB
-        ? this.amountA.div(this.amountB)
-        : 1;
+      return this.amountA && this.amountB ? this.amountA.div(this.amountB) : 1;
     },
     ratioB() {
       return BigNumber(1).div(this.ratioA);
@@ -140,9 +132,7 @@ export default {
   },
   methods: {
     minimumReceived(amount) {
-      return BigNumber(amount).minus(
-        BigNumber(amount).times(this.slippage).div(100),
-      );
+      return BigNumber(amount).minus(BigNumber(amount).times(this.slippage).div(100));
     },
     denyHandler() {
       this.reject(new Error(this.$t('errors.rejectedByUser')));

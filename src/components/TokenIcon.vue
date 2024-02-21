@@ -5,13 +5,8 @@
       :class="{ rotating, 'not-pool-token': !tokenB }"
       :src="mapToken(tokenA)"
       alt=""
-    >
-    <img
-      v-if="tokenB"
-      :class="{ rotating }"
-      :src="mapToken(tokenB)"
-      alt=""
-    >
+    />
+    <img v-if="tokenB" :class="{ rotating }" :src="mapToken(tokenB)" alt="" />
   </div>
 </template>
 
@@ -26,7 +21,9 @@ export default {
   },
   methods: {
     mapToken(token) {
-      return token.is_ae !== undefined ? AeIcon : `https://avatars.z52da5wt.xyz/${token.contract_id}`;
+      return token.is_ae !== undefined
+        ? AeIcon
+        : `https://avatars.z52da5wt.xyz/${token.contract_id}`;
     },
   },
 };

@@ -1,15 +1,15 @@
 name: Bug Report
 description: File a bug report
-labels: ["bug", "triage"]
+labels: ['bug', 'triage']
 
 body:
   - type: markdown
     attributes:
       value: |
         Before opening a bug report, please search for the behaviour in the existing issues. 
-        
+
         ---
-        
+
         Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
   - type: textarea
     id: what-happened
@@ -58,7 +58,7 @@ body:
     id: additional
     attributes:
       label: Anything else you want us to know?
-      description:  Add any other context about the problem here.
+      description: Add any other context about the problem here.
       placeholder: I had spotty internet
     validations:
       required: false

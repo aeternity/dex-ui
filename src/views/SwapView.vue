@@ -1,9 +1,5 @@
 <template>
-  <MainWrapper
-    :title="$t('nav.swap')"
-    settings
-    class="swap-view"
-  >
+  <MainWrapper :title="$t('nav.swap')" settings class="swap-view">
     <Head>
       <title>Swap - Superhero DEX</title>
     </Head>
@@ -16,10 +12,7 @@
       @update:token="setSelectedToken($event, true)"
       @update:balance="balance = $event"
     />
-    <ButtonPlain
-      class="swap-button"
-      @click="switchSelectedTokens(null)"
-    >
+    <ButtonPlain class="swap-button" @click="switchSelectedTokens(null)">
       <DownArrow />
     </ButtonPlain>
     <InputToken
@@ -30,28 +23,28 @@
       @update:value="setAmount($event, false)"
       @update:token="setSelectedToken($event, false)"
     />
-    <div
-      v-if="fetchingPairInfo"
-      class="fetching-pair-info"
-    >
+    <div v-if="fetchingPairInfo" class="fetching-pair-info">
       <AnimatedSpinner />
       <span>{{ $t('fetchPrice') }}...</span>
     </div>
-    <div
-      v-else-if="tokenB && tokenA && ratio"
-      class="price"
-    >
+    <div v-else-if="tokenB && tokenA && ratio" class="price">
       {{ `1 ${tokenB.symbol} = ${1 / ratio} ${tokenA.symbol}` }}
     </div>
     <ButtonDefault
       v-if="!isDisabled && address && !enoughAllowance"
       class="allowance-button"
-      :disabled="approving || !tokenA || !amountTokenA || fetchingPairInfo || fetchingAllowance
-        || enoughAllowance"
+      :disabled="
+        approving ||
+        !tokenA ||
+        !amountTokenA ||
+        fetchingPairInfo ||
+        fetchingAllowance ||
+        enoughAllowance
+      "
       @click="approve"
     >
       <div class="allowance">
-        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`" alt="">
+        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`" alt="" />
         {{ approveBtnMessage }}
       </div>
       <ButtonTooltip :tooltip="$t('swap.permissionToolTip', { msg: tokenA.symbol })">
@@ -60,8 +53,15 @@
     </ButtonDefault>
 
     <ButtonDefault
-      :disabled="address && (swapping || connectingToWallet || isDisabled || approving
-        || fetchingPairInfo || !enoughAllowance)"
+      :disabled="
+        address &&
+        (swapping ||
+          connectingToWallet ||
+          isDisabled ||
+          approving ||
+          fetchingPairInfo ||
+          !enoughAllowance)
+      "
       :spinner="connectingToWallet"
       :class="{ loading: connectingToWallet }"
       @click="clickHandler"
@@ -131,17 +131,22 @@ export default {
     },
     isValidAmount() {
       return !(
-        !this.amountTokenA
-        || !this.amountTokenB
-        || Number.parseFloat(this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB) <= 0
+        !this.amountTokenA ||
+        !this.amountTokenB ||
+        Number.parseFloat(this.isLastInputTokenA ? this.amountTokenA : this.amountTokenB) <= 0
       );
     },
     hasRoute() {
       return !!this.selectedRoute;
     },
     isDisabled() {
-      return !this.tokenB || !this.tokenA || !this.isValidAmount
-             || !this.enoughBalance || (!this.hasRoute && !this.isAeVsWae);
+      return (
+        !this.tokenB ||
+        !this.tokenA ||
+        !this.isValidAmount ||
+        !this.enoughBalance ||
+        (!this.hasRoute && !this.isAeVsWae)
+      );
     },
     enoughAllowance() {
       if (!this.tokenA) return false;
@@ -155,19 +160,28 @@ export default {
     buttonMessage() {
       if (this.swapping) return `${this.$t('swapping')}...`;
       if (!this.address) return this.$t('connectWallet');
-      if (this.factory && this.tokenB && this.tokenA
-        && !this.fetchingPairInfo && !this.isAeVsWae && !this.hasRoute) return this.$t('NoLiquidityFound');
+      if (
+        this.factory &&
+        this.tokenB &&
+        this.tokenA &&
+        !this.fetchingPairInfo &&
+        !this.isAeVsWae &&
+        !this.hasRoute
+      )
+        return this.$t('NoLiquidityFound');
       if (!this.isValidAmount || !this.tokenB || !this.tokenA) return this.$t('enterAmount');
       if (!this.enoughBalance) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
       return this.$t('swap.button');
     },
     amountTokenAExpanded() {
       return !this.tokenA || !this.amountTokenA
-        ? 0 : expandDecimals(this.amountTokenA, this.tokenA.decimals);
+        ? 0
+        : expandDecimals(this.amountTokenA, this.tokenA.decimals);
     },
     amountTokenBExpanded() {
       return !this.tokenB || !this.amountTokenB
-        ? 0 : expandDecimals(this.amountTokenB, this.tokenB.decimals);
+        ? 0
+        : expandDecimals(this.amountTokenB, this.tokenB.decimals);
     },
   },
   watch: {
@@ -211,21 +225,25 @@ export default {
         );
       }
       if (aePair.isTokenFrom) {
-        return this.callSwapAction(this.isLastInputTokenA ? 'swapExactTokensForAe' : 'swapTokensForExactAe');
+        return this.callSwapAction(
+          this.isLastInputTokenA ? 'swapExactTokensForAe' : 'swapTokensForExactAe',
+        );
       }
-      return this.callSwapAction(this.isLastInputTokenA ? 'swapExactAeForTokens' : 'swapAeForExactTokens');
+      return this.callSwapAction(
+        this.isLastInputTokenA ? 'swapExactAeForTokens' : 'swapAeForExactTokens',
+      );
     },
     async swapAeVsWaeProcess() {
-      return this.$store.dispatch(`aeternity/${this.tokenA.is_ae ? 'swapExactAeForExactWae' : 'swapExactWaeForExactAe'}`, {
-        amount: this.amountTokenAExpanded,
-        transactionInfo: this.generateSwapMessage(true),
-      });
+      return this.$store.dispatch(
+        `aeternity/${this.tokenA.is_ae ? 'swapExactAeForExactWae' : 'swapExactWaeForExactAe'}`,
+        {
+          amount: this.amountTokenAExpanded,
+          transactionInfo: this.generateSwapMessage(true),
+        },
+      );
     },
     getPath() {
-      return getPath(
-        this.selectedRoute,
-        this.tokenA.contract_id,
-      );
+      return getPath(this.selectedRoute, this.tokenA.contract_id);
     },
     callSwapAction(action) {
       return this.$store.dispatch(`aeternity/${action}`, {

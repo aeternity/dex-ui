@@ -7,7 +7,7 @@
     step="any"
     @keypress="isNumber($event)"
     @input="$emit('update:value', $event.target.value)"
-  >
+  />
 </template>
 
 <script>
@@ -20,8 +20,8 @@ export default {
     isNumber(evt) {
       if (!this.$attrs || !this.$attrs.type || this.$attrs.type !== 'number') return true;
 
-      const charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+      const charCode = evt.which ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
         evt.preventDefault();
         return false;
       }

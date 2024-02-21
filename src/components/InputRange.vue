@@ -9,7 +9,7 @@
     max="100"
     step="1"
     @input="$emit('update', $event.target.value)"
-  >
+  />
 </template>
 
 <script>

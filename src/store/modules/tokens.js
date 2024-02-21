@@ -15,25 +15,28 @@ export default {
     ],
   },
   getters: {
-    getAvailableTokens: ({ providers, userTokens }) => (isActive = true) => {
-      const encounteredKeys = {};
-      return providers
-        .reduce((a, b) => a.concat(b.active === isActive ? b.tokens : []), [])
-        .concat(userTokens)
-        .filter((token) => {
-          if (encounteredKeys[token.contract_id]) return false;
-          encounteredKeys[token.contract_id] = true;
-          return true;
-        });
-    },
+    getAvailableTokens:
+      ({ providers, userTokens }) =>
+      (isActive = true) => {
+        const encounteredKeys = {};
+        return providers
+          .reduce((a, b) => a.concat(b.active === isActive ? b.tokens : []), [])
+          .concat(userTokens)
+          .filter((token) => {
+            if (encounteredKeys[token.contract_id]) return false;
+            encounteredKeys[token.contract_id] = true;
+            return true;
+          });
+      },
   },
   mutations: {
     addToken(state, token) {
       state.userTokens.push(token);
     },
     removeToken(state, token) {
-      state.userTokens = state.userTokens
-        .filter((_token) => _token.contract_id !== token.contract_id);
+      state.userTokens = state.userTokens.filter(
+        (_token) => _token.contract_id !== token.contract_id,
+      );
     },
     removeAllTokens(state) {
       state.userTokens = [];
@@ -58,12 +61,14 @@ export default {
         const restOfTheTokens = provider.tokens.filter(
           (token) => token.networkId !== networkId || token.contract_id === waeAddress,
         );
-        const newTokens = restOfTheTokens.concat(tokens
-          .filter((token) => token.contract_id !== waeAddress)
-          .map((token) => ({
-            ...token,
-            networkId,
-          })));
+        const newTokens = restOfTheTokens.concat(
+          tokens
+            .filter((token) => token.contract_id !== waeAddress)
+            .map((token) => ({
+              ...token,
+              networkId,
+            })),
+        );
 
         return {
           ...provider,
@@ -74,10 +79,14 @@ export default {
     initDefaultTokens(state) {
       const tokens = [];
 
-      DEFAULT_NETWORKS.forEach((network) => tokens.push(...network.tokens.map((token) => ({
-        ...token,
-        networkId: network.networkId,
-      }))));
+      DEFAULT_NETWORKS.forEach((network) =>
+        tokens.push(
+          ...network.tokens.map((token) => ({
+            ...token,
+            networkId: network.networkId,
+          })),
+        ),
+      );
 
       state.providers = [
         {
@@ -90,18 +99,11 @@ export default {
       ];
     },
     addProvider(state, provider) {
-      state.providers = [
-        ...state.providers.filter((p) => p.name !== provider.name),
-        provider,
-      ];
+      state.providers = [...state.providers.filter((p) => p.name !== provider.name), provider];
     },
   },
   actions: {
-    async fetchAllTokens({
-      commit,
-      rootGetters: { activeNetwork },
-      state: { providers },
-    }) {
+    async fetchAllTokens({ commit, rootGetters: { activeNetwork }, state: { providers } }) {
       if (activeNetwork) {
         const tokens = await fetchJson(`${activeNetwork.middlewareUrl}/aex9/by_name`);
         if (Array.isArray(tokens)) {

@@ -1,9 +1,6 @@
 <template>
   <div :class="['liquidity-item', { hidden: !show }]">
-    <ButtonPlain
-      class="header"
-      @click="onShow"
-    >
+    <ButtonPlain class="header" @click="onShow">
       <div>
         <TokenIcon
           :token-a="token0"
@@ -52,15 +49,17 @@ export default {
     ...mapGetters('tokens', ['getAvailableTokens']),
     token0() {
       return {
-        ...this.getAvailableTokens()
-          .find((t) => t.contract_id === this.poolInfo.token0.contract_id),
+        ...this.getAvailableTokens().find(
+          (t) => t.contract_id === this.poolInfo.token0.contract_id,
+        ),
         ...this.poolInfo.token0,
       };
     },
     token1() {
       return {
-        ...this.getAvailableTokens()
-          .find((t) => t.contract_id === this.poolInfo.token1.contract_id),
+        ...this.getAvailableTokens().find(
+          (t) => t.contract_id === this.poolInfo.token1.contract_id,
+        ),
         ...this.poolInfo.token1,
       };
     },

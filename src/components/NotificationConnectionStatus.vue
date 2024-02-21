@@ -1,9 +1,5 @@
 <template>
-  <NotificationDefault
-    v-bind="$attrs"
-    close
-    class="notification-connection-status"
-  >
+  <NotificationDefault v-bind="$attrs" close class="notification-connection-status">
     <span>{{ text }}</span>
   </NotificationDefault>
 </template>

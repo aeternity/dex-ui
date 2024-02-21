@@ -1,10 +1,5 @@
 <template>
-  <MainWrapper
-    :title="$t('addLiquidity.title')"
-    back-button
-    settings
-    class="add-liquidity"
-  >
+  <MainWrapper :title="$t('addLiquidity.title')" back-button settings class="add-liquidity">
     <Head>
       <title>Add Liquidity - Superhero DEX</title>
     </Head>
@@ -31,31 +26,22 @@
       @update:balance="balanceTokenB = $event"
     />
 
-    <div
-      v-if="tokenB && tokenA"
-      class="pool-info"
-    >
+    <div v-if="tokenB && tokenA" class="pool-info">
       <div class="header">
         {{ $t('addLiquidity.pricePoolShare') }}
       </div>
-      <div
-        v-if="fetchingPairInfo"
-        class="body fetching-pair-info"
-      >
+      <div v-if="fetchingPairInfo" class="body fetching-pair-info">
         <AnimatedSpinner />
         <span>{{ $t('fetchPrice') }}...</span>
       </div>
-      <div
-        v-else
-        class="body"
-      >
+      <div v-else class="body">
         <div>
           <span>
             {{ $t('confirmLiquidityModal.rates') }}
           </span>
           <span>
             1 {{ tokenA.symbol }} = {{ ratio ? (1 / ratio).toFixed(8) : '-' }} {{ tokenB.symbol }}
-            <br>
+            <br />
             1 {{ tokenB.symbol }} = {{ ratio?.toFixed(8) ?? '-' }} {{ tokenA.symbol }}
           </span>
         </div>
@@ -63,9 +49,7 @@
           <span>
             {{ $t('confirmLiquidityModal.yourPoolShare') }}
           </span>
-          <span>
-            {{ share ? share.toFixed(8) : '0.00000000' }} %
-          </span>
+          <span> {{ share ? share.toFixed(8) : '0.00000000' }} % </span>
         </div>
       </div>
     </div>
@@ -136,11 +120,7 @@ export default {
       return this.approving || this.supplying || this.connectingToWallet;
     },
     liquidity() {
-      if (!this.tokenA
-        || !this.tokenB
-        || !this.amountTokenA
-        || !this.amountTokenB
-      ) {
+      if (!this.tokenA || !this.tokenB || !this.amountTokenA || !this.amountTokenB) {
         return 0;
       }
       const amountTokenA = expandDecimals(this.amountTokenA, this.tokenA.decimals);
@@ -149,10 +129,7 @@ export default {
       // if there is no pair yet we have a special
       // case for the first provided liquidity
       if (!this.reserveTokenA || !this.reserveTokenB || !this.totalSupply) {
-        return BigNumber(amountTokenA)
-          .times(amountTokenB)
-          .sqrt()
-          .minus(MINIMUM_LIQUIDITY);
+        return BigNumber(amountTokenA).times(amountTokenB).sqrt().minus(MINIMUM_LIQUIDITY);
       }
       const liquidityTokenA = (amountTokenA * this.totalSupply) / this.reserveTokenA;
       const liquidityTokenB = (amountTokenB * this.totalSupply) / this.reserveTokenB;
@@ -162,12 +139,13 @@ export default {
       if (!this.totalSupply && this.amountTokenA && this.amountTokenB) {
         return 100;
       }
-      if (!this.reserveTokenA
-        || !this.reserveTokenB
-        || !this.tokenA
-        || !this.tokenB
-        || !this.amountTokenA
-        || !this.amountTokenB
+      if (
+        !this.reserveTokenA ||
+        !this.reserveTokenB ||
+        !this.tokenA ||
+        !this.tokenB ||
+        !this.amountTokenA ||
+        !this.amountTokenB
       ) {
         return null;
       }
@@ -182,7 +160,8 @@ export default {
         return null;
       }
       return reduceDecimals(this.reserveTokenA, this.tokenA.decimals)
-        .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals)).toNumber();
+        .div(reduceDecimals(this.reserveTokenB, this.tokenB.decimals))
+        .toNumber();
     },
     enoughBalanceTokenA() {
       return this.balanceTokenA?.isGreaterThanOrEqualTo(this.amountTokenA);
@@ -191,8 +170,13 @@ export default {
       return this.balanceTokenB?.isGreaterThanOrEqualTo(this.amountTokenB);
     },
     isDisabled() {
-      return !this.tokenB || !this.tokenA || +this.amountTokenA <= 0
-        || !this.enoughBalanceTokenB || !this.enoughBalanceTokenA;
+      return (
+        !this.tokenB ||
+        !this.tokenA ||
+        +this.amountTokenA <= 0 ||
+        !this.enoughBalanceTokenB ||
+        !this.enoughBalanceTokenA
+      );
     },
     approveButtonMessage() {
       if (this.approving) return `${this.$t('approving')}...`;
@@ -203,18 +187,18 @@ export default {
     buttonMessage() {
       if (!this.address) return this.$t('connectWallet');
       if (this.supplying) return `${this.$t('supplying')}...`;
-      if (+this.amountTokenA <= 0 || !this.amountTokenB || !this.tokenA || !this.tokenB) return this.$t('enterAmount');
-      if (!this.enoughBalanceTokenA) return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
-      if (!this.enoughBalanceTokenB) return this.$t('insufficientBalance', { msg: this.tokenB.symbol });
+      if (+this.amountTokenA <= 0 || !this.amountTokenB || !this.tokenA || !this.tokenB)
+        return this.$t('enterAmount');
+      if (!this.enoughBalanceTokenA)
+        return this.$t('insufficientBalance', { msg: this.tokenA.symbol });
+      if (!this.enoughBalanceTokenB)
+        return this.$t('insufficientBalance', { msg: this.tokenB.symbol });
       return this.$t('supply');
     },
     enoughAllowance() {
       if (!this.tokenA || !this.tokenB) return false;
-      const enough = (token, amount) => token.is_ae || this.enoughTokenAllowance(
-        token.contract_id,
-        amount,
-        token.decimals,
-      );
+      const enough = (token, amount) =>
+        token.is_ae || this.enoughTokenAllowance(token.contract_id, amount, token.decimals);
 
       return enough(this.tokenA, this.amountTokenA) && enough(this.tokenB, this.amountTokenB);
     },

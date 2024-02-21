@@ -3,6 +3,7 @@
 This repo contains an interface to the Superhero decentralized exchange (DEX).
 
 The Superhero DEX consists of multiple parts:
+
 - [UI (this repo)](https://github.com/aeternity/dex-ui)
 - [Backend](https://github.com/aeternity/dex-backend)
 - [Contracts](https://github.com/aeternity/dex-contracts-v2)
@@ -12,17 +13,21 @@ The Superhero DEX consists of multiple parts:
 Find a hosted version of the interface over at [aepp.dex.superhero.com](https://aepp.dex.superhero.com) or
 feel free to run it on your own machine following these instructions:
 
-1. clone repo 
+1. clone repo
+
 ```
 git clone https://github.com/aeternity/dex-ui.git
 cd dex-ui
 ```
+
 2. install the dependencies (nodejs 16+ and npm 7+ required)
+
 ```
 npm i
 ```
 
 3. run the interface
+
 ```
 npm run serve
 ```
@@ -35,7 +40,7 @@ If you simply want to provide feedback, please use the following form: [https://
 
 ## Contribute
 
-If you wish to contribute to this repository, please read the [CONTRIBUTE.md](https://github.com/aeternity/dex-ui/blob/main/README.md). 
+If you wish to contribute to this repository, please read the [CONTRIBUTE.md](https://github.com/aeternity/dex-ui/blob/main/README.md).
 
 ## License
 

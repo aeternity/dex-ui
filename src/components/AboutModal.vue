@@ -1,48 +1,22 @@
 <template>
-  <ModalDefault
-    class="about-dex-modal"
-    :title="$t('aboutModal.title')"
-    close
-    @close="resolve"
-  >
+  <ModalDefault class="about-dex-modal" :title="$t('aboutModal.title')" close @close="resolve">
     <div class="wrapper">
       <div class="info-container">
         {{ $t('aboutModal.info') }}
       </div>
-      <InfoRow
-        :left-text="$t('superheroDex')"
-        :right-text="appVersion"
-      />
-      <InfoRow
-        :left-text="$t('aboutModal.contracts')"
-        :right-text="contractsVersion"
-      />
+      <InfoRow :left-text="$t('superheroDex')" :right-text="appVersion" />
+      <InfoRow :left-text="$t('aboutModal.contracts')" :right-text="contractsVersion" />
       <template v-if="activeNetwork">
-        <InfoRow
-          :left-text="$t('aboutModal.network')"
-          :right-text="activeNetwork.name"
-        />
+        <InfoRow :left-text="$t('aboutModal.network')" :right-text="activeNetwork.name" />
         <InfoRow
           :left-text="$t('aboutModal.middleware')"
           :right-text="activeNetwork.middlewareUrl"
         />
-        <InfoRow
-          :left-text="$t('aboutModal.backend')"
-          :right-text="activeNetwork.dexBackendUrl"
-        />
+        <InfoRow :left-text="$t('aboutModal.backend')" :right-text="activeNetwork.dexBackendUrl" />
       </template>
-      <InfoRow
-        :left-text="$t('aboutModal.node')"
-        :right-text="nodeVersion"
-      />
-      <InfoRow
-        :left-text="$t('aboutModal.sdk')"
-        :right-text="sdkVersion"
-      />
-      <InfoRow
-        :left-text="$t('aboutModal.height')"
-        :right-text="height ?? ''"
-      />
+      <InfoRow :left-text="$t('aboutModal.node')" :right-text="nodeVersion" />
+      <InfoRow :left-text="$t('aboutModal.sdk')" :right-text="sdkVersion" />
+      <InfoRow :left-text="$t('aboutModal.height')" :right-text="height ?? ''" />
     </div>
   </ModalDefault>
 </template>

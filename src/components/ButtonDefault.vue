@@ -1,12 +1,6 @@
 <template>
-  <ButtonPlain
-    v-bind="$attrs"
-    :class="[fill, 'button-default']"
-  >
-    <AnimatedSpinner
-      v-if="spinner"
-      class="spinner"
-    />
+  <ButtonPlain v-bind="$attrs" :class="[fill, 'button-default']">
+    <AnimatedSpinner v-if="spinner" class="spinner" />
     <slot v-else />
   </ButtonPlain>
 </template>
@@ -23,16 +17,17 @@ export default {
   props: {
     fill: {
       type: String,
-      validator: (value) => [
-        'transparent-blue',
-        'blue',
-        'dark',
-        'light',
-        'second-dark',
-        'transparent',
-        'plain',
-        'primary',
-      ].includes(value),
+      validator: (value) =>
+        [
+          'transparent-blue',
+          'blue',
+          'dark',
+          'light',
+          'second-dark',
+          'transparent',
+          'plain',
+          'primary',
+        ].includes(value),
       default() {
         return 'primary';
       },

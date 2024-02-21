@@ -1,19 +1,24 @@
 import { shallowReactive } from 'vue';
 import { createStore } from 'vuex';
 import {
-  Node, AeSdkAepp, walletDetector, BrowserWindowMessageConnection, AeSdk, unpackTx,
+  Node,
+  AeSdkAepp,
+  walletDetector,
+  BrowserWindowMessageConnection,
+  AeSdk,
+  unpackTx,
   RpcRejectedByUserError,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
-  handleUnknownError, findErrorExplanation, createDeepLinkUrl,
-  resolveWithTimeout, isSafariBrowser, isDexBackendDisabled,
+  handleUnknownError,
+  findErrorExplanation,
+  createDeepLinkUrl,
+  resolveWithTimeout,
+  isSafariBrowser,
+  isDexBackendDisabled,
 } from '@/lib/utils';
-import {
-  DEFAULT_NETWORKS,
-  IN_FRAME,
-  IS_MOBILE,
-} from '@/lib/constants';
+import { DEFAULT_NETWORKS, IN_FRAME, IS_MOBILE } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import dexBackendModule from './modules/dexBackend';
 import navigation from './modules/navigation';
@@ -40,19 +45,18 @@ export default createStore({
   },
   getters: {
     networks() {
-      return [
-        ...DEFAULT_NETWORKS,
-      ].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
+      return [...DEFAULT_NETWORKS].reduce((acc, n) => ({ ...acc, [n.networkId]: n }), {});
     },
     // returns the network object for the currently selected network
     // or null if no network is selected
     activeNetwork({ sdk }, { networks }) {
-      return sdk && Object.values(networks).find(
-        (network) => network.networkName === sdk.selectedNodeName,
+      return (
+        sdk &&
+        Object.values(networks).find((network) => network.networkName === sdk.selectedNodeName)
       );
     },
     WAE({ networkId }, { activeNetwork }) {
-      return (networkId && activeNetwork) ? activeNetwork.waeAddress : null;
+      return networkId && activeNetwork ? activeNetwork.waeAddress : null;
     },
   },
   mutations: {
@@ -96,8 +100,7 @@ export default createStore({
     changeTransactionById(state, { hash, index: _index, transaction }) {
       let index = _index;
       if (hash) {
-        index = state.transactions.indexOf(state.transactions
-          .find((t) => t.hash === hash));
+        index = state.transactions.indexOf(state.transactions.find((t) => t.hash === hash));
       }
       state.transactions[index] = { ...state.transactions[index], ...transaction };
     },
@@ -112,9 +115,7 @@ export default createStore({
     },
   },
   actions: {
-    async initUniversal({
-      commit, dispatch, state: { networkId }, getters: { networks },
-    }) {
+    async initUniversal({ commit, dispatch, state: { networkId }, getters: { networks } }) {
       const nodes = Object.values(networks).map((network) => ({
         name: network.networkName,
         instance: new Node(network.url),
@@ -124,23 +125,23 @@ export default createStore({
       commit('setSdk', instance);
       await dispatch('selectNetwork', networkId);
     },
-    async initSdk({
-      commit, dispatch, state, getters: { networks },
-    }) {
+    async initSdk({ commit, dispatch, state, getters: { networks } }) {
       const nodes = Object.values(networks).map((network) => ({
         name: network.networkName,
         instance: new Node(network.url),
       }));
-      const instance = shallowReactive(new AeSdkAepp({
-        nodes,
-        onNetworkChange: ({ networkId }) => {
-          dispatch('selectNetwork', networkId);
-        },
-        name: 'DEX',
-        onDisconnect() {
-          commit('resetState');
-        },
-      }));
+      const instance = shallowReactive(
+        new AeSdkAepp({
+          nodes,
+          onNetworkChange: ({ networkId }) => {
+            dispatch('selectNetwork', networkId);
+          },
+          name: 'DEX',
+          onDisconnect() {
+            commit('resetState');
+          },
+        }),
+      );
       commit('setSdk', instance);
       dispatch('selectNetwork', state.networkId);
     },
@@ -162,7 +163,8 @@ export default createStore({
       } else {
         try {
           await resolveWithTimeout(30000, async () => {
-            const webWalletTimeout = IS_MOBILE ? 0
+            const webWalletTimeout = IS_MOBILE
+              ? 0
               : setTimeout(() => commit('enableIframeWallet'), 15000);
             commit('useSdkWallet');
 
@@ -176,7 +178,9 @@ export default createStore({
               try {
                 const { networkId } = await sdk.connectToWallet(wallet.getConnection());
                 const ret = await sdk.subscribeAddress('subscribe', 'connected');
-                const { address: { current } } = ret;
+                const {
+                  address: { current },
+                } = ret;
                 const currentAccountAddress = Object.keys(current)[0];
                 if (!currentAccountAddress) return;
                 stopScan?.();
@@ -215,7 +219,8 @@ export default createStore({
           if (walletObj.info.name === 'Superhero') {
             dispatch('modals/open', {
               name: 'show-error',
-              message: 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
+              message:
+                'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
               dismissText: 'Open My Wallet',
               resolve: () => {
                 const addressDeepLink = createDeepLinkUrl({
@@ -241,9 +246,10 @@ export default createStore({
       { commit, dispatch, state: { networkId } },
       { address, networkId: walletNetworkId },
     ) {
-      await dispatch('selectNetwork', !walletNetworkId || walletNetworkId.includes('networkId')
-        ? networkId
-        : walletNetworkId);
+      await dispatch(
+        'selectNetwork',
+        !walletNetworkId || walletNetworkId.includes('networkId') ? networkId : walletNetworkId,
+      );
 
       commit('enableIframeWallet');
       commit('setAddress', address);
@@ -259,16 +265,19 @@ export default createStore({
       localStorage.clear();
       window.location.search = '';
     },
-    async parseAndSendTransactionFromQuery(
-      { commit, dispatch, state: { transactions, sdk /* address */ } },
-    ) {
+    async parseAndSendTransactionFromQuery({
+      commit,
+      dispatch,
+      state: { transactions, sdk /* address */ },
+    }) {
       // const { transaction } = route.query;
       const transaction = new URLSearchParams(window.location.search).get('transaction');
       if (transactions?.length && transaction) {
         try {
           const tx = unpackTx(transaction);
-          const index = transactions.indexOf(transactions
-            .find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx)));
+          const index = transactions.indexOf(
+            transactions.find((t) => JSON.stringify(t.txParams) === JSON.stringify(tx.encodedTx)),
+          );
 
           if (index !== -1 && transactions[index].pending && transactions[index].unfinished) {
             const { txHash: hash } = await sdk.api.postTransaction({ tx: transaction });
@@ -283,18 +292,16 @@ export default createStore({
         }
       }
     },
-    async addMobileWallet({
-      commit,
-      state: { address: currentAddress, route },
-    }) {
+    async addMobileWallet({ commit, state: { address: currentAddress, route } }) {
       const { address: newAddress } = route.query;
       const address = newAddress || currentAddress;
       commit('setAddress', address);
       return address;
     },
     async selectNetwork({ commit, dispatch, state: { sdk, networkId } }, newNetworkId) {
-      const nodeToSelect = (await sdk.getNodesInPool())
-        .find((node) => node.nodeNetworkId === newNetworkId);
+      const nodeToSelect = (await sdk.getNodesInPool()).find(
+        (node) => node.nodeNetworkId === newNetworkId,
+      );
 
       if (!nodeToSelect) {
         commit('setNetwork', newNetworkId);
@@ -341,14 +348,12 @@ export default createStore({
       });
     },
     /**
-    * this should be used only as a result of an error triggered
-    * by user interaction and never inside a loop
-    */
+     * this should be used only as a result of an error triggered
+     * by user interaction and never inside a loop
+     */
     showUnknownError({ dispatch, state }, error) {
       handleUnknownError(error);
-      const message = error?.message
-        ? findErrorExplanation(error.message, state)
-        : 'Unknown error';
+      const message = error?.message ? findErrorExplanation(error.message, state) : 'Unknown error';
       dispatch('modals/open', { name: 'show-error', message });
     },
 
@@ -356,7 +361,6 @@ export default createStore({
       dispatch('modals/open', { name: 'onboarding' });
       commit('setOnboardingModalAsSeen');
     },
-
   },
 
   modules: {

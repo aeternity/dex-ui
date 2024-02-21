@@ -7,16 +7,9 @@
         </i18n-t>
       </span>
       <div>
-        <div
-          v-if="poolInfoImportFailed"
-          class="error"
-        >
+        <div v-if="poolInfoImportFailed" class="error">
           {{ $t('liquidityDetails.loadingFailed') }}
-          <div
-            class="reload"
-            @click="$emit('load:pool-info')"
-            @keydown="$emit('load:pool-info')"
-          >
+          <div class="reload" @click="$emit('load:pool-info')" @keydown="$emit('load:pool-info')">
             <RefreshIcon :class="{ rotating: poolInfoImporting }" />
           </div>
         </div>
@@ -84,7 +77,8 @@ import ButtonDefault from './ButtonDefault.vue';
 
 export default {
   components: {
-    ButtonDefault, RefreshIcon,
+    ButtonDefault,
+    RefreshIcon,
   },
   props: {
     poolId: { type: String, required: true },
@@ -255,5 +249,4 @@ export default {
     }
   }
 }
-
 </style>

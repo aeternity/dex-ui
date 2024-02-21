@@ -16,17 +16,11 @@
       </ButtonPlain>
     </i18n-t>
 
-    <div
-      v-if="scanningForWallets"
-      class="box loading"
-    >
+    <div v-if="scanningForWallets" class="box loading">
       <AnimatedSpinner />
       <span>{{ $t('connectWalletModal.scanningWallet') }}...</span>
     </div>
-    <template
-      v-for="wallet of wallets"
-      :key="wallet.info.id"
-    >
+    <template v-for="wallet of wallets" :key="wallet.info.id">
       <div
         v-if="!connecting || wallet.info.id === connectingTo"
         class="box wallet"
@@ -40,7 +34,7 @@
               v-if="icons[wallet.info.name]"
               :src="icons[wallet.info.name]"
               :alt="wallet.info.name"
-            >
+            />
             <div class="title">
               {{ wallet.info.name }}
               {{ wallet.info.name.includes('Wallet') ? '' : ' Wallet' }}
@@ -56,14 +50,8 @@
             <span>{{ $t('connectWallet') }}</span>
           </ButtonDefault>
         </div>
-        <div
-          v-if="connecting || wallet.info.type === 'website'"
-          class="wallet-extentions"
-        >
-          <div
-            v-if="connecting"
-            class="loading"
-          >
+        <div v-if="connecting || wallet.info.type === 'website'" class="wallet-extentions">
+          <div v-if="connecting" class="loading">
             {{ $t('initializing') }}
           </div>
           <div v-if="wallet.info.type === 'website'">
@@ -102,9 +90,7 @@
 </template>
 
 <script>
-import {
-  walletDetector, BrowserWindowMessageConnection,
-} from '@aeternity/aepp-sdk';
+import { walletDetector, BrowserWindowMessageConnection } from '@aeternity/aepp-sdk';
 import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import ChromeLogo from '@/assets/chrome-logo.svg';
 import FirefoxLogo from '@/assets/firefox-logo.svg';

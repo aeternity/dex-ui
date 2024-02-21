@@ -83,14 +83,13 @@ export default {
     async setPairInfo() {
       clearTimeout(this.pairInfoTimeoutId);
       try {
-        [
-          this.totalSupply,
-          this.reserveTokenA,
-          this.reserveTokenB,
-        ] = await this.$store.dispatch('aeternity/getPairInfo', {
-          tokenA: this.tokenA,
-          tokenB: this.tokenB,
-        });
+        [this.totalSupply, this.reserveTokenA, this.reserveTokenB] = await this.$store.dispatch(
+          'aeternity/getPairInfo',
+          {
+            tokenA: this.tokenA,
+            tokenB: this.tokenB,
+          },
+        );
       } catch (e) {
         handleUnknownError(e);
       } finally {

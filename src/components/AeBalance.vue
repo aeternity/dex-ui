@@ -2,22 +2,15 @@
   <span v-if="balance">
     {{ balance.toFixed(fixed) }}
   </span>
-  <AnimatedSpinner
-    v-else
-    class="spinner"
-  />
+  <AnimatedSpinner v-else class="spinner" />
 </template>
 
 <script>
-import {
-  onBeforeUnmount, ref, watch, toRef,
-} from 'vue';
+import { onBeforeUnmount, ref, watch, toRef } from 'vue';
 import { useStore } from 'vuex';
 import BigNumber from 'bignumber.js';
 import FUNGIBLE_TOKEN_CONTRACT from 'dex-contracts-v2/build/FungibleTokenFull.aci.json';
-import {
-  aettosToAe, handleUnknownError, isNotFoundError,
-} from '@/lib/utils';
+import { aettosToAe, handleUnknownError, isNotFoundError } from '@/lib/utils';
 import AnimatedSpinner from '@/assets/animated-spinner.svg';
 
 const pollState = {};
@@ -31,26 +24,28 @@ async function poll() {
         try {
           if (address.startsWith('ct_') && storeState.value.address) {
             if (!state.instance) {
-              state.instance = await storeState.value.sdk.initializeContract(
-                {
-                  aci: FUNGIBLE_TOKEN_CONTRACT,
-                  address,
-                },
-              );
+              state.instance = await storeState.value.sdk.initializeContract({
+                aci: FUNGIBLE_TOKEN_CONTRACT,
+                address,
+              });
             }
 
             if (!state.decimals) {
-              state.decimals = new BigNumber((await state.instance.meta_info())
-                .decodedResult.decimals);
+              state.decimals = new BigNumber(
+                (await state.instance.meta_info()).decodedResult.decimals,
+              );
             }
             state.lastValue = new BigNumber(
               (await state.instance.balance(storeState.value.address)).decodedResult || 0,
             ).shiftedBy(state.decimals.times(-1).toNumber());
           } else if (address.startsWith('ak_') && storeState.value.sdk) {
-            state.lastValue = new BigNumber(aettosToAe(
-              (await storeState.value.sdk.getBalance(address)
-                .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e)))),
-            ));
+            state.lastValue = new BigNumber(
+              aettosToAe(
+                await storeState.value.sdk
+                  .getBalance(address)
+                  .catch((e) => (isNotFoundError(e) ? 0 : handleUnknownError(e))),
+              ),
+            );
           }
         } catch (e) {
           if (e?.message.indexOf('tx_nonce_too_high_for_account') === -1) {
@@ -59,7 +54,7 @@ async function poll() {
           handleUnknownError(e);
         }
         // eslint-disable-next-line no-return-assign, no-param-reassign
-        state.refs.forEach((r) => r.value = state.lastValue);
+        state.refs.forEach((r) => (r.value = state.lastValue));
       }),
   );
   setTimeout(poll, 2000);
@@ -98,17 +93,19 @@ export default {
     const balanceRef = getBalanceRef(toRef(props, 'address'));
     const balance = ref(0);
 
-    watch(() => balanceRef.value, async (newVal) => {
-      const networkId = await (storeState.value.sdk.api.getNetworkId().catch(() => null));
-      if (storeState.value.sdk
-        && storeState.value.networkId === networkId) {
-        balance.value = newVal;
-        emit('update:balance', newVal);
-      } else {
-        balance.value = new BigNumber(0);
-        emit('update:balance', new BigNumber(0));
-      }
-    });
+    watch(
+      () => balanceRef.value,
+      async (newVal) => {
+        const networkId = await storeState.value.sdk.api.getNetworkId().catch(() => null);
+        if (storeState.value.sdk && storeState.value.networkId === networkId) {
+          balance.value = newVal;
+          emit('update:balance', newVal);
+        } else {
+          balance.value = new BigNumber(0);
+          emit('update:balance', new BigNumber(0));
+        }
+      },
+    );
 
     return {
       balance,

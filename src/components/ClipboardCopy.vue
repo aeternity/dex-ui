@@ -1,9 +1,5 @@
 <template>
-  <span
-    class="clipboard"
-    @click.prevent="copy()"
-    @keydown.prevent="copy()"
-  >
+  <span class="clipboard" @click.prevent="copy()" @keydown.prevent="copy()">
     <CopyIcon />
     <span>{{ copied ? $t('copied') : title }}</span>
   </span>

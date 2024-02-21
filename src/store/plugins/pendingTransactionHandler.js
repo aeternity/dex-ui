@@ -1,9 +1,7 @@
 import { handleCallError, findErrorExplanation } from '@/lib/utils';
 
 export default async (store) => {
-  const waitTransactionMined = async ({
-    hash, info,
-  }) => {
+  const waitTransactionMined = async ({ hash, info }) => {
     let error = false;
     let errorMessage = '';
     try {
@@ -21,7 +19,11 @@ export default async (store) => {
     } finally {
       if (errorMessage) console.error(errorMessage);
       store.dispatch('modals/open', {
-        name: 'transaction-status', hash, info, error, errorMessage,
+        name: 'transaction-status',
+        hash,
+        info,
+        error,
+        errorMessage,
       });
       store.commit('changeTransactionById', { hash, transaction: { error, pending: false } });
     }
@@ -29,22 +31,31 @@ export default async (store) => {
 
   store.watch(
     ({ sdk }) => sdk,
-    () => store.state.transactions
-      .filter((t) => t.pending && !t.unfinished).forEach(waitTransactionMined),
+    () =>
+      store.state.transactions
+        .filter((t) => t.pending && !t.unfinished)
+        .forEach(waitTransactionMined),
   );
 
   store.subscribe(async (mutation) => {
-    if (mutation.type === 'changeTransactionById' && mutation.payload.transaction?.pending !== false) {
+    if (
+      mutation.type === 'changeTransactionById' &&
+      mutation.payload.transaction?.pending !== false
+    ) {
       const { hash, index: _index } = mutation.payload;
       let index = _index;
       if (hash) {
-        index = store.state.transactions.indexOf(store.state.transactions
-          .find((t) => t.hash === hash));
+        index = store.state.transactions.indexOf(
+          store.state.transactions.find((t) => t.hash === hash),
+        );
       }
       await waitTransactionMined(store.state.transactions[index]);
     }
-    if (mutation.type !== 'addTransaction'
-    || (mutation.type === 'addTransaction' && mutation.payload?.unfinished)) return;
+    if (
+      mutation.type !== 'addTransaction' ||
+      (mutation.type === 'addTransaction' && mutation.payload?.unfinished)
+    )
+      return;
     await waitTransactionMined(mutation.payload);
   });
 };

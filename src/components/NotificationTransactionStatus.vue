@@ -1,20 +1,10 @@
 <template>
-  <NotificationDefault
-    v-bind="$attrs"
-    close
-    class="notification-transaction-status"
-  >
-    <Alert
-      v-if="error"
-      class="error"
-    />
+  <NotificationDefault v-bind="$attrs" close class="notification-transaction-status">
+    <Alert v-if="error" class="error" />
     <Check v-else />
     <div class="info">
       <span>{{ info }}</span>
-      <div
-        v-if="errorMessage"
-        class="error"
-      >
+      <div v-if="errorMessage" class="error">
         {{ errorMessage }}
       </div>
       <a

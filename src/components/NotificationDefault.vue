@@ -1,8 +1,5 @@
 <template>
-  <Transition
-    appear
-    name="fade"
-  >
+  <Transition appear name="fade">
     <div class="notification-default">
       <ButtonPlain @click="resolve">
         <Close />

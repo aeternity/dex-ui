@@ -17,14 +17,8 @@
       </div>
     </div>
 
-    <TokenListManager
-      v-if="tab === 'lists'"
-      v-bind="$attrs"
-    />
-    <UserCustomTokensManager
-      v-if="tab === 'custom'"
-      v-bind="$attrs"
-    />
+    <TokenListManager v-if="tab === 'lists'" v-bind="$attrs" />
+    <UserCustomTokensManager v-if="tab === 'custom'" v-bind="$attrs" />
   </div>
 </template>
 

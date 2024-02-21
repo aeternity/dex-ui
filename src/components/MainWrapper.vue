@@ -1,25 +1,15 @@
 <template>
   <div class="main-wrapper">
     <div class="header">
-      <div
-        v-if="backButton"
-        class="left"
-      >
-        <ButtonDefault
-          fill="plain"
-          @click="back"
-        >
+      <div v-if="backButton" class="left">
+        <ButtonDefault fill="plain" @click="back">
           <BackArrow />
         </ButtonDefault>
       </div>
       <div class="title">
         {{ title }}
       </div>
-      <div
-        class="right"
-        @click="settingsClickHandler"
-        @keydown="settingsClickHandler"
-      >
+      <div class="right" @click="settingsClickHandler" @keydown="settingsClickHandler">
         <ActionsMenu v-if="settings">
           <template #display>
             <Cog />
@@ -46,12 +36,8 @@
                   :class="slippageStatus"
                   @update:value="updateSlippage($event)"
                 >
-                  <template
-                    #left
-                  >
-                    <Warning
-                      v-show="slippageStatus === 'warning'"
-                    />
+                  <template #left>
+                    <Warning v-show="slippageStatus === 'warning'" />
                   </template>
                   <template #right>
                     <span>%</span>
@@ -97,7 +83,12 @@ import BackArrow from '@/assets/back.svg';
 import Cog from '@/assets/cog.svg';
 import Warning from '@/assets/warning.svg';
 import {
-  DEFAULT_SLIPPAGE, MIN_SLIPPAGE, MAX_SLIPPAGE, DEFAULT_DEADLINE, MIN_DEADLINE, MAX_DEADLINE,
+  DEFAULT_SLIPPAGE,
+  MIN_SLIPPAGE,
+  MAX_SLIPPAGE,
+  DEFAULT_DEADLINE,
+  MIN_DEADLINE,
+  MAX_DEADLINE,
 } from '@/lib/constants';
 import ButtonDefault from './ButtonDefault.vue';
 import ActionsMenu from './ActionsMenu.vue';
@@ -128,13 +119,20 @@ export default {
   computed: {
     ...mapState('aeternity', ['slippage', 'deadline']),
     slippageStatus() {
-      if (this.showedSlippage > MIN_SLIPPAGE * 2 && this.showedSlippage < MAX_SLIPPAGE) return 'warning';
-      if (this.showedSlippage && (this.showedSlippage >= MAX_SLIPPAGE || this.showedSlippage < DEFAULT_SLIPPAGE)) return 'alert';
+      if (this.showedSlippage > MIN_SLIPPAGE * 2 && this.showedSlippage < MAX_SLIPPAGE)
+        return 'warning';
+      if (
+        this.showedSlippage &&
+        (this.showedSlippage >= MAX_SLIPPAGE || this.showedSlippage < DEFAULT_SLIPPAGE)
+      )
+        return 'alert';
       return '';
     },
     isInvalidDeadline() {
-      return (this.showedDeadline
-        && (this.showedDeadline > MAX_DEADLINE || this.showedDeadline < MIN_DEADLINE));
+      return (
+        this.showedDeadline &&
+        (this.showedDeadline > MAX_DEADLINE || this.showedDeadline < MIN_DEADLINE)
+      );
     },
   },
   methods: {

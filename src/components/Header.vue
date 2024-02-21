@@ -7,10 +7,7 @@
     </div>
     <NavigationMenu />
     <div class="right">
-      <div
-        v-if="activeNetwork && address"
-        class="active-network"
-      >
+      <div v-if="activeNetwork && address" class="active-network">
         <span class="circle" />
         <span>{{ activeNetwork.name }}</span>
       </div>
@@ -25,10 +22,7 @@
       >
         <span>{{ $t('connectWallet') }}</span>
       </ButtonDefault>
-      <div
-        v-else
-        class="account-info"
-      >
+      <div v-else class="account-info">
         <div
           :class="['address', { pending: pendingTransactions.length }]"
           data-cy="wallet-address"
@@ -40,7 +34,7 @@
             <AnimatedSpinner />
           </template>
           <template v-else>
-            <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="">
+            <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="" />
             <span class="h-xs">{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
           </template>
         </div>
@@ -48,16 +42,10 @@
       </div>
       <ActionsMenu @click.stop>
         <template #display>
-          <div class="more">
-            •••
-          </div>
+          <div class="more">•••</div>
         </template>
         <div v-if="activeMenu === 'main'">
-          <a
-            href="https://aeternity.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://aeternity.com/" target="_blank" rel="noopener noreferrer">
             {{ $t('nav.aboutUs') }}
           </a>
           <ButtonPlain
@@ -66,23 +54,13 @@
           >
             {{ $t('nav.termsCondition') }}
           </ButtonPlain>
-          <ButtonPlain
-            class="link"
-            @click="$store.dispatch('modals/open', { name: 'about-dex' })"
-          >
+          <ButtonPlain class="link" @click="$store.dispatch('modals/open', { name: 'about-dex' })">
             {{ $t('nav.aboutDex') }}
           </ButtonPlain>
-          <ButtonPlain
-            class="link"
-            @click="activeMenu = 'settings'"
-          >
+          <ButtonPlain class="link" @click="activeMenu = 'settings'">
             {{ $t('nav.settings.title') }}
           </ButtonPlain>
-          <a
-            href="https://discord.com/invite/55f8F2jZq4"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://discord.com/invite/55f8F2jZq4" target="_blank" rel="noopener noreferrer">
             {{ $t('nav.discord') }}
           </a>
           <a
@@ -92,11 +70,7 @@
           >
             {{ $t('nav.contracts') }}
           </a>
-          <a
-            href="https://github.com/aeternity/dex-ui/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://github.com/aeternity/dex-ui/" target="_blank" rel="noopener noreferrer">
             {{ $t('nav.source') }}
           </a>
           <a
@@ -116,69 +90,33 @@
         </div>
 
         <div v-if="activeMenu === 'settings'">
-          <ButtonPlain
-            class="link"
-            @click="activeMenu = 'main'"
-          >
+          <ButtonPlain class="link" @click="activeMenu = 'main'">
             <BackArrow />
           </ButtonPlain>
-          <ButtonPlain
-            class="link"
-            @click="activeMenu = 'languages'"
-          >
+          <ButtonPlain class="link" @click="activeMenu = 'languages'">
             {{ $t('nav.settings.languages') }}
           </ButtonPlain>
 
-          <ButtonPlain
-            v-if="UNFINISHED_FEATURES"
-            class="link"
-          >
+          <ButtonPlain v-if="UNFINISHED_FEATURES" class="link">
             {{ $t('nav.settings.theme') }}
           </ButtonPlain>
         </div>
 
         <div v-if="activeMenu === 'languages'">
-          <ButtonPlain
-            class="link"
-            @click="activeMenu = 'settings'"
-          >
+          <ButtonPlain class="link" @click="activeMenu = 'settings'">
             <BackArrow />
           </ButtonPlain>
 
-          <ButtonPlain
-            class="link"
-            @click="setLocale('en')"
-          >
-            English
-          </ButtonPlain>
+          <ButtonPlain class="link" @click="setLocale('en')"> English </ButtonPlain>
 
-          <ButtonPlain
-            class="link"
-            @click="setLocale('fr')"
-          >
-            French
-          </ButtonPlain>
+          <ButtonPlain class="link" @click="setLocale('fr')"> French </ButtonPlain>
 
-          <ButtonPlain
-            class="link"
-            @click="setLocale('zh-cn')"
-          >
-            简体中文
-          </ButtonPlain>
-          <ButtonPlain
-            class="link"
-            @click="setLocale('ru')"
-          >
-            Русский
-          </ButtonPlain>
+          <ButtonPlain class="link" @click="setLocale('zh-cn')"> 简体中文 </ButtonPlain>
+          <ButtonPlain class="link" @click="setLocale('ru')"> Русский </ButtonPlain>
         </div>
       </ActionsMenu>
     </div>
-    <iframe
-      v-if="useIframeWallet"
-      :src="walletUrl"
-      title=""
-    />
+    <iframe v-if="useIframeWallet" :src="walletUrl" title="" />
   </div>
 </template>
 

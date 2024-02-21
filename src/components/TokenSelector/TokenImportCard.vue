@@ -6,7 +6,7 @@
     </div>
 
     <div class="token-info">
-      <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`" alt="">
+      <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`" alt="" />
       <div class="symbol">
         {{ token.symbol }}
       </div>
@@ -23,10 +23,7 @@
       </a>
     </div>
 
-    <ButtonDefault
-      class="import-button"
-      @click.prevent="$emit('token:import')"
-    >
+    <ButtonDefault class="import-button" @click.prevent="$emit('token:import')">
       {{ $t('import') }}
     </ButtonDefault>
   </div>

@@ -1,9 +1,5 @@
 <template>
-  <ModalDefault
-    class="about-dex-modal"
-    close
-    @close="resolve"
-  >
+  <ModalDefault class="about-dex-modal" close @close="resolve">
     <div class="wrapper">
       <h1 class="info-headline">
         {{ $t('onboardingModal.headline') }}
@@ -20,11 +16,7 @@
           https://dex.superhero.com/superhero-dex-and-ios
         </a>
       </p>
-      <ButtonDefault
-        class="confirm-button"
-        fill="primary"
-        @click.prevent="resolve"
-      >
+      <ButtonDefault class="confirm-button" fill="primary" @click.prevent="resolve">
         {{ $t('onboardingModal.confirm') }}
       </ButtonDefault>
     </div>
@@ -54,7 +46,7 @@ export default {
 
 .about-dex-modal {
   .wrapper {
-    padding: 0 16px  16px;
+    padding: 0 16px 16px;
 
     .info-headline {
       color: variables.$color-white;

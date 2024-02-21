@@ -1,7 +1,4 @@
-import {
-  handleUnknownError,
-  getPairId, isDexBackendDisabled,
-} from '@/lib/utils';
+import { handleUnknownError, getPairId, isDexBackendDisabled } from '@/lib/utils';
 
 export default {
   namespaced: true,
@@ -12,7 +9,10 @@ export default {
     tokensUpdatedFor: {},
   },
   getters: {
-    getPairInfo: ({ pairs }) => ({ tokenA, tokenB }) => pairs && pairs[getPairId(tokenA, tokenB)],
+    getPairInfo:
+      ({ pairs }) =>
+      ({ tokenA, tokenB }) =>
+        pairs && pairs[getPairId(tokenA, tokenB)],
   },
   mutations: {
     setPairs(state, pairs) {
@@ -34,7 +34,11 @@ export default {
 
     async ensureTokensList({
       state: { failed, tokensUpdatedFor },
-      dispatch, commit, rootGetters: { activeNetwork: { networkId } },
+      dispatch,
+      commit,
+      rootGetters: {
+        activeNetwork: { networkId },
+      },
     }) {
       if (tokensUpdatedFor[networkId] || isDexBackendDisabled) return;
       // check if tokens list was already updated
@@ -48,19 +52,24 @@ export default {
       commit('markTokensAsUpdatedFor', { networkId, updated: true });
       // and finally if everything gone well replace the tokens with
       // the dex-backend official list of tokens
-      commit('tokens/updateTokens', {
-        providerName: 'Superhero DEX Selection',
-        networkId,
-        tokens,
-      }, { root: true });
+      commit(
+        'tokens/updateTokens',
+        {
+          providerName: 'Superhero DEX Selection',
+          networkId,
+          tokens,
+        },
+        { root: true },
+      );
     },
-    async safeFetch({
-      dispatch, commit, state: { failed }, rootGetters: { activeNetwork },
-    }, { url, manageFailingStatus = true }) {
+    async safeFetch(
+      { dispatch, commit, state: { failed }, rootGetters: { activeNetwork } },
+      { url, manageFailingStatus = true },
+    ) {
       if (activeNetwork && !isDexBackendDisabled) {
         let timeoutId;
         try {
-          const baseUrl = (activeNetwork.dexBackendUrl || '');
+          const baseUrl = activeNetwork.dexBackendUrl || '';
           const fullUrl = `${
             baseUrl.endsWith('/') ? baseUrl.slice(0, baseUrl.length - 1) : baseUrl
           }${url.startsWith('/') ? '' : '/'}${url}`;
@@ -98,10 +107,7 @@ export default {
 
     async checkStatus({ dispatch, commit, state: { pairs } }) {
       if (isDexBackendDisabled) return false;
-      const resp = await dispatch(
-        'safeFetch',
-        { url: 'global-state', dontSetFailingStatus: true },
-      );
+      const resp = await dispatch('safeFetch', { url: 'global-state', dontSetFailingStatus: true });
       const up = !!resp && resp.pairsSyncedPercent >= 100;
       commit('failed', !up);
       if (up) {
@@ -116,15 +122,17 @@ export default {
       const pair = getPairInfo({ tokenA, tokenB });
       if (!pair) return null;
       const resp = await dispatch('safeFetch', { url: `pairs/by-address/${pair.address}` });
-      return resp && {
-        ...resp,
-        liquidityInfo: resp.liquidityInfo && {
-          ...resp.liquidityInfo,
-          reserve0: BigInt(resp.liquidityInfo.reserve0),
-          reserve1: BigInt(resp.liquidityInfo.reserve1),
-          totalSupply: BigInt(resp.liquidityInfo.totalSupply),
-        },
-      };
+      return (
+        resp && {
+          ...resp,
+          liquidityInfo: resp.liquidityInfo && {
+            ...resp.liquidityInfo,
+            reserve0: BigInt(resp.liquidityInfo.reserve0),
+            reserve1: BigInt(resp.liquidityInfo.reserve1),
+            totalSupply: BigInt(resp.liquidityInfo.totalSupply),
+          },
+        }
+      );
     },
 
     async fetchSwapRoutes({ dispatch }, { tokenA, tokenB }) {

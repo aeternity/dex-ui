@@ -1,14 +1,6 @@
 <template>
-  <ModalDefault
-    class="select-token-modal"
-    :title="modalTitle"
-    close
-    @close="resolve"
-  >
-    <div
-      v-if="tab === 'list-tokens'"
-      class="token-list-container"
-    >
+  <ModalDefault class="select-token-modal" :title="modalTitle" close @close="resolve">
+    <div v-if="tab === 'list-tokens'" class="token-list-container">
       <div class="input-wrapper">
         <InputField
           v-model:value="searchTerm"
@@ -37,15 +29,14 @@
           @token:import="selectTokenForImport"
         />
 
-        <AnimatedSpinner
-          v-if="loadingExtraTokens"
-          class="loading"
-        />
+        <AnimatedSpinner v-if="loadingExtraTokens" class="loading" />
 
         <div
-          v-else-if="!filteredActiveProvidersTokens.length
-            && !filteredInActiveProvidersTokens.length
-            && !extraTokens.length"
+          v-else-if="
+            !filteredActiveProvidersTokens.length &&
+            !filteredInActiveProvidersTokens.length &&
+            !extraTokens.length
+          "
           class="empty"
         >
           {{ $t('tokenSelector.notFound') }}.
@@ -71,14 +62,8 @@
       :token="selectedToken"
       @token:import="importToken"
     />
-    <template
-      v-if="tab === 'manage-token-list' || tab === 'import-token'"
-      #header-left
-    >
-      <ButtonPlain
-        class="back-button"
-        @click.prevent="tab = 'list-tokens'"
-      >
+    <template v-if="tab === 'manage-token-list' || tab === 'import-token'" #header-left>
+      <ButtonPlain class="back-button" @click.prevent="tab = 'list-tokens'">
         <BackIcon />
       </ButtonPlain>
     </template>
@@ -132,19 +117,23 @@ export default {
       return this.getAvailableTokens()
         .filter((token) => token.networkId === this.networkId)
         .filter(
-          (token) => (!searchTerm
-            || token.symbol.toLowerCase().includes(searchTerm)
-            || token.name.toLowerCase().includes(searchTerm)
-            || token.contract_id.toLowerCase().includes(searchTerm)
-          ) && ((!(
-            ((this.chosenTokens?.[0] || this.chosenTokens?.[1])
-              && this.chosenTokens.find((t) => t?.symbol === 'AE' && t.contract_id === this.WAE)
-              && token.symbol === 'WAE' && token.contract_id === this.WAE)
-            || ((this.chosenTokens?.[0] || this.chosenTokens?.[1])
-                && this.chosenTokens.find((t) => t?.symbol === 'WAE' && t.contract_id === this.WAE)
-                && token.symbol === 'AE' && token.contract_id === this.WAE)
-          ) || !this.aeVsWae)
-          && (token.symbol !== 'WAE' || !this.excludeWae)),
+          (token) =>
+            (!searchTerm ||
+              token.symbol.toLowerCase().includes(searchTerm) ||
+              token.name.toLowerCase().includes(searchTerm) ||
+              token.contract_id.toLowerCase().includes(searchTerm)) &&
+            (!(
+              ((this.chosenTokens?.[0] || this.chosenTokens?.[1]) &&
+                this.chosenTokens.find((t) => t?.symbol === 'AE' && t.contract_id === this.WAE) &&
+                token.symbol === 'WAE' &&
+                token.contract_id === this.WAE) ||
+              ((this.chosenTokens?.[0] || this.chosenTokens?.[1]) &&
+                this.chosenTokens.find((t) => t?.symbol === 'WAE' && t.contract_id === this.WAE) &&
+                token.symbol === 'AE' &&
+                token.contract_id === this.WAE)
+            ) ||
+              !this.aeVsWae) &&
+            (token.symbol !== 'WAE' || !this.excludeWae),
         );
     },
     filteredInActiveProvidersTokens() {
@@ -152,11 +141,13 @@ export default {
 
       return this.getAvailableTokens(false)
         .filter((token) => token.networkId === this.networkId)
-        .filter((token) => (!searchTerm
-          || token.symbol.toLowerCase().includes(searchTerm)
-          || token.name.toLowerCase().includes(searchTerm)
-          || token.contract_id.toLowerCase().includes(searchTerm)
-        ));
+        .filter(
+          (token) =>
+            !searchTerm ||
+            token.symbol.toLowerCase().includes(searchTerm) ||
+            token.name.toLowerCase().includes(searchTerm) ||
+            token.contract_id.toLowerCase().includes(searchTerm),
+        );
     },
     modalTitle() {
       if (this.tab === 'manage-token-list') {
@@ -176,7 +167,10 @@ export default {
       if (!tokens.length && this.searchTerm && this.searchTerm.includes('ct_')) {
         this.loadingExtraTokens = true;
         try {
-          const token = await this.$store.dispatch('aeternity/getTokenInstanceMetaInfo', this.searchTerm);
+          const token = await this.$store.dispatch(
+            'aeternity/getTokenInstanceMetaInfo',
+            this.searchTerm,
+          );
 
           this.extraTokens = [
             {

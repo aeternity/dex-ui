@@ -23,7 +23,7 @@
       </div>
       <div class="content">
         <div class="address">
-          <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="">
+          <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="" />
           <span>{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
         </div>
         <div class="links">
@@ -69,18 +69,12 @@
             class="transaction"
           >
             <AnimatedSpinner v-if="transaction.pending" />
-            <Alert
-              v-else-if="transaction.error"
-              class="error"
-            />
+            <Alert v-else-if="transaction.error" class="error" />
             <Check v-else />
             <span>{{ transaction.info }}</span>
           </a>
         </template>
-        <div
-          v-else
-          class="no-data"
-        >
+        <div v-else class="no-data">
           {{ $t('accountInfoModal.transactionsWillAppear') }}
         </div>
       </div>

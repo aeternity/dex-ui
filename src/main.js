@@ -50,8 +50,4 @@ if (!window.location.host.includes('localhost')) {
   });
 }
 
-app.use(head)
-  .use(i18n)
-  .use(store)
-  .use(router)
-  .mount('#app');
+app.use(head).use(i18n).use(store).use(router).mount('#app');

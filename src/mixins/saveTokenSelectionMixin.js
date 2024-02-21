@@ -68,21 +68,21 @@ export default {
 
     async restoreCurrentSelection() {
       this.restoringTokenSelection = true;
-      const {
-        from, to,
-        amount, isFrom,
-      } = this.$route.query;
-      const getToken = (token) => this.$store.getters['tokens/getAvailableTokens']().find(
-        (_token) => (_token.is_ae ? _token.symbol : _token.contract_id) === token
-          && _token.networkId === this.$store.state.networkId,
-      );
+      const { from, to, amount, isFrom } = this.$route.query;
+      const getToken = (token) =>
+        this.$store.getters['tokens/getAvailableTokens']().find(
+          (_token) =>
+            (_token.is_ae ? _token.symbol : _token.contract_id) === token &&
+            _token.networkId === this.$store.state.networkId,
+        );
       if ((from && !getToken(from)) || (to && !getToken(to))) {
         await new Promise((resolve) => {
           setTimeout(() => {
             resolve();
           }, 5000);
-          this.$watchUntilTruly(() => this.$store.state.backend
-            ?.tokensUpdatedFor[this.$store.state.networkId]).then(resolve);
+          this.$watchUntilTruly(
+            () => this.$store.state.backend?.tokensUpdatedFor[this.$store.state.networkId],
+          ).then(resolve);
         });
       }
 

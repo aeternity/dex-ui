@@ -23,8 +23,16 @@ export default () => {
   registerModal({ name: 'show-error', component: ErrorModal });
   registerModal({ name: 'connect-wallet', component: ConnectWalletModal });
   registerModal({ name: 'account-info', component: AccountInfoModal });
-  registerModal({ name: 'transaction-status', component: NotificationTransactionStatus, allowRedirect: true });
-  registerModal({ name: 'connection-status', component: NotificationConnectionStatus, allowRedirect: true });
+  registerModal({
+    name: 'transaction-status',
+    component: NotificationTransactionStatus,
+    allowRedirect: true,
+  });
+  registerModal({
+    name: 'connection-status',
+    component: NotificationConnectionStatus,
+    allowRedirect: true,
+  });
   registerModal({ name: 'term-and-condition', component: TermAndConditionModal });
   registerModal({ name: 'onboarding', component: OnboardingModal });
 };

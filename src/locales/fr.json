@@ -17,9 +17,9 @@
     "leaveFeedback": "Laissez vos commentaires"
   },
   "aboutModal": {
-      "title": "À propos de Superhero DEX",
-      "info": "Informations sur les versions de bibliothèque et de service utilisées dans Superhero DEX",
-      "network": "Réseau"
+    "title": "À propos de Superhero DEX",
+    "info": "Informations sur les versions de bibliothèque et de service utilisées dans Superhero DEX",
+    "network": "Réseau"
   },
   "swap": {
     "title": "Échanger",

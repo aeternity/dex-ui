@@ -1,19 +1,10 @@
 <template>
-  <ModalDefault
-    class="error-modal"
-    :title="$t('error')"
-    @close="resolve"
-  >
+  <ModalDefault class="error-modal" :title="$t('error')" @close="resolve">
     <div class="error-details">
       <Alert />
       <h4>{{ message }}</h4>
     </div>
-    <ButtonDefault
-      fill="primary"
-      :disabled="!resolve"
-      data-cy="error-dismiss"
-      @click="resolve"
-    >
+    <ButtonDefault fill="primary" :disabled="!resolve" data-cy="error-dismiss" @click="resolve">
       {{ dismissText || $t('dismiss') }}
     </ButtonDefault>
   </ModalDefault>

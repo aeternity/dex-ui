@@ -4,26 +4,21 @@
     class="submit-transaction-modal"
     @close="isConfirmed ? resolve() : null"
   >
-    <AnimatedSpinner
-      v-if="loading"
-      class="spinner"
-    />
+    <AnimatedSpinner v-if="loading" class="spinner" />
     <SuccessIcon v-if="isConfirmed && !loading" />
     <ErrorIcon v-if="!isConfirmed && !loading" />
     <div class="transaction-status">
       <span class="status">
         {{
-          loading ? $t('submitTransactionModal.waiting')
-          : isConfirmed
-            ? $t('submitTransactionModal.submitted')
-            : $t('submitTransactionModal.error')
+          loading
+            ? $t('submitTransactionModal.waiting')
+            : isConfirmed
+              ? $t('submitTransactionModal.submitted')
+              : $t('submitTransactionModal.error')
         }}
       </span>
       <template v-if="loading">
-        <span
-          v-if="submitMessage"
-          class="swap-info"
-        >
+        <span v-if="submitMessage" class="swap-info">
           {{ submitMessage }}
         </span>
         <span class="guide">{{ $t('submitTransactionModal.confirm') }}</span>
@@ -47,10 +42,7 @@
         </div>
         <div v-else>
           <span class="guide">{{ $t('submitTransactionModal.rejected') }}</span>
-          <ButtonDefault
-            fill="light"
-            @click="resolve"
-          >
+          <ButtonDefault fill="light" @click="resolve">
             {{ $t('dismiss') }}
           </ButtonDefault>
         </div>

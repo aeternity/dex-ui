@@ -1,11 +1,16 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import {
-  handleUnknownError, calculateSelectedToken, getPairId,
-  expandDecimals, reduceDecimals,
+  handleUnknownError,
+  calculateSelectedToken,
+  getPairId,
+  expandDecimals,
+  reduceDecimals,
 } from '@/lib/utils';
 import {
-  ratioFromRoute, ratioWithDecimals, getPriceImpactForRoute,
+  ratioFromRoute,
+  ratioWithDecimals,
+  getPriceImpactForRoute,
   getReceivedTokensForRoute,
 } from '@/lib/swapUtils';
 
@@ -40,22 +45,22 @@ export default {
         return null;
       }
       const tokenA = this.tokenA.contract_id;
-      return swapRoute.length < 2
-            || swapRoute[0].token0 === tokenA
-            || swapRoute[0].token1 === tokenA
+      return swapRoute.length < 2 ||
+        swapRoute[0].token0 === tokenA ||
+        swapRoute[0].token1 === tokenA
         ? swapRoute
         : [...swapRoute].reverse();
     },
     ratio() {
       if (this.isAeVsWae) return 1;
       if (!this.tokenA || !this.tokenB || !this.selectedRoute) return null;
-      return ratioWithDecimals(ratioFromRoute(
-        this.selectedRoute,
-        this.tokenA.contract_id,
-      ).toString(), {
-        decimalsA: this.tokenA.decimals,
-        decimalsB: this.tokenB.decimals,
-      }).toNumber();
+      return ratioWithDecimals(
+        ratioFromRoute(this.selectedRoute, this.tokenA.contract_id).toString(),
+        {
+          decimalsA: this.tokenA.decimals,
+          decimalsB: this.tokenB.decimals,
+        },
+      ).toNumber();
     },
     priceImpact() {
       if (!this.selectedRoute || !this.amountTokenA) {

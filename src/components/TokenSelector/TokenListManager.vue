@@ -1,13 +1,12 @@
 <template>
   <div class="token-list-manager">
     <div class="list-wrapper">
-      <div
-        v-for="(provider, index) of providers"
-        :key="`provider-${index}`"
-      >
+      <div v-for="(provider, index) of providers" :key="`provider-${index}`">
         <div
-          v-if="activeNetwork
-            && provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length"
+          v-if="
+            activeNetwork &&
+            provider.tokens.filter((t) => t.networkId === activeNetwork.networkId).length
+          "
           class="provider"
           @click.prevent="$store.commit('tokens/toggleProvider', provider)"
           @keydown.prevent="$store.commit('tokens/toggleProvider', provider)"
@@ -18,7 +17,7 @@
                 {{ provider.name }}
               </div>
               <div class="total-tokens">
-                {{ provider.tokens.filter(t => t.networkId === activeNetwork.networkId).length }}
+                {{ provider.tokens.filter((t) => t.networkId === activeNetwork.networkId).length }}
                 {{ $t('tokens') }}
               </div>
             </div>

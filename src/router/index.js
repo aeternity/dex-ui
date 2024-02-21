@@ -20,26 +20,28 @@ const routes = [
   {
     path: '/pool',
     component: { render: () => h(RouterView) },
-    children: [{
-      path: '',
-      name: 'pool',
-      component: PoolView,
-    },
-    {
-      path: 'import',
-      name: 'import-pool',
-      component: ImportPool,
-    },
-    {
-      path: 'add',
-      name: 'add-pool',
-      component: AddLiquidity,
-    },
-    {
-      path: 'remove/:id',
-      name: 'remove-pool',
-      component: RemoveLiquidity,
-    }],
+    children: [
+      {
+        path: '',
+        name: 'pool',
+        component: PoolView,
+      },
+      {
+        path: 'import',
+        name: 'import-pool',
+        component: ImportPool,
+      },
+      {
+        path: 'add',
+        name: 'add-pool',
+        component: AddLiquidity,
+      },
+      {
+        path: 'remove/:id',
+        name: 'remove-pool',
+        component: RemoveLiquidity,
+      },
+    ],
   },
   {
     path: '/404',

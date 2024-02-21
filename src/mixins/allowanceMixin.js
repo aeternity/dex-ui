@@ -19,7 +19,7 @@ export default {
      * @param {string} tokenId the tokenId. any unique key
      * @param {number|BigNumber} amount token amount
      * @param {number} decimals token decimals
-    */
+     */
     enoughTokenAllowance(tokenId, amount, decimals) {
       if (!tokenId || !amount) return false;
 
@@ -51,7 +51,7 @@ export default {
      * @param {string} tokenId the tokenId. any unique key
      * @param {function} fetchAllowance an @async function taking tokenId
      * as parameter and returning the allowance for this token from outside
-    */
+     */
     async refreshAllowance(tokenId, fetchAlowance) {
       if (!tokenId) return;
       this.allowances[tokenId] = null;
@@ -68,7 +68,7 @@ export default {
      * @param {number} decimals token decimals
      * @param {function} fetchAllowance an @async function taking tokenId
      * as parameter and returning the allowance for this token from outside
-    */
+     */
     async safeRefreshAllowance(tokenId, amount, decimals, fetchAlowance) {
       // NOTE: if for any reason pulling any allowance from outside failed
       // we promised to give the user a chance to swap, so we are going
@@ -89,7 +89,7 @@ export default {
      * @param {string} tokenId the tokenId. any unique key
      * @param {function} fetchAllowance an @async function taking tokenId
      * as parameter and returning the allowance for this token from outside
-    */
+     */
     async fetchAllowanceIfNone(tokenId, fetchAllowance) {
       // if there is no wallet there is no allowance to ask for
       if (!tokenId || !this.address) return;

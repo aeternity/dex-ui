@@ -21,12 +21,12 @@
       :amount="amountTo"
     />
     <div class="estimation">
-      {{ isLastAmountFrom ? $t("confirmSwapModal.output") : $t("confirmSwapModal.input") }}
-      {{ $t("confirmSwapModal.isEstimated") }}.
+      {{ isLastAmountFrom ? $t('confirmSwapModal.output') : $t('confirmSwapModal.input') }}
+      {{ $t('confirmSwapModal.isEstimated') }}.
       {{
         isLastAmountFrom
-          ? $t("confirmSwapModal.receiveAtLeast")
-          : $t("confirmSwapModal.spendNoMore")
+          ? $t('confirmSwapModal.receiveAtLeast')
+          : $t('confirmSwapModal.spendNoMore')
       }}
       <strong>{{ receivedOrSpentValueMsg }}</strong>
       {{ $t('transactionWillRevert') }}
@@ -50,24 +50,17 @@
       <div class="no-border">
         <span>
           {{
-            isLastAmountFrom
-              ? $t('confirmSwapModal.minReceived')
-              : $t('confirmSwapModal.maxSpent')
+            isLastAmountFrom ? $t('confirmSwapModal.minReceived') : $t('confirmSwapModal.maxSpent')
           }}
         </span>
         <span>{{ receivedOrSpentValueMsg }}</span>
       </div>
     </div>
-    <div
-      v-if="shouldShowWarning"
-      class="warning"
-    >
+    <div v-if="shouldShowWarning" class="warning">
       {{ $t('confirmSwapModal.priceImpactWarning') }}
     </div>
-    <ButtonDefault
-      @click="allowHandler"
-    >
-      {{ $t("confirmSwapModal.title") }}
+    <ButtonDefault @click="allowHandler">
+      {{ $t('confirmSwapModal.title') }}
     </ButtonDefault>
   </ModalDefault>
 </template>
@@ -105,16 +98,12 @@ export default {
     ...mapState('aeternity', ['slippage']),
     minimumReceived() {
       return BigNumber(this.amountTo).minus(
-        this.isAeVsWae
-          ? 0
-          : BigNumber(this.amountTo).times(this.slippage).div(100),
+        this.isAeVsWae ? 0 : BigNumber(this.amountTo).times(this.slippage).div(100),
       );
     },
     maximumSpent() {
       return BigNumber(this.amountFrom).plus(
-        this.isAeVsWae
-          ? 0
-          : BigNumber(this.amountFrom).times(this.slippage).div(100),
+        this.isAeVsWae ? 0 : BigNumber(this.amountFrom).times(this.slippage).div(100),
       );
     },
     receivedOrSpentValueMsg() {

@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-if="message"
-    class="connection-status"
-    :class="message.className"
-  >
+  <div v-if="message" class="connection-status" :class="message.className">
     {{ message.text }}
   </div>
 </template>
@@ -21,16 +17,21 @@ export default {
     ...mapState({
       message({ onLine, sdk, isSdkInitializing }) {
         if (!onLine) return { text: this.$t('connectionStatus.offline') };
-        if (!isSdkInitializing && !sdk) return { text: this.$t('connectionStatus.unableToConnectChosenNode') };
-        if (isSdkInitializing) return { text: this.$t('connectionStatus.connectingNetwork'), className: 'connecting' };
+        if (!isSdkInitializing && !sdk)
+          return { text: this.$t('connectionStatus.unableToConnectChosenNode') };
+        if (isSdkInitializing)
+          return { text: this.$t('connectionStatus.connectingNetwork'), className: 'connecting' };
         if (!this.middlewareStatus) {
           return {
             text: this.$t('connectionStatus.middlewareNotAvailable'),
             className: 'warning',
           };
         }
-        if (!this.middlewareStatus.loading && !this.middlewareStatus.mdw_synced
-          && this.middlewareStatus.node_height - this.middlewareStatus.mdw_height > 15) {
+        if (
+          !this.middlewareStatus.loading &&
+          !this.middlewareStatus.mdw_synced &&
+          this.middlewareStatus.node_height - this.middlewareStatus.mdw_height > 15
+        ) {
           return {
             text: this.$t('connectionStatus.middlewareOutOfSync'),
             className: 'warning',

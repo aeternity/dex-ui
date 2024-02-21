@@ -1,16 +1,11 @@
 <template>
-  <MainWrapper
-    :title="$t('nav.pool')"
-    class="pool-view"
-  >
+  <MainWrapper :title="$t('nav.pool')" class="pool-view">
     <Head>
       <title>Pool - Superhero DEX</title>
     </Head>
     <div class="title">
       <span>{{ $t('pool.yourLiquidity') }}</span>
-      <ButtonTooltip
-        :tooltip="$t('pool.liquidityPopup')"
-      >
+      <ButtonTooltip :tooltip="$t('pool.liquidityPopup')">
         <QuestionCircle />
       </ButtonTooltip>
     </div>
@@ -54,12 +49,13 @@ export default {
   computed: {
     ...mapState({
       address: 'address',
-      liquidity: (state) => Object.keys(
-        state.aeternity.providedLiquidity[state.address] || {},
-      ).map((key) => ({
-        id: key,
-        payload: state.aeternity.providedLiquidity[state.address][key],
-      })).filter((x) => x.payload?.networkId === state.networkId),
+      liquidity: (state) =>
+        Object.keys(state.aeternity.providedLiquidity[state.address] || {})
+          .map((key) => ({
+            id: key,
+            payload: state.aeternity.providedLiquidity[state.address][key],
+          }))
+          .filter((x) => x.payload?.networkId === state.networkId),
     }),
   },
   methods: {

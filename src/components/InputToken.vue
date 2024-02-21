@@ -1,10 +1,7 @@
 <template>
   <div class="input-token">
     <div class="token-amount">
-      <ButtonToken
-        v-bind="$attrs"
-        arrow
-      />
+      <ButtonToken v-bind="$attrs" arrow />
       <InputField
         v-bind="$attrs"
         type="number"
@@ -12,23 +9,13 @@
         @update:value="$emit('update:value', $event)"
       />
     </div>
-    <div
-      v-if="$attrs.token && address"
-      class="balance"
-    >
-      <span>{{ $t('swap.balance') }}:
-        <AeBalance
-          :address="contractId"
-          @update:balance="updateBalance($event)"
-        />
+    <div v-if="$attrs.token && address" class="balance">
+      <span
+        >{{ $t('swap.balance') }}:
+        <AeBalance :address="contractId" @update:balance="updateBalance($event)" />
         {{ $attrs.token.symbol }}
       </span>
-      <ButtonPlain
-        v-if="+balance"
-        @click="setMax"
-      >
-        ({{ $t('max') }})
-      </ButtonPlain>
+      <ButtonPlain v-if="+balance" @click="setMax"> ({{ $t('max') }}) </ButtonPlain>
     </div>
   </div>
 </template>
@@ -54,11 +41,8 @@ export default {
   computed: {
     ...mapState(['address']),
     contractId() {
-      return this.$attrs.token.is_ae
-        ? this.address
-        : this.$attrs.token.contract_id;
+      return this.$attrs.token.is_ae ? this.address : this.$attrs.token.contract_id;
     },
-
   },
   methods: {
     async setMax() {

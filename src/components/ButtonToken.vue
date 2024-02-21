@@ -7,11 +7,8 @@
   >
     <div class="token">
       <AnimatedSpinner v-if="loading" />
-      <TokenIcon
-        v-else
-        :token-a="token"
-      />
-      <span>{{ token && token.symbol || $t('selectToken') }}</span>
+      <TokenIcon v-else :token-a="token" />
+      <span>{{ (token && token.symbol) || $t('selectToken') }}</span>
     </div>
     <DownChevron v-if="arrow" />
   </ButtonDefault>
@@ -38,7 +35,10 @@ export default {
   emits: ['update:token'],
   methods: {
     async selectToken() {
-      const token = await this.$store.dispatch('modals/open', { name: 'select-token', ...this.$attrs });
+      const token = await this.$store.dispatch('modals/open', {
+        name: 'select-token',
+        ...this.$attrs,
+      });
       if (token) this.$emit('update:token', token);
     },
   },

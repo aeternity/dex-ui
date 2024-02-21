@@ -14,8 +14,10 @@ export default (store) => {
     state: { opened: [] },
     mutations: {
       open(state, modal) {
-        state.opened
-          .push({ ...modal, props: { ...modal.props, body: [].concat(modal.props.body) } });
+        state.opened.push({
+          ...modal,
+          props: { ...modal.props, body: [].concat(modal.props.body) },
+        });
       },
       closeByKey(state, key) {
         const idx = state.opened.findIndex((modal) => modal.key === key);
@@ -23,41 +25,39 @@ export default (store) => {
       },
     },
     getters: {
-      opened: ({ opened }) => opened
-        .map(({ name, ...other }) => ({ ...modals[name], ...other })),
+      opened: ({ opened }) => opened.map(({ name, ...other }) => ({ ...modals[name], ...other })),
     },
     actions: {
       open({ commit }, { name, allowRedirect, ...props }) {
-        if (!modals[name]) return Promise.reject(new Error(`Modal with name "${name}" not registered`));
+        if (!modals[name])
+          return Promise.reject(new Error(`Modal with name "${name}" not registered`));
         const key = modalCounter;
         modalCounter += 1;
-        return new Promise(
-          (resolve, reject) => {
-            commit('open', {
-              name,
-              key,
-              ...(allowRedirect !== undefined && { allowRedirect }),
-              props: { resolve, reject, ...props },
-            });
-          },
-        )
-          .finally(() => {
-            if (!props.resolve) {
-              commit('closeByKey', key);
-            }
+        return new Promise((resolve, reject) => {
+          commit('open', {
+            name,
+            key,
+            ...(allowRedirect !== undefined && { allowRedirect }),
+            props: { resolve, reject, ...props },
           });
+        }).finally(() => {
+          if (!props.resolve) {
+            commit('closeByKey', key);
+          }
+        });
       },
     },
   });
 
   store.watch(
-    ({ route }) => (route && route.name),
-    () => store.state.modals.opened
-      .filter(({ name, allowRedirect }) => !modals[name].allowRedirect && !allowRedirect)
-      .filter(({ name, props: { resolve } }) => {
-        if (modals[name].resolveNullOnRedirect) resolve(null);
-        return !modals[name].resolveNullOnRedirect;
-      })
-      .forEach(({ props: { reject } }) => reject(new Error('User navigated outside'))),
+    ({ route }) => route && route.name,
+    () =>
+      store.state.modals.opened
+        .filter(({ name, allowRedirect }) => !modals[name].allowRedirect && !allowRedirect)
+        .filter(({ name, props: { resolve } }) => {
+          if (modals[name].resolveNullOnRedirect) resolve(null);
+          return !modals[name].resolveNullOnRedirect;
+        })
+        .forEach(({ props: { reject } }) => reject(new Error('User navigated outside'))),
   );
 };
