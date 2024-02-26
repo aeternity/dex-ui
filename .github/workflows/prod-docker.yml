@@ -100,8 +100,9 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          repository: aeternity/gitops-apps.git
+          repository: aeternity/gitops-apps-aelabs.git
           ref: prd
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
           persist-credentials: false
           fetch-depth: 0
 
@@ -125,6 +126,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          repository: aeternity/gitops-apps
+          repository: aeternity/gitops-apps-aelabs
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
           branch: prd
