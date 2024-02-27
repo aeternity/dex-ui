@@ -83,6 +83,9 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          build-args: |
+            VUE_APP_MAINNET_DEX_BACKEND_URL="https://dex-backend-mainnet.prd.service.aepps.com" 
+            VUE_APP_TESTNET_DEX_BACKEND_URL="https://dex-backend-testnet.prd.service.aepps.com"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
