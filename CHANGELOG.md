@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.3](https://github.com/aeternity/dex-ui/compare/v1.18.2...v1.18.3) (2024-02-27)
+
+
+### CI / CD
+
+* change repo in prod  pipeline ([8fa5ad5](https://github.com/aeternity/dex-ui/commit/8fa5ad573599210219df934bfd223d270ae70995))
+
 ## [1.18.2](https://github.com/aeternity/dex-ui/compare/v1.18.1...v1.18.2) (2024-02-14)
 
 
