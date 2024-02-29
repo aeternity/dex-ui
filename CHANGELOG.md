@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.18.4](https://github.com/aeternity/dex-ui/compare/v1.18.3...v1.18.4) (2024-02-29)
+
+
+### CI / CD
+
+* add build args  pipeline ([6547896](https://github.com/aeternity/dex-ui/commit/65478962e25b66a3c69b92b815a154c663525975))
+
+
+### Miscellaneous
+
+* remove unused env variables ([bd07ec5](https://github.com/aeternity/dex-ui/commit/bd07ec5a2b4896323c0c4a154f4779c27fb547a0))
+
 ## [1.18.3](https://github.com/aeternity/dex-ui/compare/v1.18.2...v1.18.3) (2024-02-27)
 
 
