@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.19.0](https://github.com/unit214/superhero-dex-ui/compare/v1.18.4...v1.19.0) (2024-03-22)
+
+### CI / CD
+
+* fix npm run test:e2e ([bda7fb5](https://github.com/unit214/superhero-dex-ui/commit/bda7fb50e7f5311bb3187cd3d197f70c9a05c23e))
+
+### Testing
+
+* **deps:** migrate to vitest and upgrade cypress ([52cb155](https://github.com/unit214/superhero-dex-ui/commit/52cb155b3d7703153ed893da3995deb9fcc3be88))
+* skip e2e tests (for now) ([5c22c85](https://github.com/unit214/superhero-dex-ui/commit/5c22c85ff7e5a23b3b78c05a95abd537b5ad992c))
+
+### Refactorings
+
+* migrate from vue-cli to vite, upgrade dependencies, migrate to new eslint and stylelint ([5681e5f](https://github.com/unit214/superhero-dex-ui/commit/5681e5f151a9246df0eec4d6d64f0148acdc7644))
+
+### Miscellaneous
+
+* add prettier ([45ecba8](https://github.com/unit214/superhero-dex-ui/commit/45ecba8a780b564b268b0c0d151982ffc8f0d2c2))
+* fix stylelint not catching all files locally ([9571f1a](https://github.com/unit214/superhero-dex-ui/commit/9571f1af3968bb8db720f51dd206eccf7f426662))
+* add CHANGELOG.md to .prettierignore ([1128695](https://github.com/unit214/superhero-dex-ui/commit/1128695e90aa53ced5b5140b6d866c813dcce48a))
+
 ## [1.18.4](https://github.com/aeternity/dex-ui/compare/v1.18.3...v1.18.4) (2024-02-29)
 
 
