@@ -17,7 +17,7 @@
     "format:check": "prettier -c ."
   },
   "dependencies": {
-    "@aeternity/aepp-sdk": "13.2.2",
+    "@aeternity/aepp-sdk": "13.3.2",
     "@fontsource/ibm-plex-sans": "^5.0.18",
     "@popperjs/core": "^2.11.8",
     "@sentry/tracing": "^7.101.0",
