@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.1](https://github.com/unit214/superhero-dex-ui/compare/v1.19.0...v1.19.1) (2024-04-25)
+
+
+### Miscellaneous
+
+* upgrade aepp-sdk to 13.3.2 ([aab57cd](https://github.com/unit214/superhero-dex-ui/commit/aab57cd932a82923c03b301cf7d9342e6b7e19cd))
+
 ## [1.19.0](https://github.com/unit214/superhero-dex-ui/compare/v1.18.4...v1.19.0) (2024-03-22)
 
 ### CI / CD
