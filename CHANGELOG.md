@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.18.5](https://github.com/aeternity/dex-ui/compare/v1.18.4...v1.18.5) (2024-05-02)
+
+
+### CI / CD
+
+* fix npm run test:e2e ([bda7fb5](https://github.com/aeternity/dex-ui/commit/bda7fb50e7f5311bb3187cd3d197f70c9a05c23e))
+
+
+### Testing
+
+* **deps:** migrate to vitest and upgrade cypress ([52cb155](https://github.com/aeternity/dex-ui/commit/52cb155b3d7703153ed893da3995deb9fcc3be88))
+* skip e2e tests (for now) ([5c22c85](https://github.com/aeternity/dex-ui/commit/5c22c85ff7e5a23b3b78c05a95abd537b5ad992c))
+
+
+### Miscellaneous
+
+* fix docker image builds ([9ebd9a7](https://github.com/aeternity/dex-ui/commit/9ebd9a7ef3e756dbad39f71c0ba79fe5a138377f))
+* **main:** release 1.19.0 ([38ae51f](https://github.com/aeternity/dex-ui/commit/38ae51f4e25f69f3cac9d408bc3288ca2b18dc25))
+* **main:** release 1.19.1 ([34a8c56](https://github.com/aeternity/dex-ui/commit/34a8c56779a8df759416ae9e8ce5a3505d677360))
+* upgrade aepp-sdk to 13.3.2 ([aab57cd](https://github.com/aeternity/dex-ui/commit/aab57cd932a82923c03b301cf7d9342e6b7e19cd))
+
 ## [1.19.1](https://github.com/unit214/superhero-dex-ui/compare/v1.19.0...v1.19.1) (2024-04-25)
 
 
