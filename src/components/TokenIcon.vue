@@ -6,9 +6,7 @@
       :src="mapToken(tokenA)"
       alt=""
     />
-    <AeIcon
-        v-else-if="tokenA && tokenA.is_ae"
-        :class="{ rotating, 'not-pool-token': !tokenB }" />
+    <AeIcon v-else-if="tokenA && tokenA.is_ae" :class="{ rotating, 'not-pool-token': !tokenB }" />
     <img v-if="tokenB && !tokenB.is_ae" :class="{ rotating }" :src="mapToken(tokenB)" alt="" />
     <AeIcon v-else-if="tokenB && tokenB.is_ae" />
   </div>
@@ -28,9 +26,9 @@ export default {
   },
   methods: {
     mapToken(token) {
-        return `https://avatars.z52da5wt.xyz/${token.contract_id}`;
+      return `https://avatars.z52da5wt.xyz/${token.contract_id}`;
     },
-  }
+  },
 };
 </script>
 
@@ -38,13 +36,15 @@ export default {
 .token-icon {
   display: flex;
 
-  img, svg {
+  img,
+  svg {
     height: 24px;
     width: 24px;
     border-radius: 24px;
   }
 
-  img:not(.not-pool-token):nth-of-type(2), svg:not(.not-pool-token):nth-of-type(2) {
+  img:not(.not-pool-token):nth-of-type(2),
+  svg:not(.not-pool-token):nth-of-type(2) {
     margin-left: -10px;
   }
 }
