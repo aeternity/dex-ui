@@ -1,4 +1,4 @@
-import { shallowReactive } from 'vue';
+import { shallowRef } from 'vue';
 import { createStore } from 'vuex';
 import {
   Node,
@@ -121,7 +121,7 @@ export default createStore({
         instance: new Node(network.url),
       }));
 
-      const instance = shallowReactive(new AeSdk({ nodes }));
+      const instance = shallowRef(new AeSdk({ nodes }));
       commit('setSdk', instance);
       await dispatch('selectNetwork', networkId);
     },
@@ -130,7 +130,7 @@ export default createStore({
         name: network.networkName,
         instance: new Node(network.url),
       }));
-      const instance = shallowReactive(
+      const instance = shallowRef(
         new AeSdkAepp({
           nodes,
           onNetworkChange: ({ networkId }) => {
@@ -177,11 +177,8 @@ export default createStore({
             const connectWallet = async (wallet) => {
               try {
                 const { networkId } = await sdk.connectToWallet(wallet.getConnection());
-                const ret = await sdk.subscribeAddress('subscribe', 'connected');
-                const {
-                  address: { current },
-                } = ret;
-                const currentAccountAddress = Object.keys(current)[0];
+                await sdk.subscribeAddress('subscribe', 'connected');
+                const currentAccountAddress = sdk.addresses()[0];
                 if (!currentAccountAddress) return;
                 stopScan?.();
                 commit('setAddress', currentAccountAddress);
