@@ -132,9 +132,6 @@ export default {
       this.addDefaultWallet();
     } else {
       this.scanningForWallets = true;
-      const scannerConnection = new BrowserWindowMessageConnection({
-        connectionInfo: { id: 'spy' },
-      });
 
       let stopScan = null;
 
@@ -156,6 +153,7 @@ export default {
         this.scanningForWallets = false;
       };
 
+      const scannerConnection = new BrowserWindowMessageConnection();
       stopScan = walletDetector(scannerConnection, handleWallet);
     }
   },
