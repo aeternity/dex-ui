@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.18.6](https://github.com/aeternity/dex-ui/compare/v1.18.5...v1.18.6) (2024-05-09)
+
+
+### Bug Fixes
+
+* adds missing lang key ([ccd8471](https://github.com/aeternity/dex-ui/commit/ccd8471b1bb5545c4fbe1cb24a6fcd5071d3a1db))
+* properly display the icon ([aa65c52](https://github.com/aeternity/dex-ui/commit/aa65c52f42a8faeba3ce43f79c80929e1aa12e45))
+* removes useless spy id from connection ([8063adc](https://github.com/aeternity/dex-ui/commit/8063adc7bdb895dc64def07684b73cb63ac85e64))
+* uses proper shallow ref for sdk ([3c6326e](https://github.com/aeternity/dex-ui/commit/3c6326e55f57d21ab76e44e70b2f916ef03f7622))
+
+
+### Miscellaneous
+
+* adjusts styling ([843c44f](https://github.com/aeternity/dex-ui/commit/843c44fc5a31159d74fc5049484554d3f47bfd36))
+
 ## [1.18.5](https://github.com/aeternity/dex-ui/compare/v1.18.4...v1.18.5) (2024-05-02)
 
 
