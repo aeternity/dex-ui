@@ -22,15 +22,14 @@ Cypress.Commands.add('login', () => {
       if (body.find('[data-cy=wallet-address]').length > 0) {
         cy.get('[data-cy=wallet-address]').should('contain', 'ak_');
       } else {
-        cy.get('[data-cy=error-dismiss]', { timeout: 6000 })
+        // get checkbox container .terms-agreement and click it
+        cy.get('.terms-agreement')
           .click()
-          .get('[data-cy=checkbox]')
-          .click()
-          .get('[data-cy=import-wallet]')
+          .get('[data-cy=import-wallet]', { timeout: 6000 })
           .click()
           .get('[data-cy=textarea]')
           .type('grief huge rare weather proof clerk pilot edit speak network denial debris')
-          .get('[data-cy=import]')
+          .get('[data-cy=btn-import]')
           .click()
           .get('button')
           .contains('Confirm')
