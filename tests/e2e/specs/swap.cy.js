@@ -1,46 +1,16 @@
 describe('Swap', () => {
   it('Swap Token', () => {
-    cy.login()
-      // get first .input-token
-      .get('.input-token button')
-      .first()
-      .click()
-      // token pop up should open
-      .get('.select-token-modal')
-      .should('be.visible')
-      // select first token
-      .get('.select-token-modal .token')
-      .click()
-      // expect ae to be selected
-      .get('.input-token')
-      .first()
-      .should('contain', 'AE')
-      // select second token
-      // get first .input-token
-      .get('.input-token button')
-      .eq(1)
-      .click()
-      // token pop up should open
-      .get('.select-token-modal')
-      .should('be.visible')
-      // select first token
-      .get('.select-token-modal .search-bar')
-      .type('ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC')
-      //
-      .get('.select-token-modal .import-button')
-      .click()
-      // warning should be shown
-      .get('.select-token-modal')
-      .should('contain', 'Make sure this is the token that you want to trade.')
-      // confirm import
-      .get('.select-token-modal .import-button')
-      .click()
-      // expect ae to be selected
-      .get('.input-token')
-      .eq(1)
-      .should('contain', 'TAEX9-A')
-      // input amount
-      .get('.input-token input')
+    cy.interceptTxPost();
+    cy.login();
+    cy.selectToken(0);
+    cy.selectToken(1, 'ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC');
+
+    cy.get('.input-token').first().should('contain', 'AE');
+
+    // expect ae to be selected
+    cy.get('.input-token').eq(1).should('contain', 'TAEX9-A');
+    // input amount
+    cy.get('.input-token input')
       .eq(0)
       .type('1')
       // expect second input to have a number
