@@ -11,41 +11,22 @@
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', () => {
-  cy.get('[data-cy=connect-wallet]')
+  cy.visit('/swap?address=ak_rRVV9aDnmmLriPePDSvfTUvepZtR2rbYk2Mx4GCqGLcc1DMAq&networkId=ae_uat')
+    .contains('.title', 'Swap')
+    // popup should open with "Thanks for trying out the DEX!"
+    .get('.about-dex-modal')
+    .should('be.visible')
+    // close the popup
+    .get('.close')
     .click()
-    .get('[data-cy=connect-Superhero]', { timeout: 60000 })
-    .click()
-    .get('[data-cy=connect-Superhero]', { timeout: 60000 })
+    .get('.about-dex-modal')
     .should('not.exist')
-    .get('body')
-    .then((body) => {
-      if (body.find('[data-cy=wallet-address]').length > 0) {
-        cy.get('[data-cy=wallet-address]').should('contain', 'ak_');
-      } else {
-        // get checkbox container .terms-agreement and click it
-        cy.get('.terms-agreement')
-          .click()
-          .get('[data-cy=import-wallet]', { timeout: 6000 })
-          .click()
-          .get('[data-cy=textarea]')
-          .type('grief huge rare weather proof clerk pilot edit speak network denial debris')
-          .get('[data-cy=btn-import]')
-          .click()
-          .get('button')
-          .contains('Confirm')
-          .click()
-          .visit('/')
-          .login();
-      }
-    });
+    // check that testnet is written in the network selector
+    .get('.active-network')
+    .should('contain', 'Testnet');
 });
 
 Cypress.Commands.add('logout', () => {
   cy.get('[data-cy=wallet-address]').click().get('[data-cy=wallet-disconnect]').click();
   // TODO: check if we gonna disconnect from wallet.superhero.com too
-});
-
-Cypress.Commands.add('switchTestnetNetwork', () => {
-  cy.wait(1000);
-  // TODO
 });
