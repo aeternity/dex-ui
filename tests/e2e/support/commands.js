@@ -1,17 +1,7 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
+import aeSdk from './testAeSdk';
+
 Cypress.Commands.add('login', () => {
-  cy.visit('/swap?address=ak_rRVV9aDnmmLriPePDSvfTUvepZtR2rbYk2Mx4GCqGLcc1DMAq&networkId=ae_uat')
+  cy.visit(`/swap?address=${aeSdk.address}&networkId=ae_uat`)
     .contains('.title', 'Swap')
     // popup should open with "Thanks for trying out the DEX!"
     .get('.about-dex-modal')
