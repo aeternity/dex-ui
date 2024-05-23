@@ -13,7 +13,7 @@
     </div>
 
     <ButtonPlain
-      v-for="token in tokens"
+      v-for="token in tokensToShow"
       :key="`${token.contract_id}|${token.symbol}`"
       :class="[
         'token',
@@ -60,6 +60,13 @@
         </div>
       </div>
     </ButtonPlain>
+    <ButtonPlain
+      v-if="expandedList && tokens.length > currentPage * 10 + 10"
+      class="button-show-more"
+      @click="showMore"
+    >
+      Show More
+    </ButtonPlain>
   </div>
 </template>
 
@@ -98,6 +105,23 @@ export default {
     chosenTokens: { type: Array, default: null },
   },
   emits: ['token:click', 'token:import'],
+  data() {
+    return {
+      currentPage: 0,
+    };
+  },
+  computed: {
+    tokensToShow() {
+      return this.expandedList ? this.tokens.slice(0, this.currentPage * 10 + 10) : this.tokens;
+    },
+  },
+  mounted() {},
+  // if the token list is longer than 10 items, show a "show more button"
+  methods: {
+    showMore() {
+      this.currentPage += 1;
+    },
+  },
 };
 </script>
 
@@ -105,6 +129,12 @@ export default {
 @use '../../styles/variables.scss';
 @use '../../styles/typography.scss';
 @use './style.scss';
+
+.button-show-more {
+  margin: 15px 0;
+  color: variables.$color-white;
+  @extend %face-sans-16-regular;
+}
 
 .list-tokens {
   display: flex;
