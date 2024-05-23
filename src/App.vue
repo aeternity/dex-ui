@@ -60,6 +60,7 @@ export default {
     const query = {
       // safari vue-router issue
       address: new URLSearchParams(window.location.search).get('address'),
+      networkId: new URLSearchParams(window.location.search).get('networkId'),
       ...this.$route.query,
     };
 
