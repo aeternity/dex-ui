@@ -22,7 +22,7 @@
       <RouterLink :to="{ name: 'import-pool' }">{{ $t('pool.importIt') }}</RouterLink>
     </span>
 
-    <ButtonDefault @click="clickHandler">
+    <ButtonDefault data-cy="add-liquidity" @click="clickHandler">
       {{ address ? $t('addLiquidity.title') : $t('connectWallet') }}
     </ButtonDefault>
   </MainWrapper>
