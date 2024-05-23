@@ -1,20 +1,28 @@
 describe('Login', () => {
-  it('Calls the wallet for login', () => {
+  it('testnet login', () => {
     cy.visit('/')
       .contains('.title', 'Swap')
       .get('[data-cy=connect-wallet]')
       .click()
       .get('[data-cy=connect-Superhero]', { timeout: 60000 })
       .click()
-      .url()
-      .should('eql', 'https://wallet.superhero.com/');
+      .get('.about-dex-modal')
+      .should('be.visible')
+      // close the popup
+      .get('.close')
+      .click()
+      .get('.about-dex-modal')
+      .should('not.exist')
+      // check that Testnet is written in the network selector
+      .get('.active-network')
+      .should('contain', 'Testnet');
   });
 
-  it('Receive the wallet callback testnet', () => {
+  it('testnet login command', () => {
     cy.login();
   });
 
-  it('Receive the wallet callback mainnet', () => {
+  it('mainnet login', () => {
     cy.visit(
       '/swap?address=ak_rRVV9aDnmmLriPePDSvfTUvepZtR2rbYk2Mx4GCqGLcc1DMAq&networkId=ae_mainnet',
     )
