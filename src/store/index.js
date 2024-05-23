@@ -49,11 +49,8 @@ export default createStore({
     },
     // returns the network object for the currently selected network
     // or null if no network is selected
-    activeNetwork({ sdk }, { networks }) {
-      return (
-        sdk &&
-        Object.values(networks).find((network) => network.networkName === sdk.selectedNodeName)
-      );
+    activeNetwork({ sdk, networkId }, { networks }) {
+      return sdk && Object.values(networks).find((network) => network.networkId === networkId);
     },
     WAE({ networkId }, { activeNetwork }) {
       return networkId && activeNetwork ? activeNetwork.waeAddress : null;
