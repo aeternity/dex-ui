@@ -1,11 +1,75 @@
-// https://docs.cypress.io/api/introduction/api.html
+describe('Swap', () => {
+  it('Swap Token', () => {
+    cy.login()
+      // get first .input-token
+      .get('.input-token button')
+      .first()
+      .click()
+      // token pop up should open
+      .get('.select-token-modal')
+      .should('be.visible')
+      // select first token
+      .get('.select-token-modal .token')
+      .click()
+      // expect ae to be selected
+      .get('.input-token')
+      .first()
+      .should('contain', 'AE')
+      // select second token
+      // get first .input-token
+      .get('.input-token button')
+      .eq(1)
+      .click()
+      // token pop up should open
+      .get('.select-token-modal')
+      .should('be.visible')
+      // select first token
+      .get('.select-token-modal .search-bar')
+      .type('ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC')
+      //
+      .get('.select-token-modal .import-button')
+      .click()
+      // warning should be shown
+      .get('.select-token-modal')
+      .should('contain', 'Make sure this is the token that you want to trade.')
+      // confirm import
+      .get('.select-token-modal .import-button')
+      .click()
+      // expect ae to be selected
+      .get('.input-token')
+      .eq(1)
+      .should('contain', 'TAEX9-A')
+      // input amount
+      .get('.input-token input')
+      .eq(0)
+      .type('1')
+      // expect second input to have a number
+      .get('.input-token input')
+      .eq(1)
+      .invoke('val')
+      .should((value) => {
+        expect(Number.isNaN(+value)).to.eq(false); // passes
+      })
+      .get('main button.primary')
+      .click()
+      // confirm modal should open
+      .get('.confirm-swap-modal')
+      .should('be.visible')
+      // confirm transaction
+      .get('.confirm-swap-modal button.primary')
+      .click();
+    // expect wallet to be opened
+    cy.wait('@signTx', { timeout: 10000 });
+    cy.wait('@postTx', { timeout: 10000 });
 
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
-    cy.visit('/')
-      .contains('.title', 'Swap')
-      .login()
-      .wait(5000) // TODO: remove when adding swap tests
-      .logout();
+    cy.get('.notification-transaction-status').should('be.visible');
   });
+
+  // TODO edit swap settings
+
+  // TODO navigate to pool view
+  // TODO provide liquidity
+  // TODO deal with provide liquidity callback
+  // TODO remove liquidity
+  // TODO deal with remove liquidity callback
 });
