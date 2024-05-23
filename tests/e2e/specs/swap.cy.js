@@ -59,7 +59,7 @@ describe('Swap', () => {
       .get('.confirm-swap-modal button.primary')
       .click();
     // expect wallet to be opened
-    cy.wait('@signTx', { timeout: 10000 });
+    cy.wait('@walletSignTx', { timeout: 10000 });
     cy.wait('@postTx', { timeout: 10000 });
 
     cy.get('.notification-transaction-status').should('be.visible');
