@@ -65,11 +65,13 @@ describe('Swap', () => {
     cy.get('.notification-transaction-status').should('be.visible');
   });
 
-  // TODO edit swap settings
-
-  // TODO navigate to pool view
-  // TODO provide liquidity
-  // TODO deal with provide liquidity callback
-  // TODO remove liquidity
-  // TODO deal with remove liquidity callback
+  it('Adjust Swap Settings', () => {
+    cy.login();
+    cy.get('.swap-view .actions-menu').click();
+    cy.get('.settings').should('be.visible');
+    cy.get('.settings .input-amount input').eq(0).type('8');
+    cy.get('.settings .input-amount input').eq(1).type('8');
+    cy.get('.overlay').click({ force: true });
+    cy.get('.settings').should('not.exist');
+  });
 });
