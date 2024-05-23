@@ -16,7 +16,38 @@ Cypress.Commands.add('login', () => {
     .should('contain', 'Testnet');
 });
 
-Cypress.Commands.add('logout', () => {
-  cy.get('[data-cy=wallet-address]').click().get('[data-cy=wallet-disconnect]').click();
-  // TODO: check if we gonna disconnect from wallet.superhero.com too
+Cypress.Commands.add('selectToken', (slot, token) => {
+  // get first .input-token
+  cy.get('.input-token button')
+    .eq(slot)
+    .click()
+    // token pop up should open
+    .get('.select-token-modal')
+    .should('be.visible');
+  // select first token
+  if (token) {
+    cy.get('.select-token-modal .search-bar')
+      .type(token)
+      .get('.select-token-modal .import-button')
+      .click()
+      // warning should be shown
+      .get('.select-token-modal')
+      .should('contain', 'Make sure this is the token that you want to trade.')
+      // confirm import
+      .get('.select-token-modal .import-button')
+      .click();
+  } else {
+    cy.get('.select-token-modal .token').click();
+  }
+});
+
+Cypress.Commands.add('interceptTxPost', () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: 'https://testnet.aeternity.io/v3/transactions*',
+      times: 1,
+    },
+    { tx_hash: 'th_8zREhgdJmg8LxG5hnJ2Eq63n7ZTbJMeZfi8EETDjtdnmv4Ksk' },
+  ).as('postTx');
 });

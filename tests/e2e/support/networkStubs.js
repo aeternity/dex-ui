@@ -1,6 +1,6 @@
 import aeSdk from './testAeSdk';
 
-before(() => {
+beforeEach(() => {
   cy.intercept('GET', 'https://wallet.superhero.com/sign-transaction*', (req) => {
     // extract transaction from query
     const transaction = new URL(req.url).searchParams.get('transaction');
@@ -21,15 +21,6 @@ before(() => {
       );
     });
   }).as('walletAddress');
-
-  cy.intercept(
-    {
-      method: 'POST',
-      url: 'https://testnet.aeternity.io/v3/transactions*',
-    },
-    { tx_hash: 'th_8zREhgdJmg8LxG5hnJ2Eq63n7ZTbJMeZfi8EETDjtdnmv4Ksk' },
-  ).as('postTx');
 });
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+export {};
