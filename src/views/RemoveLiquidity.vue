@@ -135,6 +135,7 @@
           class="remove-btn"
           :class="{ transparent: !enoughAllowance }"
           :disabled="!removeButtonEnabled"
+          data-cy="remove-liquidity-btn"
           @click="handleRemove"
         >
           {{ removing ? $t('removeLiquidity.removing') : $t('liquidityDetails.remove') }}

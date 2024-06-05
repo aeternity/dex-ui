@@ -28,50 +28,38 @@ describe('Pool', () => {
     cy.selectToken(1, 'ct_b7FZHQzBcAW4r43ECWpV3qQJMQJp5BxkZUGNKrqqLyjVRN3SC');
     cy.get('.input-token input').eq(0).type('0.1');
 
-    // intercept the approval transaction
-    cy.intercept({
-      method: 'POST',
-      url: 'https://testnet.aeternity.io/v3/transactions*',
-      times: 1,
-    }).as('postTx');
-
-    cy.contains('Approve').click();
-    cy.wait('@walletSignTx', { timeout: 10000 });
-    cy.wait('@postTx', { timeout: 10000 });
-
-    // wait for notification to appear
-    cy.get('.notification-transaction-status').should('be.visible', { timeout: 10000 });
+    cy.approveTokenUsageIfNessesary();
 
     cy.interceptTxPost();
     cy.contains('Supply').click();
+    cy.get('.transaction-details').should('be.visible');
+    cy.contains('Confirm Supply').click();
     cy.wait('@walletSignTx', { timeout: 10000 });
     cy.wait('@postTx', { timeout: 10000 });
+
+    cy.get('.notification-transaction-status').should('be.visible');
   });
 
-  it.skip('Remove Liquidity', () => {
-    cy.login()
-      .get('[data-cy=pool]')
-      .filter(':visible')
-      .click()
-      .get('.title')
-      .should('contain', 'Pool')
-      .get('.pool-view')
-      .should('be.visible')
-      .get('.remove-liquidity-button')
-      .click()
-      .get('.remove-liquidity-modal')
-      .should('be.visible')
-      .get('.input-token input')
-      .eq(0)
-      .type('1')
-      .get('.input-token input')
-      .eq(1)
-      .type('1')
-      .get('.remove-liquidity-modal button.primary')
-      .click()
-      .get('.confirm-transaction-modal')
-      .should('be.visible')
-      .get('.confirm-transaction-modal button.primary')
-      .click();
+  it('Import Pool Share', () => {
+    cy.importLiquidity();
+  });
+
+  it('Remove Liquidity', () => {
+    // Setup test
+    cy.importLiquidity();
+    cy.get('.liquidity-item').click();
+    cy.get('.liquidity-item .body').should('be.visible');
+    cy.contains('Remove').click();
+    cy.get('.remove-liquidity').should('be.visible');
+    cy.contains('100%').click();
+    cy.approveTokenUsageIfNessesary();
+    cy.interceptTxPost();
+    cy.get('[data-cy="remove-liquidity-btn"]').click();
+    cy.get('.confirm-add-modal').should('be.visible');
+    cy.get('.confirm-add-modal button.primary').click();
+    cy.wait('@walletSignTx', { timeout: 10000 });
+    cy.wait('@postTx', { timeout: 10000 });
+
+    cy.get('.notification-transaction-status').should('be.visible');
   });
 });
