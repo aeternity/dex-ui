@@ -1,11 +1,13 @@
 import { h } from 'vue';
 import { createRouter, createWebHistory, RouterView } from 'vue-router';
+import ExploreView from '../views/ExploreView.vue';
 import SwapView from '../views/SwapView.vue';
 import PoolView from '../views/PoolView.vue';
 import ImportPool from '../views/ImportPool.vue';
 import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
 import NotFound from '../views/NotFound.vue';
+import TokenDetailView from '../views/TokenDetailView.vue';
 
 const routes = [
   {
@@ -40,6 +42,37 @@ const routes = [
         path: 'remove/:id',
         name: 'remove-pool',
         component: RemoveLiquidity,
+      },
+    ],
+  },
+  {
+    path: '/explore',
+    component: { render: () => h(RouterView) },
+    children: [
+      {
+        path: '',
+        name: 'explore',
+        component: ExploreView,
+      },
+      {
+        path: 'tokens',
+        name: 'token-list',
+        component: ExploreView,
+      },
+      {
+        path: 'tokens/:id',
+        name: 'token-detail',
+        component: TokenDetailView,
+      },
+      {
+        path: 'pools',
+        name: 'pool-list',
+        component: ExploreView,
+      },
+      {
+        path: 'pools/:id',
+        name: 'pool-detail',
+        component: ExploreView,
       },
     ],
   },
