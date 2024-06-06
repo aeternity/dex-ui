@@ -8,6 +8,7 @@ import AddLiquidity from '../views/AddLiquidity.vue';
 import RemoveLiquidity from '../views/RemoveLiquidity.vue';
 import NotFound from '../views/NotFound.vue';
 import TokenDetailView from '../views/TokenDetailView.vue';
+import PoolDetailView from '../views/PoolDetailView.vue';
 
 const routes = [
   {
@@ -72,7 +73,7 @@ const routes = [
       {
         path: 'pools/:id',
         name: 'pool-detail',
-        component: ExploreView,
+        component: PoolDetailView,
       },
     ],
   },

@@ -118,10 +118,18 @@ export default {
       return up;
     },
 
-    async fetchPairDetails({ getters: { getPairInfo }, dispatch }, { tokenA, tokenB }) {
-      const pair = getPairInfo({ tokenA, tokenB });
-      if (!pair) return null;
-      const resp = await dispatch('safeFetch', { url: `pairs/by-address/${pair.address}` });
+    async fetchPairDetails(
+      { getters: { getPairInfo }, dispatch },
+      { pairAddress, tokenA, tokenB },
+    ) {
+      let pair;
+      if (!pairAddress) {
+        pair = getPairInfo({ tokenA, tokenB });
+        if (!pair) return null;
+      }
+      const resp = await dispatch('safeFetch', {
+        url: `pairs/by-address/${pairAddress || pair.address}`,
+      });
       return (
         resp && {
           ...resp,
@@ -157,6 +165,15 @@ export default {
       });
       commit('setPairs', pairs);
       return pairs;
+    },
+
+    async fetchHistory({ dispatch }, options) {
+      const queryString = new URLSearchParams({
+        limit: 100,
+        offset: 0,
+        ...options,
+      }).toString();
+      return dispatch('safeFetch', { url: `history/liquidity?${queryString}` });
     },
   },
 };

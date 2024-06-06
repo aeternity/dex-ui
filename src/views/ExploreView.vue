@@ -5,7 +5,7 @@
 </template>
 <script>
 import { defineComponent } from 'vue';
-import StyledGraph from '@/components/explore/StyledGraph.vue';
+import StyledGraph from '@/components/explore/PriceHistoryGraph.vue';
 
 export default defineComponent({
   components: { StyledGraph },
