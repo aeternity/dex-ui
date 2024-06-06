@@ -34,7 +34,7 @@
             <AnimatedSpinner />
           </template>
           <template v-else>
-            <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="" />
+            <AddressAvatar :address="address" />
             <span class="h-xs">{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
           </template>
         </div>
@@ -126,6 +126,7 @@ import AeLogo from '@/assets/logo.svg';
 import AeLogoSmall from '@/assets/logo-small.svg';
 import BackArrow from '@/assets/back.svg';
 import AnimatedSpinner from '@/assets/animated-spinner.svg';
+import AddressAvatar from '@/components/AddressAvatar.vue';
 import ActionsMenu from './ActionsMenu.vue';
 import AeBalance from './AeBalance.vue';
 import NavigationMenu from './NavigationMenu.vue';
@@ -134,6 +135,7 @@ import ButtonPlain from './ButtonPlain.vue';
 
 export default {
   components: {
+    AddressAvatar,
     AeLogo,
     AeLogoSmall,
     BackArrow,
