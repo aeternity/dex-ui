@@ -44,7 +44,7 @@
       @click="approve"
     >
       <div class="allowance">
-        <img :src="`https://avatars.z52da5wt.xyz/${tokenA.contract_id}`" alt="" />
+        <AddressAvatar :address="tokenA.contract_id" />
         {{ approveBtnMessage }}
       </div>
       <ButtonTooltip :tooltip="$t('swap.permissionToolTip', { msg: tokenA.symbol })">
@@ -87,9 +87,11 @@ import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import saveTokenSelectionMixin from '@/mixins/saveTokenSelectionMixin';
 import approvalMixin from '@/mixins/allowanceMixin';
 import setSwapRoutesMixin from '@/mixins/setSwapRoutesMixin';
+import AddressAvatar from '@/components/AddressAvatar.vue';
 
 export default {
   components: {
+    AddressAvatar,
     MainWrapper,
     InputToken,
     ButtonPlain,

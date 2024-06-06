@@ -23,7 +23,7 @@
       </div>
       <div class="content">
         <div class="address">
-          <img :src="`https://avatars.z52da5wt.xyz/${address}`" alt="" />
+          <AddressAvatar :address="address" />
           <span>{{ `${address.slice(0, 6)}...${address.slice(-3)}` }}</span>
         </div>
         <div class="links">
@@ -90,12 +90,14 @@ import DeleteIcon from '@/assets/delete.svg';
 import AnimatedSpinner from '@/assets/animated-spinner.svg';
 import Alert from '@/assets/alert.svg';
 import Check from '@/assets/check.svg';
+import AddressAvatar from '@/components/AddressAvatar.vue';
 import ButtonPlain from './ButtonPlain.vue';
 import ClipboardCopy from './ClipboardCopy.vue';
 import ModalDefault from './ModalDefault.vue';
 
 export default {
   components: {
+    AddressAvatar,
     ModalDefault,
     ClipboardCopy,
     ButtonPlain,
