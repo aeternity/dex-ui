@@ -3,6 +3,11 @@ import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from '@/lib/errors';
 
+// eslint-disable-next-line no-extend-native,func-names
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
 const errorMessages = {
   ...dexContractsErrorMessages,
   ...dexUiErrorMessages,
@@ -188,3 +193,6 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
  */
 export const isDexBackendDisabled =
   import.meta.env.VITE_DISABLE_DEX_BACKEND && JSON.parse(import.meta.env.VITE_DISABLE_DEX_BACKEND);
+
+export const shortenAddress = (address, lengthStart = 6, lengthEnd = 3) =>
+  address ? `${address.slice(0, lengthStart)}...${address.slice(-lengthEnd)}` : '';
