@@ -1,7 +1,7 @@
 <template>
   <div class="relative overflow-x-auto">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase">
+      <thead class="text-xs text-gray-400 uppercase">
         <tr>
           <th scope="col" class="px-6 py-3"></th>
           <th scope="col" class="px-6 py-3">USD</th>
@@ -31,24 +31,26 @@
           </th>
           <td class="px-6 py-4">0</td>
           <td class="px-6 py-4">
-            {{
-              new BigNumber(tx.deltaReserve0)
-                .div(new BigNumber(10).pow(token0.decimals))
-                .abs()
-                .toFixed(4)
-            }}
+            {{ formatAmount(tx.deltaReserve0, token0.decimals) }}
             {{ token0.symbol }}
           </td>
           <td class="px-6 py-4">
-            {{
-              new BigNumber(tx.deltaReserve1)
-                .div(new BigNumber(10).pow(token1.decimals))
-                .abs()
-                .toFixed(4)
-            }}
+            {{ formatAmount(tx.deltaReserve1, token1.decimals) }}
             {{ token1.symbol }}
           </td>
-          <td class="px-6 py-4">ak_tbd</td>
+          <td class="px-6 py-4">
+            <a
+              v-if="activeNetwork"
+              class="flex gap-2"
+              :href="`${activeNetwork.explorerUrl}/accounts/${tx.senderAccount}`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ shortenAddress(tx.senderAccount) }}
+              <ExternalLinkIcon aria-hidden="true" />
+              <span class="sr-only">External link</span>
+            </a>
+          </td>
           <td class="px-6 py-4">
             {{
               formatDistance(new Date(Number(tx.microBlockTime)), new Date(), { addSuffix: true })
@@ -64,9 +66,12 @@
 import { formatDistance } from 'date-fns';
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
+import ExternalLinkIcon from '@/assets/external-link.svg';
+import { shortenAddress } from '@/lib/utils';
 
 export default {
   name: 'TransactionTable',
+  components: { ExternalLinkIcon },
   props: {
     transactions: {
       type: Array,
@@ -81,38 +86,21 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      txs: [
-        {
-          pairAddress: 'ct_2aj54uGyEebTj3zquptVunU1HALzbDDrbrN6LouQgujgJuAsEX',
-          type: 'CreatePair',
-          reserve0: '0',
-          reserve1: '0',
-          deltaReserve0: '0',
-          deltaReserve1: '0',
-          aeUsdPrice: '0.024174',
-          height: 822999,
-          microBlockHash: 'mh_2rxtGPoxFTR7VRcVru9JEL8QzV9qmQ2YJnrb3av64LqMe17aJZ',
-          microBlockTime: '1692892137863',
-          transactionHash: 'th_Qc4JX2M2dUWACdbqStvi1Dtp3QMvvrUyn113xQdj2xaXnupe6',
-          transactionIndex: '0',
-          logIndex: 0,
-        },
-      ],
-    };
-  },
   computed: {
-    BigNumber() {
-      return BigNumber;
-    },
     ...mapGetters(['activeNetwork']),
     reversedTransactions() {
       return this.transactions.slice().reverse();
     },
   },
   methods: {
+    shortenAddress,
     formatDistance,
+    formatAmount(amount, decimals) {
+      const formattedAmount = new BigNumber(amount).div(new BigNumber(10).pow(decimals)).abs();
+      return formattedAmount
+        .toFixed(Math.max(0, 5 - formattedAmount.toFixed(0).length))
+        .replace(/\.?0+$/, ''); // remove trailing 0s
+    },
     typeToText(eventType, delta0) {
       switch (eventType) {
         case 'CreatePair':
@@ -130,4 +118,9 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+svg {
+  width: 16px;
+  height: 16px;
+}
+</style>
