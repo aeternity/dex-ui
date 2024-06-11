@@ -12,11 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="tx in reversedTransactions"
-          :key="tx.transactionHash"
-          class="border-b border-b-gray-700"
-        >
+        <tr v-for="tx in transactions" :key="tx.transactionHash" class="border-b border-b-gray-700">
           <th
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -29,13 +25,15 @@
               {{ typeToText(tx.type, tx.deltaReserve0, tx.deltaReserve1) }}
             </a>
           </th>
-          <td class="px-6 py-4">0</td>
           <td class="px-6 py-4">
-            {{ formatAmount(tx.deltaReserve0, token0.decimals) }}
+            {{ tx.usdValue }}
+          </td>
+          <td class="px-6 py-4">
+            {{ formatAmountPretty(tx.deltaReserve0, token0.decimals) }}
             {{ token0.symbol }}
           </td>
           <td class="px-6 py-4">
-            {{ formatAmount(tx.deltaReserve1, token1.decimals) }}
+            {{ formatAmountPretty(tx.deltaReserve1, token1.decimals) }}
             {{ token1.symbol }}
           </td>
           <td class="px-6 py-4">
@@ -67,7 +65,7 @@ import { formatDistance } from 'date-fns';
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 import ExternalLinkIcon from '@/assets/external-link.svg';
-import { shortenAddress } from '@/lib/utils';
+import { calculateUsdValue, formatAmountPretty, shortenAddress } from '@/lib/utils';
 
 export default {
   name: 'TransactionTable',
@@ -88,19 +86,11 @@ export default {
   },
   computed: {
     ...mapGetters(['activeNetwork']),
-    reversedTransactions() {
-      return this.transactions.slice().reverse();
-    },
   },
   methods: {
     shortenAddress,
     formatDistance,
-    formatAmount(amount, decimals) {
-      const formattedAmount = new BigNumber(amount).div(new BigNumber(10).pow(decimals)).abs();
-      return formattedAmount
-        .toFixed(Math.max(0, 5 - formattedAmount.toFixed(0).length))
-        .replace(/\.?0+$/, ''); // remove trailing 0s
-    },
+    formatAmountPretty,
     typeToText(eventType, delta0) {
       switch (eventType) {
         case 'CreatePair':
