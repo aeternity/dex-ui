@@ -26,7 +26,7 @@
             </a>
           </th>
           <td class="px-6 py-4">
-            {{ tx.usdValue }}
+            {{ `$${formatAmountPretty(tx.txUsdValue, 0)}` }}
           </td>
           <td class="px-6 py-4">
             {{ formatAmountPretty(tx.deltaReserve0, token0.decimals) }}
@@ -63,9 +63,8 @@
 <script>
 import { formatDistance } from 'date-fns';
 import { mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
 import ExternalLinkIcon from '@/assets/external-link.svg';
-import { calculateUsdValue, formatAmountPretty, shortenAddress } from '@/lib/utils';
+import { formatAmountPretty, shortenAddress } from '@/lib/utils';
 
 export default {
   name: 'TransactionTable',

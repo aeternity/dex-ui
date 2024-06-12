@@ -34,8 +34,8 @@
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Transactions</h2>
       <TransactionTable
-        v-if="pair && augmentedReversedTransactions"
-        :transactions="augmentedReversedTransactions"
+        v-if="pair && reversedTransactions"
+        :transactions="reversedTransactions"
         :token0="pair?.token0"
         :token1="pair?.token1"
       ></TransactionTable>
@@ -108,7 +108,7 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
-import { calculateUsdValue, formatAmountPretty, shortenAddress } from '@/lib/utils';
+import { formatAmountPretty, shortenAddress } from '@/lib/utils';
 import { mapGetters } from 'vuex';
 import ExternalLinkIcon from '@/assets/external-link.svg';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
@@ -134,45 +134,35 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters(['activeNetwork']),
-    augmentedReversedTransactions() {
-      return this.history
-        .slice()
-        .reverse()
-        .map((tx) => ({
-          ...tx,
-          usdValue: calculateUsdValue({
-            ...tx,
-            reserve0: tx.deltaReserve0,
-            reserve1: tx.deltaReserve1,
-            decimals0: this.pair.token0.decimals,
-            decimals1: this.pair.token1.decimals,
-          }),
-        }));
+    reversedTransactions() {
+      return this.history.slice().reverse();
+    },
+    last24hTransactions() {
+      return this.reversedTransactions.filter(
+        (tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000,
+      );
     },
     tvl() {
       const tx = this.history[this.history.length - 1];
       if (!tx || !this.pair) return '0';
-      return calculateUsdValue({
-        ...tx,
-        reserve0: tx.reserve0,
-        reserve1: tx.reserve1,
-        decimals0: this.pair.token0.decimals,
-        decimals1: this.pair.token1.decimals,
-      });
+      return formatAmountPretty(tx.reserveUsd, 0);
     },
     volume() {
-      // aggregate volume over the last 24 hours
-      const txs = this.augmentedReversedTransactions.filter(
-        (tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000,
-      );
-      if (!txs.length) return '0';
+      if (!this.last24hTransactions.length) return '0';
       return formatAmountPretty(
-        txs.reduce((acc, tx) => acc.plus(tx.usdValue || 0), new BigNumber(0)),
+        this.last24hTransactions.reduce(
+          (acc, tx) => acc.plus(tx.txUsdValue || 0),
+          new BigNumber(0),
+        ),
         0,
       );
     },
     fees() {
-      return '0';
+      if (!this.last24hTransactions.length) return '0';
+      return formatAmountPretty(
+        this.last24hTransactions.reduce((acc, tx) => acc.plus(tx.txUsdFee || 0), new BigNumber(0)),
+        0,
+      );
     },
   },
   async mounted() {
