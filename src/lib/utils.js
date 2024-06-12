@@ -205,26 +205,3 @@ export const formatAmountPretty = (amount, decimals) => {
     .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') // add 000,000 seperator
     .replace(/(\.\d*[1-9])0+$/, '$1'); // move to 0.0001 instead of 0.00010000
 };
-
-export const calculateUsdValue = ({
-  reserve0,
-  token0AePrice,
-  decimals0,
-  reserve1,
-  token1AePrice,
-  decimals1,
-  aeUsdPrice,
-}) => {
-  if (!reserve0 || !reserve1 || !token0AePrice || !token1AePrice || !aeUsdPrice) {
-    return '0';
-  }
-
-  const amountFromToken0 = new BigNumber(reserve0)
-    .multipliedBy(token0AePrice)
-    .div(new BigNumber(10).pow(decimals0));
-  const amountFromToken1 = new BigNumber(reserve1)
-    .multipliedBy(token1AePrice)
-    .div(new BigNumber(10).pow(decimals1));
-
-  return formatAmountPretty(amountFromToken0.plus(amountFromToken1).multipliedBy(aeUsdPrice), 0);
-};
