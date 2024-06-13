@@ -8,19 +8,21 @@
       <div class="flex-1 flex-auto p-6">
         <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" />
       </div>
-      <div class="flex flex-col flex-auto">
-        <div class="flex flex-row mx-2 gap-2">
+      <div class="flex flex-col flex-auto mr-4">
+        <div class="flex flex-row space-x-2 mb-4">
           <ButtonDefault
             fill="light"
-            @click="$router.push({ name: 'swap', params: { id: pairId } })"
+            class="w-full"
+            @click="$router.push({ name: 'swap', query: { from: 'AE', to: pairId } })"
           >
-            {{ $t('swap') }}
+            {{ $t('poolDetail.swap') }}
           </ButtonDefault>
           <ButtonDefault
             fill="light"
+            class="whitespace-nowrap"
             @click="$router.push({ name: 'pool', params: { id: pairId } })"
           >
-            {{ $t('add-liquidity') }}
+            {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
         </div>
         <div>
