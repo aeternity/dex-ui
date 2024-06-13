@@ -10,7 +10,8 @@
       {{ time }}
     </ButtonDefault>
   </div>
-  <Line :data="graphData" :options="options" />
+  <Bar v-if="showBar" :data="graphData" :options="options" />
+  <Line v-else :data="graphData" :options="options" />
   <div class="flex gap-2">
     <ButtonDefault
       v-for="time in Object.keys(timeFrames)"
@@ -35,10 +36,12 @@ import {
   Tooltip,
   Legend,
   TimeScale,
+  BarElement,
 } from 'chart.js';
-import { Line } from 'vue-chartjs';
+import { Line, Bar } from 'vue-chartjs';
 import 'chartjs-adapter-date-fns';
 import ButtonDefault from '@/components/ButtonDefault.vue';
+import BigNumber from 'bignumber.js';
 
 const TIME_FRAMES = {
   '1H': 1,
@@ -58,6 +61,7 @@ ChartJS.register(
   Legend,
   TimeScale,
   LineElement,
+  BarElement,
 );
 
 export default {
@@ -65,6 +69,7 @@ export default {
   components: {
     ButtonDefault,
     Line,
+    Bar,
   },
   props: {
     datasets: { type: Array, required: true },
@@ -76,54 +81,158 @@ export default {
       selectedChart: 'Volume',
       colors: ['red', 'green', 'blue', 'purple', 'orange'],
       timeFrames: TIME_FRAMES,
-      options: {
-        legend: {
-          labels: {
-            fontColor: 'blue',
-            fontSize: 18,
-          },
-        },
+    };
+  },
+  computed: {
+    options() {
+      return {
         responsive: true,
         scales: {
           x: {
             type: 'time',
+            offset: true,
+            min: Math.max(
+              Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
+              this.filteredData.filteredTime[0],
+            ),
+            max: Date.now(),
           },
           y: {
             ticks: {
               // Include a dollar sign in the ticks
-              callback: this.yTickCallback,
+              callback: (value) =>
+                ['TVL', 'Fees', 'Volume'].includes(this.selectedChart) ? `$${value}` : value,
             },
           },
         },
-      },
-    };
-  },
-  computed: {
+      };
+    },
     labels() {
       return this.datasets.map((d) => d.label);
     },
+    filteredData() {
+      const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
+      return {
+        filteredData: selectedDataSet.data.filter(
+          (_, i) =>
+            this.x[i] > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
+        ),
+        filteredTime: this.x
+          .filter((d) => d > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame])
+          .map((d) => Number(d)),
+        selectedDataSet,
+      };
+    },
     graphData() {
       // filter data based on selected time
-      const filteredX = this.x.filter(
-        (d) => d > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
-      );
-      const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
-      const filteredData = selectedDataSet.data.filter(
-        (_, i) => this.x[i] > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
-      );
+      const { filteredTime, filteredData, selectedDataSet } = this.filteredData;
+      if (
+        (filteredData.length === 0 || filteredTime.length === 0 || !selectedDataSet) &&
+        (this.selectedChart === 'Fees' || this.selectedChart === 'Volume')
+      ) {
+        return {
+          labels: [],
+          datasets: [],
+        };
+      }
+
+      // aggregate data based on selected time
+      // retrieve min time from data or default to selected view
+      const minTime =
+        filteredTime.length > 0
+          ? Math.min(...filteredTime)
+          : Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame];
+
+      if (['TVL', 'Volume', 'Fees'].includes(this.selectedChart)) {
+        // these three charts are bar charts, so we need to calculate buckets
+        const bucketSize = (Date.now() - minTime) / 30;
+
+        // seed empty buckets
+        const emptyBuckets = Object.fromEntries(
+          Array.from({ length: 31 }).map((_, i) => {
+            const key = minTime + i * bucketSize;
+            return [key, []];
+          }),
+        );
+
+        // deal with no data in current time frame
+        if (Object.keys(filteredData).length === 0 && selectedDataSet.data.length > 0) {
+          filteredTime.push(minTime);
+          filteredData.push(selectedDataSet.data[selectedDataSet.data.length - 1]);
+        }
+
+        const aggregatedData = filteredData.reduce((acc, d, i) => {
+          const time = filteredTime[i];
+          const bucketIndex = Math.floor((time - minTime) / bucketSize);
+          const key = minTime + bucketIndex * bucketSize;
+          acc[key].push(d);
+          return acc;
+        }, emptyBuckets);
+        let bucketedData;
+        // interpolate TVL
+        if (this.selectedChart === 'TVL') {
+          // average TVL
+          let prevArr = [];
+          bucketedData = Object.fromEntries(
+            Object.entries(aggregatedData).map(([time, bucketArr], index) => {
+              let aggregatedValue = bucketArr
+                .reduce((acc, v) => acc.plus(v), new BigNumber(0))
+                .div(bucketArr.length);
+              // interpolate TVL by filling in missing data with latest value from previous bucket
+              if (index > 0 && aggregatedValue.isNaN()) {
+                aggregatedValue = prevArr[prevArr.length - 1];
+              } else {
+                prevArr = [...bucketArr];
+              }
+              return [time, aggregatedValue];
+            }),
+          );
+
+          // deal with empty filteredData
+        } else {
+          // sum fees and volume
+          bucketedData = Object.fromEntries(
+            Object.entries(aggregatedData).map(([time, bucketArr]) => [
+              time,
+              bucketArr.reduce((acc, v) => acc.plus(v), new BigNumber(0)),
+            ]),
+          );
+        }
+        return {
+          labels: Object.keys(bucketedData).map((x) => Number(x)),
+          datasets: [
+            {
+              label: selectedDataSet.label,
+              data: Object.values(bucketedData).map((y) => Number(y)),
+              borderColor: 'rgb(0 255 157 / 80%)',
+              backgroundColor: 'rgb(0 255 157 / 80%)',
+            },
+          ],
+        };
+      }
+      console.log('filteredData', filteredData);
+      // Prices should be interpolated
+      if (filteredData.length === 0 && selectedDataSet.data.length > 0) {
+        filteredTime.push(minTime);
+        filteredData.push(selectedDataSet.data[selectedDataSet.data.length - 1]);
+        console.log(filteredTime);
+      }
 
       return {
-        labels: filteredX.map((x) => Number(x)),
+        labels: [...filteredTime.map((x) => Number(x)), Date.now()],
         datasets: [
           {
             label: selectedDataSet.label,
-            data: filteredData.map((y) => Number(y)),
+            data: [...filteredData, filteredData[filteredData.length - 1]].map((y) => Number(y)),
             borderColor: 'rgb(0 255 157 / 80%)',
-            fill: false,
-            tension: 0.0,
+            backgroundColor: 'rgb(0 255 157 / 80%)',
+            fill: true,
           },
         ],
       };
+    },
+    showBar() {
+      return ['TVL', 'Volume', 'Fees'].includes(this.selectedChart);
     },
   },
   methods: {
@@ -132,9 +241,6 @@ export default {
     },
     changeChartContent(newChart) {
       this.selectedChart = newChart;
-    },
-    yTickCallback(value) {
-      return ['TVL', 'Fees', 'Volume'].includes(this.selectedChart) ? `$${value}` : value;
     },
   },
 };

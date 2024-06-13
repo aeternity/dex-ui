@@ -25,8 +25,11 @@
         </div>
         <div>
           <StatElement title="TVL" :value="`$${tvl}`" />
-          <StatElement :title="`Locked ${pair?.token0.symbol}`" :value="token0Amount" />
-          <StatElement :title="`Locked ${pair?.token1.symbol}`" :value="token1Amount" />
+          <StatElement
+            title="Locked"
+            :value="`${token0Amount} ${pair?.token0.symbol}`"
+            :value2="`${token1Amount} ${pair?.token1.symbol}`"
+          />
           <StatElement title="Volume (24h)" :value="`$${volume}`" />
           <StatElement title="Fees (24h)" :value="`$${fees}`" />
         </div>
@@ -182,17 +185,17 @@ export default defineComponent({
               .div(BigNumber(10).pow(this.pair.token0.decimals))
               .div(new BigNumber(tx.reserve1).div(BigNumber(10).pow(this.pair.token1.decimals)))
               .toString(),
-          ];
+          ].map((d) => d || 0);
           acc.datasets[1].data = [
-            ...acc.datasets[1].data,
+            ...(acc.datasets[1].data || []),
             new BigNumber(tx.reserve1)
               .div(BigNumber(10).pow(this.pair.token1.decimals))
               .div(new BigNumber(tx.reserve0).div(BigNumber(10).pow(this.pair.token0.decimals)))
               .toString(),
-          ];
-          acc.datasets[2].data = [...acc.datasets[2].data, tx.reserveUsd];
-          acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee];
-          acc.datasets[4].data = [...acc.datasets[4].data, tx.txUsdValue];
+          ].map((d) => d || 0);
+          acc.datasets[2].data = [...acc.datasets[2].data, tx.reserveUsd].map((d) => d || 0);
+          acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee].map((d) => d || 0);
+          acc.datasets[4].data = [...acc.datasets[4].data, tx.txUsdValue].map((d) => d || 0);
           acc.x = [...acc.x, tx.microBlockTime];
           return acc;
         },
