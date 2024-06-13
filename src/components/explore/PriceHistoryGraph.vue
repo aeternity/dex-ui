@@ -210,12 +210,10 @@ export default {
           ],
         };
       }
-      console.log('filteredData', filteredData);
       // Prices should be interpolated
       if (filteredData.length === 0 && selectedDataSet.data.length > 0) {
         filteredTime.push(minTime);
         filteredData.push(selectedDataSet.data[selectedDataSet.data.length - 1]);
-        console.log(filteredTime);
       }
 
       return {
