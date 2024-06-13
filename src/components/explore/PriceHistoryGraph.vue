@@ -1,10 +1,21 @@
 <template>
-  <Line :data="data" :options="options" />
+  <div class="flex gap-2">
+    <ButtonDefault
+      v-for="time in labels"
+      :key="time"
+      class="p-16 block"
+      fill="light"
+      @click="changeChartContent(time)"
+    >
+      {{ time }}
+    </ButtonDefault>
+  </div>
+  <Line :data="graphData" :options="options" />
   <div class="flex gap-2">
     <ButtonDefault
       v-for="time in Object.keys(timeFrames)"
       :key="time"
-      class="p-6 block"
+      class="p-10 block w-12"
       fill="light"
       @click="changeTimeFrame(time)"
     >
@@ -56,11 +67,14 @@ export default {
     Line,
   },
   props: {
-    priceData: { type: Array, required: true },
+    datasets: { type: Array, required: true },
+    x: { type: Array, required: true },
   },
   data() {
     return {
       selectedTimeFrame: 'MAX',
+      selectedChart: 'Volume',
+      colors: ['red', 'green', 'blue', 'purple', 'orange'],
       timeFrames: TIME_FRAMES,
       options: {
         legend: {
@@ -74,27 +88,39 @@ export default {
           x: {
             type: 'time',
           },
+          y: {
+            ticks: {
+              // Include a dollar sign in the ticks
+              callback: this.yTickCallback,
+            },
+          },
         },
       },
     };
   },
   computed: {
-    data() {
+    labels() {
+      return this.datasets.map((d) => d.label);
+    },
+    graphData() {
       // filter data based on selected time
-      const filteredData = this.priceData.filter(
-        (d) => d.x > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
+      const filteredX = this.x.filter(
+        (d) => d > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
+      );
+      const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
+      const filteredData = selectedDataSet.data.filter(
+        (_, i) => this.x[i] > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
       );
 
       return {
-        labels: filteredData.map((d) => Number(d.x)),
+        labels: filteredX.map((x) => Number(x)),
         datasets: [
           {
-            label: 'Price',
-            data: filteredData.map((d) => d.y),
+            label: selectedDataSet.label,
+            data: filteredData.map((y) => Number(y)),
             borderColor: 'rgb(0 255 157 / 80%)',
             fill: false,
-            cubicInterpolationMode: 'monotone',
-            tension: 0.4,
+            tension: 0.0,
           },
         ],
       };
@@ -104,14 +130,19 @@ export default {
     changeTimeFrame(newTimeFrame) {
       this.selectedTimeFrame = newTimeFrame;
     },
+    changeChartContent(newChart) {
+      this.selectedChart = newChart;
+    },
+    yTickCallback(value) {
+      return ['TVL', 'Fees', 'Volume'].includes(this.selectedChart) ? `$${value}` : value;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .button-default {
-  padding: 5px;
+  padding: 5px 10px;
   border-radius: 25px;
-  width: 50px;
 }
 </style>
