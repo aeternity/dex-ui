@@ -6,7 +6,7 @@
     </div>
     <div class="flex">
       <div class="flex-1 flex-auto p-6">
-        <PriceHistoryGraph :price-data="graphData" />
+        <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" />
       </div>
       <div class="flex flex-col flex-auto">
         <div class="flex flex-row mx-2 gap-2">
@@ -25,6 +25,8 @@
         </div>
         <div>
           <StatElement title="TVL" :value="`$${tvl}`" />
+          <StatElement :title="`Locked ${pair?.token0.symbol}`" :value="token0Amount" />
+          <StatElement :title="`Locked ${pair?.token1.symbol}`" :value="token1Amount" />
           <StatElement title="Volume (24h)" :value="`$${volume}`" />
           <StatElement title="Fees (24h)" :value="`$${fees}`" />
         </div>
@@ -129,7 +131,6 @@ export default defineComponent({
       pairId: null,
       pair: null,
       history: [],
-      graphData: [],
     };
   },
   computed: {
@@ -164,6 +165,64 @@ export default defineComponent({
         0,
       );
     },
+    token0Amount() {
+      const tx = this.history[this.history.length - 1];
+      return formatAmountPretty(tx?.reserve0, this.pair?.token0.decimals);
+    },
+    token1Amount() {
+      const tx = this.history[this.history.length - 1];
+      return formatAmountPretty(tx?.reserve1, this.pair?.token1.decimals);
+    },
+    graphData() {
+      return this.history.reduce(
+        (acc, tx) => {
+          acc.datasets[0].data = [
+            ...acc.datasets[0].data,
+            new BigNumber(tx.reserve0)
+              .div(BigNumber(10).pow(this.pair.token0.decimals))
+              .div(new BigNumber(tx.reserve1).div(BigNumber(10).pow(this.pair.token1.decimals)))
+              .toString(),
+          ];
+          acc.datasets[1].data = [
+            ...acc.datasets[1].data,
+            new BigNumber(tx.reserve1)
+              .div(BigNumber(10).pow(this.pair.token1.decimals))
+              .div(new BigNumber(tx.reserve0).div(BigNumber(10).pow(this.pair.token0.decimals)))
+              .toString(),
+          ];
+          acc.datasets[2].data = [...acc.datasets[2].data, tx.reserveUsd];
+          acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee];
+          acc.datasets[4].data = [...acc.datasets[4].data, tx.txUsdValue];
+          acc.x = [...acc.x, tx.microBlockTime];
+          return acc;
+        },
+        {
+          x: [],
+          datasets: [
+            {
+              label: `${this.pair?.token1.symbol} / ${this.pair?.token0.symbol} Price`,
+              data: [],
+            },
+            {
+              label: `${this.pair?.token0.symbol} / ${this.pair?.token1.symbol} Price`,
+              data: [],
+            },
+            {
+              label: 'TVL',
+              data: [],
+            },
+            {
+              label: 'Fees',
+              data: [],
+            },
+            {
+              label: 'Volume',
+              data: [],
+            },
+          ],
+        },
+      );
+    },
   },
   async mounted() {
     // extract param from URL
@@ -178,12 +237,6 @@ export default defineComponent({
     this.history = await this.$store.dispatch('backend/fetchHistory', {
       pairAddress: this.pairId,
     });
-    this.graphData = this.history
-      .map((h) => ({
-        x: h.microBlockTime,
-        y: h.reserve0 / h.reserve1,
-      }))
-      .filter((h) => h.y > 0);
   },
   methods: { shortenAddress },
 });
