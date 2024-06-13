@@ -1,23 +1,23 @@
 <template>
-  <div class="flex gap-2">
+  <div class="flex gap-2 mb-3">
     <ButtonDefault
-      v-for="time in labels"
-      :key="time"
+      v-for="label in labels"
+      :key="label"
       class="p-16 block"
-      fill="light"
-      @click="changeChartContent(time)"
+      :fill="label === selectedChart ? 'light' : 'transparent'"
+      @click="changeChartContent(label)"
     >
-      {{ time }}
+      {{ label }}
     </ButtonDefault>
   </div>
   <Bar v-if="showBar" :data="graphData" :options="options" />
   <Line v-else :data="graphData" :options="options" />
-  <div class="flex gap-2">
+  <div class="flex gap-2 mt-3">
     <ButtonDefault
       v-for="time in Object.keys(timeFrames)"
       :key="time"
-      class="p-10 block w-12"
-      fill="light"
+      class="p-10 block w-14"
+      :fill="time === selectedTimeFrame ? 'light' : 'transparent'"
       @click="changeTimeFrame(time)"
     >
       {{ time }}
@@ -87,6 +87,11 @@ export default {
     options() {
       return {
         responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
         scales: {
           x: {
             type: 'time',

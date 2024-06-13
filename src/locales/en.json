@@ -166,6 +166,10 @@
     "middlewareNotAvailable": "Middleware is not available, some functionality may not work properly.",
     "middlewareOutOfSync": "The middleware is out of sync, some functionality may not work properly."
   },
+  "poolDetail": {
+    "swap": "Swap",
+    "addLiquidity": "Add Liquidity"
+  },
   "superheroDex": "Superhero DEX",
   "initializing": "Initializing...",
   "connectWallet": "Connect Wallet",
