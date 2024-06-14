@@ -26,7 +26,7 @@
             </a>
           </th>
           <td class="px-6 py-4">
-            {{ `$${formatAmountPretty(tx.txUsdValue, 0)}` }}
+            {{ formatUsdPretty(tx.txUsdValue, 0) }}
           </td>
           <td class="px-6 py-4">
             {{ formatAmountPretty(tx.deltaReserve0, token0.decimals) }}
@@ -64,7 +64,7 @@
 import { formatDistance } from 'date-fns';
 import { mapGetters } from 'vuex';
 import ExternalLinkIcon from '@/assets/external-link.svg';
-import { formatAmountPretty, shortenAddress } from '@/lib/utils';
+import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
 
 export default {
   name: 'TransactionTable',
@@ -87,6 +87,7 @@ export default {
     ...mapGetters(['activeNetwork']),
   },
   methods: {
+    formatUsdPretty,
     shortenAddress,
     formatDistance,
     formatAmountPretty,
