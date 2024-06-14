@@ -10,8 +10,18 @@
       {{ label }}
     </ButtonDefault>
   </div>
-  <Bar v-if="showBar" :data="graphData" :options="options" />
-  <Line v-else :data="graphData" :options="options" />
+  <div class="relative">
+    <Bar v-if="showBar" :data="graphData" :options="options" />
+    <Line v-else :data="graphData" :options="options" />
+    <div
+      v-if="showNoData"
+      class="absolute flex justify-center items-center w-full h-full top-0 left-0 text-3xl"
+      @click.prevent
+    >
+      No Data
+    </div>
+  </div>
+
   <div class="flex gap-2 mt-3">
     <ButtonDefault
       v-for="time in Object.keys(timeFrames)"
@@ -84,6 +94,12 @@ export default {
     };
   },
   computed: {
+    showNoData() {
+      return (
+        !this.graphData?.datasets?.[0]?.data?.length ||
+        this.graphData?.datasets?.[0]?.data?.every((d) => d === 0)
+      );
+    },
     options() {
       return {
         responsive: true,
@@ -229,7 +245,6 @@ export default {
             data: [...filteredData, filteredData[filteredData.length - 1]].map((y) => Number(y)),
             borderColor: 'rgb(0 255 157 / 80%)',
             backgroundColor: 'rgb(0 255 157 / 80%)',
-            fill: true,
           },
         ],
       };

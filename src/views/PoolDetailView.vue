@@ -1,6 +1,6 @@
 <template>
   <ExploreWrapper>
-    <div class="flex flex-row p-6 items-center">
+    <div class="flex flex-row px-6 pt-6 items-center">
       <span v-if="pairId" class="logo"><AddressAvatar :address="pairId" /></span>
       <h1 class="text-2xl">{{ pair?.token0.symbol }} / {{ pair?.token1.symbol }}</h1>
     </div>
@@ -26,14 +26,17 @@
           </ButtonDefault>
         </div>
         <div>
-          <StatElement title="TVL" :value="`$${tvl}`" />
+          <StatElement title="TVL" :value="tvl" />
           <StatElement
-            title="Locked"
+            title="Pool Balances"
             :value="`${token0Amount} ${pair?.token0.symbol}`"
             :value2="`${token1Amount} ${pair?.token1.symbol}`"
           />
-          <StatElement title="Volume (24h)" :value="`$${volume}`" />
-          <StatElement title="Fees (24h)" :value="`$${fees}`" />
+          <StatElement title="Volume (24h)" :value="volume" />
+          <StatElement title="Fees (24h)" :value="fees" />
+        </div>
+        <div>
+          <!-- TODO add links here -->
         </div>
       </div>
     </div>
@@ -115,7 +118,7 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
-import { formatAmountPretty, shortenAddress } from '@/lib/utils';
+import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
 import { mapGetters } from 'vuex';
 import ExternalLinkIcon from '@/assets/external-link.svg';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
@@ -151,11 +154,11 @@ export default defineComponent({
     tvl() {
       const tx = this.history[this.history.length - 1];
       if (!tx || !this.pair) return '0';
-      return formatAmountPretty(tx.reserveUsd, 0);
+      return formatUsdPretty(tx.reserveUsd, 0);
     },
     volume() {
-      if (!this.last24hTransactions.length) return '0';
-      return formatAmountPretty(
+      if (!this.last24hTransactions.length) return '$0';
+      return formatUsdPretty(
         this.last24hTransactions.reduce(
           (acc, tx) => acc.plus(tx.txUsdValue || 0),
           new BigNumber(0),
@@ -164,8 +167,8 @@ export default defineComponent({
       );
     },
     fees() {
-      if (!this.last24hTransactions.length) return '0';
-      return formatAmountPretty(
+      if (!this.last24hTransactions.length) return '$0';
+      return formatUsdPretty(
         this.last24hTransactions.reduce((acc, tx) => acc.plus(tx.txUsdFee || 0), new BigNumber(0)),
         0,
       );

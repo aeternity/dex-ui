@@ -198,10 +198,16 @@ export const shortenAddress = (address, lengthStart = 6, lengthEnd = 3) =>
   address ? `${address.slice(0, lengthStart)}...${address.slice(-lengthEnd)}` : '';
 
 export const formatAmountPretty = (amount, decimals) => {
+  if (amount === null) return 'N/A';
   const formattedAmount = new BigNumber(amount).div(new BigNumber(10).pow(decimals)).abs();
   return formattedAmount
     .toFixed(Math.max(0, 5 - formattedAmount.toFixed(0).length))
     .replace(/\.0*$/, '') // remove trailing .0
     .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') // add 000,000 seperator
     .replace(/(\.\d*[1-9])0+$/, '$1'); // move to 0.0001 instead of 0.00010000
+};
+
+export const formatUsdPretty = (amount, decimals) => {
+  const formattedAmount = formatAmountPretty(amount, decimals);
+  return formattedAmount === 'N/A' ? formattedAmount : `$${formattedAmount}`;
 };
