@@ -167,13 +167,22 @@ export default {
       return pairs;
     },
 
-    async fetchHistory({ dispatch }, options) {
+    async fetchHistoryByPair({ dispatch }, options) {
       const queryString = new URLSearchParams({
         limit: 100,
         offset: 0,
         ...options,
       }).toString();
-      return dispatch('safeFetch', { url: `history/liquidity?${queryString}` });
+      return dispatch('safeFetch', { url: `history?${queryString}` });
+    },
+
+    async fetchHistoryByToken({ dispatch }, options) {
+      const queryString = new URLSearchParams({
+        limit: 100,
+        offset: 0,
+        ...options,
+      }).toString();
+      return dispatch('safeFetch', { url: `history?${queryString}` });
     },
   },
 };

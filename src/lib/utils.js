@@ -198,7 +198,7 @@ export const shortenAddress = (address, lengthStart = 6, lengthEnd = 3) =>
   address ? `${address.slice(0, lengthStart)}...${address.slice(-lengthEnd)}` : '';
 
 export const formatAmountPretty = (amount, decimals) => {
-  if (amount === null) return 'N/A';
+  if (amount === null || new BigNumber(amount).isNaN()) return 'N/A';
   const formattedAmount = new BigNumber(amount).div(new BigNumber(10).pow(decimals)).abs();
   return formattedAmount
     .toFixed(Math.max(0, 5 - formattedAmount.toFixed(0).length))

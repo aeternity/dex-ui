@@ -13,14 +13,14 @@
           <ButtonDefault
             fill="light"
             class="w-full"
-            @click="$router.push({ name: 'swap', query: { from: 'AE', to: pairId } })"
+            @click="$router.push({ name: 'swap', query: { from: 'AE', to: undefined } })"
           >
             {{ $t('poolDetail.swap') }}
           </ButtonDefault>
           <ButtonDefault
             fill="light"
             class="whitespace-nowrap"
-            @click="$router.push({ name: 'pool', params: { id: pairId } })"
+            @click="$router.push({ name: 'pool', params: { id: undefined } })"
           >
             {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
@@ -154,13 +154,13 @@ export default defineComponent({
     tvl() {
       const tx = this.history[this.history.length - 1];
       if (!tx || !this.pair) return '0';
-      return formatUsdPretty(tx.reserveUsd, 0);
+      return formatUsdPretty(new BigNumber(tx.reserve0Usd).plus(tx.reserve1Usd), 0);
     },
     volume() {
       if (!this.last24hTransactions.length) return '$0';
       return formatUsdPretty(
         this.last24hTransactions.reduce(
-          (acc, tx) => acc.plus(tx.txUsdValue || 0),
+          (acc, tx) => acc.plus(tx.delta0UsdValue || 0).plus(tx.delta1UsdValue || 0),
           new BigNumber(0),
         ),
         0,
@@ -184,6 +184,7 @@ export default defineComponent({
     graphData() {
       return this.history.reduce(
         (acc, tx) => {
+          // Price 0/1
           acc.datasets[0].data = [
             ...acc.datasets[0].data,
             new BigNumber(tx.reserve0)
@@ -191,6 +192,7 @@ export default defineComponent({
               .div(new BigNumber(tx.reserve1).div(BigNumber(10).pow(this.pair.token1.decimals)))
               .toString(),
           ].map((d) => d || 0);
+          // Price 1/0
           acc.datasets[1].data = [
             ...(acc.datasets[1].data || []),
             new BigNumber(tx.reserve1)
@@ -198,9 +200,18 @@ export default defineComponent({
               .div(new BigNumber(tx.reserve0).div(BigNumber(10).pow(this.pair.token0.decimals)))
               .toString(),
           ].map((d) => d || 0);
-          acc.datasets[2].data = [...acc.datasets[2].data, tx.reserveUsd].map((d) => d || 0);
+          // TVL
+          acc.datasets[2].data = [
+            ...acc.datasets[2].data,
+            new BigNumber(tx.reserve0Usd).plus(tx.reserve1Usd).toString(),
+          ].map((d) => d || 0);
+          // Fee
           acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee].map((d) => d || 0);
-          acc.datasets[4].data = [...acc.datasets[4].data, tx.txUsdValue].map((d) => d || 0);
+          // TX USD Value
+          acc.datasets[4].data = [
+            ...acc.datasets[4].data,
+            new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue).toString(),
+          ].map((d) => d || 0);
           acc.x = [...acc.x, tx.microBlockTime];
           return acc;
         },
@@ -242,7 +253,7 @@ export default defineComponent({
     });
 
     // Fetch pair price history
-    this.history = await this.$store.dispatch('backend/fetchHistory', {
+    this.history = await this.$store.dispatch('backend/fetchHistoryByPair', {
       pairAddress: this.pairId,
     });
   },
