@@ -1,5 +1,5 @@
 <template>
-  <BaseTable :columns="columns" :data="pairsTableData" />
+  <BaseTable :columns="columns" :rows="pairsTableData" />
 </template>
 
 <script>
