@@ -49,7 +49,7 @@
     <div class="border-2 border-gray-800"></div>
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Pools</h2>
-      <PoolTable></PoolTable>
+      <PairTable :pairs="pairList"></PairTable>
     </div>
 
     <div class="border-2 border-gray-800"></div>
@@ -79,11 +79,11 @@ import BigNumber from 'bignumber.js';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import { mapGetters } from 'vuex';
 import InfoElement from '@/components/explore/InfoElement.vue';
-import PoolTable from '@/components/explore/PoolTable.vue';
+import PairTable from '@/components/explore/PairTable.vue';
 
 export default defineComponent({
   components: {
-    PoolTable,
+    PairTable,
     InfoElement,
     TransactionTable,
     PriceHistoryGraph,
@@ -176,6 +176,9 @@ export default defineComponent({
           token1: this.pairMap.get(tx.pairAddress).token1,
         }));
     },
+    pairList() {
+      return [...this.pairMap.values()];
+    },
     supply() {
       return formatAmountPretty(this.metaInfo.event_supply, this.metaInfo.decimals);
     },
@@ -266,6 +269,8 @@ export default defineComponent({
     this.history = await this.$store.dispatch('backend/fetchHistoryByToken', {
       tokenAddress: this.tokenId,
     });
+
+    // TODO fetch the tokens pairs from the new pair endpoint
   },
   methods: {
     shortenAddress,
