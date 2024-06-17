@@ -12,7 +12,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="tx in transactions" :key="tx.transactionHash" class="border-b border-b-gray-700">
+        <tr
+          v-for="tx in transactionsPaginated"
+          :key="tx.transactionHash"
+          class="border-b border-b-gray-700"
+        >
           <th
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -22,19 +26,19 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              {{ typeToText(tx.type, tx.deltaReserve0, tx.deltaReserve1) }}
+              {{ typeToText(tx) }}
             </a>
           </th>
           <td class="px-6 py-4">
             {{ formatUsdPretty(new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue), 0) }}
           </td>
           <td class="px-6 py-4">
-            {{ formatAmountPretty(tx.deltaReserve0, token0.decimals) }}
-            {{ token0.symbol }}
+            {{ formatAmountPretty(tx.deltaReserve0, tx.token0.decimals) }}
+            {{ tx.token0.symbol }}
           </td>
           <td class="px-6 py-4">
-            {{ formatAmountPretty(tx.deltaReserve1, token1.decimals) }}
-            {{ token1.symbol }}
+            {{ formatAmountPretty(tx.deltaReserve1, tx.token1.decimals) }}
+            {{ tx.token1.symbol }}
           </td>
           <td class="px-6 py-4">
             <a
@@ -57,6 +61,25 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="transactions.length > 0">
+      <div class="flex justify-end gap-4 p-4">
+        <ButtonDefault fill="transparent" :disabled="page === 0" @click="setFirstPage">
+          First
+        </ButtonDefault>
+        <ButtonDefault fill="transparent" :disabled="page === 0" @click="prevPage">
+          Previous
+        </ButtonDefault>
+        <div class="py-2 px-1">
+          {{ page + 1 }}
+        </div>
+        <ButtonDefault fill="transparent" :disabled="lastPage" @click="nextPage">
+          Next
+        </ButtonDefault>
+        <ButtonDefault fill="transparent" :disabled="lastPage" @click="setLastPage">
+          Last
+        </ButtonDefault>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -66,10 +89,11 @@ import { mapGetters } from 'vuex';
 import ExternalLinkIcon from '@/assets/external-link.svg';
 import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
 import BigNumber from 'bignumber.js';
+import ButtonDefault from '@/components/ButtonDefault.vue';
 
 export default {
   name: 'TransactionTable',
-  components: { ExternalLinkIcon },
+  components: { ButtonDefault, ExternalLinkIcon },
   props: {
     transactions: {
       type: Array,
@@ -77,24 +101,53 @@ export default {
     },
     token0: {
       type: Object,
-      required: true,
+      required: false,
+      default: () => ({
+        symbol: '',
+      }),
     },
     token1: {
       type: Object,
-      required: true,
+      required: false,
+      default: () => ({
+        symbol: '',
+      }),
     },
+  },
+  data() {
+    return {
+      page: 0,
+    };
   },
   computed: {
     ...mapGetters(['activeNetwork']),
+    transactionsPaginated() {
+      return this.transactions.slice(this.page * 10, this.page * 10 + 10);
+    },
+    lastPage() {
+      return this.page * 10 + 10 >= this.transactions.length;
+    },
   },
   methods: {
+    nextPage() {
+      if (!this.lastPage) this.page += 1;
+    },
+    prevPage() {
+      if (this.page > 0) this.page -= 1;
+    },
+    setFirstPage() {
+      this.page = 0;
+    },
+    setLastPage() {
+      this.page = Math.floor(this.transactions.length / 10);
+    },
     BigNumber,
     formatUsdPretty,
     shortenAddress,
     formatDistance,
     formatAmountPretty,
-    typeToText(eventType, delta0) {
-      switch (eventType) {
+    typeToText(tx) {
+      switch (tx.type) {
         case 'CreatePair':
           return 'Create Pair';
         case 'PairMint':
@@ -102,9 +155,9 @@ export default {
         case 'PairBurn':
           return 'Remove Liquidity';
         case 'SwapTokens':
-          return `Swap ${delta0 < 0 ? this.token1.symbol : this.token0.symbol} for ${delta0 > 0 ? this.token1.symbol : this.token0.symbol}`;
+          return `Swap ${tx.deltaReserve0 < 0 ? tx.token1.symbol : tx.token0.symbol} for ${tx.deltaReserve0 > 0 ? tx.token1.symbol : tx.token0.symbol}`;
         default:
-          return eventType;
+          return tx.type;
       }
     },
   },
@@ -114,5 +167,10 @@ export default {
 svg {
   width: 16px;
   height: 16px;
+}
+
+.button-default {
+  padding: 8px 16px;
+  font-size: 16px;
 }
 </style>
