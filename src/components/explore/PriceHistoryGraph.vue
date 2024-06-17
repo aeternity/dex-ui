@@ -164,7 +164,7 @@ export default {
           ? Math.min(...filteredTime)
           : Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame];
 
-      if (['TVL', 'Volume', 'Fees'].includes(this.selectedChart)) {
+      if (['TVL', 'Volume', 'Fees', 'Locked'].includes(this.selectedChart)) {
         // these three charts are bar charts, so we need to calculate buckets
         const bucketSize = (Date.now() - minTime) / 30;
 
@@ -191,7 +191,7 @@ export default {
         }, emptyBuckets);
         let bucketedData;
         // interpolate TVL
-        if (this.selectedChart === 'TVL') {
+        if (['TVL', 'Locked'].includes(this.selectedChart)) {
           // average TVL
           let prevArr = [];
           bucketedData = Object.fromEntries(
@@ -250,7 +250,7 @@ export default {
       };
     },
     showBar() {
-      return ['TVL', 'Volume', 'Fees'].includes(this.selectedChart);
+      return ['TVL', 'Volume', 'Fees', 'Locked'].includes(this.selectedChart);
     },
   },
   methods: {

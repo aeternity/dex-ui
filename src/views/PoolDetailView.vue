@@ -144,7 +144,14 @@ export default defineComponent({
   computed: {
     ...mapGetters(['activeNetwork']),
     reversedTransactions() {
-      return this.history.slice().reverse();
+      return this.history
+        .slice()
+        .reverse()
+        .map((tx) => ({
+          ...tx,
+          token0: this.pair.token0,
+          token1: this.pair.token1,
+        }));
     },
     last24hTransactions() {
       return this.reversedTransactions.filter(

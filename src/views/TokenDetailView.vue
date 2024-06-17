@@ -26,16 +26,27 @@
           </ButtonDefault>
         </div>
         <div>
+          <StatElement title="Price" :value="price" />
           <StatElement title="TVL" :value="tvl" />
+          <StatElement title="Locked" :value="`${locked} ${metaInfo.symbol}`" />
           <StatElement title="Total Supply" :value="`${supply} ${metaInfo.symbol}`" />
+          <StatElement title="FDV" :value="fdv" />
           <StatElement title="Volume (24h)" :value="volume" />
-          <StatElement title="Fees (24h)" :value="fees" />
         </div>
         <div>
           <!-- TODO add links here -->
         </div>
       </div>
     </div>
+    <div class="border-2 border-gray-800"></div>
+    <div>
+      <h2 class="text-2xl text-left p-4 pb-0">Transactions</h2>
+      <TransactionTable
+        v-if="metaInfo && reversedTransactions && pairMap.size > 0"
+        :transactions="reversedTransactions"
+      ></TransactionTable>
+    </div>
+
     <!-- Graph that shows price over time -->
     <!-- Stats -->
     <!-- List of transactions -->
@@ -49,15 +60,29 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
-import { formatAmountPretty } from '@/lib/utils';
+import { formatAmountPretty, formatUsdPretty } from '@/lib/utils';
 import BigNumber from 'bignumber.js';
+import TransactionTable from '@/components/explore/TransactionTable.vue';
 
 export default defineComponent({
-  components: { PriceHistoryGraph, StatElement, ButtonDefault, AddressAvatar, ExploreWrapper },
+  components: {
+    TransactionTable,
+    PriceHistoryGraph,
+    StatElement,
+    ButtonDefault,
+    AddressAvatar,
+    ExploreWrapper,
+  },
   data() {
     return {
       tokenId: null,
       history: [],
+      pairs: {
+        pairs0: [],
+        pairs1: [],
+      },
+      pairMap: new Map(),
+      tokenIdMap: new Map(),
       metaInfo: {
         decimals: 0,
         name: '',
@@ -73,25 +98,28 @@ export default defineComponent({
   },
   computed: {
     graphData() {
+      let reserve = new BigNumber(0);
       return this.history.reduce(
         (acc, tx) => {
-          acc.datasets[0].data = [
-            ...acc.datasets[0].data,
-            new BigNumber(tx.reserve0)
-              .div(BigNumber(10).pow(this.pair.token0.decimals))
-              .div(new BigNumber(tx.reserve1).div(BigNumber(10).pow(this.pair.token1.decimals)))
-              .toString(),
-          ].map((d) => d || 0);
+          reserve = reserve.plus(this.getDeltaReserve(tx));
+          acc.datasets[0].data = [...acc.datasets[0].data, this.getUsdPrice(tx)].map((d) => d || 0);
           acc.datasets[1].data = [
-            ...(acc.datasets[1].data || []),
-            new BigNumber(tx.reserve1)
-              .div(BigNumber(10).pow(this.pair.token1.decimals))
-              .div(new BigNumber(tx.reserve0).div(BigNumber(10).pow(this.pair.token0.decimals)))
-              .toString(),
+            ...acc.datasets[1].data,
+            new BigNumber(reserve)
+              .multipliedBy(this.getUsdPrice(tx))
+              .div(new BigNumber(10).pow(this.metaInfo.decimals)),
           ].map((d) => d || 0);
-          acc.datasets[2].data = [...acc.datasets[2].data, tx.reserveUsd].map((d) => d || 0);
-          acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee].map((d) => d || 0);
-          acc.datasets[4].data = [...acc.datasets[4].data, tx.txUsdValue].map((d) => d || 0);
+          acc.datasets[2].data = [
+            ...acc.datasets[2].data,
+            new BigNumber(reserve).div(new BigNumber(10).pow(this.metaInfo.decimals)),
+          ].map((d) => d || 0);
+          acc.datasets[3].data = [
+            ...acc.datasets[3].data,
+            new BigNumber(this.getDeltaReserve(tx))
+              .abs()
+              .multipliedBy(this.getUsdPrice(tx))
+              .div(new BigNumber(10).pow(this.metaInfo.decimals)),
+          ].map((d) => d || 0);
           acc.x = [...acc.x, tx.microBlockTime];
           return acc;
         },
@@ -99,7 +127,7 @@ export default defineComponent({
           x: [],
           datasets: [
             {
-              label: `Price`,
+              label: 'Price',
               data: [],
             },
             {
@@ -107,7 +135,7 @@ export default defineComponent({
               data: [],
             },
             {
-              label: 'Fees',
+              label: 'Locked',
               data: [],
             },
             {
@@ -118,14 +146,66 @@ export default defineComponent({
         },
       );
     },
+    reversedTransactions() {
+      return this.history
+        .slice()
+        .reverse()
+        .map((tx) => ({
+          ...tx,
+          token0: this.pairMap.get(tx.pairAddress).token0,
+          token1: this.pairMap.get(tx.pairAddress).token1,
+        }));
+    },
     supply() {
       return formatAmountPretty(this.metaInfo.event_supply, this.metaInfo.decimals);
     },
+    priceRaw() {
+      // latest 20 history events
+      const latestHistoryEntries = this.history.slice(-5);
+      // average the price of the last events
+      const historicPriceEntries = latestHistoryEntries
+        .map((historyElement) => this.getUsdPrice(historyElement))
+        .filter((price) => !!price);
+      return historicPriceEntries
+        .reduce((a, b) => a.plus(b), BigNumber(0))
+        .div(historicPriceEntries.length);
+    },
+    price() {
+      return formatUsdPretty(this.priceRaw, 0);
+    },
+    lockedRaw() {
+      return this.pairs?.pairs0
+        .map((pair) => pair.liquidityInfo.reserve0)
+        .filter((reserve) => !!reserve)
+        .reduce((a, b) => a.plus(b), BigNumber(0))
+        .plus(
+          this.pairs.pairs1
+            .map((pair) => pair.liquidityInfo.reserve1)
+            .filter((reserve) => !!reserve)
+            .reduce((a, b) => a.plus(b), BigNumber(0)),
+        )
+        .div(new BigNumber(10).pow(this.metaInfo.decimals));
+    },
+    locked() {
+      return formatAmountPretty(this.lockedRaw, 0);
+    },
     tvl() {
-      return 0;
+      return formatUsdPretty(new BigNumber(this.lockedRaw).multipliedBy(this.priceRaw), 0);
+    },
+    fdv() {
+      console.log(new BigNumber(this.metaInfo.event_supply).toNumber());
+      return formatUsdPretty(
+        new BigNumber(this.metaInfo.event_supply).multipliedBy(this.priceRaw).toString(),
+        this.metaInfo.decimals,
+      );
     },
     volume() {
-      return 0;
+      return formatUsdPretty(
+        this.history
+          .filter((tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000)
+          .reduce((acc, tx) => acc.plus(this.getUsdPrice(tx)), new BigNumber(0)),
+        0,
+      );
     },
     fees() {
       return 0;
@@ -135,41 +215,92 @@ export default defineComponent({
     // extract param from URL
     this.tokenId = this.$route.params.id;
 
+    this.metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
+    this.pairs = await this.$store.dispatch('backend/fetchPairsByToken', this.tokenId);
+
+    this.pairMap = new Map([
+      ...this.pairs.pairs0.map((pair) => [
+        pair.address,
+        {
+          ...pair,
+          token0: this.metaInfo,
+          token1: pair.oppositeToken,
+        },
+      ]),
+      ...this.pairs.pairs1.map((pair) => [
+        pair.address,
+        {
+          ...pair,
+          token0: pair.oppositeToken,
+          token1: this.metaInfo,
+        },
+      ]),
+    ]);
+
+    this.tokenIdMap = new Map([
+      ...this.pairs.pairs0.map((pair) => [pair.address, 0]),
+      ...this.pairs.pairs1.map((pair) => [pair.address, 1]),
+    ]);
+
     // Fetch token price history
     this.history = await this.$store.dispatch('backend/fetchHistoryByToken', {
       tokenAddress: this.tokenId,
     });
-
-    this.metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
-
-    // todo fetch mdw data about token (total supply, etc)
+  },
+  methods: {
+    getReserve(historyEntry) {
+      if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
+        return historyEntry.reserve0;
+      }
+      return historyEntry.reserve1;
+    },
+    getDeltaReserve(historyEntry) {
+      if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
+        return historyEntry.deltaReserve0;
+      }
+      return historyEntry.deltaReserve1;
+    },
+    getTokenPrice(historyEntry) {
+      if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
+        return historyEntry.token0AePrice;
+      }
+      return historyEntry.token1AePrice;
+    },
+    getUsdPrice(historyEntry) {
+      return new BigNumber(this.getTokenPrice(historyEntry)).multipliedBy(historyEntry.aeUsdPrice);
+    },
   },
 });
 </script>
 <style lang="scss" scoped>
 .logo {
   margin-right: 10px;
+
   img {
     width: 45px;
     height: 45px;
   }
 }
+
 .header {
   display: flex;
   align-items: center;
   flex-direction: row;
   margin-bottom: 20px;
+
   h1 {
     font-size: 24px;
     font-weight: 500;
   }
 }
+
 .button-default {
   margin-top: 20px;
   padding: 16px;
   font-size: 20px;
   width: 100%;
 }
+
 svg {
   width: 18px;
   height: 18px;
