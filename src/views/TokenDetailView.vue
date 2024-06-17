@@ -5,7 +5,7 @@
       <h1 class="text-2xl">{{ metaInfo?.symbol }} / {{ metaInfo?.name }}</h1>
     </div>
     <div class="flex">
-      <div class="flex-1 flex-auto p-6">
+      <div class="flex-auto p-6">
         <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" />
       </div>
       <div class="flex flex-col flex-auto mr-4">
@@ -46,11 +46,25 @@
         :transactions="reversedTransactions"
       ></TransactionTable>
     </div>
+    <div class="border-2 border-gray-800"></div>
+    <div>
+      <h2 class="text-2xl text-left p-4 pb-0">Pools</h2>
+      <PoolTable></PoolTable>
+    </div>
 
-    <!-- Graph that shows price over time -->
-    <!-- Stats -->
-    <!-- List of transactions -->
-    <!-- List of pools -->
+    <div class="border-2 border-gray-800"></div>
+    <div>
+      <h2 class="text-2xl text-left p-4 pb-0">Token Information</h2>
+      <div class="flex flex-row gap-12 w-full text-left p-4">
+        <InfoElement title="Token Name" :value="metaInfo.name" />
+        <InfoElement title="Token Symbol" :value="metaInfo.symbol" />
+        <InfoElement
+          title="Contract Address"
+          :value="shortenAddress(tokenId)"
+          :link="`${activeNetwork.explorerUrl}/contracts/${tokenId}`"
+        />
+      </div>
+    </div>
   </ExploreWrapper>
 </template>
 <script>
@@ -60,12 +74,17 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
-import { formatAmountPretty, formatUsdPretty } from '@/lib/utils';
+import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
 import BigNumber from 'bignumber.js';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
+import { mapGetters } from 'vuex';
+import InfoElement from '@/components/explore/InfoElement.vue';
+import PoolTable from '@/components/explore/PoolTable.vue';
 
 export default defineComponent({
   components: {
+    PoolTable,
+    InfoElement,
     TransactionTable,
     PriceHistoryGraph,
     StatElement,
@@ -97,6 +116,7 @@ export default defineComponent({
     };
   },
   computed: {
+    ...mapGetters(['activeNetwork']),
     graphData() {
       let reserve = new BigNumber(0);
       return this.history.reduce(
@@ -248,6 +268,7 @@ export default defineComponent({
     });
   },
   methods: {
+    shortenAddress,
     getReserve(historyEntry) {
       if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
         return historyEntry.reserve0;
@@ -299,11 +320,5 @@ export default defineComponent({
   padding: 16px;
   font-size: 20px;
   width: 100%;
-}
-
-svg {
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
 }
 </style>

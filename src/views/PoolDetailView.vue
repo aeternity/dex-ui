@@ -55,58 +55,22 @@
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Pair Information</h2>
       <div class="flex flex-row gap-12 w-full text-left p-4">
-        <div>
-          <div>Pair Name</div>
-          <div>{{ pair?.token0.symbol }} / {{ pair?.token1.symbol }}</div>
-        </div>
-        <div>
-          <div>Pair Address</div>
-          <div>
-            <a
-              v-if="activeNetwork"
-              class="flex gap-2"
-              :href="`${activeNetwork.explorerUrl}/contracts/${pairId}`"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ shortenAddress(pairId) }}
-              <ExternalLinkIcon aria-hidden="true" />
-              <span class="sr-only">External link</span>
-            </a>
-          </div>
-        </div>
-        <div>
-          <div>{{ pair?.token0?.symbol }} Address</div>
-          <div>
-            <a
-              v-if="activeNetwork"
-              class="flex gap-2"
-              :href="`${activeNetwork.explorerUrl}/contracts/${pair?.token0?.address}`"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ shortenAddress(pair?.token0?.address) }}
-              <ExternalLinkIcon aria-hidden="true" />
-              <span class="sr-only">External link</span>
-            </a>
-          </div>
-        </div>
-        <div>
-          <div>{{ pair?.token1?.symbol }} Address</div>
-          <div>
-            <a
-              v-if="activeNetwork"
-              class="flex gap-2"
-              :href="`${activeNetwork.explorerUrl}/contracts/${pair?.token1?.address}`"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ shortenAddress(pair?.token1?.address) }}
-              <ExternalLinkIcon aria-hidden="true" />
-              <span class="sr-only">External link</span>
-            </a>
-          </div>
-        </div>
+        <InfoElement title="Pair Name" :value="`${pair?.token0.symbol} / ${pair?.token1.symbol}`" />
+        <InfoElement
+          title="Pair Address"
+          :value="shortenAddress(pairId)"
+          :link="`${activeNetwork.explorerUrl}/contracts/${pairId}`"
+        />
+        <InfoElement
+          :title="`${pair.token0.symbol} Address`"
+          :value="shortenAddress(pair?.token0?.address)"
+          :link="`${activeNetwork.explorerUrl}/contracts/${pair?.token0?.address}`"
+        />
+        <InfoElement
+          :title="`${pair.token1.symbol} Address`"
+          :value="shortenAddress(pair?.token1?.address)"
+          :link="`${activeNetwork.explorerUrl}/contracts/${pair?.token1?.address}`"
+        />
       </div>
     </div>
   </ExploreWrapper>
@@ -120,14 +84,14 @@ import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
 import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
 import { mapGetters } from 'vuex';
-import ExternalLinkIcon from '@/assets/external-link.svg';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import BigNumber from 'bignumber.js';
+import InfoElement from '@/components/explore/InfoElement.vue';
 
 export default defineComponent({
   components: {
+    InfoElement,
     TransactionTable,
-    ExternalLinkIcon,
     StatElement,
     ButtonDefault,
     PriceHistoryGraph,
@@ -290,10 +254,5 @@ export default defineComponent({
   padding: 16px;
   font-size: 20px;
   width: 100%;
-}
-svg {
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
 }
 </style>
