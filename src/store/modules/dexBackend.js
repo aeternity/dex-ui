@@ -177,12 +177,29 @@ export default {
     },
 
     async fetchHistoryByToken({ dispatch }, options) {
-      const queryString = new URLSearchParams({
-        limit: 100,
-        offset: 0,
-        ...options,
-      }).toString();
-      return dispatch('safeFetch', { url: `history?${queryString}` });
+      // fetch the full history with all pages
+      let history = [];
+      let offset = 0;
+      const limit = 100;
+      let page;
+      do {
+        const queryString = new URLSearchParams({
+          limit,
+          offset,
+          ...options,
+        }).toString();
+        // eslint-disable-next-line no-await-in-loop
+        page = await dispatch('safeFetch', { url: `history?${queryString}` });
+        if (!page) break;
+        history = history.concat(page);
+        offset += limit;
+      } while (page.length === limit);
+
+      return history;
+    },
+
+    async fetchPairsByToken({ dispatch }, tokenId) {
+      return dispatch('safeFetch', { url: `tokens/by-address/${tokenId}/pairs` });
     },
   },
 };
