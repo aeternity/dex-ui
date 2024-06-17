@@ -23,7 +23,7 @@
         </tr>
       </tbody>
     </table>
-    <div v-if="rows.length > 0">
+    <div v-if="rows.length > 10">
       <div class="flex justify-end gap-4 p-4">
         <ButtonDefault fill="transparent" :disabled="page === 0" @click="setFirstPage">
           First
