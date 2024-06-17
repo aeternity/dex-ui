@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      columns: [{ key: 'pair', label: 'Pair' }],
+      columns: [{ key: 'pair', label: '' }],
     };
   },
   computed: {
