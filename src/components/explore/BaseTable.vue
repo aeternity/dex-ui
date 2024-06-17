@@ -23,7 +23,7 @@
         </tr>
       </tbody>
     </table>
-    <div v-if="data.length > 0">
+    <div v-if="rows.length > 0">
       <div class="flex justify-end gap-4 p-4">
         <ButtonDefault fill="transparent" :disabled="page === 0" @click="setFirstPage">
           First
@@ -58,7 +58,7 @@ export default {
       type: Array,
       required: true,
     },
-    data: {
+    rows: {
       type: Array,
       required: true,
     },
@@ -71,10 +71,10 @@ export default {
   computed: {
     ...mapGetters(['activeNetwork']),
     dataPaginated() {
-      return this.data.slice(this.page * 10, this.page * 10 + 10);
+      return this.rows.slice(this.page * 10, this.page * 10 + 10);
     },
     lastPage() {
-      return this.page * 10 + 10 >= this.data.length;
+      return this.page * 10 + 10 >= this.rows.length;
     },
     nonHeaderColumns() {
       return this.columns.slice(1);
@@ -91,7 +91,7 @@ export default {
       this.page = 0;
     },
     setLastPage() {
-      this.page = Math.floor(this.transactions.length / 10);
+      this.page = Math.floor(this.rows.length / 10);
     },
   },
 };

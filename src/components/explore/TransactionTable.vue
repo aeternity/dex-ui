@@ -1,5 +1,5 @@
 <template>
-  <BaseTable :data="transactionsTableData" :columns="columns" />
+  <BaseTable :rows="transactionsTableData" :columns="columns" />
 </template>
 
 <script>

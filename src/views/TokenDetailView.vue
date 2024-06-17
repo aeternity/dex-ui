@@ -188,7 +188,8 @@ export default defineComponent({
       // average the price of the last events
       const historicPriceEntries = latestHistoryEntries
         .map((historyElement) => this.getUsdPrice(historyElement))
-        .filter((price) => !!price);
+        .filter((price) => !price.isNaN());
+
       return historicPriceEntries
         .reduce((a, b) => a.plus(b), BigNumber(0))
         .div(historicPriceEntries.length);
@@ -216,7 +217,6 @@ export default defineComponent({
       return formatUsdPretty(new BigNumber(this.lockedRaw).multipliedBy(this.priceRaw), 0);
     },
     fdv() {
-      console.log(new BigNumber(this.metaInfo.event_supply).toNumber());
       return formatUsdPretty(
         new BigNumber(this.metaInfo.event_supply).multipliedBy(this.priceRaw).toString(),
         this.metaInfo.decimals,
