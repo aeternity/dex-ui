@@ -134,10 +134,12 @@ export default {
     filteredData() {
       const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
       return {
-        filteredData: selectedDataSet.data.filter(
-          (_, i) =>
-            this.x[i] > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
-        ),
+        filteredData: selectedDataSet.data
+          .filter(
+            (_, i) =>
+              this.x[i] > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame],
+          )
+          .filter((d) => !new BigNumber(d).isNaN()),
         filteredTime: this.x
           .filter((d) => d > Date.now() - 1000 * 60 * 60 * this.timeFrames[this.selectedTimeFrame])
           .map((d) => Number(d)),
