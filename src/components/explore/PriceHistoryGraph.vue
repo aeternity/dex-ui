@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-2 mb-3">
+  <div v-if="labels.length > 1" class="flex gap-2 mb-3">
     <ButtonDefault
       v-for="label in labels"
       :key="label"
@@ -84,11 +84,13 @@ export default {
   props: {
     datasets: { type: Array, required: true },
     x: { type: Array, required: true },
+    initialChart: { type: String, default: 'Volume' },
+    initialTimeFrame: { type: String, default: 'MAX' },
   },
   data() {
     return {
-      selectedTimeFrame: 'MAX',
-      selectedChart: 'Volume',
+      selectedTimeFrame: null,
+      selectedChart: null,
       colors: ['red', 'green', 'blue', 'purple', 'orange'],
       timeFrames: TIME_FRAMES,
     };
@@ -133,6 +135,7 @@ export default {
     },
     filteredData() {
       const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
+      console.log(selectedDataSet, this.datasets, this.selectedChart);
       return {
         filteredData: selectedDataSet.data
           .filter(
@@ -254,6 +257,10 @@ export default {
     showBar() {
       return ['TVL', 'Volume', 'Fees', 'Locked'].includes(this.selectedChart);
     },
+  },
+  created() {
+    this.selectedTimeFrame = this.initialTimeFrame;
+    this.selectedChart = this.initialChart;
   },
   methods: {
     changeTimeFrame(newTimeFrame) {
