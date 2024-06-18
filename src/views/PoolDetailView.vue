@@ -62,12 +62,12 @@
           :link="`${activeNetwork.explorerUrl}/contracts/${pairId}`"
         />
         <InfoElement
-          :title="`${pair.token0.symbol} Address`"
+          :title="`${pair?.token0.symbol} Address`"
           :value="shortenAddress(pair?.token0?.address)"
           :link="`${activeNetwork.explorerUrl}/contracts/${pair?.token0?.address}`"
         />
         <InfoElement
-          :title="`${pair.token1.symbol} Address`"
+          :title="`${pair?.token1.symbol} Address`"
           :value="shortenAddress(pair?.token1?.address)"
           :link="`${activeNetwork.explorerUrl}/contracts/${pair?.token1?.address}`"
         />
@@ -230,7 +230,7 @@ export default defineComponent({
     });
 
     // Fetch pair price history
-    this.history = await this.$store.dispatch('backend/fetchHistoryByPair', {
+    this.history = await this.$store.dispatch('backend/fetchHistory', {
       pairAddress: this.pairId,
     });
   },

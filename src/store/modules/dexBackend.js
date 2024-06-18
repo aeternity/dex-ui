@@ -167,20 +167,11 @@ export default {
       return pairs;
     },
 
-    async fetchHistoryByPair({ dispatch }, options) {
-      const queryString = new URLSearchParams({
-        limit: 100,
-        offset: 0,
-        ...options,
-      }).toString();
-      return dispatch('safeFetch', { url: `history?${queryString}` });
-    },
-
-    async fetchHistoryByToken({ dispatch }, options) {
+    async fetchHistory({ dispatch }, options) {
       // fetch the full history with all pages
       let history = [];
       let offset = 0;
-      const limit = 100;
+      const limit = 9999999;
       let page;
       do {
         const queryString = new URLSearchParams({
