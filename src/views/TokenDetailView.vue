@@ -133,13 +133,17 @@ export default defineComponent({
             ...acc.datasets[2].data,
             new BigNumber(reserve).div(new BigNumber(10).pow(this.metaInfo.decimals)),
           ].map((d) => d || 0);
-          acc.datasets[3].data = [
-            ...acc.datasets[3].data,
-            new BigNumber(this.getDeltaReserve(tx))
-              .abs()
-              .multipliedBy(this.getUsdPrice(tx))
-              .div(new BigNumber(10).pow(this.metaInfo.decimals)),
-          ].map((d) => d || 0);
+          if (tx.type === 'SwapTokens') {
+            acc.datasets[3].data = [
+              ...acc.datasets[3].data,
+              new BigNumber(this.getDeltaReserve(tx))
+                .abs()
+                .multipliedBy(this.getUsdPrice(tx))
+                .div(new BigNumber(10).pow(this.metaInfo.decimals)),
+            ].map((d) => d || 0);
+          } else {
+            acc.datasets[3].data = [...acc.datasets[3].data, 0];
+          }
           acc.x = [...acc.x, tx.microBlockTime];
           return acc;
         },
@@ -226,6 +230,7 @@ export default defineComponent({
       return formatUsdPretty(
         this.history
           .filter((tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000)
+          .filter((tx) => tx.type === 'SwapTokens')
           .reduce((acc, tx) => acc.plus(this.getUsdPrice(tx)), new BigNumber(0)),
         0,
       );
