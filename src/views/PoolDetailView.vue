@@ -130,10 +130,12 @@ export default defineComponent({
     volume() {
       if (!this.last24hTransactions.length) return '$0';
       return formatUsdPretty(
-        this.last24hTransactions.reduce(
-          (acc, tx) => acc.plus(tx.delta0UsdValue || 0).plus(tx.delta1UsdValue || 0),
-          new BigNumber(0),
-        ),
+        this.last24hTransactions
+          .filter((tx) => tx.type === 'SwapTokens')
+          .reduce(
+            (acc, tx) => acc.plus(tx.delta0UsdValue || 0).plus(tx.delta1UsdValue || 0),
+            new BigNumber(0),
+          ),
         0,
       );
     },
@@ -178,11 +180,15 @@ export default defineComponent({
           ].map((d) => d || 0);
           // Fee
           acc.datasets[3].data = [...acc.datasets[3].data, tx.txUsdFee].map((d) => d || 0);
-          // TX USD Value
-          acc.datasets[4].data = [
-            ...acc.datasets[4].data,
-            new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue).toString(),
-          ].map((d) => d || 0);
+          // Volume
+          if (tx.type === 'SwapTokens') {
+            acc.datasets[4].data = [
+              ...acc.datasets[4].data,
+              new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue).toString(),
+            ].map((d) => d || 0);
+          } else {
+            acc.datasets[4].data = [...acc.datasets[4].data, 0].map((d) => d || 0);
+          }
           acc.x = [...acc.x, tx.microBlockTime];
           return acc;
         },
