@@ -1,5 +1,5 @@
 <template>
-  <BaseTable :rows="transactionsTableData" :columns="columns" />
+  <BaseTable :rows="transactionsTableData" :columns="columns" :page-size="pageSize" />
 </template>
 
 <script>
@@ -30,6 +30,10 @@ export default {
       default: () => ({
         symbol: '',
       }),
+    },
+    pageSize: {
+      type: Number,
+      default: 10,
     },
   },
   data() {
