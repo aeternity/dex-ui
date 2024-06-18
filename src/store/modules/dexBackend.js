@@ -156,6 +156,10 @@ export default {
       }));
     },
 
+    async getAllTokens({ dispatch }) {
+      return dispatch('safeFetch', { url: 'tokens' });
+    },
+
     async fetchPairs({ dispatch, commit }, onlyListed) {
       const pairsXs = await dispatch('safeFetch', { url: `pairs?only-listed=${!!onlyListed}` });
       if (!pairsXs) return null;

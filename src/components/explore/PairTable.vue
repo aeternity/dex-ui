@@ -1,10 +1,10 @@
 <template>
-  <BaseTable :columns="columns" :rows="pairsTableData" />
+  <BaseTable :columns="columns" :rows="pairsTableData" :page-size="pageSize" />
 </template>
 
 <script>
 import BaseTable from '@/components/explore/BaseTable.vue';
-import { mapGetters } from 'vuex';
+import { formatUsdPretty } from '@/lib/utils';
 
 export default {
   name: 'PairTable',
@@ -14,19 +14,47 @@ export default {
       type: Array,
       required: true,
     },
+    pageSize: {
+      type: Number,
+      default: 10,
+    },
   },
   data() {
     return {
-      columns: [{ key: 'pair', label: '' }],
+      columns: [
+        { key: 'pair', label: '' },
+        {
+          key: 'txs',
+          label: 'Transactions',
+        },
+        { key: 'tvl', label: 'TVL' },
+        { key: 'volumeDay', label: 'Volume (24h)' },
+        { key: 'volumeMonth', label: 'Volume (30d)' },
+        { key: 'volumeAll', label: 'Volume' },
+      ],
     };
   },
   computed: {
-    ...mapGetters(['activeNetwork']),
     pairsTableData() {
       return this.pairs.map((pair) => ({
         pair: {
           text: `${pair.token0.symbol}/${pair.token1.symbol}`,
-          link: `${this.activeNetwork.explorerUrl}/contracts/${pair.id}`,
+          link: `/explore/pools/${pair.address}`,
+        },
+        txs: {
+          text: pair.transactions,
+        },
+        tvl: {
+          text: formatUsdPretty(pair.tvlUsd, 0),
+        },
+        volumeDay: {
+          text: formatUsdPretty(pair.volumeUsdDay, 0),
+        },
+        volumeMonth: {
+          text: formatUsdPretty(pair.volumeUsdMonth, 0),
+        },
+        volumeAll: {
+          text: formatUsdPretty(pair.volumeUsdAll, 0),
         },
       }));
     },

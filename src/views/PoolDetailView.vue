@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="border-2 border-gray-800"></div>
+    <DividerLine />
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Transactions</h2>
       <TransactionTable
@@ -51,7 +51,7 @@
       ></TransactionTable>
     </div>
 
-    <div class="border-2 border-gray-800"></div>
+    <DividerLine />
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Pair Information</h2>
       <div class="flex flex-row gap-12 w-full text-left p-4">
@@ -87,9 +87,11 @@ import { mapGetters } from 'vuex';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import BigNumber from 'bignumber.js';
 import InfoElement from '@/components/explore/InfoElement.vue';
+import DividerLine from '@/components/explore/DividerLine.vue';
 
 export default defineComponent({
   components: {
+    DividerLine,
     InfoElement,
     TransactionTable,
     StatElement,
