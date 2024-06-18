@@ -271,7 +271,7 @@ export default defineComponent({
     ]);
 
     // Fetch token price history
-    this.history = await this.$store.dispatch('backend/fetchHistoryByToken', {
+    this.history = await this.$store.dispatch('backend/fetchHistory', {
       tokenAddress: this.tokenId,
     });
 
