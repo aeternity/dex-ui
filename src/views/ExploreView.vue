@@ -57,7 +57,7 @@
     </div>
     <DividerLine />
 
-    <!-- TABLE WITH TOKENS / POOLS / TX -->
+    <!-- TODO TABLE WITH TOKENS  -->
   </ExploreWrapper>
 </template>
 <script>
