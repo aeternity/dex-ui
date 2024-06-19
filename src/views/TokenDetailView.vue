@@ -6,7 +6,7 @@
     </div>
     <div class="flex">
       <div class="flex-auto p-6">
-        <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" />
+        <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" :loading="loading" />
       </div>
       <div class="flex flex-col flex-auto mr-4">
         <div class="flex flex-row space-x-2 mb-4">
@@ -120,6 +120,7 @@ export default defineComponent({
         holders: 0,
         initial_supply: 0,
       },
+      loading: false,
     };
   },
   computed: {
@@ -247,6 +248,7 @@ export default defineComponent({
     },
   },
   async mounted() {
+    this.loading = true;
     // extract param from URL
     this.tokenId = this.$route.params.id;
 
@@ -282,7 +284,7 @@ export default defineComponent({
     this.history = await this.$store.dispatch('backend/fetchHistory', {
       tokenAddress: this.tokenId,
     });
-
+    this.loading = false;
     // TODO fetch the tokens pairs from the new pair endpoint
   },
   methods: {

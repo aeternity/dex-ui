@@ -3,7 +3,13 @@
     <div class="flex flex-row p-6 gap-6 items-center">
       <div class="flex-1">
         <h1 class="text-2xl">TVL</h1>
-        <PriceHistoryGraph v-if="graphData" :x="graphData.x" :datasets="tvl" initial-chart="TVL" />
+        <PriceHistoryGraph
+          v-if="graphData"
+          :x="graphData.x"
+          :datasets="tvl"
+          initial-chart="TVL"
+          :loading="loading"
+        />
       </div>
       <div class="flex-1">
         <h1 class="text-2xl">Volume</h1>
@@ -12,6 +18,7 @@
           :x="graphData.x"
           :datasets="volume"
           initial-chart="Volume"
+          :loading="loading"
         />
       </div>
     </div>
@@ -69,7 +76,7 @@ import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import PairTable from '@/components/explore/PairTable.vue';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import DividerLine from '@/components/explore/DividerLine.vue';
-import { detectAndModifyWAE } from '@/lib/utils.js';
+import { detectAndModifyWAE } from '@/lib/utils';
 
 export default defineComponent({
   components: { DividerLine, TransactionTable, PairTable, PriceHistoryGraph, ExploreWrapper },
@@ -79,6 +86,7 @@ export default defineComponent({
       history: [],
       tokenMap: new Map(),
       activeTab: 'Pairs',
+      loading: false,
     };
   },
   computed: {
@@ -148,6 +156,7 @@ export default defineComponent({
     },
   },
   async mounted() {
+    this.loading = true;
     // fetch all tokens
     const tokens = await this.$store.dispatch('backend/getAllTokens');
     this.tokenMap = new Map(tokens.map((token) => [token.address, detectAndModifyWAE(token)]));
@@ -157,6 +166,7 @@ export default defineComponent({
 
     // fetch all history
     this.history = await this.$store.dispatch('backend/fetchHistory');
+    this.loading = false;
   },
   methods: {
     pairToToken(pairAddress) {
