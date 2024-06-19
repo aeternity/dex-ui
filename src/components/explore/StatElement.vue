@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col text-left pb-2">
+  <div class="flex flex-col text-right md:text-left pb-2">
     <div class="text-xs">{{ title }}</div>
-    <div class="flex flex-row">
+    <div class="inline-flex flex-row justify-end md:justify-start">
       <div class="text-2xl font-bold">{{ value }}</div>
       <div v-if="change" class="text-xs">{{ change }}</div>
     </div>

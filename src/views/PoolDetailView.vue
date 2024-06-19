@@ -12,11 +12,11 @@
         }}</router-link>
       </h1>
     </div>
-    <div class="flex">
-      <div class="flex-1 flex-auto p-6">
+    <div class="flex flex-col md:flex-row">
+      <div class="flex-auto p-4 md:p-6">
         <PriceHistoryGraph :loading="loading" :datasets="graphData.datasets" :x="graphData.x" />
       </div>
-      <div class="flex flex-col flex-auto mr-4">
+      <div class="flex flex-col flex-auto p-4 md:p-0 md:mr-2">
         <div class="flex flex-row space-x-2 mb-4">
           <ButtonDefault
             fill="light"
@@ -33,15 +33,19 @@
             {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
         </div>
-        <div>
-          <StatElement title="TVL" :value="tvl" />
-          <StatElement
-            title="Pool Balances"
-            :value="`${token0Amount} ${pair?.token0.symbol}`"
-            :value2="`${token1Amount} ${pair?.token1.symbol}`"
-          />
-          <StatElement title="Volume (24h)" :value="volume" />
-          <StatElement title="Fees (24h)" :value="fees" />
+        <div class="flex flex-row justify-between md:flex-col">
+          <div>
+            <StatElement title="TVL" :value="tvl" />
+            <StatElement
+              title="Pool Balances"
+              :value="`${token0Amount} ${pair?.token0.symbol}`"
+              :value2="`${token1Amount} ${pair?.token1.symbol}`"
+            />
+          </div>
+          <div>
+            <StatElement title="Volume (24h)" :value="volume" />
+            <StatElement title="Fees (24h)" :value="fees" />
+          </div>
         </div>
         <div>
           <!-- TODO add links here -->
@@ -61,11 +65,11 @@
 
     <DividerLine />
     <div>
-      <h2 class="text-2xl text-left p-4 pb-0">Pair Information</h2>
-      <div class="flex flex-row gap-12 w-full text-left p-4">
-        <InfoElement title="Pair Name" :value="`${pair?.token0.symbol} / ${pair?.token1.symbol}`" />
+      <h2 class="text-2xl text-left p-4 pb-0">Pool Information</h2>
+      <div class="flex flex-col md:flex-row gap-4 md:gap-12 w-full text-left p-4">
+        <InfoElement title="Pool Name" :value="`${pair?.token0.symbol} / ${pair?.token1.symbol}`" />
         <InfoElement
-          title="Pair Address"
+          title="Pool Address"
           :value="shortenAddress(pairId)"
           :link="`${activeNetwork.explorerUrl}/contracts/${pairId}`"
         />

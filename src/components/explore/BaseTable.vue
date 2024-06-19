@@ -1,45 +1,47 @@
 <template>
-  <div class="relative overflow-x-auto">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-400 uppercase">
-        <tr>
-          <th
-            v-for="col in columns"
-            :key="col.key"
-            scope="col"
-            :class="{
-              'px-6 py-4': true,
-              'text-right': col.align === 'right',
-            }"
-          >
-            {{ col.label }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="d in dataPaginated" :key="d.id" class="border-b border-b-gray-700">
-          <th
-            scope="row"
-            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-          >
-            <TableCell :text="d[columns[0].key].text" :link="d[columns[0].key].link" />
-          </th>
+  <div>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-400 uppercase">
+          <tr>
+            <th
+              v-for="col in columns"
+              :key="col.key"
+              scope="col"
+              :class="{
+                'px-6 py-4': true,
+                'text-right': col.align === 'right',
+              }"
+            >
+              {{ col.label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="d in dataPaginated" :key="d.id" class="border-b border-b-gray-700">
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              <TableCell :text="d[columns[0].key].text" :link="d[columns[0].key].link" />
+            </th>
 
-          <td
-            v-for="(col, index) in nonHeaderColumns"
-            :key="index"
-            :class="{
-              'px-6 py-4': true,
-              'text-right': col.align === 'right',
-            }"
-          >
-            <TableCell :text="d[col.key].text" :link="d[col.key].link" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div v-if="rows.length > pageSize">
-      <div class="flex justify-end gap-4 p-4">
+            <td
+              v-for="(col, index) in nonHeaderColumns"
+              :key="index"
+              :class="{
+                'px-6 py-4': true,
+                'text-right': col.align === 'right',
+              }"
+            >
+              <TableCell :text="d[col.key].text" :link="d[col.key].link" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div v-if="rows.length > pageSize" class="w-full">
+      <div class="flex justify-end gap-2 md:gap-4 p-4">
         <ButtonDefault fill="transparent" :disabled="page === 0" @click="setFirstPage">
           First
         </ButtonDefault>
