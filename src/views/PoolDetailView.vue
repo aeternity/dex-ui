@@ -21,14 +21,30 @@
           <ButtonDefault
             fill="light"
             class="w-full"
-            @click="$router.push({ name: 'swap', query: { from: 'AE', to: undefined } })"
+            @click="
+              $router.push({
+                name: 'swap',
+                query: {
+                  from: pair?.token0.isAe ? 'AE' : pair?.token0.address,
+                  to: pair?.token1.isAe ? 'AE' : pair?.token1.address,
+                },
+              })
+            "
           >
             {{ $t('poolDetail.swap') }}
           </ButtonDefault>
           <ButtonDefault
             fill="light"
             class="whitespace-nowrap"
-            @click="$router.push({ name: 'pool', params: { id: undefined } })"
+            @click="
+              $router.push({
+                name: 'add-pool',
+                query: {
+                  from: pair?.token0.isAe ? 'AE' : pair?.token0.address,
+                  to: pair?.token1.isAe ? 'AE' : pair?.token1.address,
+                },
+              })
+            "
           >
             {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
