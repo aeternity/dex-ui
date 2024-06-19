@@ -267,7 +267,7 @@ export default {
   watch: {
     async address(newVal) {
       if (newVal && this.pairId) {
-        await this.refreshAllowance(this.pairId, this.fetchAlowance);
+        await this.refreshAllowance(this.pairId, this.fetchAllowance);
       }
     },
   },
@@ -278,7 +278,7 @@ export default {
     this.tokenB = this.getAvailableTokens().find((t) => t.contract_id === tokenBContract);
     await this.setPairInfo();
     if (this.pairId) {
-      await this.refreshAllowance(this.pairId, this.fetchAlowance);
+      await this.refreshAllowance(this.pairId, this.fetchAllowance);
     }
   },
   methods: {
@@ -293,7 +293,7 @@ export default {
         tokenBSymbol: this.tokenB.symbol,
       });
     },
-    fetchAlowance() {
+    fetchAllowance() {
       return this.$store.dispatch('aeternity/getRouterPairAllowance', {
         tokenA: this.tokenA.contract_id,
         tokenB: this.tokenB.contract_id,
@@ -307,7 +307,7 @@ export default {
           tokenB: this.tokenB,
           amount: expandDecimals(this.poolTokenInput, 18),
         });
-        await this.safeRefreshAllowance(this.pairId, this.poolTokenInput, 18, this.fetchAlowance);
+        await this.safeRefreshAllowance(this.pairId, this.poolTokenInput, 18, this.fetchAllowance);
       } catch (e) {
         this.approved = false;
         await this.$store.dispatch('showUnknownError', e);
@@ -371,7 +371,7 @@ export default {
         await this.$store.dispatch('showUnknownError', e);
       } finally {
         await this.setPairInfo();
-        await this.refreshAllowance(this.pairId, this.fetchAlowance);
+        await this.refreshAllowance(this.pairId, this.fetchAllowance);
         this.updatePercent(0);
         this.removing = false;
       }
