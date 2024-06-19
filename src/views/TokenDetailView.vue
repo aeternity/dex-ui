@@ -259,13 +259,15 @@ export default defineComponent({
       ...metaInfo,
       address: this.tokenId,
     });
-    if (this.metaInfo.isAe) {
-      this.metaInfo = {
-        ...this.metaInfo,
-        event_supply: 0, //
-      };
-    }
+
     this.pairs = await this.$store.dispatch('backend/fetchPairsByToken', this.tokenId);
+
+    if (!this.pairs) {
+      this.loading = false;
+      // redirect to 404
+      this.$router.push({ name: 'not-found' });
+      return;
+    }
 
     this.pairMap = new Map([
       ...this.pairs.pairs0.map((pair) => [
