@@ -14,7 +14,14 @@
     <Bar v-if="showBar" :data="graphData" :options="options" />
     <Line v-else :data="graphData" :options="options" />
     <div
-      v-if="showNoData"
+      v-if="loading"
+      class="absolute flex justify-center items-center w-full h-full top-0 left-0 text-3xl"
+      @click.prevent
+    >
+      Loading...
+    </div>
+    <div
+      v-if="showNoData && !loading"
       class="absolute flex justify-center items-center w-full h-full top-0 left-0 text-3xl"
       @click.prevent
     >
@@ -86,6 +93,7 @@ export default {
     x: { type: Array, required: true },
     initialChart: { type: String, default: 'Volume' },
     initialTimeFrame: { type: String, default: 'MAX' },
+    loading: { type: Boolean, default: false },
   },
   data() {
     return {
