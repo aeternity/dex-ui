@@ -249,6 +249,13 @@ export default defineComponent({
     this.pair = await this.$store.dispatch('backend/fetchPairDetails', {
       pairAddress: this.pairId,
     });
+
+    if (!this.pair) {
+      this.loading = false;
+      // redirect to 404
+      this.$router.push({ name: 'not-found' });
+      return;
+    }
     this.pair = {
       ...this.pair,
       token0: detectAndModifyWAE(this.pair.token0),
