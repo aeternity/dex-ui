@@ -4,11 +4,11 @@
       <span v-if="tokenId" class="logo"><AddressAvatar :address="tokenId" /></span>
       <h1 class="text-2xl">{{ metaInfo?.symbol }} / {{ metaInfo?.name }}</h1>
     </div>
-    <div class="flex">
-      <div class="flex-auto p-6">
+    <div class="flex flex-col md:flex-row">
+      <div class="flex-auto p-4 md:p-6">
         <PriceHistoryGraph :datasets="graphData.datasets" :x="graphData.x" :loading="loading" />
       </div>
-      <div class="flex flex-col flex-auto mr-4">
+      <div class="flex flex-col flex-auto p-4 md:p-0 md:mr-2">
         <div class="flex flex-row space-x-2 mb-4">
           <ButtonDefault
             fill="light"
@@ -25,13 +25,17 @@
             {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
         </div>
-        <div>
-          <StatElement title="Price" :value="price" />
-          <StatElement title="TVL" :value="tvl" />
-          <StatElement title="Locked" :value="`${locked} ${metaInfo.symbol}`" />
-          <StatElement title="Total Supply" :value="`${supply} ${metaInfo.symbol}`" />
-          <StatElement title="FDV" :value="fdv" />
-          <StatElement title="Volume (24h)" :value="volume" />
+        <div class="flex flex-row justify-between md:flex-col">
+          <div>
+            <StatElement title="Price" :value="price" />
+            <StatElement title="TVL" :value="tvl" />
+            <StatElement title="Locked" :value="`${locked} ${metaInfo.symbol}`" />
+          </div>
+          <div>
+            <StatElement title="Total Supply" :value="`${supply} ${metaInfo.symbol}`" />
+            <StatElement title="FDV" :value="fdv" />
+            <StatElement title="Volume (24h)" :value="volume" />
+          </div>
         </div>
         <div>
           <!-- TODO add links here -->
