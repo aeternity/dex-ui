@@ -56,19 +56,9 @@ const routes = [
         component: ExploreView,
       },
       {
-        path: 'tokens',
-        name: 'token-list',
-        component: ExploreView,
-      },
-      {
         path: 'tokens/:id',
         name: 'token-detail',
         component: TokenDetailView,
-      },
-      {
-        path: 'pools',
-        name: 'pool-list',
-        component: ExploreView,
       },
       {
         path: 'pools/:id',
