@@ -20,7 +20,15 @@
           <ButtonDefault
             fill="light"
             class="whitespace-nowrap"
-            @click="$router.push({ name: 'pool', params: { id: tokenId } })"
+            @click="
+              $router.push({
+                name: 'add-pool',
+                query: {
+                  from: 'AE',
+                  to: tokenId,
+                },
+              })
+            "
           >
             {{ $t('poolDetail.addLiquidity') }}
           </ButtonDefault>
