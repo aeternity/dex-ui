@@ -3,7 +3,15 @@
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-400 uppercase">
         <tr>
-          <th v-for="col in columns" :key="col.key" scope="col" class="px-6 py-3">
+          <th
+            v-for="col in columns"
+            :key="col.key"
+            scope="col"
+            :class="{
+              'px-6 py-4': true,
+              'text-right': col.align === 'right',
+            }"
+          >
             {{ col.label }}
           </th>
         </tr>
@@ -17,7 +25,14 @@
             <TableCell :text="d[columns[0].key].text" :link="d[columns[0].key].link" />
           </th>
 
-          <td v-for="(col, index) in nonHeaderColumns" :key="index" class="px-6 py-4">
+          <td
+            v-for="(col, index) in nonHeaderColumns"
+            :key="index"
+            :class="{
+              'px-6 py-4': true,
+              'text-right': col.align === 'right',
+            }"
+          >
             <TableCell :text="d[col.key].text" :link="d[col.key].link" />
           </td>
         </tr>

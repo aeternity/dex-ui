@@ -135,7 +135,6 @@ export default {
     },
     filteredData() {
       const selectedDataSet = this.datasets.find((d) => d.label === this.selectedChart);
-      console.log(selectedDataSet, this.datasets, this.selectedChart);
       return {
         filteredData: selectedDataSet.data
           .filter(
