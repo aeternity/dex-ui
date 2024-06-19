@@ -23,6 +23,10 @@ body {
   background-color: variables.$color-black2;
 }
 
+svg {
+  display: inline-block;
+}
+
 @include mixins.laptop {
   #app {
     padding-bottom: 80px;

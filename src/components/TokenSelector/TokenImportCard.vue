@@ -56,6 +56,11 @@ export default {
 @use '../../styles/variables.scss';
 @use '../../styles/typography.scss';
 
+svg,
+img {
+  display: inline-block;
+}
+
 .token-import-card {
   border-top: 1px solid variables.$color-black;
   padding: 28px 14px;

@@ -217,7 +217,7 @@ export const detectAndModifyWAE = (token) => {
   // find the wrapped ae token and modify it on any network
   const waeAddresses = DEFAULT_NETWORKS.map((network) => network.waeAddress);
   if (waeAddresses.includes(token.address)) {
-    return { ...token, symbol: 'AE', decimals: 18 };
+    return { ...token, symbol: 'AE', decimals: 18, name: 'Aeternity', isAe: true };
   }
   return token;
 };

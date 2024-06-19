@@ -316,6 +316,10 @@ export default {
     background-color: variables.$color-black2;
     border: 4px solid variables.$color-black3;
 
+    svg {
+      display: block;
+    }
+
     &:hover {
       opacity: 0.8;
     }
