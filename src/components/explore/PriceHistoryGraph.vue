@@ -3,12 +3,25 @@
     <ButtonDefault
       v-for="label in labels"
       :key="label"
-      class="p-16 block"
+      class="p-16 hidden md:block"
       :fill="label === selectedChart ? 'light' : 'transparent'"
       @click="changeChartContent(label)"
     >
       {{ label }}
     </ButtonDefault>
+    <div class="border border-gray-800 p-2 md:hidden rounded-xl">
+      <label for="chart-select" class="hidden">Select Option</label>
+      <select
+        id="chart-select"
+        v-model="selectedChart"
+        class="block bg-transparent text-white outline-0"
+        @change="changeChartContent($event.target.value)"
+      >
+        <option v-for="label in labels" :key="label" :value="label" class="bg-gray-800">
+          {{ label }}
+        </option>
+      </select>
+    </div>
   </div>
   <div class="relative">
     <Bar v-if="showBar" :data="graphData" :options="options" />
@@ -284,5 +297,9 @@ export default {
 .button-default {
   padding: 5px 10px;
   border-radius: 25px;
+}
+option,
+optgroup {
+  -webkit-appearance: none;
 }
 </style>

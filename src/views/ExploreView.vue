@@ -1,6 +1,6 @@
 <template>
   <ExploreWrapper>
-    <div class="flex flex-row p-6 gap-6 items-center">
+    <div class="flex flex-col md:flex-row p-6 gap-6 items-center">
       <div class="flex-1">
         <h1 class="text-2xl">TVL</h1>
         <PriceHistoryGraph
