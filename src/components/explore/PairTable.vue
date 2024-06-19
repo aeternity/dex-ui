@@ -43,7 +43,7 @@ export default {
           link: `/explore/pools/${pair.address}`,
         },
         txs: {
-          text: pair.transactions,
+          text: String(pair.transactions),
         },
         tvl: {
           text: formatUsdPretty(pair.tvlUsd, 0),

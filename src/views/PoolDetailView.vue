@@ -2,7 +2,15 @@
   <ExploreWrapper>
     <div class="flex flex-row px-6 pt-6 items-center">
       <span v-if="pairId" class="logo"><AddressAvatar :address="pairId" /></span>
-      <h1 class="text-2xl">{{ pair?.token0.symbol }} / {{ pair?.token1.symbol }}</h1>
+      <h1 class="text-2xl">
+        <router-link :to="`/explore/tokens/${pair?.token0.address}`">{{
+          pair?.token0.symbol
+        }}</router-link>
+        /
+        <router-link :to="`/explore/tokens/${pair?.token1.address}`">{{
+          pair?.token1.symbol
+        }}</router-link>
+      </h1>
     </div>
     <div class="flex">
       <div class="flex-1 flex-auto p-6">
