@@ -69,6 +69,7 @@ import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import PairTable from '@/components/explore/PairTable.vue';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import DividerLine from '@/components/explore/DividerLine.vue';
+import { detectAndModifyWAE } from '@/lib/utils.js';
 
 export default defineComponent({
   components: { DividerLine, TransactionTable, PairTable, PriceHistoryGraph, ExploreWrapper },
@@ -149,7 +150,7 @@ export default defineComponent({
   async mounted() {
     // fetch all tokens
     const tokens = await this.$store.dispatch('backend/getAllTokens');
-    this.tokenMap = new Map(tokens.map((token) => [token.address, token]));
+    this.tokenMap = new Map(tokens.map((token) => [token.address, detectAndModifyWAE(token)]));
     // fetch all pairs
     const fetchResult = await this.$store.dispatch('backend/fetchPairs');
     this.pairs = Object.values(fetchResult);
