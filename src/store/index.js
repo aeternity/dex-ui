@@ -1,22 +1,22 @@
 import { shallowRef } from 'vue';
 import { createStore } from 'vuex';
 import {
-  Node,
-  AeSdkAepp,
-  walletDetector,
-  BrowserWindowMessageConnection,
   AeSdk,
-  unpackTx,
+  AeSdkAepp,
+  BrowserWindowMessageConnection,
+  Node,
   RpcRejectedByUserError,
+  unpackTx,
+  walletDetector,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
-  handleUnknownError,
-  findErrorExplanation,
   createDeepLinkUrl,
-  resolveWithTimeout,
-  isSafariBrowser,
+  findErrorExplanation,
+  handleUnknownError,
   isDexBackendDisabled,
+  isSafariBrowser,
+  resolveWithTimeout,
 } from '@/lib/utils';
 import { DEFAULT_NETWORKS, IN_FRAME, IS_MOBILE } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
@@ -217,12 +217,11 @@ export default createStore({
                 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
               dismissText: 'Open My Wallet',
               resolve: () => {
-                const addressDeepLink = createDeepLinkUrl({
+                window.location = createDeepLinkUrl({
                   type: 'address',
                   'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
                   'x-cancel': window.location.href.split('?')[0],
                 });
-                window.location = addressDeepLink;
               },
             });
           } else {

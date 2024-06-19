@@ -193,9 +193,6 @@ export default defineComponent({
           token1: this.pairMap.get(tx.pairAddress).token1,
         }));
     },
-    pairList() {
-      return [...this.pairMap.values()];
-    },
     supply() {
       return formatAmountPretty(this.metaInfo.event_supply, this.metaInfo.decimals);
     },
@@ -258,7 +255,16 @@ export default defineComponent({
     this.tokenId = this.$route.params.id;
 
     const metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
-    this.metaInfo = detectAndModifyWAE(metaInfo);
+    this.metaInfo = detectAndModifyWAE({
+      ...metaInfo,
+      address: this.tokenId,
+    });
+    if (this.metaInfo.isAe) {
+      this.metaInfo = {
+        ...this.metaInfo,
+        event_supply: 0, //
+      };
+    }
     this.pairs = await this.$store.dispatch('backend/fetchPairsByToken', this.tokenId);
 
     this.pairMap = new Map([
@@ -296,7 +302,6 @@ export default defineComponent({
       tokenAddress: this.tokenId,
     });
     this.loading = false;
-    // TODO fetch the tokens pairs from the new pair endpoint
   },
   methods: {
     shortenAddress,
