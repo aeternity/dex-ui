@@ -2,6 +2,7 @@ import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from '@/lib/errors';
+import { DEFAULT_NETWORKS } from '@/lib/constants.js';
 
 // eslint-disable-next-line no-extend-native,func-names
 BigInt.prototype.toJSON = function () {
@@ -210,4 +211,13 @@ export const formatAmountPretty = (amount, decimals) => {
 export const formatUsdPretty = (amount, decimals) => {
   const formattedAmount = formatAmountPretty(amount, decimals);
   return formattedAmount === 'N/A' ? formattedAmount : `$${formattedAmount}`;
+};
+
+export const detectAndModifyWAE = (token) => {
+  // find the wrapped ae token and modify it on any network
+  const waeAddresses = DEFAULT_NETWORKS.map((network) => network.waeAddress);
+  if (waeAddresses.includes(token.address)) {
+    return { ...token, symbol: 'AE', decimals: 18 };
+  }
+  return token;
 };

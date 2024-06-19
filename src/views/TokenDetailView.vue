@@ -74,7 +74,12 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
-import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
+import {
+  detectAndModifyWAE,
+  formatAmountPretty,
+  formatUsdPretty,
+  shortenAddress,
+} from '@/lib/utils';
 import BigNumber from 'bignumber.js';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import { mapGetters } from 'vuex';
@@ -245,7 +250,8 @@ export default defineComponent({
     // extract param from URL
     this.tokenId = this.$route.params.id;
 
-    this.metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
+    const metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
+    this.metaInfo = detectAndModifyWAE(metaInfo);
     this.pairs = await this.$store.dispatch('backend/fetchPairsByToken', this.tokenId);
 
     this.pairMap = new Map([
@@ -254,14 +260,14 @@ export default defineComponent({
         {
           ...pair,
           token0: this.metaInfo,
-          token1: pair.oppositeToken,
+          token1: detectAndModifyWAE(pair.oppositeToken),
         },
       ]),
       ...this.pairs.pairs1.map((pair) => [
         pair.address,
         {
           ...pair,
-          token0: pair.oppositeToken,
+          token0: detectAndModifyWAE(pair.oppositeToken),
           token1: this.metaInfo,
         },
       ]),

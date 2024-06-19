@@ -82,7 +82,12 @@ import AddressAvatar from '@/components/AddressAvatar.vue';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';
 import StatElement from '@/components/explore/StatElement.vue';
-import { formatAmountPretty, formatUsdPretty, shortenAddress } from '@/lib/utils';
+import {
+  detectAndModifyWAE,
+  formatAmountPretty,
+  formatUsdPretty,
+  shortenAddress,
+} from '@/lib/utils';
 import { mapGetters } from 'vuex';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import BigNumber from 'bignumber.js';
@@ -230,6 +235,11 @@ export default defineComponent({
     this.pair = await this.$store.dispatch('backend/fetchPairDetails', {
       pairAddress: this.pairId,
     });
+    this.pair = {
+      ...this.pair,
+      token0: detectAndModifyWAE(this.pair.token0),
+      token1: detectAndModifyWAE(this.pair.token1),
+    };
 
     // Fetch pair price history
     this.history = await this.$store.dispatch('backend/fetchHistory', {
