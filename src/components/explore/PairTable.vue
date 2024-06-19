@@ -26,11 +26,12 @@ export default {
         {
           key: 'txs',
           label: 'Transactions',
+          align: 'right',
         },
-        { key: 'tvl', label: 'TVL' },
-        { key: 'volumeDay', label: 'Volume (24h)' },
-        { key: 'volumeMonth', label: 'Volume (30d)' },
-        { key: 'volumeAll', label: 'Volume' },
+        { key: 'tvl', label: 'TVL', align: 'right' },
+        { key: 'volumeDay', label: 'Volume (24h)', align: 'right' },
+        { key: 'volumeMonth', label: 'Volume (30d)', align: 'right' },
+        { key: 'volumeAll', label: 'Volume', align: 'right' },
       ],
     };
   },
@@ -38,7 +39,7 @@ export default {
     pairsTableData() {
       return this.pairs.map((pair) => ({
         pair: {
-          text: `${pair.token0.symbol}/${pair.token1.symbol}`,
+          text: `${pair.token0.symbol} / ${pair.token1.symbol}`,
           link: `/explore/pools/${pair.address}`,
         },
         txs: {

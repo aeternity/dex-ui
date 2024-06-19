@@ -1,15 +1,15 @@
 <template>
   <!-- external link -->
   <template v-if="link && link.includes('https')">
-    <a :href="link" target="_blank" class="flex gap-2" rel="noopener noreferrer">
-      {{ text }}
+    <a :href="link" target="_blank" class="gap-2 inline-flex" rel="noopener noreferrer">
+      <span>{{ text }}</span>
       <ExternalLinkIcon aria-hidden="true" />
       <span class="sr-only">External link</span>
     </a>
   </template>
   <!-- internal link -->
   <template v-else-if="link">
-    <router-link :to="link" class="flex gap-2">
+    <router-link :to="link" class="inline-flex gap-2">
       {{ text }}
     </router-link>
   </template>

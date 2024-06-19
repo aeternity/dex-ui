@@ -40,11 +40,11 @@ export default {
     return {
       columns: [
         { key: 'type', label: '' },
-        { key: 'usd', label: 'USD' },
-        { key: 'token0', label: `${this.token0.symbol} Amount` },
-        { key: 'token1', label: `${this.token1.symbol} Amount` },
-        { key: 'account', label: 'Account' },
-        { key: 'time', label: 'Time' },
+        { key: 'usd', label: 'USD', align: 'right' },
+        { key: 'token0', label: `${this.token0.symbol} Amount`, align: 'right' },
+        { key: 'token1', label: `${this.token1.symbol} Amount`, align: 'right' },
+        { key: 'account', label: 'Account', align: 'right' },
+        { key: 'time', label: 'Time', align: 'right' },
       ],
     };
   },

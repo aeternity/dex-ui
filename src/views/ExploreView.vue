@@ -153,7 +153,6 @@ export default defineComponent({
     // fetch all pairs
     const fetchResult = await this.$store.dispatch('backend/fetchPairs');
     this.pairs = Object.values(fetchResult);
-    console.log(this.pairs);
 
     // fetch all history
     this.history = await this.$store.dispatch('backend/fetchHistory');
