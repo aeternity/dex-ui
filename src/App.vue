@@ -93,15 +93,14 @@ export default {
       // TODO
     }
 
-    // TODO reenable
-    // if (query.address) {
-    //   await this.$store.dispatch('connectDefaultWallet', query);
-    //   delete query.address;
-    //   delete query.networkId;
-    //   this.$router.replace({ query });
-    // } else if (this.wallet && this.address) {
-    //   await this.$store.dispatch('connectWallet', { info: this.wallet });
-    // }
+    if (query.address) {
+      await this.$store.dispatch('connectDefaultWallet', query);
+      delete query.address;
+      delete query.networkId;
+      this.$router.replace({ query });
+    } else if (this.wallet && this.address) {
+      await this.$store.dispatch('connectWallet', { info: this.wallet });
+    }
     if (
       this.$isMobile &&
       !query.address &&
