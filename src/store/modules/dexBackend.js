@@ -196,5 +196,9 @@ export default {
     async fetchPairsByToken({ dispatch }, tokenId) {
       return dispatch('safeFetch', { url: `tokens/by-address/${tokenId}/pairs` });
     },
+
+    async fetchPairsByTokenUsd({ dispatch }, tokenId) {
+      return dispatch('safeFetch', { url: `pairs?token=${tokenId}` });
+    },
   },
 };

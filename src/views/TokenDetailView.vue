@@ -49,7 +49,7 @@
     <div class="border-2 border-gray-800"></div>
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Pools</h2>
-      <PairTable :pairs="pairList"></PairTable>
+      <PairTable :pairs="pairTable"></PairTable>
     </div>
 
     <DividerLine />
@@ -107,6 +107,7 @@ export default defineComponent({
         pairs0: [],
         pairs1: [],
       },
+      pairTable: [],
       pairMap: new Map(),
       tokenIdMap: new Map(),
       metaInfo: {
@@ -275,6 +276,12 @@ export default defineComponent({
       ]),
     ]);
 
+    const pairWithUSD = await this.$store.dispatch('backend/fetchPairsByTokenUsd', this.tokenId);
+    this.pairTable = pairWithUSD.map((pair) => ({
+      ...pair,
+      token0: this.pairMap.get(pair.address).token0,
+      token1: this.pairMap.get(pair.address).token1,
+    }));
     this.tokenIdMap = new Map([
       ...this.pairs.pairs0.map((pair) => [pair.address, 0]),
       ...this.pairs.pairs1.map((pair) => [pair.address, 1]),
@@ -289,12 +296,6 @@ export default defineComponent({
   },
   methods: {
     shortenAddress,
-    getReserve(historyEntry) {
-      if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
-        return historyEntry.reserve0;
-      }
-      return historyEntry.reserve1;
-    },
     getDeltaReserve(historyEntry) {
       if (this.tokenIdMap.get(historyEntry.pairAddress) === 0) {
         return historyEntry.deltaReserve0;
