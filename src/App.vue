@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       backendSanityCheckTimeoutId: null,
+      walletExploreDelayed: false,
     };
   },
   computed: {
@@ -49,6 +50,12 @@ export default {
     async backendFailed(newVal) {
       if (newVal) {
         await this.checkBackendStatus();
+      }
+    },
+    $route(to) {
+      if (!to.path.includes('/explore') && this.walletExploreDelayed) {
+        this.walletExploreDelayed = false;
+        this.$store.dispatch('connectWallet', { info: this.wallet });
       }
     },
   },
@@ -98,8 +105,12 @@ export default {
       delete query.address;
       delete query.networkId;
       this.$router.replace({ query });
-    } else if (this.wallet && this.address && !this.$route.fullPath.includes('/explore')) {
-      await this.$store.dispatch('connectWallet', { info: this.wallet });
+    } else if (this.wallet && this.address) {
+      if (this.$route.fullPath.includes('/explore')) {
+        this.walletExploreDelayed = true;
+      } else {
+        await this.$store.dispatch('connectWallet', { info: this.wallet });
+      }
     }
     if (
       this.$isMobile &&
