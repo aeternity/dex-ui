@@ -62,6 +62,9 @@
     <div v-if="activeTab === 'Transactions'">
       <TransactionTable :transactions="transactionTable" :page-size="20" />
     </div>
+    <div v-if="activeTab === 'Tokens'">
+      <TokenTable v-if="activeTab === 'Tokens'" :tokens="tokenTable" />
+    </div>
     <DividerLine />
 
     <!-- TODO TABLE WITH TOKENS  -->
@@ -77,9 +80,17 @@ import PairTable from '@/components/explore/PairTable.vue';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
 import DividerLine from '@/components/explore/DividerLine.vue';
 import { detectAndModifyWAE } from '@/lib/utils';
+import TokenTable from '@/components/explore/TokenTable.vue';
 
 export default defineComponent({
-  components: { DividerLine, TransactionTable, PairTable, PriceHistoryGraph, ExploreWrapper },
+  components: {
+    TokenTable,
+    DividerLine,
+    TransactionTable,
+    PairTable,
+    PriceHistoryGraph,
+    ExploreWrapper,
+  },
   data() {
     return {
       pairs: [],
@@ -110,6 +121,9 @@ export default defineComponent({
         ...tx,
         ...this.pairToToken(tx.pairAddress),
       }));
+    },
+    tokenTable() {
+      return [...this.tokenMap.values()];
     },
     graphData() {
       let tvl = new BigNumber(0);
