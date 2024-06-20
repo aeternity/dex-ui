@@ -10,6 +10,7 @@
 <script>
 import BaseTable from '@/components/explore/BaseTable.vue';
 import { formatUsdPretty } from '@/lib/utils';
+import BigNumber from 'bignumber.js';
 
 export default {
   name: 'TokenTable',
@@ -34,8 +35,8 @@ export default {
           align: 'right',
           sortable: true,
         },
+        { key: 'price', label: 'Price', align: 'right', sortable: true },
         { key: 'tvl', label: 'TVL', align: 'right', sortable: true },
-        { key: 'fdv', label: 'FDV', align: 'right', sortable: true },
         { key: 'priceChangeDay', label: 'Price Change (24h)', align: 'right', sortable: true },
         { key: 'priceChangeMonth', label: 'Price Change (30D)', align: 'right', sortable: true },
         { key: 'volumeDay', label: 'Volume (24h)', align: 'right', sortable: true },
@@ -60,16 +61,16 @@ export default {
           text: formatUsdPretty(token.tvlUsd, 0),
           value: token.tvlUsd,
         },
-        fdv: {
-          text: formatUsdPretty(token.fdvUsd, 0),
-          value: token.fdvUsd,
+        price: {
+          text: formatUsdPretty(token.priceUsd, 0),
+          value: token.priceUsd,
         },
         priceChangeDay: {
-          text: `${token.priceChangeDay}%`,
+          text: `${new BigNumber(token.priceChangeDay).toFixed(2)}%`,
           value: token.priceChangeDay,
         },
         priceChangeMonth: {
-          text: `${token.priceChangeMonth}%`,
+          text: `${new BigNumber(token.priceChangeMonth).toFixed(2)}%`,
           value: token.priceChangeMonth,
         },
         volumeDay: {

@@ -63,7 +63,7 @@
       <TransactionTable :transactions="transactionTable" :page-size="20" />
     </div>
     <div v-if="activeTab === 'Tokens'">
-      <TokenTable v-if="activeTab === 'Tokens'" :tokens="tokenTable" />
+      <TokenTable v-if="activeTab === 'Tokens'" :tokens="tokenTable" :page-size="20" />
     </div>
     <DividerLine />
 
@@ -96,7 +96,7 @@ export default defineComponent({
       pairs: [],
       history: [],
       tokenMap: new Map(),
-      activeTab: 'Pairs',
+      activeTab: 'Tokens',
       loading: false,
     };
   },
