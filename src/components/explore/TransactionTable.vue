@@ -1,5 +1,10 @@
 <template>
-  <BaseTable :rows="transactionsTableData" :columns="columns" :page-size="pageSize" />
+  <BaseTable
+    :rows="transactionsTableData"
+    :columns="columns"
+    :page-size="pageSize"
+    initial-sort-by="time"
+  />
 </template>
 
 <script>
@@ -40,11 +45,11 @@ export default {
     return {
       columns: [
         { key: 'type', label: '' },
-        { key: 'usd', label: 'USD', align: 'right' },
-        { key: 'token0', label: `${this.token0.symbol} Amount`, align: 'right' },
-        { key: 'token1', label: `${this.token1.symbol} Amount`, align: 'right' },
+        { key: 'usd', label: 'USD', align: 'right', sortable: true },
+        { key: 'token0', label: `${this.token0.symbol} Amount`, align: 'right', sortable: true },
+        { key: 'token1', label: `${this.token1.symbol} Amount`, align: 'right', sortable: true },
         { key: 'account', label: 'Account', align: 'right' },
-        { key: 'time', label: 'Time', align: 'right' },
+        { key: 'time', label: 'Time', align: 'right', sortable: true },
       ],
     };
   },
@@ -55,28 +60,34 @@ export default {
         type: {
           text: this.typeToText(tx),
           link: `${this.activeNetwork.explorerUrl}/transactions/${tx.transactionHash}`,
+          value: tx.type,
         },
         usd: {
           text: this.formatUsdPretty(new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue), 0),
+          value: new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue),
         },
         token0: {
           text: `${this.formatAmountPretty(tx.deltaReserve0, tx.token0.decimals)} ${
             tx.token0.symbol
           }`,
+          value: new BigNumber(tx.deltaReserve0).div(10 ** tx.token0.decimals),
         },
         token1: {
           text: `${this.formatAmountPretty(tx.deltaReserve1, tx.token1.decimals)} ${
             tx.token1.symbol
           }`,
+          value: new BigNumber(tx.deltaReserve1).div(10 ** tx.token1.decimals),
         },
         account: {
           link: `${this.activeNetwork.explorerUrl}/accounts/${tx.senderAccount}`,
           text: this.shortenAddress(tx.senderAccount),
+          value: tx.senderAccount,
         },
         time: {
           text: this.formatDistance(new Date(Number(tx.microBlockTime)), new Date(), {
             addSuffix: true,
           }),
+          value: tx.microBlockTime,
         },
       }));
     },
