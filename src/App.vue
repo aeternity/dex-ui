@@ -98,7 +98,7 @@ export default {
       delete query.address;
       delete query.networkId;
       this.$router.replace({ query });
-    } else if (this.wallet && this.address) {
+    } else if (this.wallet && this.address && !this.$route.fullPath.includes('/explore')) {
       await this.$store.dispatch('connectWallet', { info: this.wallet });
     }
     if (
