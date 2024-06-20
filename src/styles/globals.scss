@@ -27,6 +27,10 @@ svg {
   display: inline-block;
 }
 
+img {
+  max-width: inherit;
+}
+
 @include mixins.laptop {
   #app {
     padding-bottom: 80px;
