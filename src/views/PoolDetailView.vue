@@ -72,8 +72,8 @@
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Transactions</h2>
       <TransactionTable
-        v-if="pair && reversedTransactions"
-        :transactions="reversedTransactions"
+        v-if="pair && transactionTable"
+        :transactions="transactionTable"
         :token0="pair?.token0"
         :token1="pair?.token1"
       ></TransactionTable>
@@ -143,20 +143,15 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters(['activeNetwork']),
-    reversedTransactions() {
-      return this.history
-        .slice()
-        .reverse()
-        .map((tx) => ({
-          ...tx,
-          token0: this.pair.token0,
-          token1: this.pair.token1,
-        }));
+    transactionTable() {
+      return this.history.map((tx) => ({
+        ...tx,
+        token0: this.pair.token0,
+        token1: this.pair.token1,
+      }));
     },
     last24hTransactions() {
-      return this.reversedTransactions.filter(
-        (tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000,
-      );
+      return this.history.filter((tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000);
     },
     tvl() {
       const tx = this.history[this.history.length - 1];
