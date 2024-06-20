@@ -133,6 +133,10 @@ export default createStore({
           onNetworkChange: ({ networkId }) => {
             dispatch('selectNetwork', networkId);
           },
+          onAddressChange: ({ current }) => {
+            const [address] = Object.keys(current);
+            commit('setAddress', address);
+          },
           name: 'DEX',
           onDisconnect() {
             commit('resetState');
