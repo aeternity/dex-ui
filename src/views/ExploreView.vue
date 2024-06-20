@@ -98,23 +98,18 @@ export default defineComponent({
       return [this.graphData.datasets[1]];
     },
     pairTable() {
-      return this.pairs
-        .map((pair) => ({
-          ...pair,
-          token0: this.tokenMap.get(pair.token0),
-          token1: this.tokenMap.get(pair.token1),
-          transactions: String(pair.transactions),
-        }))
-        .sort((a, b) => b.volumeUsdMonth - a.volumeUsdMonth || b.volumeUsdAll - a.volumeUsdAll);
+      return this.pairs.map((pair) => ({
+        ...pair,
+        token0: this.tokenMap.get(pair.token0),
+        token1: this.tokenMap.get(pair.token1),
+        transactions: String(pair.transactions),
+      }));
     },
     transactionTable() {
-      return this.history
-        .slice()
-        .reverse()
-        .map((tx) => ({
-          ...tx,
-          ...this.pairToToken(tx.pairAddress),
-        }));
+      return this.history.map((tx) => ({
+        ...tx,
+        ...this.pairToToken(tx.pairAddress),
+      }));
     },
     graphData() {
       let tvl = new BigNumber(0);

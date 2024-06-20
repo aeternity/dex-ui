@@ -13,19 +13,30 @@
                 'text-right': col.align === 'right',
               }"
             >
-              {{ col.label }}
+              <a
+                v-if="col.sortable"
+                class="cursor-pointer"
+                @keydown="sortByColumn(col.key)"
+                @click="sortByColumn(col.key)"
+              >
+                {{ col.label }}
+              </a>
+              <span v-else>{{ col.label }}</span>
+              <span v-if="sortBy === col.key" class="ml-1">
+                <span v-if="sortDirection === 'asc'">▲</span>
+                <span v-else>▼</span>
+              </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="d in dataPaginated" :key="d.id" class="border-b border-b-gray-700">
+          <tr v-for="d in rowsPaginated" :key="d.id" class="border-b border-b-gray-700">
             <th
               scope="row"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               <TableCell :text="d[columns[0].key].text" :link="d[columns[0].key].link" />
             </th>
-
             <td
               v-for="(col, index) in nonHeaderColumns"
               :key="index"
@@ -83,16 +94,39 @@ export default {
       type: Number,
       default: 10,
     },
+    initialSortBy: {
+      type: String,
+      default: null,
+    },
+    initialSortDirection: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
       page: 0,
+      sortBy: null,
+      sortDirection: null,
     };
   },
   computed: {
     ...mapGetters(['activeNetwork']),
-    dataPaginated() {
-      return this.rows.slice(this.page * this.pageSize, this.page * this.pageSize + this.pageSize);
+    rowsSorted() {
+      if (!this.sortBy) return this.rows;
+      return this.rows.slice().sort((a, b) => {
+        const aValue = this.tryParseInt(a[this.sortBy].value);
+        const bValue = this.tryParseInt(b[this.sortBy].value);
+        if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return this.sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    },
+    rowsPaginated() {
+      return this.rowsSorted.slice(
+        this.page * this.pageSize,
+        this.page * this.pageSize + this.pageSize,
+      );
     },
     lastPage() {
       return this.page * this.pageSize + this.pageSize >= this.rows.length;
@@ -101,7 +135,16 @@ export default {
       return this.columns.slice(1);
     },
   },
+  mounted() {
+    this.sortBy = this.initialSortBy;
+    this.sortDirection = this.initialSortDirection;
+  },
   methods: {
+    tryParseInt(value) {
+      if (value === undefined || value === null) return 0;
+      const parsed = parseFloat(String(value).replace(/[$,]/g, ''));
+      return Number.isNaN(parsed) ? 0 : parsed;
+    },
     nextPage() {
       if (!this.lastPage) this.page += 1;
     },
@@ -113,6 +156,19 @@ export default {
     },
     setLastPage() {
       this.page = Math.floor(this.rows.length / this.pageSize);
+    },
+    sortByColumn(key) {
+      if (this.sortBy === key) {
+        if (this.sortDirection === 'desc') {
+          this.sortDirection = 'asc';
+        } else {
+          this.sortBy = null;
+          this.sortDirection = null;
+        }
+      } else {
+        this.sortBy = key;
+        this.sortDirection = 'desc';
+      }
     },
   },
 };
