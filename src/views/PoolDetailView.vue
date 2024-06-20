@@ -25,8 +25,8 @@
               $router.push({
                 name: 'swap',
                 query: {
-                  from: pair?.token0.isAe ? 'AE' : pair?.token0.address,
-                  to: pair?.token1.isAe ? 'AE' : pair?.token1.address,
+                  from: pair?.token0.address,
+                  to: pair?.token1.address,
                 },
               })
             "
@@ -40,8 +40,8 @@
               $router.push({
                 name: 'add-pool',
                 query: {
-                  from: pair?.token0.isAe ? 'AE' : pair?.token0.address,
-                  to: pair?.token1.isAe ? 'AE' : pair?.token1.address,
+                  from: pair?.token0.address,
+                  to: pair?.token1.address,
                 },
               })
             "
