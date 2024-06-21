@@ -4,9 +4,9 @@ describe('Login', () => {
       .contains('.title', 'Swap')
       .get('[data-cy=connect-wallet]')
       .click()
-      .get('[data-cy=connect-Superhero]', { timeout: 60000 })
+      .get('[data-cy=connect-Superhero]', { timeout: 10000 })
       .click()
-      .get('.onboarding-modal')
+      .get('.onboarding-modal', { timeout: 10000 })
       .should('be.visible')
       // close the popup
       .get('.close')
