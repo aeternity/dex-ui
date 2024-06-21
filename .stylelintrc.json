@@ -15,9 +15,7 @@
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        "ignorePseudoClasses": [
-          "deep"
-        ]
+        "ignorePseudoClasses": ["deep"]
       }
     ],
     "property-no-vendor-prefix": null,
