@@ -286,21 +286,25 @@ export default defineComponent({
 <style lang="scss" scoped>
 .logo {
   margin-right: 10px;
+
   img {
     width: 45px;
     height: 45px;
   }
 }
+
 .header {
   display: flex;
   align-items: center;
   flex-direction: row;
   margin-bottom: 20px;
+
   h1 {
     font-size: 24px;
     font-weight: 500;
   }
 }
+
 .button-default {
   margin-top: 20px;
   padding: 16px;
