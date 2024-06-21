@@ -100,7 +100,7 @@ export default {
     },
     initialSortDirection: {
       type: String,
-      default: null,
+      default: 'desc',
     },
   },
   data() {
@@ -115,6 +115,7 @@ export default {
     rowsSorted() {
       if (!this.sortBy) return this.rows;
       return this.rows.slice().sort((a, b) => {
+        if (!this.sortBy || !this.sortDirection) return 0;
         const aValue = this.tryParseInt(a[this.sortBy].value);
         const bValue = this.tryParseInt(b[this.sortBy].value);
         if (aValue < bValue) return this.sortDirection === 'asc' ? -1 : 1;
