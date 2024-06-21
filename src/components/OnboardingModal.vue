@@ -1,5 +1,5 @@
 <template>
-  <ModalDefault class="about-dex-modal" close @close="resolve">
+  <ModalDefault class="onboarding-modal" close @close="resolve">
     <div class="wrapper">
       <h1 class="info-headline">
         {{ $t('onboardingModal.headline') }}
@@ -44,7 +44,7 @@ export default {
 @use '../styles/typography.scss';
 @use '../styles/mixins.scss';
 
-.about-dex-modal {
+.onboarding-modal {
   .wrapper {
     padding: 0 16px 16px;
 

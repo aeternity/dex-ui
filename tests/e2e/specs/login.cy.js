@@ -6,12 +6,12 @@ describe('Login', () => {
       .click()
       .get('[data-cy=connect-Superhero]', { timeout: 60000 })
       .click()
-      .get('.about-dex-modal')
+      .get('.onboarding-modal')
       .should('be.visible')
       // close the popup
       .get('.close')
       .click()
-      .get('.about-dex-modal')
+      .get('.onboarding-modal')
       .should('not.exist')
       // check that Testnet is written in the network selector
       .get('.active-network')
@@ -28,12 +28,12 @@ describe('Login', () => {
     )
       .contains('.title', 'Swap')
       // popup should open with "Thanks for trying out the DEX!"
-      .get('.about-dex-modal')
+      .get('.onboarding-modal')
       .should('be.visible')
       // close the popup
       .get('.close')
       .click()
-      .get('.about-dex-modal')
+      .get('.onboarding-modal')
       .should('not.exist')
       // check that mainnet is written in the network selector
       .get('.active-network')
