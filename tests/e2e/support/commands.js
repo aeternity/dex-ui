@@ -4,12 +4,12 @@ Cypress.Commands.add('login', () => {
   cy.visit(`/swap?address=${aeSdk.address}&networkId=ae_uat`)
     .contains('.title', 'Swap')
     // popup should open with "Thanks for trying out the DEX!"
-    .get('.about-dex-modal')
+    .get('.onboarding-modal')
     .should('be.visible')
     // close the popup
     .get('.close')
     .click()
-    .get('.about-dex-modal')
+    .get('.onboarding-modal')
     .should('not.exist')
     // check that testnet is written in the network selector
     .get('.active-network')
