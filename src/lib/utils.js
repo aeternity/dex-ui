@@ -2,7 +2,7 @@ import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from '@/lib/errors';
-import { DEFAULT_NETWORKS } from '@/lib/constants.js';
+import { DEFAULT_NETWORKS } from '@/lib/constants';
 
 // eslint-disable-next-line no-extend-native,func-names
 BigInt.prototype.toJSON = function () {

@@ -133,6 +133,7 @@ export default {
 .button-show-more {
   margin: 15px 0;
   color: variables.$color-white;
+
   @extend %face-sans-16-regular;
 }
 

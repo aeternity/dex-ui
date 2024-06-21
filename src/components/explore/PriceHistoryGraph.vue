@@ -321,6 +321,7 @@ export default {
   padding: 5px 10px;
   border-radius: 25px;
 }
+
 option,
 optgroup {
   -webkit-appearance: none;

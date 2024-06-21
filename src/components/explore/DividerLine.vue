@@ -7,4 +7,3 @@ export default {
   name: 'DividerLine',
 };
 </script>
-<style scoped lang="scss"></style>
