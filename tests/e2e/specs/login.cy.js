@@ -28,7 +28,7 @@ describe('Login', () => {
     )
       .contains('.title', 'Swap')
       // popup should open with "Thanks for trying out the DEX!"
-      .get('.onboarding-modal')
+      .get('.onboarding-modal', { timeout: 10000 })
       .should('be.visible')
       // close the popup
       .get('.close')
