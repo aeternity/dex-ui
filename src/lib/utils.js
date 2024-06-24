@@ -2,6 +2,12 @@ import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from '@/lib/errors';
+import { DEFAULT_NETWORKS } from '@/lib/constants';
+
+// eslint-disable-next-line no-extend-native,func-names
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 const errorMessages = {
   ...dexContractsErrorMessages,
@@ -188,3 +194,30 @@ export const handleCallError = ({ returnType, returnValue }, instance) => {
  */
 export const isDexBackendDisabled =
   import.meta.env.VITE_DISABLE_DEX_BACKEND && JSON.parse(import.meta.env.VITE_DISABLE_DEX_BACKEND);
+
+export const shortenAddress = (address, lengthStart = 6, lengthEnd = 3) =>
+  address ? `${address.slice(0, lengthStart)}...${address.slice(-lengthEnd)}` : '';
+
+export const formatAmountPretty = (amount, decimals) => {
+  if (amount === null || new BigNumber(amount).isNaN()) return 'N/A';
+  const formattedAmount = new BigNumber(amount).div(new BigNumber(10).pow(decimals)).abs();
+  return formattedAmount
+    .toFixed(Math.max(0, 5 - formattedAmount.toFixed(0).length))
+    .replace(/\.0*$/, '') // remove trailing .0
+    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') // add 000,000 seperator
+    .replace(/(\.\d*[1-9])0+$/, '$1'); // move to 0.0001 instead of 0.00010000
+};
+
+export const formatUsdPretty = (amount, decimals) => {
+  const formattedAmount = formatAmountPretty(amount, decimals);
+  return formattedAmount === 'N/A' ? formattedAmount : `$${formattedAmount}`;
+};
+
+export const detectAndModifyWAE = (token) => {
+  // find the wrapped ae token and modify it on any network
+  const waeAddresses = DEFAULT_NETWORKS.map((network) => network.waeAddress);
+  if (waeAddresses.includes(token.address)) {
+    return { ...token, symbol: 'AE', decimals: 18, name: 'Aeternity', isAe: true };
+  }
+  return token;
+};

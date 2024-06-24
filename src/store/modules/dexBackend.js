@@ -118,10 +118,18 @@ export default {
       return up;
     },
 
-    async fetchPairDetails({ getters: { getPairInfo }, dispatch }, { tokenA, tokenB }) {
-      const pair = getPairInfo({ tokenA, tokenB });
-      if (!pair) return null;
-      const resp = await dispatch('safeFetch', { url: `pairs/by-address/${pair.address}` });
+    async fetchPairDetails(
+      { getters: { getPairInfo }, dispatch },
+      { pairAddress, tokenA, tokenB },
+    ) {
+      let pair;
+      if (!pairAddress) {
+        pair = getPairInfo({ tokenA, tokenB });
+        if (!pair) return null;
+      }
+      const resp = await dispatch('safeFetch', {
+        url: `pairs/by-address/${pairAddress || pair.address}`,
+      });
       return (
         resp && {
           ...resp,
@@ -148,6 +156,10 @@ export default {
       }));
     },
 
+    async getAllTokens({ dispatch }) {
+      return dispatch('safeFetch', { url: 'tokens' });
+    },
+
     async fetchPairs({ dispatch, commit }, onlyListed) {
       const pairsXs = await dispatch('safeFetch', { url: `pairs?only-listed=${!!onlyListed}` });
       if (!pairsXs) return null;
@@ -157,6 +169,36 @@ export default {
       });
       commit('setPairs', pairs);
       return pairs;
+    },
+
+    async fetchHistory({ dispatch }, options) {
+      // fetch the full history with all pages
+      let history = [];
+      let offset = 0;
+      const limit = 9999999;
+      let page;
+      do {
+        const queryString = new URLSearchParams({
+          limit,
+          offset,
+          ...options,
+        }).toString();
+        // eslint-disable-next-line no-await-in-loop
+        page = await dispatch('safeFetch', { url: `history?${queryString}` });
+        if (!page) break;
+        history = history.concat(page);
+        offset += limit;
+      } while (page.length === limit);
+
+      return history;
+    },
+
+    async fetchPairsByToken({ dispatch }, tokenId) {
+      return dispatch('safeFetch', { url: `tokens/by-address/${tokenId}/pairs` });
+    },
+
+    async fetchPairsByTokenUsd({ dispatch }, tokenId) {
+      return dispatch('safeFetch', { url: `pairs?token=${tokenId}` });
     },
   },
 };

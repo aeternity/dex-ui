@@ -6,7 +6,7 @@
     </div>
 
     <div class="token-info">
-      <img :src="`https://avatars.z52da5wt.xyz/${token.contract_id}`" alt="" />
+      <AddressAvatar :address="token.contract_id" />
       <div class="symbol">
         {{ token.symbol }}
       </div>
@@ -32,10 +32,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import QuestionCircleIcon from '@/assets/question-circle.svg';
+import AddressAvatar from '@/components/AddressAvatar.vue';
 import ButtonDefault from '../ButtonDefault.vue';
 
 export default {
   components: {
+    AddressAvatar,
     ButtonDefault,
     QuestionCircleIcon,
   },
@@ -53,6 +55,11 @@ export default {
 <style lang="scss" scoped>
 @use '../../styles/variables.scss';
 @use '../../styles/typography.scss';
+
+svg,
+img {
+  display: inline-block;
+}
 
 .token-import-card {
   border-top: 1px solid variables.$color-black;

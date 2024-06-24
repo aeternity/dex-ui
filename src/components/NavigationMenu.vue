@@ -3,8 +3,11 @@
     <router-link to="/swap" @click.prevent="navigateSwap">
       {{ $t('nav.swap') }}
     </router-link>
-    <router-link to="/pool" @click.prevent="navigatePool">
+    <router-link data-cy="pool" to="/pool" @click.prevent="navigatePool">
       {{ $t('nav.pool') }}
+    </router-link>
+    <router-link data-cy="explore" to="/explore">
+      {{ $t('nav.explore') }}
     </router-link>
   </nav>
 </template>

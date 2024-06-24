@@ -2,6 +2,7 @@
   "nav": {
     "swap": "Swap",
     "pool": "Pool",
+    "explore": "Explore",
     "aboutUs": "About us",
     "aboutDex": "About DEX",
     "termsCondition": "Terms & Condition",
@@ -164,6 +165,10 @@
     "connectingNetwork": "Connecting to the network...",
     "middlewareNotAvailable": "Middleware is not available, some functionality may not work properly.",
     "middlewareOutOfSync": "The middleware is out of sync, some functionality may not work properly."
+  },
+  "poolDetail": {
+    "swap": "Swap",
+    "addLiquidity": "Add Liquidity"
   },
   "superheroDex": "Superhero DEX",
   "initializing": "Initializing...",

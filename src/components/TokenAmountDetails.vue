@@ -63,6 +63,7 @@ export default {
     }
   }
 
+  .token-icon :deep(svg),
   .token-icon :deep(img) {
     width: 20px;
     height: 20px;

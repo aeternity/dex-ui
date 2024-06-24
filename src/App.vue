@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       backendSanityCheckTimeoutId: null,
+      walletExploreDelayed: false,
     };
   },
   computed: {
@@ -51,6 +52,12 @@ export default {
         await this.checkBackendStatus();
       }
     },
+    $route(to) {
+      if (!to.path.includes('/explore') && this.walletExploreDelayed) {
+        this.walletExploreDelayed = false;
+        this.$store.dispatch('connectWallet', { info: this.wallet });
+      }
+    },
   },
   async mounted() {
     if (this.$store.state.lang) this.$i18n.locale = this.$store.state.lang;
@@ -60,6 +67,7 @@ export default {
     const query = {
       // safari vue-router issue
       address: new URLSearchParams(window.location.search).get('address'),
+      networkId: new URLSearchParams(window.location.search).get('networkId'),
       ...this.$route.query,
     };
 
@@ -98,7 +106,11 @@ export default {
       delete query.networkId;
       this.$router.replace({ query });
     } else if (this.wallet && this.address) {
-      await this.$store.dispatch('connectWallet', { info: this.wallet });
+      if (this.$route.fullPath.includes('/explore')) {
+        this.walletExploreDelayed = true;
+      } else {
+        await this.$store.dispatch('connectWallet', { info: this.wallet });
+      }
     }
     if (
       this.$isMobile &&

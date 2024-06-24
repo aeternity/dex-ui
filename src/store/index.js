@@ -1,22 +1,22 @@
 import { shallowRef } from 'vue';
 import { createStore } from 'vuex';
 import {
-  Node,
-  AeSdkAepp,
-  walletDetector,
-  BrowserWindowMessageConnection,
   AeSdk,
-  unpackTx,
+  AeSdkAepp,
+  BrowserWindowMessageConnection,
+  Node,
   RpcRejectedByUserError,
+  unpackTx,
+  walletDetector,
 } from '@aeternity/aepp-sdk';
 import createPersistedState from 'vuex-persistedstate';
 import {
-  handleUnknownError,
-  findErrorExplanation,
   createDeepLinkUrl,
-  resolveWithTimeout,
-  isSafariBrowser,
+  findErrorExplanation,
+  handleUnknownError,
   isDexBackendDisabled,
+  isSafariBrowser,
+  resolveWithTimeout,
 } from '@/lib/utils';
 import { DEFAULT_NETWORKS, IN_FRAME, IS_MOBILE } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
@@ -49,11 +49,8 @@ export default createStore({
     },
     // returns the network object for the currently selected network
     // or null if no network is selected
-    activeNetwork({ sdk }, { networks }) {
-      return (
-        sdk &&
-        Object.values(networks).find((network) => network.networkName === sdk.selectedNodeName)
-      );
+    activeNetwork({ sdk, networkId }, { networks }) {
+      return sdk && Object.values(networks).find((network) => network.networkId === networkId);
     },
     WAE({ networkId }, { activeNetwork }) {
       return networkId && activeNetwork ? activeNetwork.waeAddress : null;
@@ -135,6 +132,10 @@ export default createStore({
           nodes,
           onNetworkChange: ({ networkId }) => {
             dispatch('selectNetwork', networkId);
+          },
+          onAddressChange: ({ current }) => {
+            const [address] = Object.keys(current);
+            commit('setAddress', address);
           },
           name: 'DEX',
           onDisconnect() {
@@ -220,12 +221,11 @@ export default createStore({
                 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
               dismissText: 'Open My Wallet',
               resolve: () => {
-                const addressDeepLink = createDeepLinkUrl({
+                window.location = createDeepLinkUrl({
                   type: 'address',
                   'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
                   'x-cancel': window.location.href.split('?')[0],
                 });
-                window.location = addressDeepLink;
               },
             });
           } else {

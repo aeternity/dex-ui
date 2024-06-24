@@ -121,5 +121,9 @@ export default {
         }
       }
     },
+    async fetchToken({ rootGetters: { activeNetwork } }, token) {
+      if (!activeNetwork) return null;
+      return fetchJson(`${activeNetwork.middlewareUrl}/v3/aex9/${token}`);
+    },
   },
 };

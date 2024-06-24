@@ -36,7 +36,6 @@ export default {
 
   span:last-of-type {
     margin-right: 4px;
-    white-space: nowrap;
   }
 }
 </style>
