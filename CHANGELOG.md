@@ -1,5 +1,96 @@
 # Changelog
 
+## [1.19.0](https://github.com/aeternity/dex-ui/compare/v1.18.6...v1.19.0) (2024-06-25)
+
+
+### Features
+
+* adds .env to gitignore ([2e95fc1](https://github.com/aeternity/dex-ui/commit/2e95fc19750086ccaa83c7df041eb63761afa9ae))
+* adds 404 for malformed tokens & pairs ([2744562](https://github.com/aeternity/dex-ui/commit/27445625b8670075d92b4ab5fbe4638270cc98ce))
+* adds alignment to tables ([cac797b](https://github.com/aeternity/dex-ui/commit/cac797bcf87e413ba658204506a4348112d198b1))
+* adds env to prod ([05e74e9](https://github.com/aeternity/dex-ui/commit/05e74e992a761f8fbb1a0c8c26197233a5662295))
+* adds generic dashboard ([bbf4f27](https://github.com/aeternity/dex-ui/commit/bbf4f27962955a2b86e1443a15317ea58f8e6207))
+* adds responsiveness ([c29bf40](https://github.com/aeternity/dex-ui/commit/c29bf4058aa0fa6aa4ea36482198cb28c3c989c3))
+* adds tokens table ([f3706d0](https://github.com/aeternity/dex-ui/commit/f3706d06d5ab9ac555d469cadbbdd8a458b69797))
+* deeplinks on detail pages for swap & add liquidity now work ([188bb86](https://github.com/aeternity/dex-ui/commit/188bb861eb92844da3567021bc2ebb14af60d037))
+* **explore:** adds first version of pool detail view and some wip changes ([a9e0ff7](https://github.com/aeternity/dex-ui/commit/a9e0ff74511677371a75e2212fbfb20c8ca05e1b))
+* **explore:** adds usd to tx & stats, only fee missing ([56e1433](https://github.com/aeternity/dex-ui/commit/56e1433179d29f5e8917111dadebccecab031d04))
+* **explore:** disables wallet popup on explore ([00f7821](https://github.com/aeternity/dex-ui/commit/00f7821b117a4e036272e59289bc2cca8fdf3580))
+* first steps towards explore ([9d4db0b](https://github.com/aeternity/dex-ui/commit/9d4db0b8f6a750b9604c521a5a063efc567cab3c))
+* **graph:** adds bars and correct interpolation ([78c6dab](https://github.com/aeternity/dex-ui/commit/78c6dabf09dd85a83092229b61867e1c5638e470))
+* **graph:** adds loading indicator ([56a9f50](https://github.com/aeternity/dex-ui/commit/56a9f50eb3fe31e827287b3e51102e94bdadcc7b))
+* **graph:** adds type selection ([2f4d75a](https://github.com/aeternity/dex-ui/commit/2f4d75a3f65bd24ab6fa01dc3c21f688909cd6ed))
+* makes mainnet default ([57e3e4f](https://github.com/aeternity/dex-ui/commit/57e3e4f376f9d987ee84c158bcd4c5794ec6529d))
+* **pool-detail:** finishes tx table ([0b28571](https://github.com/aeternity/dex-ui/commit/0b2857185e61c763c3f56fb4ef4c57e5de8aa3e5))
+* **pool:** adds and abstracts info element ([d00877c](https://github.com/aeternity/dex-ui/commit/d00877cf87bee6d03e190fd2f37a51f572112764))
+* **pools:** migrates to per-token usd api properties ([c2a4605](https://github.com/aeternity/dex-ui/commit/c2a460597646067a6dc937af05681e6d3ac139c5))
+* **pools:** minor updates to displaying and error handling ([de3edda](https://github.com/aeternity/dex-ui/commit/de3edda295b8be8a1c4bf962d5bceb61a6272982))
+* replaces WAE with AE ([9313abc](https://github.com/aeternity/dex-ui/commit/9313abc05adf45e32ad9d4ebadc6c1726d8377df))
+* **table:** introduces sorting ([f255dde](https://github.com/aeternity/dex-ui/commit/f255dde1d58ba08822bc043b19c1cd7492aefeb9))
+* **token:** adds pair table to token and links ([351795b](https://github.com/aeternity/dex-ui/commit/351795bf3fe9dff9132209f4faec64b875153068))
+* **tokens:** adds graphs and table to token detail view ([c9f116f](https://github.com/aeternity/dex-ui/commit/c9f116ff09b555aac2f0a37b113459a4ce89f1b5))
+* **tokens:** first draft of token detail view ([c8e84e3](https://github.com/aeternity/dex-ui/commit/c8e84e392b0edb808cca34b32b82744cf704fe6b))
+* **wallet:** adds onAddress change listener ([33dcff5](https://github.com/aeternity/dex-ui/commit/33dcff51e33b436df59991ae971242fb5024310a))
+
+
+### Bug Fixes
+
+* adjusts class in onboarding modal ([fc7f554](https://github.com/aeternity/dex-ui/commit/fc7f5547ceb8a7099247399fb038f572f0afcff4))
+* aggregates volume only from swap ([8d1c3e6](https://github.com/aeternity/dex-ui/commit/8d1c3e669aca5ad0556d038a03cce5451ebb4c8e))
+* allows ae to be through contract id ([ea2094d](https://github.com/aeternity/dex-ui/commit/ea2094de2601ad5317dd1d64e490153c286b4ad7))
+* **app:** properly fetches networkId from query ([5dc2bee](https://github.com/aeternity/dex-ui/commit/5dc2bee60990219510560106f518ba0f66490df1))
+* **css:** disables max width on images per default ([787d895](https://github.com/aeternity/dex-ui/commit/787d89595a337cbde61cf39b19749ced34fc605a))
+* env setup for testing ([a87ae5f](https://github.com/aeternity/dex-ui/commit/a87ae5f772e28b19964eea1108573611cc717f78))
+* **explore:** fixes issue with nan for tvl ([6a37261](https://github.com/aeternity/dex-ui/commit/6a37261be13c13dc06ac540c611e53d9c08314e2))
+* **explore:** shows pagination only when nessesary ([ebf7bc7](https://github.com/aeternity/dex-ui/commit/ebf7bc79877a2badf703a741d0ae99e0b2a057d8))
+* few minor styling issues ([6114347](https://github.com/aeternity/dex-ui/commit/6114347eb9771abcdb5bbfc4ce60da96d57335f0))
+* **graph:** minor visuals ([1235f34](https://github.com/aeternity/dex-ui/commit/1235f34eab677e3b52144dd36528b11ef12ec887))
+* launches wallet popup when user returns to swap view from explore ([6450027](https://github.com/aeternity/dex-ui/commit/645002724ce47622710a388b39639615c18b6bb3))
+* removes no-wrap to avoid weird behavior on small screens ([ce8ae8e](https://github.com/aeternity/dex-ui/commit/ce8ae8e287d7ed15bc9eb6975d6465dc195997db))
+* sorting now works without providing an initial direction ([738880a](https://github.com/aeternity/dex-ui/commit/738880a77ad454a4414836fe284a7bccf90af941))
+* **store:** activeNetwork now uses networkId which is reactive ([04c8302](https://github.com/aeternity/dex-ui/commit/04c83028f25e43dfe93e5e7ea2ebc8bf1acf16ff))
+* table now shows correct and complete values ([88542ba](https://github.com/aeternity/dex-ui/commit/88542baaee6687f01783c716e1cd92579953d311))
+* **tokenlist:** only shows 10 tokens at a time for expanded list ([7e6d706](https://github.com/aeternity/dex-ui/commit/7e6d706a4682cc5d6240d3e98305961c9c93c5b1))
+
+
+### Testing
+
+* **e2e:** adds full swap test ([c04208b](https://github.com/aeternity/dex-ui/commit/c04208b725fac9ebcbc6994a4f46916e65bf9710))
+* **e2e:** adds tests for initial login ([c92af79](https://github.com/aeternity/dex-ui/commit/c92af79bf27a210f37d33040b9589438c45c6a42))
+* **e2e:** finishes pool tests ([059fa0d](https://github.com/aeternity/dex-ui/commit/059fa0d575fede450e119f54c36b954d28b06187))
+* **e2e:** first steps towards pool tests ([adb1338](https://github.com/aeternity/dex-ui/commit/adb133899fae0ee6a711dc5dfe3f848b8db2546e))
+* **e2e:** fixes swap test ([97ef237](https://github.com/aeternity/dex-ui/commit/97ef237c1030a3d2cf5b7d3295eec262851c4247))
+* **e2e:** fixes timeout because we now have mainnet as default ([255f843](https://github.com/aeternity/dex-ui/commit/255f8430f3ce0d4c392217b7c35fe77f1fbc2d4b))
+* **e2e:** fixes timeout on mainnet ([db4878f](https://github.com/aeternity/dex-ui/commit/db4878fc3fac42cf351a73bd5d0028b5d8aa4d3f))
+* **e2e:** makes commands reusable ([2083a04](https://github.com/aeternity/dex-ui/commit/2083a045aeb80d2d695c5e61c6d575e327fcbd02))
+* **e2e:** tests settings modifications ([e661820](https://github.com/aeternity/dex-ui/commit/e661820684214b79b88b1622953a9ed4623db093))
+* **e2e:** updates cypress config and adds user agent ([f3c3ba3](https://github.com/aeternity/dex-ui/commit/f3c3ba31cc5ea3b6bc09776784c954058b0db13f))
+* **e2e:** updates login command ([4d23d97](https://github.com/aeternity/dex-ui/commit/4d23d97e2d37ed0dd57a95a2f0a5e664bf426a64))
+* **e2e:** updates login flow ([a4a955f](https://github.com/aeternity/dex-ui/commit/a4a955f66f323fc5a2e10e3435e630ecae2b862b))
+* **e2e:** updates login test with full flow ([06ff901](https://github.com/aeternity/dex-ui/commit/06ff901677caf52e7e5dc5840b2b2a8799fda8fd))
+
+
+### Refactorings
+
+* **graph:** moves data manipulation to computed property ([3cb036c](https://github.com/aeternity/dex-ui/commit/3cb036cdc304a3ebd85848fe35b57cb01efd04ef))
+* joins history endpoint fetching ([88a3aa1](https://github.com/aeternity/dex-ui/commit/88a3aa17cf1d2d3532eebea84a43b7bd03e3897e))
+* moves avatar to component ([78e14c4](https://github.com/aeternity/dex-ui/commit/78e14c4750a7d604c663705f2af938649c965394))
+* **pool:** removes usd calculations ([4c8963d](https://github.com/aeternity/dex-ui/commit/4c8963deed739484a384e74f7fbd39c1c13c9c66))
+* **table:** moves ui to generic table ([a66c424](https://github.com/aeternity/dex-ui/commit/a66c4248958587b8b4decde86aa2d8dbe6f8d813))
+
+
+### Miscellaneous
+
+* adds boilerplate configs ([b48d00d](https://github.com/aeternity/dex-ui/commit/b48d00d0544412639e245f121d6bc44c29fae858))
+* adds todo about tokens table ([dcc9746](https://github.com/aeternity/dex-ui/commit/dcc97468bfa3563e567ba979d3812e2b31816b27))
+* adjusts formatting to match prettier ([d147da1](https://github.com/aeternity/dex-ui/commit/d147da1afcf37e818f211c3889d7c3d68aa183c1))
+* fixed typo ([092bfd9](https://github.com/aeternity/dex-ui/commit/092bfd9c7d9aa836f06246849a1dc7f46f466ced))
+* fixes linter issues ([e88e361](https://github.com/aeternity/dex-ui/commit/e88e3616431226f49e97cd7bb6bcde5b89274425))
+* **graph:** removes console logs ([0082712](https://github.com/aeternity/dex-ui/commit/0082712ded953225533aebedcf22a15200787255))
+* removes AE detection from link due to recent fix ([382ef3e](https://github.com/aeternity/dex-ui/commit/382ef3e7047b1e1e2b6c8d8ed78f6a3314181031))
+* removes placeholder routes ([d9d6e09](https://github.com/aeternity/dex-ui/commit/d9d6e095654f86c42e065ddcf6db8bf98ef3dfba))
+* **token:** removes table label ([2f1fa96](https://github.com/aeternity/dex-ui/commit/2f1fa96364db0664e0d93308a5747009ee4ffb3b))
+
 ## [1.18.6](https://github.com/aeternity/dex-ui/compare/v1.18.5...v1.18.6) (2024-05-09)
 
 
