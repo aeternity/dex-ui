@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.19.1](https://github.com/aeternity/dex-ui/compare/v1.19.0...v1.19.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* hides user-account on explore pages ([0441bce](https://github.com/aeternity/dex-ui/commit/0441bce3169ea2dddd3f441272a63d8e68325815))
+* increase backend timeout ([28a7a74](https://github.com/aeternity/dex-ui/commit/28a7a74d1b119ad30c035603acae73d67a3af219))
+
 ## [1.19.0](https://github.com/aeternity/dex-ui/compare/v1.18.6...v1.19.0) (2024-06-25)
 
 
