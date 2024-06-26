@@ -7,12 +7,12 @@
     </div>
     <NavigationMenu />
     <div class="right">
-      <div v-if="activeNetwork && address" class="active-network">
+      <div v-if="activeNetwork && address && !isExplore" class="active-network">
         <span class="circle" />
         <span>{{ activeNetwork.name }}</span>
       </div>
       <ButtonDefault
-        v-if="!address"
+        v-if="!address && !isExplore"
         :spinner="connectingToWallet"
         :disabled="connectingToWallet"
         class="connect-wallet"
@@ -22,7 +22,7 @@
       >
         <span>{{ $t('connectWallet') }}</span>
       </ButtonDefault>
-      <div v-else class="account-info">
+      <div v-else-if="!isExplore" class="account-info">
         <div
           :class="['address', { pending: pendingTransactions.length }]"
           data-cy="wallet-address"
@@ -159,6 +159,9 @@ export default {
         return transactions.filter((t) => t.pending && !t.unfinished);
       },
     }),
+    isExplore() {
+      return this.$route.fullPath.includes('/explore');
+    },
   },
   methods: {
     async connectWallet() {
