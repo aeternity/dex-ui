@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.2](https://github.com/aeternity/dex-ui/compare/v1.19.1...v1.19.2) (2024-07-29)
+
+
+### Bug Fixes
+
+* allows wrong network modal to be closed ([c4fef3f](https://github.com/aeternity/dex-ui/commit/c4fef3f11e64aac0f29647588b32d76fcc3c63e3))
+
 ## [1.19.1](https://github.com/aeternity/dex-ui/compare/v1.19.0...v1.19.1) (2024-06-26)
 
 
