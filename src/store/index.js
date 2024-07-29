@@ -305,7 +305,6 @@ export default createStore({
         await dispatch('modals/open', {
           name: 'show-error',
           message: `Network ${newNetworkId} is not supported, please switch to Testnet`,
-          resolve: null,
         });
       } else {
         if (networkId !== newNetworkId) {
