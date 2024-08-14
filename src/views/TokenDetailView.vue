@@ -2,7 +2,7 @@
   <ExploreWrapper>
     <div class="flex flex-row px-6 pt-6 items-center">
       <span v-if="tokenId" class="logo"><AddressAvatar :address="tokenId" /></span>
-      <h1 class="text-2xl">{{ metaInfo?.symbol }} / {{ metaInfo?.name }}</h1>
+      <h1 class="text-2xl">{{ tokenWithUsd?.symbol }} / {{ tokenWithUsd?.name }}</h1>
     </div>
     <div class="flex flex-col md:flex-row">
       <div class="flex-auto p-4 md:p-6">
@@ -37,12 +37,12 @@
           <div>
             <StatElement title="Price" :value="price" />
             <StatElement title="TVL" :value="tvl" />
-            <StatElement title="Locked" :value="`${locked} ${metaInfo.symbol}`" />
+            <StatElement title="Locked" :value="`${locked} ${tokenWithUsd.symbol}`" />
           </div>
           <div>
-            <StatElement title="Total Supply" :value="`${supply} ${metaInfo.symbol}`" />
+            <StatElement title="Total Supply" :value="`${supply} ${tokenWithUsd.symbol}`" />
             <StatElement title="FDV" :value="fdv" />
-            <StatElement title="Volume (24h)" :value="volume" />
+            <StatElement title="Volume (24h)" :value="volume24h" />
           </div>
         </div>
         <div>
@@ -54,7 +54,7 @@
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Transactions</h2>
       <TransactionTable
-        v-if="metaInfo && reversedTransactions && pairMap.size > 0"
+        v-if="tokenWithUsd && reversedTransactions && pairMap.size > 0"
         :transactions="reversedTransactions"
       ></TransactionTable>
     </div>
@@ -68,8 +68,8 @@
     <div>
       <h2 class="text-2xl text-left p-4 pb-0">Token Information</h2>
       <div class="flex flex-row gap-12 w-full text-left p-4">
-        <InfoElement title="Token Name" :value="metaInfo.name" />
-        <InfoElement title="Token Symbol" :value="metaInfo.symbol" />
+        <InfoElement title="Token Name" :value="tokenWithUsd.name" />
+        <InfoElement title="Token Symbol" :value="tokenWithUsd.symbol" />
         <InfoElement
           title="Contract Address"
           :value="shortenAddress(tokenId)"
@@ -119,20 +119,34 @@ export default defineComponent({
         pairs0: [],
         pairs1: [],
       },
+      tokenWithUsd: {
+        address: '',
+        symbol: '',
+        name: '',
+        decimals: 0,
+        malformed: false,
+        noContract: false,
+        listed: false,
+        priceAe: '',
+        priceUsd: '',
+        tvlAe: '',
+        tvlUsd: '',
+        totalReserve: '',
+        pairs: 0,
+        volumeUsdDay: '',
+        volumeUsdWeek: '',
+        volumeUsdMonth: '',
+        volumeUsdYear: '',
+        volumeUsdAll: '',
+        priceChangeDay: '',
+        priceChangeWeek: '',
+        priceChangeMonth: '',
+        priceChangeYear: '',
+      },
       pairTable: [],
       pairMap: new Map(),
       tokenIdMap: new Map(),
-      metaInfo: {
-        decimals: 0,
-        name: '',
-        extensions: [],
-        symbol: '',
-        contract_id: '',
-        contract_tx_hash: '',
-        event_supply: 0,
-        holders: 0,
-        initial_supply: 0,
-      },
+      totalSupply: 0,
       loading: false,
     };
   },
@@ -148,11 +162,11 @@ export default defineComponent({
             ...acc.datasets[1].data,
             new BigNumber(reserve)
               .multipliedBy(this.getUsdPrice(tx))
-              .div(new BigNumber(10).pow(this.metaInfo.decimals)),
+              .div(new BigNumber(10).pow(this.tokenWithUsd.decimals)),
           ].map((d) => d || 0);
           acc.datasets[2].data = [
             ...acc.datasets[2].data,
-            new BigNumber(reserve).div(new BigNumber(10).pow(this.metaInfo.decimals)),
+            new BigNumber(reserve).div(new BigNumber(10).pow(this.tokenWithUsd.decimals)),
           ].map((d) => d || 0);
           if (tx.type === 'SwapTokens') {
             acc.datasets[3].data = [
@@ -160,7 +174,7 @@ export default defineComponent({
               new BigNumber(this.getDeltaReserve(tx))
                 .abs()
                 .multipliedBy(this.getUsdPrice(tx))
-                .div(new BigNumber(10).pow(this.metaInfo.decimals)),
+                .div(new BigNumber(10).pow(this.tokenWithUsd.decimals)),
             ].map((d) => d || 0);
           } else {
             acc.datasets[3].data = [...acc.datasets[3].data, 0];
@@ -202,59 +216,25 @@ export default defineComponent({
         }));
     },
     supply() {
-      return formatAmountPretty(this.metaInfo.event_supply, this.metaInfo.decimals);
-    },
-    priceRaw() {
-      // latest 20 history events
-      const latestHistoryEntries = this.history.slice(-5);
-      // average the price of the last events
-      const historicPriceEntries = latestHistoryEntries
-        .map((historyElement) => this.getUsdPrice(historyElement))
-        .filter((price) => !price.isNaN());
-
-      return historicPriceEntries
-        .reduce((a, b) => a.plus(b), BigNumber(0))
-        .div(historicPriceEntries.length);
+      return formatAmountPretty(this.totalSupply, this.tokenWithUsd.decimals);
     },
     price() {
-      return formatUsdPretty(this.priceRaw, 0);
-    },
-    lockedRaw() {
-      return this.pairs?.pairs0
-        .map((pair) => pair.liquidityInfo.reserve0)
-        .filter((reserve) => !!reserve)
-        .reduce((a, b) => a.plus(b), BigNumber(0))
-        .plus(
-          this.pairs.pairs1
-            .map((pair) => pair.liquidityInfo.reserve1)
-            .filter((reserve) => !!reserve)
-            .reduce((a, b) => a.plus(b), BigNumber(0)),
-        )
-        .div(new BigNumber(10).pow(this.metaInfo.decimals));
+      return formatUsdPretty(this.tokenWithUsd.priceUsd, 0);
     },
     locked() {
-      return formatAmountPretty(this.lockedRaw, 0);
+      return formatAmountPretty(this.tokenWithUsd.totalReserve, 0);
     },
     tvl() {
-      return formatUsdPretty(new BigNumber(this.lockedRaw).multipliedBy(this.priceRaw), 0);
+      return formatUsdPretty(this.tokenWithUsd.tvlUsd, 0);
     },
     fdv() {
       return formatUsdPretty(
-        new BigNumber(this.metaInfo.event_supply).multipliedBy(this.priceRaw).toString(),
-        this.metaInfo.decimals,
+        new BigNumber(this.totalSupply).multipliedBy(this.tokenWithUsd.priceUsd).toString(),
+        this.tokenWithUsd.decimals,
       );
     },
-    volume() {
-      return formatUsdPretty(
-        this.history
-          .filter((tx) => Date.now() - tx.microBlockTime < 24 * 60 * 60 * 1000)
-          .filter((tx) => tx.type === 'SwapTokens')
-          .reduce((acc, tx) => acc.plus(this.getUsdPrice(tx)), new BigNumber(0)),
-        0,
-      );
-    },
-    fees() {
-      return 0;
+    volume24h() {
+      return formatUsdPretty(this.tokenWithUsd.volumeUsdDay || 0, 0);
     },
   },
   async mounted() {
@@ -262,13 +242,18 @@ export default defineComponent({
     // extract param from URL
     this.tokenId = this.$route.params.id;
 
-    const metaInfo = await this.$store.dispatch('tokens/fetchToken', this.tokenId);
-    this.metaInfo = detectAndModifyWAE({
-      ...metaInfo,
-      address: this.tokenId,
-    });
+    this.totalSupply = await this.$store
+      .dispatch('tokens/fetchToken', this.tokenId)
+      .then((r) => r.event_supply);
 
     this.pairs = await this.$store.dispatch('backend/fetchPairsByToken', this.tokenId);
+
+    this.tokenWithUsd = await this.$store.dispatch('backend/getTokenWithUsd', this.tokenId);
+
+    this.tokenWithUsd = detectAndModifyWAE({
+      ...this.tokenWithUsd,
+      address: this.tokenId,
+    });
 
     if (!this.pairs) {
       this.loading = false;
@@ -282,7 +267,7 @@ export default defineComponent({
         pair.address,
         {
           ...pair,
-          token0: this.metaInfo,
+          token0: this.tokenWithUsd,
           token1: detectAndModifyWAE(pair.oppositeToken),
         },
       ]),
@@ -291,7 +276,7 @@ export default defineComponent({
         {
           ...pair,
           token0: detectAndModifyWAE(pair.oppositeToken),
-          token1: this.metaInfo,
+          token1: this.tokenWithUsd,
         },
       ]),
     ]);

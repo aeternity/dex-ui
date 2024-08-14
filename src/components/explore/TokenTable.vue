@@ -74,15 +74,15 @@ export default {
           value: token.priceChangeMonth,
         },
         volumeDay: {
-          text: formatUsdPretty(token.volumeUsdDay, 0),
+          text: formatUsdPretty(token.volumeUsdDay || 0, 0),
           value: token.volumeUsdDay,
         },
         volumeMonth: {
-          text: formatUsdPretty(token.volumeUsdMonth, 0),
+          text: formatUsdPretty(token.volumeUsdMonth || 0, 0),
           value: token.volumeUsdMonth,
         },
         volumeAll: {
-          text: formatUsdPretty(token.volumeUsdAll, 0),
+          text: formatUsdPretty(token.volumeUsdAll || 0, 0),
           value: token.volumeUsdAll,
         },
       }));

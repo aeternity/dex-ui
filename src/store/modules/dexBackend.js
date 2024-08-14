@@ -156,6 +156,10 @@ export default {
       }));
     },
 
+    async getTokenWithUsd({ dispatch }, tokenId) {
+      return dispatch('safeFetch', { url: `tokens/${tokenId}` });
+    },
+
     async getAllTokens({ dispatch }) {
       return dispatch('safeFetch', { url: 'tokens' });
     },
@@ -194,7 +198,7 @@ export default {
     },
 
     async fetchPairsByToken({ dispatch }, tokenId) {
-      return dispatch('safeFetch', { url: `tokens/by-address/${tokenId}/pairs` });
+      return dispatch('safeFetch', { url: `tokens/${tokenId}/pairs` });
     },
 
     async fetchPairsByTokenUsd({ dispatch }, tokenId) {

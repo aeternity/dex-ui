@@ -58,15 +58,15 @@ export default {
           value: pair.tvlUsd,
         },
         volumeDay: {
-          text: formatUsdPretty(pair.volumeUsdDay, 0),
+          text: formatUsdPretty(pair.volumeUsdDay || 0, 0),
           value: pair.volumeUsdDay,
         },
         volumeMonth: {
-          text: formatUsdPretty(pair.volumeUsdMonth, 0),
+          text: formatUsdPretty(pair.volumeUsdMonth || 0, 0),
           value: pair.volumeUsdMonth,
         },
         volumeAll: {
-          text: formatUsdPretty(pair.volumeUsdAll, 0),
+          text: formatUsdPretty(pair.volumeUsdAll || 0, 0),
           value: pair.volumeUsdAll,
         },
       }));
