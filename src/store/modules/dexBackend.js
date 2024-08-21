@@ -128,7 +128,7 @@ export default {
         if (!pair) return null;
       }
       const resp = await dispatch('safeFetch', {
-        url: `pairs/by-address/${pairAddress || pair.address}`,
+        url: `pairs/${pairAddress || pair.address}`,
       });
       return (
         resp && {
@@ -144,7 +144,7 @@ export default {
     },
 
     async fetchSwapRoutes({ dispatch }, { tokenA, tokenB }) {
-      return dispatch('safeFetch', { url: `pairs/swap-routes/${tokenA}/${tokenB}` });
+      return dispatch('safeFetch', { url: `swap-routes/${tokenA}/${tokenB}` });
     },
 
     async getListedTokens({ dispatch }) {
