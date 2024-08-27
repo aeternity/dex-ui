@@ -204,5 +204,10 @@ export default {
     async fetchPairsByTokenUsd({ dispatch }, tokenId) {
       return dispatch('safeFetch', { url: `pairs?token=${tokenId}` });
     },
+
+    async fetchGraph({ dispatch }, options) {
+      const queryString = new URLSearchParams(options).toString();
+      return dispatch('safeFetch', { url: `graph?${queryString}` });
+    },
   },
 };

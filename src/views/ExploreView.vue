@@ -6,9 +6,9 @@
         <PriceHistoryGraph
           v-if="graphData"
           :x="graphData.x"
+          :available-graph-types="['TVL']"
           :datasets="tvl"
           initial-chart="TVL"
-          :loading="loading"
         />
       </div>
       <div class="flex-1">
@@ -16,9 +16,9 @@
         <PriceHistoryGraph
           v-if="graphData"
           :x="graphData.x"
+          :available-graph-types="['Volume']"
           :datasets="volume"
           initial-chart="Volume"
-          :loading="loading"
         />
       </div>
     </div>
@@ -97,7 +97,6 @@ export default defineComponent({
       history: [],
       tokenMap: new Map(),
       activeTab: 'Tokens',
-      loading: false,
     };
   },
   computed: {
@@ -165,17 +164,12 @@ export default defineComponent({
     },
   },
   async mounted() {
-    this.loading = true;
     // fetch all tokens
     const tokens = await this.$store.dispatch('backend/getAllTokens');
     this.tokenMap = new Map(tokens.map((token) => [token.address, detectAndModifyWAE(token)]));
     // fetch all pairs
     const fetchResult = await this.$store.dispatch('backend/fetchPairs');
     this.pairs = Object.values(fetchResult);
-
-    // fetch all history
-    this.history = await this.$store.dispatch('backend/fetchHistory');
-    this.loading = false;
   },
   methods: {
     pairToToken(pairAddress) {
