@@ -4,21 +4,15 @@
       <div class="flex-1">
         <h1 class="text-2xl">TVL</h1>
         <PriceHistoryGraph
-          v-if="graphData"
-          :x="graphData.x"
-          :available-graph-types="['TVL']"
-          :datasets="tvl"
-          initial-chart="TVL"
+          :available-graph-types="[{ type: 'TVL', text: 'TVL' }]"
+          :initial-chart="{ type: 'TVL', text: 'TVL' }"
         />
       </div>
       <div class="flex-1">
         <h1 class="text-2xl">Volume</h1>
         <PriceHistoryGraph
-          v-if="graphData"
-          :x="graphData.x"
-          :available-graph-types="['Volume']"
-          :datasets="volume"
-          initial-chart="Volume"
+          :available-graph-types="[{ type: 'Volume', text: 'Volume' }]"
+          :initial-chart="{ type: 'Volume', text: 'Volume' }"
         />
       </div>
     </div>
@@ -74,7 +68,6 @@
 import { defineComponent } from 'vue';
 import ExploreWrapper from '@/components/explore/ExploreWrapper.vue';
 import { mapGetters } from 'vuex';
-import BigNumber from 'bignumber.js';
 import PriceHistoryGraph from '@/components/explore/PriceHistoryGraph.vue';
 import PairTable from '@/components/explore/PairTable.vue';
 import TransactionTable from '@/components/explore/TransactionTable.vue';
@@ -101,12 +94,6 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters(['activeNetwork']),
-    tvl() {
-      return [this.graphData.datasets[0]];
-    },
-    volume() {
-      return [this.graphData.datasets[1]];
-    },
     pairTable() {
       return this.pairs.map((pair) => ({
         ...pair,
@@ -123,44 +110,6 @@ export default defineComponent({
     },
     tokenTable() {
       return [...this.tokenMap.values()];
-    },
-    graphData() {
-      let tvl = new BigNumber(0);
-      return this.history.reduce(
-        (acc, tx) => {
-          // TVL
-          // deltaUsdValue is already calculated but absolute, so we need to check the deltaReserve to get the sign
-          const delta0 = new BigNumber(tx.delta0UsdValue).times(Math.sign(tx.deltaReserve0));
-          const delta1 = new BigNumber(tx.delta1UsdValue).times(Math.sign(tx.deltaReserve1));
-          tvl = tvl.plus(delta0.isNaN() ? 0 : delta0).plus(delta1.isNaN() ? 0 : delta1);
-          acc.datasets[0].data = [...acc.datasets[0].data, tvl.toString()].map((d) => d || 0);
-
-          // VOLUME
-          if (tx.type === 'SwapTokens') {
-            acc.datasets[1].data = [
-              ...acc.datasets[1].data,
-              new BigNumber(tx.delta0UsdValue).plus(tx.delta1UsdValue).toString(),
-            ].map((d) => d || 0);
-          } else {
-            acc.datasets[1].data = [...acc.datasets[1].data, 0].map((d) => d || 0);
-          }
-          acc.x = [...acc.x, tx.microBlockTime];
-          return acc;
-        },
-        {
-          x: [],
-          datasets: [
-            {
-              label: 'TVL',
-              data: [],
-            },
-            {
-              label: 'Volume',
-              data: [],
-            },
-          ],
-        },
-      );
     },
   },
   async mounted() {
