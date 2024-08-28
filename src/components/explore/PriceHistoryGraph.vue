@@ -4,10 +4,10 @@
       v-for="label in labels"
       :key="label"
       class="p-16 hidden md:block"
-      :fill="label === selectedChart ? 'light' : 'transparent'"
+      :fill="label.type === selectedChart.type ? 'light' : 'transparent'"
       @click="changeChartContent(label)"
     >
-      {{ label }}
+      {{ label.text }}
     </ButtonDefault>
     <div class="border border-gray-800 p-2 md:hidden rounded-xl">
       <label for="chart-select" class="hidden">Select Option</label>
@@ -18,7 +18,7 @@
         @change="changeChartContent($event.target.value)"
       >
         <option v-for="label in labels" :key="label" :value="label" class="bg-gray-800">
-          {{ label }}
+          {{ label.text }}
         </option>
       </select>
     </div>
@@ -71,7 +71,6 @@ import {
 import { Line, Bar } from 'vue-chartjs';
 import 'chartjs-adapter-date-fns';
 import ButtonDefault from '@/components/ButtonDefault.vue';
-import BigNumber from 'bignumber.js';
 
 const TIME_FRAMES = {
   '1H': 1,
@@ -103,15 +102,17 @@ export default {
   },
   props: {
     availableGraphTypes: { type: Array, required: true },
-    datasets: { type: Array, required: true },
-    x: { type: Array, required: true },
-    initialChart: { type: String, default: 'Volume' },
+    initialChart: { type: Object, required: true },
     initialTimeFrame: { type: String, default: 'MAX' },
+    pairId: { type: String, default: null },
   },
   data() {
     return {
       selectedTimeFrame: null,
-      selectedChart: null,
+      selectedChart: {
+        type: null,
+        text: null,
+      },
       colors: ['red', 'green', 'blue', 'purple', 'orange'],
       timeFrames: TIME_FRAMES,
       graph: {
@@ -150,7 +151,7 @@ export default {
             ticks: {
               // Include a dollar sign in the ticks
               callback: (value) =>
-                ['TVL', 'Fees', 'Volume'].includes(this.selectedChart) ? `$${value}` : value,
+                ['TVL', 'Fees', 'Volume'].includes(this.selectedChart.type) ? `$${value}` : value,
             },
           },
         },
@@ -164,18 +165,18 @@ export default {
         labels: this.graph.labels.map((l) => Number(l)),
         datasets: this.graph.datasets.map((d) => ({
           label: d.label,
-          data: d.data.map((d) => Number(d)),
+          data: d.data.map((n) => Number(n)),
           borderColor: 'rgb(0 255 157 / 80%)',
           backgroundColor: 'rgb(0 255 157 / 80%)',
         })),
       };
     },
     showBar() {
-      return ['TVL', 'Volume', 'Fees', 'Locked'].includes(this.selectedChart);
+      return ['TVL', 'Volume', 'Fees', 'Locked'].includes(this.selectedChart.type);
     },
   },
   async mounted() {
-    this.fetchData();
+    await this.fetchData();
   },
   created() {
     this.selectedTimeFrame = this.initialTimeFrame;
@@ -188,14 +189,19 @@ export default {
     },
     changeChartContent(newChart) {
       this.selectedChart = newChart;
+      this.fetchData();
     },
     async fetchData() {
       this.loading = true;
       this.graph.datasets = [];
-      this.graph = await this.$store.dispatch('backend/fetchGraph', {
-        graphType: this.selectedChart,
+      let options = {
+        graphType: this.selectedChart.type,
         timeFrame: this.selectedTimeFrame,
-      });
+      };
+      if (this.pairId) {
+        options = { ...options, pairAddress: this.pairId };
+      }
+      this.graph = await this.$store.dispatch('backend/fetchGraph', options);
       this.loading = false;
     },
   },
