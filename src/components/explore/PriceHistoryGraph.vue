@@ -105,6 +105,7 @@ export default {
     initialChart: { type: Object, required: true },
     initialTimeFrame: { type: String, default: 'MAX' },
     pairId: { type: String, default: null },
+    tokenId: { type: String, default: null },
   },
   data() {
     return {
@@ -200,6 +201,9 @@ export default {
       };
       if (this.pairId) {
         options = { ...options, pairAddress: this.pairId };
+      }
+      if (this.tokenId) {
+        options = { ...options, tokenAddress: this.tokenId };
       }
       this.graph = await this.$store.dispatch('backend/fetchGraph', options);
       this.loading = false;
