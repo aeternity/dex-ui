@@ -118,7 +118,8 @@ export default {
       timeFrames: TIME_FRAMES,
       graph: {
         labels: [],
-        datasets: [],
+        data: [],
+        graphType: null,
       },
       loading: false,
     };
@@ -164,12 +165,14 @@ export default {
     graphData() {
       return {
         labels: this.graph.labels.map((l) => Number(l)),
-        datasets: this.graph.datasets.map((d) => ({
-          label: d.label,
-          data: d.data.map((n) => Number(n)),
-          borderColor: 'rgb(0 255 157 / 80%)',
-          backgroundColor: 'rgb(0 255 157 / 80%)',
-        })),
+        datasets: [
+          {
+            label: this.graph.graphType,
+            data: this.graph.data?.map((n) => Number(n)),
+            borderColor: 'rgb(0 255 157 / 80%)',
+            backgroundColor: 'rgb(0 255 157 / 80%)',
+          },
+        ],
       };
     },
     showBar() {
@@ -194,7 +197,7 @@ export default {
     },
     async fetchData() {
       this.loading = true;
-      this.graph.datasets = [];
+      this.graph.data = [];
       let options = {
         graphType: this.selectedChart.type,
         timeFrame: this.selectedTimeFrame,
