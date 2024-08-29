@@ -17,8 +17,14 @@
         <PriceHistoryGraph
           v-if="pair"
           :available-graph-types="[
-            { type: 'Price0_1', text: `${pair?.token1.symbol} / ${pair?.token0.symbol} Price` },
-            { type: 'Price1_0', text: `${pair?.token0.symbol} / ${pair?.token1.symbol} Price` },
+            {
+              type: 'PriceToken1InToken0',
+              text: `${pair?.token1.symbol} / ${pair?.token0.symbol} Price`,
+            },
+            {
+              type: 'PriceToken0InToken1',
+              text: `${pair?.token0.symbol} / ${pair?.token1.symbol} Price`,
+            },
             { type: 'TVL', text: 'TVL' },
             { type: 'Fees', text: 'Fees' },
             { type: 'Volume', text: 'Volume' },
@@ -42,7 +48,7 @@
               })
             "
           >
-            {{ $t('poolDetail.swap') }}x
+            {{ $t('poolDetail.swap') }}
           </ButtonDefault>
           <ButtonDefault
             fill="light"
