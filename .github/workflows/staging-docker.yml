@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Web build docker
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -30,7 +30,7 @@ jobs:
           install: true
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v4.0.2
         with:
           path: /tmp/.buildx-cache
           # Key is named differently to avoid collision
@@ -47,7 +47,7 @@ jobs:
       - name: Extract metadata for docker
         if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5.5.1
         with:
           images: aeternity/dex-ui
           tags: |
@@ -64,7 +64,7 @@ jobs:
 
       - name: Build and push docker image
         if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6.7.0
         with:
           context: .
           file: Dockerfile
@@ -86,7 +86,7 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.1.7
         with:
           repository: aeternity/gitops-apps-aelabs
           token: ${{ secrets.BOT_GITHUB_TOKEN }}
@@ -126,7 +126,7 @@ jobs:
           app: ${{ env.APP }}
 
       - name: Print PR url
-        uses: unsplash/comment-on-pr@v1.3.0
+        uses: unsplash/comment-on-pr@v1.3.1
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
