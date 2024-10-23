@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.19.3](https://github.com/aeternity/dex-ui/compare/v1.19.2...v1.19.3) (2024-10-23)
+
+
+### CI / CD
+
+* test gh actions modules updates ([8558136](https://github.com/aeternity/dex-ui/commit/855813640cd604f5276c82e1ed8026e0eb876080))
+* update gh actions versions ([aca0781](https://github.com/aeternity/dex-ui/commit/aca0781e8ce7b1121b8bb4c2b7bbf39ec6f7f879))
+* update more gh actions versions ([bf1d7cd](https://github.com/aeternity/dex-ui/commit/bf1d7cd0baff7b51358f94cd97f83786e493f3d9))
+
 ## [1.19.2](https://github.com/aeternity/dex-ui/compare/v1.19.1...v1.19.2) (2024-07-29)
 
 
