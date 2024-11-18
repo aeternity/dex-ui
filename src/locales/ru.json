@@ -36,7 +36,7 @@
     "to": "Получаете",
     "transactionDetails": "Детали транзакции",
     "liquidityProviderFee": "Комиссия поставщика ликвидности",
-    "priceImpact": "Влияние на цену",
+    "priceImpact": "Влияние на цену {token}",
     "allowedSlippage": "Допустимое проскальзывание",
     "minReceived": "Минимум к получению",
     "maxSpent": "Максимум к продаже",

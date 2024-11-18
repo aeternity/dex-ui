@@ -42,7 +42,7 @@
     "to": "Pour",
     "transactionDetails": "détails de la transaction",
     "liquidityProviderFee": "Frais de fournisseur de liquidité",
-    "priceImpact": "Incidence sur les prix",
+    "priceImpact": "Incidence sur les prix de {token}",
     "allowedSlippage": "Glissement autorisé",
     "minReceived": "Minimum reçu",
     "maxSpent": "Dépense maximale",

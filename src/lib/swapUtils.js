@@ -119,7 +119,7 @@ const getPriceImpactForPairReserves = (pairReserves, amountA) => {
   const marketPrice = BigNumber(1).div(ratioFromPairReserves(pairReserves));
   const newPrice = BigNumber(amountA).div(receivedB);
 
-  return newPrice.minus(marketPrice).times(100).div(marketPrice).toNumber();
+  return -newPrice.minus(marketPrice).times(100).div(newPrice).toNumber();
 };
 
 /**

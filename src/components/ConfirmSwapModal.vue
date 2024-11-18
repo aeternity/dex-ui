@@ -44,7 +44,7 @@
         <span>{{ slippage }}%</span>
       </div>
       <div v-if="!isAeVsWae">
-        <span>{{ $t('confirmSwapModal.priceImpact') }}</span>
+        <span>{{ $t('confirmSwapModal.priceImpact', { token: from.symbol }) }}</span>
         <span>{{ priceImpact?.toFixed(8) }}%</span>
       </div>
       <div class="no-border">

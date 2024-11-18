@@ -70,7 +70,7 @@ describe('route price impact', () => {
   });
   const toPairs = (xs) => xs.map(toPair);
   const priceImpact = (xs, tokenA, amountA) => getPriceImpactForRoute(toPairs(xs), tokenA, amountA);
-  it('price impact to be 0.5', () => {
+  it('price impact to be -0.4975124378109453', () => {
     expect(
       priceImpact(
         [
@@ -82,9 +82,9 @@ describe('route price impact', () => {
         'a',
         10000n,
       ),
-    ).toBe(0.5);
+    ).toBe(-0.4975124378109453);
   });
-  it('price impact to be 5', () => {
+  it('price impact to be -4.761904761904762', () => {
     expect(
       priceImpact(
         [
@@ -96,7 +96,7 @@ describe('route price impact', () => {
         'a',
         100000n,
       ),
-    ).toBe(5);
+    ).toBe(-4.761904761904762);
   });
   it('should receive 1', () => {
     expect(getReceivedTokensForPairReserves([[2, 2]], 2).toNumber()).toBe(1);
@@ -113,7 +113,7 @@ describe('route price impact', () => {
     ).toBe(0.6666666666666666);
   });
 
-  it('swapping reserveA will have priceImpact=100%', () => {
+  it('swapping reserveA will have priceImpact=-50%', () => {
     expect(
       priceImpact(
         [
@@ -125,10 +125,10 @@ describe('route price impact', () => {
         'a',
         2,
       ),
-    ).toBe(100);
+    ).toBe(-50);
   });
 
-  it('swapping reserveA withing two pairs will have priceImpact=200%', () => {
+  it('swapping reserveA withing two pairs will have priceImpact=-66.66666666666667%', () => {
     expect(
       priceImpact(
         [
@@ -144,9 +144,9 @@ describe('route price impact', () => {
         'a',
         2,
       ),
-    ).toBe(200);
+    ).toBe(-66.66666666666667);
   });
-  it('swapping reserveA withing 3 pairs will have priceImpact=300%', () => {
+  it('swapping reserveA withing 3 pairs will have priceImpact=-75%', () => {
     expect(
       priceImpact(
         [
@@ -166,9 +166,9 @@ describe('route price impact', () => {
         'a',
         2,
       ),
-    ).toBe(300);
+    ).toBe(-75);
   });
-  it('swapping 25 for [[100,50],[25,25]] will have priceImpact=75%', () => {
+  it('swapping 25 for [[100,50],[25,25]] will have priceImpact=-42.857142857142854%', () => {
     expect(
       priceImpact(
         [
@@ -184,7 +184,7 @@ describe('route price impact', () => {
         'a',
         25,
       ),
-    ).toBe(75);
+    ).toBe(-42.857142857142854);
   });
 });
 describe('get route reserves', () => {
