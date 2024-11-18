@@ -50,7 +50,7 @@
     "to": "To",
     "transactionDetails": "Transaction Details",
     "liquidityProviderFee": "Liquidity Provider Fee",
-    "priceImpact": "Price Impact",
+    "priceImpact": "Price Impact on {token}",
     "allowedSlippage": "Allowed Slippage",
     "minReceived": "Minimum received",
     "maxSpent": "Maximum spent",

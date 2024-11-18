@@ -49,7 +49,7 @@
     "to": "到",
     "transactionDetails": "交换详情",
     "liquidityProviderFee": "Liquidity Provider Fee",
-    "priceImpact": "价格影响",
+    "priceImpact": "价格影响针对 {token}",
     "allowedSlippage": "滑点",
     "minReceived": "最小收益",
     "maxSpent": "最多支付",
