@@ -153,7 +153,10 @@ export default {
       const amountTokenB = expandDecimals(this.amountTokenB, this.tokenB.decimals);
       const amount = amountTokenA * amountTokenB;
       const reserve = this.reserveTokenB * this.reserveTokenA;
-      return BigNumber(amount).times(100).div(reserve).toNumber();
+      return BigNumber(amount)
+        .times(100)
+        .div(reserve + amount)
+        .toNumber();
     },
     ratio() {
       if (!this.reserveTokenA || !this.reserveTokenB || !this.tokenA || !this.tokenB) {
