@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.20.0](https://github.com/aeternity/dex-ui/compare/v1.19.2...v1.20.0) (2024-11-19)
+
+
+### Features
+
+* adapt adjusted graph endpoint response ([cf4d9a8](https://github.com/aeternity/dex-ui/commit/cf4d9a80d03af3356c47017cb5f359b6a2c76eda))
+* adapt adjusted graph types ([ae2a4ca](https://github.com/aeternity/dex-ui/commit/ae2a4ca00f424ec909f0ebc813fefe7ef7c30130))
+* adapt new graph endpoint for ExploreView ([ad285d5](https://github.com/aeternity/dex-ui/commit/ad285d580c8f99153866fefc983ae707fa94c5a7))
+* adapt new graph endpoint for PoolDetailView ([9ff8ab3](https://github.com/aeternity/dex-ui/commit/9ff8ab370cf03b66cdfc9d6dea9b2e5b0f0a7ebe))
+* adapt new graph endpoint for TokenDetailView ([7966f9e](https://github.com/aeternity/dex-ui/commit/7966f9e9214ad27af2bed9636053cc450aefd791))
+* use backend data for price and volume in TokenDetailView ([b2656ef](https://github.com/aeternity/dex-ui/commit/b2656efcd54ec8289f39341b3750a9352c938f6f))
+
+
+### Bug Fixes
+
+* calculation of pool share percentage on AddLiquidity ([3089691](https://github.com/aeternity/dex-ui/commit/3089691d58bf1412f089ff65c604e62fd69d34bd))
+* improve calculation and display of price impact on Swap ([9c1822e](https://github.com/aeternity/dex-ui/commit/9c1822e6cfe97fa76ae8eb73e6b590ea55842571))
+* increase timeout of e2e tests ([141e4e7](https://github.com/aeternity/dex-ui/commit/141e4e72d2873f57bfa50d75e9c5223971ac51ff))
+
+
+### CI / CD
+
+* change pr closed triggers ([f6a07ed](https://github.com/aeternity/dex-ui/commit/f6a07edb302a0fa6552d53030d50bf1748e9651b))
+* test gh actions modules updates ([8558136](https://github.com/aeternity/dex-ui/commit/855813640cd604f5276c82e1ed8026e0eb876080))
+* update gh actions versions ([aca0781](https://github.com/aeternity/dex-ui/commit/aca0781e8ce7b1121b8bb4c2b7bbf39ec6f7f879))
+* update more gh actions versions ([bf1d7cd](https://github.com/aeternity/dex-ui/commit/bf1d7cd0baff7b51358f94cd97f83786e493f3d9))
+
+
+### Refactorings
+
+* adapt improved backend api structure ([aeac9b4](https://github.com/aeternity/dex-ui/commit/aeac9b4493ace3c84e9d183aaa7c01968b299074))
+
 ## [1.19.2](https://github.com/aeternity/dex-ui/compare/v1.19.1...v1.19.2) (2024-07-29)
 
 
