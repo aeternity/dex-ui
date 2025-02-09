@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.20.1](https://github.com/aeternity/dex-ui/compare/v1.20.0...v1.20.1) (2025-02-09)
+
+
+### CI / CD
+
+* fix gh action undeploy step triggers ([194bb31](https://github.com/aeternity/dex-ui/commit/194bb31d26531d83b85a8cd19be6342268366ca1))
+* pipeline changes ([cff0624](https://github.com/aeternity/dex-ui/commit/cff062403c240e79aa9362f8da48c972a0500e1f))
+
 ## [1.20.0](https://github.com/aeternity/dex-ui/compare/v1.19.2...v1.20.0) (2024-11-19)
 
 
