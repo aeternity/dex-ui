@@ -125,14 +125,15 @@ jobs:
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
 
-      - name: Print PR url
-        uses: unsplash/comment-on-pr@v1.3.1
+      - name: Comment PR with deployment URL
+        uses: peter-evans/create-or-update-comment@v4
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: Deployed to https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.service.aepps.com
-          check_for_duplicate_msg: true
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚀 Deployed to https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.service.aepps.com
+          token: ${{ secrets.GITHUB_TOKEN }}
+          edit-mode: replace
 
       - name: Push changes
         uses: ad-m/github-push-action@master
