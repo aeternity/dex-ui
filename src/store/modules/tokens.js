@@ -59,7 +59,7 @@ export default {
         }
         const { waeAddress } = DEFAULT_NETWORKS.find((network) => network.networkId === networkId);
         const restOfTheTokens = provider.tokens.filter(
-          (token) => token.networkId !== networkId || token.contract_id === waeAddress,
+          (token) => token.networkId === networkId,
         );
         const newTokens = restOfTheTokens.concat(
           tokens
