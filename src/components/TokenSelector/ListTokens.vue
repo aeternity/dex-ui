@@ -115,7 +115,6 @@ export default {
       return this.expandedList ? this.tokens.slice(0, this.currentPage * 10 + 10) : this.tokens;
     },
   },
-  mounted() {},
   // if the token list is longer than 10 items, show a "show more button"
   methods: {
     showMore() {

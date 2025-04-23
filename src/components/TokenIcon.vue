@@ -1,19 +1,26 @@
 <template>
   <div class="token-icon">
+    <component
+      :is="selectedIcon(tokenA)"
+      v-if="selectedIcon(tokenA)"
+      :class="{ rotating, 'not-pool-token': !tokenB }"
+    />
     <img
-      v-if="tokenA && !tokenA.is_ae"
+      v-else-if="tokenA"
       :class="{ rotating, 'not-pool-token': !tokenB }"
       :src="mapToken(tokenA)"
       alt=""
     />
-    <AeIcon v-else-if="tokenA && tokenA.is_ae" :class="{ rotating, 'not-pool-token': !tokenB }" />
-    <img v-if="tokenB && !tokenB.is_ae" :class="{ rotating }" :src="mapToken(tokenB)" alt="" />
-    <AeIcon v-else-if="tokenB && tokenB.is_ae" />
+    <component :is="selectedIcon(tokenB)" v-if="selectedIcon(tokenB)" />
+    <img v-else-if="tokenB" :class="{ rotating }" :src="mapToken(tokenB)" alt="" />
   </div>
 </template>
 
 <script>
 import AeIcon from '@/assets/ae.svg';
+import EthIcon from '@/assets/ethereum.svg';
+
+import { WRAPPED_ETHEREUM_CONTRACT_ADDRESS } from '@/lib/constants';
 
 export default {
   components: {
@@ -27,6 +34,10 @@ export default {
   methods: {
     mapToken(token) {
       return `https://avatars.z52da5wt.xyz/${token.contract_id}`;
+    },
+    selectedIcon(token) {
+      if (token && token.is_ae) return AeIcon;
+      return token?.contract_id === WRAPPED_ETHEREUM_CONTRACT_ADDRESS ? EthIcon : undefined;
     },
   },
 };
