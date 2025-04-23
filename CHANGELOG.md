@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.21.0](https://github.com/aeternity/dex-ui/compare/v1.20.0...v1.21.0) (2025-04-23)
+
+
+### Features
+
+* add Wrapped Ethereum custom token ([2096c8b](https://github.com/aeternity/dex-ui/commit/2096c8b1a5e7ed66343b5ff53c49e6c71b6f01f0))
+
+
+### Bug Fixes
+
+* be able to use middleware tokens ([6d323ca](https://github.com/aeternity/dex-ui/commit/6d323caa973395a342ef11209900c7b9ef802fd9))
+
+
+### CI / CD
+
+* change pr comment action ([5bde361](https://github.com/aeternity/dex-ui/commit/5bde36138fba13ced07868d8abca2980eba81cac))
+* fix gh action undeploy step triggers ([194bb31](https://github.com/aeternity/dex-ui/commit/194bb31d26531d83b85a8cd19be6342268366ca1))
+* pipeline changes ([cff0624](https://github.com/aeternity/dex-ui/commit/cff062403c240e79aa9362f8da48c972a0500e1f))
+* update action/cache version ([814727d](https://github.com/aeternity/dex-ui/commit/814727d4db1434585d17112d03c70ab054ca046a))
+
 ## [1.20.0](https://github.com/aeternity/dex-ui/compare/v1.19.2...v1.20.0) (2024-11-19)
 
 
