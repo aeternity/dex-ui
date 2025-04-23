@@ -14,6 +14,9 @@ export const DEFAULT_DEADLINE = 30;
 export const MIN_DEADLINE = 1;
 export const MAX_DEADLINE = 1000;
 
+export const WRAPPED_ETHEREUM_MAINNET_CONTRACT_ADDRESS =
+  'ct_ryTY1mxqjCjq1yBn9i6HDaCSdA6thXUFZTA84EMzbWd1SLKdh';
+
 export const DEFAULT_NETWORKS = [
   {
     url: 'https://mainnet.aeternity.io',
@@ -39,6 +42,13 @@ export const DEFAULT_NETWORKS = [
         decimals: MAGNITUDE,
         name: 'Wrapped AE',
         symbol: 'WAE',
+        is_ae: false,
+      },
+      {
+        contract_id: WRAPPED_ETHEREUM_MAINNET_CONTRACT_ADDRESS,
+        decimals: MAGNITUDE,
+        name: 'aeETH',
+        symbol: 'aeETH',
         is_ae: false,
       },
       {
