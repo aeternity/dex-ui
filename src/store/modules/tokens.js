@@ -1,5 +1,5 @@
 import { DEFAULT_NETWORKS } from '@/lib/constants';
-import { fetchJson } from '@/lib/utils';
+import { fetchJson, fetchAllPages } from '@/lib/utils';
 
 export default {
   namespaced: true,
@@ -58,9 +58,7 @@ export default {
           return provider;
         }
         const { waeAddress } = DEFAULT_NETWORKS.find((network) => network.networkId === networkId);
-        const restOfTheTokens = provider.tokens.filter(
-          (token) => token.networkId === networkId,
-        );
+        const restOfTheTokens = provider.tokens.filter((token) => token.networkId === networkId);
         const newTokens = restOfTheTokens.concat(
           tokens
             .filter((token) => token.contract_id !== waeAddress)
@@ -105,7 +103,11 @@ export default {
   actions: {
     async fetchAllTokens({ commit, rootGetters: { activeNetwork }, state: { providers } }) {
       if (activeNetwork) {
-        const tokens = await fetchJson(`${activeNetwork.middlewareUrl}/aex9/by_name`);
+        const tokens = await fetchAllPages(
+          () =>
+            fetchJson(`${activeNetwork.middlewareUrl}/v3/aex9?by=name&limit=100&direction=forward`),
+          (nextPageUrl) => fetchJson(`${activeNetwork.middlewareUrl}${nextPageUrl}`),
+        );
         if (Array.isArray(tokens)) {
           commit('addProvider', {
             name: 'AE Middleware List',
