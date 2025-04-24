@@ -31,10 +31,7 @@
         </thead>
         <tbody>
           <tr v-for="d in rowsPaginated" :key="d.id" class="border-b border-b-gray-700">
-            <th
-              scope="row"
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-            >
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
               <TableCell :text="d[columns[0].key].text" :link="d[columns[0].key].link" />
             </th>
             <td
