@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.21.1](https://github.com/aeternity/dex-ui/compare/v1.21.0...v1.21.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* show table labels ([78da7e7](https://github.com/aeternity/dex-ui/commit/78da7e72cf4224aadbae88300df96fc7e59f5ded))
+
+
+### CI / CD
+
+* update deploy action to use correct domain ([15adfe8](https://github.com/aeternity/dex-ui/commit/15adfe8945faef3e4040dbd683cc5aff163cd302))
+
 ## [1.21.0](https://github.com/aeternity/dex-ui/compare/v1.20.0...v1.21.0) (2025-04-23)
 
 
