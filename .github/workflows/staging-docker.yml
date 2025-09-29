@@ -94,11 +94,13 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Check the initial PR deployment status before make a PR Sync.
+      - name: Chekc the initial PR deployment status before make a PR Sync.
+        continue-on-error: true
         if: github.event_name == 'pull_request' || github.event.action != 'synchronize' || github.event.action == 'opened' || github.event.action == 'reopened'
-        uses: aeternity/ae-github-actions/deploy-status@v7
+        uses: aeternity/ae-github-actions/deploy-status@v7.4.0
         with:
           url: https://pr-${{ env.PR_NUMBER }}-${{ env.APP }}.${{ env.ENV }}.service.aepps.com
+          timeout: 10
 
       - name: Staging PR Sync
         if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
