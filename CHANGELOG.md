@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.21.2](https://github.com/aeternity/dex-ui/compare/v1.21.1...v1.21.2) (2025-10-01)
+
+
+### Miscellaneous
+
+* update gh actions events ([4d155f7](https://github.com/aeternity/dex-ui/commit/4d155f74d176f0d512fd6e4cf347183f4461a090))
+* update gh actions events ([483a717](https://github.com/aeternity/dex-ui/commit/483a717d212f9bcceff67553721819b146f93529))
+* update initial deploy check step ([52c1dbd](https://github.com/aeternity/dex-ui/commit/52c1dbd45243ba1196dc4d2cf2642867de840deb))
+
 ## [1.21.1](https://github.com/aeternity/dex-ui/compare/v1.21.0...v1.21.1) (2025-06-12)
 
 
