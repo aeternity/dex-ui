@@ -103,6 +103,11 @@ export default {
   actions: {
     async fetchAllTokens({ commit, rootGetters: { activeNetwork }, state: { providers } }) {
       if (activeNetwork) {
+        const existingProvider = providers.find((p) => p.name === 'AE Middleware List');
+        const hasTokensForNetwork = existingProvider?.tokens?.some(
+          (t) => t.networkId === activeNetwork.networkId,
+        );
+        if (hasTokensForNetwork) return;
         const tokens = await fetchAllPages(
           () =>
             fetchJson(`${activeNetwork.middlewareUrl}/v3/aex9?by=name&limit=100&direction=forward`),
