@@ -254,7 +254,7 @@ export default createStore({
     },
     async disconnectWallet({ state: { sdk }, commit }) {
       try {
-        await sdk.disconnectWallet(false);
+        await sdk.disconnectWallet();
       } catch (error) {
         // TODO
       }

@@ -1,4 +1,4 @@
-import { formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
+import { Contract, formatAmount, AE_AMOUNT_FORMATS, decode } from '@aeternity/aepp-sdk';
 import BigNumber from 'bignumber.js';
 import dexContractsErrorMessages from 'dex-contracts-v2/build/errors';
 import dexUiErrorMessages from '@/lib/errors';
@@ -24,6 +24,15 @@ export const aettosToAe = (v) =>
     denomination: AE_AMOUNT_FORMATS.AETTOS,
     targetDenomination: AE_AMOUNT_FORMATS.AE,
   });
+
+/**
+ * Creates a contract instance bound to the sdk state (node, account).
+ * Replacement for `AeSdk:initializeContract` removed in aepp-sdk@14.
+ * @param {AeSdkBase} sdk
+ * @param {object} options `Contract.initialize` options (aci, address, ...)
+ */
+export const initializeContract = (sdk, options) =>
+  Contract.initialize({ ...sdk.getContext(), ...options });
 
 export const cttoak = (value) => value.replace('ct_', 'ak_');
 export const calculateSelectedToken = (token, from, to, isFrom) => {
