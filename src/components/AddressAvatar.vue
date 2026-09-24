@@ -1,5 +1,5 @@
 <template>
-  <img :src="`https://avatars.z52da5wt.xyz/${address}`" :alt="address" />
+  <img :src="`https://avatars.superherowallet.com/${address}`" :alt="address" />
 </template>
 <script>
 export default {
