@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     mapToken(token) {
-      return `https://avatars.z52da5wt.xyz/${token.contract_id}`;
+      return `https://avatars.superherowallet.com/${token.contract_id}`;
     },
     selectedIcon(token) {
       if (token && token.is_ae) return AeIcon;
