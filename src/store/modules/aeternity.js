@@ -1,3 +1,4 @@
+import { Contract } from '@aeternity/aepp-sdk';
 import aex9ACI from 'dex-contracts-v2/build/FungibleTokenFull.aci.json';
 import routerACI from 'dex-contracts-v2/build/AedexV2Router.aci.json';
 import waeACI from 'dex-contracts-v2/build/WAE.aci.json';
@@ -205,7 +206,8 @@ export default {
     },
     async initRouter({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
       if (activeNetwork) {
-        const contract = await sdk.initializeContract({
+        const contract = await Contract.initialize({
+          ...sdk.getContext(),
           aci: routerACI,
           address: activeNetwork.routerAddress,
         });
@@ -214,7 +216,8 @@ export default {
     },
     async initFactory({ commit, state: { router }, rootState: { sdk } }) {
       const { decodedResult: factoryAddress } = await router.factory();
-      const contract = await sdk.initializeContract({
+      const contract = await Contract.initialize({
+        ...sdk.getContext(),
         aci: factoryACI,
         address: factoryAddress,
       });
@@ -222,7 +225,8 @@ export default {
     },
     async initWae({ commit, rootState: { sdk }, rootGetters: { activeNetwork } }) {
       if (activeNetwork) {
-        const contract = await sdk.initializeContract({
+        const contract = await Contract.initialize({
+          ...sdk.getContext(),
           aci: waeACI,
           address: activeNetwork.waeAddress,
         });
@@ -260,7 +264,8 @@ export default {
       if (contractAddress == null) {
         throw new Error('PAIR NOT FOUND');
       }
-      const instance = await sdk.initializeContract({
+      const instance = await Contract.initialize({
+        ...sdk.getContext(),
         aci: pairACI,
         address: contractAddress,
       });
@@ -268,7 +273,8 @@ export default {
       return instance;
     },
     getTokenInstance({ rootState: { sdk } }, contractAddress) {
-      return sdk.initializeContract({
+      return Contract.initialize({
+        ...sdk.getContext(),
         aci: aex9ACI,
         address: contractAddress,
       });

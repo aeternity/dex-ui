@@ -9,6 +9,7 @@
 import { onBeforeUnmount, ref, watch, toRef } from 'vue';
 import { useStore } from 'vuex';
 import BigNumber from 'bignumber.js';
+import { Contract } from '@aeternity/aepp-sdk';
 import FUNGIBLE_TOKEN_CONTRACT from 'dex-contracts-v2/build/FungibleTokenFull.aci.json';
 import { aettosToAe, handleUnknownError, isNotFoundError } from '@/lib/utils';
 import AnimatedSpinner from '@/assets/animated-spinner.svg';
@@ -24,7 +25,8 @@ async function poll() {
         try {
           if (address.startsWith('ct_') && storeState.value.address) {
             if (!state.instance) {
-              state.instance = await storeState.value.sdk.initializeContract({
+              state.instance = await Contract.initialize({
+                ...storeState.value.sdk.getContext(),
                 aci: FUNGIBLE_TOKEN_CONTRACT,
                 address,
               });
