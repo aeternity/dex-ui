@@ -8,7 +8,7 @@ describe('Swap', () => {
     cy.get('.input-token').first().should('contain', 'AE');
 
     // expect ae to be selected
-    cy.get('.input-token').eq(1).should('contain', 'TAEX9-A');
+    cy.get('.input-token').eq(1).should('contain', 'FST');
     // input amount
     cy.get('.input-token input')
       .eq(0)

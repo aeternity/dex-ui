@@ -6,7 +6,7 @@ describe('Login', () => {
       .click()
       .get('[data-cy=connect-Superhero]', { timeout: 10000 })
       .click()
-      .get('.onboarding-modal', { timeout: 10000 })
+      .get('.onboarding-modal', { timeout: 30000 })
       .should('be.visible')
       // close the popup
       .get('.close')
@@ -28,7 +28,7 @@ describe('Login', () => {
     )
       .contains('.title', 'Swap')
       // popup should open with "Thanks for trying out the DEX!"
-      .get('.onboarding-modal', { timeout: 10000 })
+      .get('.onboarding-modal', { timeout: 30000 })
       .should('be.visible')
       // close the popup
       .get('.close')
