@@ -58,8 +58,9 @@ export default {
           return provider;
         }
         const { waeAddress } = DEFAULT_NETWORKS.find((network) => network.networkId === networkId);
-        const restOfTheTokens = provider.tokens.filter((token) => token.networkId === networkId);
-        const newTokens = restOfTheTokens.concat(
+        // keep the tokens of other networks and the defaults not listed by the backend (e.g. aeETH),
+        // duplicates are dropped in getAvailableTokens
+        const newTokens = provider.tokens.concat(
           tokens
             .filter((token) => token.contract_id !== waeAddress)
             .map((token) => ({

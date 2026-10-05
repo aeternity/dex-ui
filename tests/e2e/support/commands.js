@@ -4,7 +4,8 @@ Cypress.Commands.add('login', () => {
   cy.visit(`/swap?address=${aeSdk.address}&networkId=ae_uat`)
     .contains('.title', 'Swap')
     // popup should open with "Thanks for trying out the DEX!"
-    .get('.onboarding-modal', { timeout: 10000 })
+    // it waits for both networks to init, up to 4 dex-backend requests with an 8s timeout each
+    .get('.onboarding-modal', { timeout: 30000 })
     .should('be.visible')
     // close the popup
     .get('.close')
@@ -16,30 +17,22 @@ Cypress.Commands.add('login', () => {
     .should('contain', 'Testnet');
 });
 
-Cypress.Commands.add('selectToken', (slot, token, initialSelector = '.input-token button') => {
-  // get first .input-token
-  cy.get(initialSelector)
-    .eq(slot)
-    .click()
-    // token pop up should open
-    .get('.select-token-modal')
-    .should('be.visible');
-  // select first token
-  if (token) {
-    cy.get('.select-token-modal .search-bar')
-      .type(token)
-      .get('.select-token-modal .import-button')
+// not `.input-token button`, it shifts when a "max" button appears after the balance is loaded
+Cypress.Commands.add(
+  'selectToken',
+  (slot, token, initialSelector = '.input-token .button-token') => {
+    // get first .input-token
+    cy.get(initialSelector)
+      .eq(slot)
       .click()
-      // warning should be shown
+      // token pop up should open
       .get('.select-token-modal')
-      .should('contain', 'Make sure this is the token that you want to trade.')
-      // confirm import
-      .get('.select-token-modal .import-button')
-      .click();
-  } else {
-    cy.get('.select-token-modal .token').click();
-  }
-});
+      .should('be.visible');
+    // narrow the list down to the requested token, otherwise take the first one (AE)
+    if (token) cy.get('.select-token-modal .search-bar').type(token);
+    cy.get('.select-token-modal .token.clickable').first().click();
+  },
+);
 
 Cypress.Commands.add('interceptTxPost', () => {
   cy.intercept(
