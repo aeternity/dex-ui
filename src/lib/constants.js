@@ -1,6 +1,11 @@
 export const IS_MOBILE = window.navigator.userAgent.includes('Mobi');
 
-export const IN_FRAME = window.parent !== window;
+const IN_FRAME = window.parent !== window;
+// The Superhero Wallet app opens aepps in a Cordova in-app browser. Its native bridge exists
+// before any script runs, but the wallet announces itself only after the page has loaded.
+const IN_APP_BROWSER = !!(window.cordova_iab || window.webkit?.messageHandlers?.cordova_iab);
+// The wallet hosting the page talks to it over postMessage, deep links can't reach it.
+export const IN_WALLET = IN_FRAME || IN_APP_BROWSER;
 
 export const MAGNITUDE = 18;
 // TODO: this is what uniswap uses as minimumLiquidity, let's decide on it

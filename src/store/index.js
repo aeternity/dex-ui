@@ -18,7 +18,7 @@ import {
   isSafariBrowser,
   resolveWithTimeout,
 } from '@/lib/utils';
-import { DEFAULT_NETWORKS, IN_FRAME, IS_MOBILE } from '@/lib/constants';
+import { DEFAULT_NETWORKS, IN_WALLET, IS_MOBILE } from '@/lib/constants';
 import aeternityModule from './modules/aeternity';
 import dexBackendModule from './modules/dexBackend';
 import navigation from './modules/navigation';
@@ -150,7 +150,7 @@ export default createStore({
       commit('setConnectingToWallet', true);
       commit('setWallet', walletObj.info);
 
-      if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
+      if ((IS_MOBILE || isSafariBrowser()) && !IN_WALLET) {
         if (address) {
           commit('setConnectingToWallet', false);
           return;
@@ -214,19 +214,32 @@ export default createStore({
             }
           });
         } catch (error) {
+          // Without deep links a restored session the wallet doesn't take back can't sign
+          if (IN_WALLET) {
+            try {
+              // Otherwise the wallet keeps the connection and doesn't offer it again
+              sdk.disconnectWallet();
+            } catch (e) {
+              // not connected
+            }
+            commit('setAddress', null);
+            commit('setWallet', null);
+          }
           if (walletObj.info.name === 'Superhero') {
             dispatch('modals/open', {
               name: 'show-error',
               message:
                 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
-              dismissText: 'Open My Wallet',
-              resolve: () => {
-                window.location = createDeepLinkUrl({
-                  type: 'address',
-                  'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
-                  'x-cancel': window.location.href.split('?')[0],
-                });
-              },
+              ...(!IN_WALLET && {
+                dismissText: 'Open My Wallet',
+                resolve: () => {
+                  window.location = createDeepLinkUrl({
+                    type: 'address',
+                    'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
+                    'x-cancel': window.location.href.split('?')[0],
+                  });
+                },
+              }),
             });
           } else {
             dispatch('modals/open', {
