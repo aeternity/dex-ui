@@ -96,7 +96,7 @@ import ChromeLogo from '@/assets/chrome-logo.svg';
 import FirefoxLogo from '@/assets/firefox-logo.svg';
 import SuperheroLogo from '@/assets/wallets/superhero.png';
 import { resolveWithTimeout } from '@/lib/utils';
-import { IN_FRAME } from '@/lib/constants';
+import { IN_WALLET } from '@/lib/constants';
 import ModalDefault from './ModalDefault.vue';
 import ButtonDefault from './ButtonDefault.vue';
 import ButtonPlain from './ButtonPlain.vue';
@@ -128,7 +128,7 @@ export default {
     };
   },
   async mounted() {
-    if (this.$isMobile && !IN_FRAME) {
+    if (this.$isMobile && !IN_WALLET) {
       this.addDefaultWallet();
     } else {
       this.scanningForWallets = true;
