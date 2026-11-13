@@ -30,7 +30,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Head } from '@vueuse/head';
+import { Head } from '@unhead/vue/components';
 import QuestionCircle from '@/assets/question-circle.svg';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonDefault from '@/components/ButtonDefault.vue';

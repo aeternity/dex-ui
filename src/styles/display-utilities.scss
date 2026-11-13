@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $displays: block, inline-block, flex, inline-flex !default;
 
 // Breakpoint values for various devices to use in media queries
@@ -11,7 +13,7 @@ $breakpoints: (
 
 // Function to return breakpoint values
 @function breakpoint($key) {
-  @return map-get($breakpoints, $key);
+  @return map.get($breakpoints, $key);
 }
 
 // Classes to hide elements in certain screen sizes

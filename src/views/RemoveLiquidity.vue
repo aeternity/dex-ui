@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { Head } from '@vueuse/head';
+import { Head } from '@unhead/vue/components';
 import BigNumber from 'bignumber.js';
 import { mapGetters, mapState } from 'vuex';
 import MainWrapper from '@/components/MainWrapper.vue';

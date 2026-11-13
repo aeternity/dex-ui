@@ -17,7 +17,18 @@ module.exports = {
     'vue/no-reserved-component-names': 'off',
     'space-infix-ops': ['error', { int32Hint: false }],
     'brace-style': ['error', '1tbs', { allowSingleLine: false }],
-    'import/no-unresolved': 'error',
+    'import/no-unresolved': [
+      'error',
+      // eslint-plugin-import can't resolve packages that only expose subpaths via `exports`
+      {
+        ignore: [
+          '^@rushstack/eslint-patch/',
+          '^vite$',
+          '^@vitejs/plugin-vue$',
+          '^@unhead/vue/',
+        ],
+      },
+    ],
   },
   overrides: [
     {

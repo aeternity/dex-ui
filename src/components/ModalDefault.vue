@@ -81,7 +81,7 @@ export default {
     .header {
       padding: 20px 20px 16px;
       color: white;
-      word-break: break-word;
+      overflow-wrap: anywhere;
       text-align: center;
       display: flex;
       justify-content: space-between;
@@ -100,7 +100,7 @@ export default {
     }
 
     .body {
-      word-break: break-word;
+      overflow-wrap: anywhere;
       text-align: center;
     }
 
