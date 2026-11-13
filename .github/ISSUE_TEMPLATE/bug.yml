@@ -46,6 +46,7 @@ body:
     id: browsers
     attributes:
       label: What browsers are you seeing the problem on?
+      description: Leave empty if the problem is not browser-specific (e.g. the app fails to install, build or start).
       multiple: true
       options:
         - Firefox
@@ -53,7 +54,7 @@ body:
         - Safari
         - Microsoft Edge
     validations:
-      required: true
+      required: false
   - type: textarea
     id: additional
     attributes:

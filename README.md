@@ -20,17 +20,21 @@ git clone https://github.com/aeternity/dex-ui.git
 cd dex-ui
 ```
 
-2. install the dependencies (nodejs 16+ and npm 7+ required)
+2. install the dependencies (Node.js 18+ required)
 
 ```
 npm i
 ```
 
-3. run the interface
+3. start the development server
 
 ```
-npm run serve
+npm run dev
 ```
+
+4. open the URL printed in the terminal (by default [http://localhost:5173](http://localhost:5173))
+
+To build a production version instead, run `npm run build`. The output is written to the `dist` directory and can be previewed locally with `npm run preview`.
 
 ## Feedback
 
