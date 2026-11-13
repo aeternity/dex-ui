@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.22.0](https://github.com/aeternity/dex-ui/compare/v1.21.2...v1.22.0) (2026-11-13)
+
+
+### Features
+
+* update sdk to 15.0.0 ([72d1c17](https://github.com/aeternity/dex-ui/commit/72d1c17ec7712446a3c02064a49d8dcacab096fc))
+
+
+### CI / CD
+
+* update GitHub Actions ([a0694c6](https://github.com/aeternity/dex-ui/commit/a0694c66f6de599248c3ece321475990e1d1e2e7))
+
+
+### Testing
+
+* make ci test work ([d3eaa10](https://github.com/aeternity/dex-ui/commit/d3eaa108989abc95371fffaf3f41c1fdc1ede37f))
+
+
+### Miscellaneous
+
+* update dependencies ([290c697](https://github.com/aeternity/dex-ui/commit/290c69711821b1c222e38a9020a4548c6149d959))
+
 ## [1.21.2](https://github.com/aeternity/dex-ui/compare/v1.21.1...v1.21.2) (2026-09-24)
 
 
