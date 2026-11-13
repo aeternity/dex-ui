@@ -27,7 +27,7 @@ import Header from '@/components/Header.vue';
 import NavigationMenu from '@/components/NavigationMenu.vue';
 import ConnectionStatus from '@/components/ConnectionStatus.vue';
 import { isDexBackendDisabled } from '@/lib/utils';
-import { IN_FRAME } from '@/lib/constants';
+import { IN_WALLET } from '@/lib/constants';
 
 export default {
   components: {
@@ -76,7 +76,7 @@ export default {
     }
     this.$store.commit('setIsSdkInitializing', true);
     try {
-      if (this.$isMobile && !IN_FRAME) {
+      if (this.$isMobile && !IN_WALLET) {
         await this.$store.dispatch('initUniversal'); // TODO: remove after https://github.com/aeternity/aepp-sdk-js/issues/1390 is resolved
         setTimeout(() => this.$store.dispatch('parseAndSendTransactionFromQuery'), 1000);
       } else {
