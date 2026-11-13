@@ -44,7 +44,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Head } from '@vueuse/head';
+import { Head } from '@unhead/vue/components';
 import MainWrapper from '@/components/MainWrapper.vue';
 import ButtonToken from '@/components/ButtonToken.vue';
 import Tip from '@/components/Tip.vue';

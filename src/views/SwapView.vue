@@ -73,7 +73,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { Head } from '@vueuse/head';
+import { Head } from '@unhead/vue/components';
 import MainWrapper from '@/components/MainWrapper.vue';
 import InputToken from '@/components/InputToken.vue';
 import ButtonPlain from '@/components/ButtonPlain.vue';

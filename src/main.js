@@ -1,8 +1,10 @@
 import { createApp } from 'vue';
 import { sync } from 'vuex-router-sync';
 import * as Sentry from '@sentry/vue';
-import { BrowserTracing } from '@sentry/tracing';
-import { createHead } from '@vueuse/head';
+import { createHead } from '@unhead/vue/client';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
 
 import App from './App.vue';
 import router from './router';
@@ -36,13 +38,8 @@ if (!window.location.host.includes('localhost')) {
   Sentry.init({
     app,
     dsn: import.meta.env.VITE_SENTRY_URL,
-    integrations: [
-      new BrowserTracing({
-        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        // https://docs.sentry.io/platforms/javascript/guides/react/performance/instrumentation/automatic-instrumentation/#tracingorigins
-        tracingOrigins: ['testnet.aeternity.io', 'mainnet.aeternity.io', /^\//],
-      }),
-    ],
+    integrations: [Sentry.browserTracingIntegration({ router })],
+    tracePropagationTargets: ['testnet.aeternity.io', 'mainnet.aeternity.io', /^\//],
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production

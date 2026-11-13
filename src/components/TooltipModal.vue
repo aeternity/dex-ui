@@ -76,7 +76,7 @@ export default {
   display: flex;
   padding: 10px 16px;
   max-width: 256px;
-  word-break: break-word;
+  overflow-wrap: anywhere;
   background: variables.$color-black3;
   color: variables.$color-white2;
   border-radius: 12px;

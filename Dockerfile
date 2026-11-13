@@ -1,4 +1,4 @@
-FROM node:20 as builder
+FROM node:24 AS builder
 
 RUN mkdir -p /home/node/app
 WORKDIR /home/node/app
@@ -12,7 +12,7 @@ COPY --chown=node:node . /home/node/app
 ENV NODE_ENV=production
 RUN npm run build
 
-FROM nginx:1.13.7-alpine
+FROM nginx:1.30-alpine
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /home/node/app/dist /usr/share/nginx/html
