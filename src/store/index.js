@@ -385,7 +385,17 @@ export default createStore({
         wallet,
         lang,
         aeternity: { providedLiquidity, slippage, deadline },
-        tokens: { userTokens, providers },
+        // Persist only lightweight provider metadata to avoid localStorage overflow.
+        // Do NOT persist large token lists; they are fetched on demand.
+        tokens: {
+          userTokens,
+          providers: (providers || []).map(({ name, icon, active }) => ({
+            name,
+            icon,
+            active,
+            tokens: [],
+          })),
+        },
         hasSeenOnboarding,
       }),
     }),

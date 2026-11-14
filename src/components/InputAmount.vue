@@ -1,7 +1,12 @@
 <template>
   <div class="input-amount">
     <slot name="left" />
-    <InputField type="number" v-bind="$attrs" @input="$emit('input', $event)" />
+    <InputField
+      type="number"
+      :value="value"
+      v-bind="$attrs"
+      @update:value="$emit('update:value', $event)"
+    />
     <slot name="right" />
   </div>
 </template>
@@ -13,7 +18,10 @@ export default {
   components: {
     InputField,
   },
-  emits: ['input'],
+  props: {
+    value: { type: [String, Number], default: '' },
+  },
+  emits: ['update:value'],
 };
 </script>
 

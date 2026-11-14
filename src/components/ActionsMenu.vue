@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="actions-menu"
-    :class="{ active: showMenu }"
-    @click="showMenu = true"
-    @keydown="showMenu = true"
-  >
+  <div class="actions-menu" :class="{ active: showMenu }" @click="handleOpen" @keydown="handleOpen">
     <slot name="display" />
     <SmallModal v-if="showMenu" @close="showMenu = false">
       <slot />
@@ -19,10 +14,17 @@ export default {
   components: {
     SmallModal,
   },
+  emits: ['open'],
   data() {
     return {
       showMenu: false,
     };
+  },
+  methods: {
+    handleOpen() {
+      if (!this.showMenu) this.$emit('open');
+      this.showMenu = true;
+    },
   },
 };
 </script>
