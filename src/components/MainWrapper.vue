@@ -9,8 +9,8 @@
       <div class="title">
         {{ title }}
       </div>
-      <div class="right" @click="settingsClickHandler" @keydown="settingsClickHandler">
-        <ActionsMenu v-if="settings">
+      <div class="right">
+        <ActionsMenu v-if="settings" @open="settingsClickHandler">
           <template #display>
             <Cog />
           </template>
